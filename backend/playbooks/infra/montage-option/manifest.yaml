@@ -1,0 +1,22 @@
+id: infra.montage-option
+titre: "Montage : ajouter une option (nodev, nosuid, noexec...)"
+description: >
+  Ajoute l'option a la 4e colonne de la ligne du point de montage dans /etc/fstab puis remonte, comme la source. Refus si le point de montage n'est pas declare dans /etc/fstab.
+risque: moyen
+parametres:
+  - {nom: point, type: string, requis: true, motif: '^/[A-Za-z0-9._/-]*$'}
+  - {nom: option, type: string, requis: true, motif: '^[a-z_]+$'}
+# revenir.sh retrouve l'etat par le point de montage ET l'option.
+parametres_revenir: [point, option]
+racine_requise: true
+reversible: true
+simulation: true
+idempotent: true
+redemarrage: false
+indisponibilite: "0 s (remontage a chaud)"
+source:
+  origine: complianceascode
+  version: 0.1.82
+  gabarit: shared/templates/mount_option/bash.template (bash_ensure_mount_option_in_fstab)
+  ecarts: "sauvegarde de /etc/fstab ; retour arriere si le remontage echoue"
+references: [ANSSI-BP-028, CIS Benchmarks]

@@ -1,0 +1,68 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-grub2-nosmap-argument-absent
+titre: Argument de demarrage nosmap absent
+domaine: systeme
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: demarrage
+  type_controle: argument-absent
+  niveaux:
+    cis: null
+    anssi: renforce
+source:
+  origine: complianceascode
+  regle: grub2_nosmap_argument_absent
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/bootloader-grub2/grub2_nosmap_argument_absent
+mots_cles:
+- argument
+- demarrage
+- grub
+- nosmap
+- noyau
+resume: Le noyau ne doit pas demarrer avec nosmap (il desactive une protection). (regle grub2_nosmap_argument_absent,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: cat /proc/cmdline
+  but: Lire les arguments du demarrage EN COURS
+  lecture: nosmap ne doit pas figurer.
+- commande: grep -E '^GRUB_CMDLINE_LINUX' /etc/default/grub
+  but: Verifier la configuration persistante de GRUB
+  lecture: nosmap ne doit pas figurer.
+controles:
+- controle: nosmap absent
+  bon: nosmap absent
+  mauvais: nosmap present
+  gravite: moyenne
+  risque: 'SMAP empeche le noyau d''acceder par erreur aux donnees des programmes : le desactiver (nosmap)
+    facilite l''exploitation de nombreuses failles du noyau.'
+  action: Retirer nosmap de GRUB_CMDLINE_LINUX dans /etc/default/grub, update-grub, redemarrer.
+  playbook: infra.grub-argument
+  parametres:
+    argument: nosmap
+    action: retirer
+  evaluation:
+  - commande: 0
+    lecteur: cmdline
+    comparateur: absent
+    champ: nosmap
+  - commande: 1
+    lecteur: grub
+    comparateur: absent
+    champ: nosmap
+pieges:
+- Effet au prochain redemarrage seulement.
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R1 (niveau renforce)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

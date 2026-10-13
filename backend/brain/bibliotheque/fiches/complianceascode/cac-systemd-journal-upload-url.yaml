@@ -1,0 +1,69 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-systemd-journal-upload-url
+titre: 'journald : serveur distant defini pour systemd-journal-upload (URL=)'
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: journalisation
+  type_controle: detection
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: systemd_journal_upload_url
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/logging/journald/systemd_journal_upload_url
+mots_cles:
+- centralisation
+- journal-upload
+- journald
+- serveur distant
+resume: 'journald : serveur distant defini pour systemd-journal-upload (URL=). (regle systemd_journal_upload_url,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: grep -hEs '^[[:space:]]*URL=[^[:space:]]+' /etc/systemd/journal-upload.conf /etc/systemd/journal-upload.conf.d/*.conf
+  but: Lire l'URL du serveur de journaux distant
+  lecture: Une ligne = conforme ; aucune = ecart.
+controles:
+- controle: URL= renseignee
+  bon: une ligne URL=...
+  mauvais: aucune URL
+  gravite: moyenne
+  risque: Des journaux gardes a un seul endroit peuvent etre effaces ou modifies par accident ou par un
+    attaquant. systemd-journal-upload doit connaitre le serveur distant (URL) et s'y connecter en TLS
+    (cle, certificat, autorite).
+  action: Ecrire « URL=https://serveur-journaux:19532 » dans /etc/systemd/journal-upload.conf.
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: presente
+pieges:
+- Ne s'applique que si journald est le service de journalisation retenu (sinon voir rsyslog).
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 6.2.1.2.2 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 6.1.2.1.2 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 6.1.2.1.2 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

@@ -1,0 +1,43 @@
+id: electrochimie-des-batteries
+schema: 1
+nom: Électrochimie des batteries
+resume: Réactions d'oxydoréduction dans les accumulateurs (plomb, lithium-ion) ; clé de l'autonomie des onduleurs et de la tenue des datacenters lors des coupures électriques.
+famille: chimie
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - électrochimie
+  - batterie
+  - accumulateur
+  - lithium-ion
+  - plomb
+  - oxydoréduction
+  - onduleur
+  - ups
+  - bms
+  - autonomie
+caracteristiques:
+  notions_fondamentales: "Une cellule électrochimique convertit l'énergie chimique en énergie électrique par des réactions d'oxydoréduction entre anode et cathode."
+  technologies_courantes: "Plomb-acide (mature, lourd, recyclé) pour les onduleurs classiques ; lithium-ion (densité d'énergie plus élevée) de plus en plus en datacenter."
+  parametres_cles: "Tension nominale, capacité (Ah), profondeur de décharge et température déterminent l'autonomie et la durée de vie ; le vieillissement est accéléré par la chaleur."
+  lien_informatique: "Les onduleurs (UPS) assurent la continuité électrique des serveurs ; le BMS surveille tension, courant et température de chaque élément."
+securite:
+  - titre: Onduleur sans autonomie réelle testée
+    risque: Des batteries vieillies ou sous-dimensionnées lâchent pendant la coupure, avant le basculement sur groupe électrogène, et les serveurs s'arrêtent brutalement.
+    conseil: Tester régulièrement l'autonomie en conditions réelles et remplacer les batteries selon leur état mesuré, pas seulement leur âge.
+    gravite: elevee
+  - titre: BMS accessible sur le réseau
+    risque: Un système de gestion de batteries ou d'onduleur exposé sans authentification permet de couper l'alimentation ou de fausser les mesures à distance.
+    conseil: Isoler la supervision électrique dans un réseau dédié, avec authentification forte et journalisation des accès.
+    gravite: elevee
+  - titre: Stockage et recyclage des batteries usagées
+    risque: Des batteries au plomb ou lithium stockées négligemment polluent ou s'enflamment ; leur filière de recyclage peut aussi faire fuiter des données (numéros de série, traçabilité).
+    conseil: Passer par des filières de recyclage agréées et consigner la sortie des équipements dans l'inventaire des actifs.
+    gravite: moyenne
+sources:
+  - titre: Wikipédia — Accumulateur électrique
+    url: https://fr.wikipedia.org/wiki/Accumulateur_%C3%A9lectrique
+  - titre: IUPAC — Gold Book (Compendium of Chemical Terminology)
+    url: https://goldbook.iupac.org/

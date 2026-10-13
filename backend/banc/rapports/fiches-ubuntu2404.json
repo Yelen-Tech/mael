@@ -1,0 +1,6938 @@
+{
+ "systeme": "ubuntu:24.04",
+ "date": "2026-09-19T16:48:19.866997+00:00",
+ "fiches_testees": 519,
+ "fiches_hors_champ": 2,
+ "fiches_a_tester_en_vm": [
+  {
+   "fiche": "cac-aide-periodic-checking-systemd-timer",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-apparmor-configured",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-directory-groupowner-etc-sysctld",
+   "raison": "theme « parametres-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-directory-owner-etc-sysctld",
+   "raison": "theme « parametres-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-directory-permissions-etc-sysctld",
+   "raison": "theme « parametres-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-disable-users-coredumps",
+   "raison": "theme « parametres-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-file-groupowner-grub2-cfg",
+   "raison": "theme « demarrage » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-file-groupowner-user-cfg",
+   "raison": "theme « demarrage » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-file-owner-grub2-cfg",
+   "raison": "theme « demarrage » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-file-owner-user-cfg",
+   "raison": "theme « demarrage » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-file-permissions-grub2-cfg",
+   "raison": "theme « demarrage » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-file-permissions-user-cfg",
+   "raison": "theme « demarrage » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-firewall-single-service-active",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-grub2-audit-argument",
+   "raison": "commande « /proc/cmdline » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-grub2-audit-backlog-limit-argument",
+   "raison": "commande « /proc/cmdline » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-grub2-enable-apparmor",
+   "raison": "commande « /proc/cmdline » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-grub2-enable-iommu-force",
+   "raison": "theme « demarrage » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-grub2-l1tf-argument",
+   "raison": "theme « demarrage » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-grub2-mce-argument",
+   "raison": "theme « demarrage » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-grub2-mds-argument",
+   "raison": "theme « demarrage » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-grub2-nosmap-argument-absent",
+   "raison": "theme « demarrage » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-grub2-nosmep-argument-absent",
+   "raison": "theme « demarrage » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-grub2-page-alloc-shuffle-argument",
+   "raison": "theme « demarrage » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-grub2-page-poison-argument",
+   "raison": "theme « demarrage » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-grub2-password",
+   "raison": "theme « demarrage » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-grub2-pti-argument",
+   "raison": "theme « demarrage » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-grub2-rng-core-default-quality-argument",
+   "raison": "theme « demarrage » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-grub2-slab-nomerge-argument",
+   "raison": "theme « demarrage » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-grub2-slub-debug-argument",
+   "raison": "theme « demarrage » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-grub2-spec-store-bypass-disable-argument",
+   "raison": "theme « demarrage » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-grub2-spectre-v2-argument",
+   "raison": "theme « demarrage » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-grub2-uefi-password",
+   "raison": "theme « demarrage » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-acpi-custom-method",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-arm64-sw-ttbr0-pan",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-binfmt-misc",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-bug-on-data-corruption",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-bug",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-compat-brk",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-compat-vdso",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-debug-credentials",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-debug-fs",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-debug-list",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-debug-notifiers",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-debug-sg",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-debug-wx",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-default-mmap-min-addr",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-devkmem",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-fortify-source",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-gcc-plugin-latent-entropy",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-gcc-plugin-randstruct",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-gcc-plugin-stackleak",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-gcc-plugin-structleak-byref-all",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-gcc-plugin-structleak",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-hardened-usercopy-fallback",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-hardened-usercopy",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-hibernation",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-ia32-emulation",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-kexec",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-legacy-ptys",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-legacy-vsyscall-emulate",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-legacy-vsyscall-none",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-legacy-vsyscall-xonly",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-modify-ldt-syscall",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-module-sig-all",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-module-sig-force",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-module-sig-hash",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-module-sig-key",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-module-sig-sha512",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-module-sig",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-page-poisoning-no-sanity",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-page-poisoning-zero",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-page-poisoning",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-page-table-isolation",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-panic-on-oops",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-panic-timeout",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-proc-kcore",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-randomize-base",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-randomize-memory",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-refcount-full",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-retpoline",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-sched-stack-end-check",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-seccomp-filter",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-seccomp",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-security-dmesg-restrict",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-security-writable-hooks",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-security-yama",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-security",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-slab-freelist-hardened",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-slab-freelist-random",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-slab-merge-default",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-slub-debug",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-stackprotector-strong",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-stackprotector",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-strict-kernel-rwx",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-strict-module-rwx",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-syn-cookies",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-unmap-kernel-at-el0",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-vmap-stack",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-config-x86-vsyscall-emulation",
+   "raison": "theme « compilation-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-module-cramfs-disabled",
+   "raison": "theme « modules-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-module-dccp-disabled",
+   "raison": "theme « modules-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-module-freevxfs-disabled",
+   "raison": "theme « modules-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-module-hfs-disabled",
+   "raison": "theme « modules-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-module-hfsplus-disabled",
+   "raison": "theme « modules-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-module-jffs2-disabled",
+   "raison": "theme « modules-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-module-overlayfs-disabled",
+   "raison": "theme « modules-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-module-rds-disabled",
+   "raison": "theme « modules-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-module-sctp-disabled",
+   "raison": "theme « modules-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-module-tipc-disabled",
+   "raison": "theme « modules-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-module-udf-disabled",
+   "raison": "theme « modules-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-kernel-module-usb-storage-disabled",
+   "raison": "theme « modules-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-logging-services-active",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-mount-option-nodev-nonroot-local-partitions",
+   "raison": "commande « mount | » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-ntp-single-service-active",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-package-systemd-journal-remote-installed",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-prefer-64bit-os",
+   "raison": "theme « demarrage » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-apport-disabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-auditd-enabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-autofs-disabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-avahi-daemon-disabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-bluetooth-disabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-chronyd-disabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-chronyd-enabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-chronyd-or-ntpd-enabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-cron-enabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-cups-disabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-dnsmasq-disabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-dovecot-disabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-named-disabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-nfs-disabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-nftables-disabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-nftables-enabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-nginx-disabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-rpcbind-disabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-rsyslog-enabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-slapd-disabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-snmpd-disabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-squid-disabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-sssd-enabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-systemd-journal-upload-enabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-systemd-journald-enabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-timesyncd-disabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-timesyncd-enabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-ufw-enabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-vsftpd-disabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-xinetd-disabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-service-ypserv-disabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-socket-systemd-journal-remote-disabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-fs-protected-fifos",
+   "raison": "theme « parametres-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-fs-protected-hardlinks",
+   "raison": "theme « parametres-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-fs-protected-regular",
+   "raison": "theme « parametres-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-fs-protected-symlinks",
+   "raison": "theme « parametres-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-fs-suid-dumpable",
+   "raison": "theme « parametres-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-kernel-dmesg-restrict",
+   "raison": "theme « parametres-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-kernel-kptr-restrict",
+   "raison": "theme « parametres-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-kernel-modules-disabled",
+   "raison": "theme « modules-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-kernel-panic-on-oops",
+   "raison": "theme « parametres-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-kernel-perf-cpu-time-max-percent",
+   "raison": "theme « parametres-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-kernel-perf-event-max-sample-rate",
+   "raison": "theme « parametres-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-kernel-perf-event-paranoid",
+   "raison": "theme « parametres-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-kernel-pid-max",
+   "raison": "theme « parametres-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-kernel-randomize-va-space",
+   "raison": "theme « parametres-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-kernel-sysrq",
+   "raison": "theme « parametres-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-kernel-unprivileged-bpf-disabled",
+   "raison": "theme « parametres-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-kernel-yama-ptrace-scope",
+   "raison": "theme « parametres-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-core-bpf-jit-harden",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv4-conf-all-accept-local",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv4-conf-all-accept-redirects",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv4-conf-all-accept-source-route",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv4-conf-all-arp-filter",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv4-conf-all-arp-ignore",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv4-conf-all-drop-gratuitous-arp",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv4-conf-all-log-martians",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv4-conf-all-route-localnet",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv4-conf-all-rp-filter",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv4-conf-all-secure-redirects",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv4-conf-all-send-redirects",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv4-conf-all-shared-media",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv4-conf-default-accept-redirects",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv4-conf-default-accept-source-route",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv4-conf-default-log-martians",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv4-conf-default-rp-filter",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv4-conf-default-secure-redirects",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv4-conf-default-send-redirects",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv4-conf-default-shared-media",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv4-icmp-echo-ignore-broadcasts",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv4-icmp-ignore-bogus-error-responses",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv4-ip-forward",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv4-tcp-rfc1337",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv4-tcp-syncookies",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv6-conf-all-accept-ra-defrtr",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv6-conf-all-accept-ra-pinfo",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv6-conf-all-accept-ra-rtr-pref",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv6-conf-all-accept-ra",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv6-conf-all-accept-redirects",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv6-conf-all-accept-source-route",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv6-conf-all-autoconf",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv6-conf-all-forwarding",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv6-conf-all-max-addresses",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv6-conf-all-router-solicitations",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv6-conf-default-accept-ra-defrtr",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv6-conf-default-accept-ra-pinfo",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv6-conf-default-accept-ra-rtr-pref",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv6-conf-default-accept-ra",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv6-conf-default-accept-redirects",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv6-conf-default-accept-source-route",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv6-conf-default-autoconf",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv6-conf-default-max-addresses",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-net-ipv6-conf-default-router-solicitations",
+   "raison": "theme « parametres-reseau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-sysctl-vm-mmap-min-addr",
+   "raison": "theme « parametres-noyau » : noyau d'un conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "cac-timer-logrotate-enabled",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  },
+  {
+   "fiche": "journaux-authentification",
+   "raison": "commande « systemctl » : conteneur ≠ vraie machine"
+  }
+ ],
+ "verdicts": {
+  "ecart": 160,
+  "conforme": 212,
+  "indetermine": 125
+ },
+ "defauts_de_fiche": [
+  "cac-dir-perms-world-writable-root-owned : delai depasse : find / -xdev -type d -perm -0002 -uid +0 -print 2>/dev/null"
+ ],
+ "detail": [
+  {
+   "fiche": "cac-account-disable-post-pw-expiration",
+   "verdicts": [
+    {
+     "controle": "INACTIVE entre 0 et 45",
+     "statut": "ecart",
+     "constate": "INACTIVE non defini (defaut : -1)",
+     "motif": "attendu entre 0 et 45"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-account-unique-id",
+   "verdicts": [
+    {
+     "controle": "aucun UID en double",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-account-unique-name",
+   "verdicts": [
+    {
+     "controle": "aucun nom en double",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-maximum-age-login-defs",
+   "verdicts": [
+    {
+     "controle": "PASS_MAX_DAYS entre 1 et 365",
+     "statut": "ecart",
+     "constate": "PASS_MAX_DAYS\t99999",
+     "motif": "attendu entre 1 et 365"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-minimum-age-login-defs",
+   "verdicts": [
+    {
+     "controle": "PASS_MIN_DAYS au moins 1",
+     "statut": "ecart",
+     "constate": "PASS_MIN_DAYS\t0",
+     "motif": "attendu au moins 1"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-no-uid-except-zero",
+   "verdicts": [
+    {
+     "controle": "aucun autre compte en UID 0",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-password-all-shadowed",
+   "verdicts": [
+    {
+     "controle": "2e champ de /etc/passwd = x pour tous les comptes",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-password-last-change-is-in-past",
+   "verdicts": [
+    {
+     "controle": "date de dernier changement dans le passe pour tous",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-password-pam-dcredit",
+   "verdicts": [
+    {
+     "controle": "dcredit au plus -1",
+     "statut": "ecart",
+     "constate": "dcredit non defini (defaut : 0)",
+     "motif": "attendu au plus -1"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-password-pam-dictcheck",
+   "verdicts": [
+    {
+     "controle": "dictcheck 1",
+     "statut": "ecart",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-password-pam-difok",
+   "verdicts": [
+    {
+     "controle": "difok au moins 2",
+     "statut": "ecart",
+     "constate": "difok non defini (defaut : 1)",
+     "motif": "attendu au moins 2"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-password-pam-enforce-root",
+   "verdicts": [
+    {
+     "controle": "« enforce_for_root » present",
+     "statut": "ecart",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-password-pam-lcredit",
+   "verdicts": [
+    {
+     "controle": "lcredit au plus -1",
+     "statut": "ecart",
+     "constate": "lcredit non defini (defaut : 0)",
+     "motif": "attendu au plus -1"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-password-pam-maxrepeat",
+   "verdicts": [
+    {
+     "controle": "maxrepeat entre 1 et 3",
+     "statut": "ecart",
+     "constate": "maxrepeat non defini (defaut : 0)",
+     "motif": "attendu entre 1 et 3"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-password-pam-maxsequence",
+   "verdicts": [
+    {
+     "controle": "maxsequence entre 1 et 3",
+     "statut": "ecart",
+     "constate": "maxsequence non defini (defaut : 0)",
+     "motif": "attendu entre 1 et 3"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-password-pam-minclass",
+   "verdicts": [
+    {
+     "controle": "minclass au moins 4",
+     "statut": "ecart",
+     "constate": "minclass non defini (defaut : 0)",
+     "motif": "attendu au moins 4"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-password-pam-minlen",
+   "verdicts": [
+    {
+     "controle": "minlen au moins 14",
+     "statut": "ecart",
+     "constate": "minlen non defini (defaut : 8)",
+     "motif": "attendu au moins 14"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-password-pam-ocredit",
+   "verdicts": [
+    {
+     "controle": "ocredit au plus -1",
+     "statut": "ecart",
+     "constate": "ocredit non defini (defaut : 0)",
+     "motif": "attendu au plus -1"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-password-pam-pwhistory-enabled",
+   "verdicts": [
+    {
+     "controle": "password pam_pwhistory.so",
+     "statut": "ecart",
+     "constate": "pam_pwhistory.so absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-password-pam-pwhistory-enforce-root",
+   "verdicts": [
+    {
+     "controle": "password pam_pwhistory.so enforce_for_root",
+     "statut": "ecart",
+     "constate": "pam_pwhistory.so absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-password-pam-pwhistory-use-authtok",
+   "verdicts": [
+    {
+     "controle": "password pam_pwhistory.so use_authtok",
+     "statut": "ecart",
+     "constate": "pam_pwhistory.so absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-password-pam-pwquality-enabled",
+   "verdicts": [
+    {
+     "controle": "password pam_pwquality.so",
+     "statut": "ecart",
+     "constate": "pam_pwquality.so absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-password-pam-retry",
+   "verdicts": [
+    {
+     "controle": "password pam_pwquality.so retry<=3",
+     "statut": "ecart",
+     "constate": "pam_pwquality.so absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-password-pam-ucredit",
+   "verdicts": [
+    {
+     "controle": "ucredit au plus -1",
+     "statut": "ecart",
+     "constate": "ucredit non defini (defaut : 0)",
+     "motif": "attendu au plus -1"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-password-pam-unix-authtok",
+   "verdicts": [
+    {
+     "controle": "password pam_unix.so use_authtok",
+     "statut": "ecart",
+     "constate": "pam_unix.so : use_authtok absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-password-pam-unix-enabled",
+   "verdicts": [
+    {
+     "controle": "auth pam_unix.so",
+     "statut": "conforme",
+     "constate": "pam_unix.so nullok",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-password-pam-unix-no-remember",
+   "verdicts": [
+    {
+     "controle": "remember absent de pam_unix",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-password-set-max-life-existing",
+   "verdicts": [
+    {
+     "controle": "5e champ de /etc/shadow entre 1 et 365",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-password-set-max-life-root",
+   "verdicts": [
+    {
+     "controle": "duree maximale de root entre 1 et 365",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-password-set-min-life-existing",
+   "verdicts": [
+    {
+     "controle": "4e champ de /etc/shadow au moins 1",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-password-warn-age-login-defs",
+   "verdicts": [
+    {
+     "controle": "PASS_WARN_AGE au moins 7",
+     "statut": "conforme",
+     "constate": "PASS_WARN_AGE\t7",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-passwords-pam-faillock-deny-root",
+   "verdicts": [
+    {
+     "controle": "« even_deny_root » present",
+     "statut": "ecart",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-passwords-pam-faillock-deny",
+   "verdicts": [
+    {
+     "controle": "deny entre 1 et 4",
+     "statut": "ecart",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-passwords-pam-faillock-enabled",
+   "verdicts": [
+    {
+     "controle": "auth pam_faillock.so",
+     "statut": "ecart",
+     "constate": "pam_faillock.so absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-passwords-pam-faillock-interval",
+   "verdicts": [
+    {
+     "controle": "fail_interval au moins 900",
+     "statut": "ecart",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-passwords-pam-faillock-root-unlock-time",
+   "verdicts": [
+    {
+     "controle": "root_unlock_time au moins 60",
+     "statut": "ecart",
+     "constate": "aucune valeur persistante",
+     "motif": "root_unlock_time n'est fixe dans aucun fichier : la valeur ne survit pas au redemarrage"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-passwords-pam-faillock-unlock-time",
+   "verdicts": [
+    {
+     "controle": "unlock_time au moins 900",
+     "statut": "ecart",
+     "constate": "unlock_time non defini (defaut : 600)",
+     "motif": "attendu au moins 900"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-polyinstantiated-tmp",
+   "verdicts": [
+    {
+     "controle": "« /tmp /tmp/tmp-inst/ level root,adm » dans namespace.conf",
+     "statut": "ecart",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-polyinstantiated-var-tmp",
+   "verdicts": [
+    {
+     "controle": "« /var/tmp /var/tmp/tmp-inst/ level root,adm » dans namespace.conf",
+     "statut": "ecart",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-root-gid-zero",
+   "verdicts": [
+    {
+     "controle": "root en GID 0",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-root-path-dirs-no-write",
+   "verdicts": [
+    {
+     "controle": "droits <= 0755",
+     "statut": "conforme",
+     "constate": "6 fichier(s) conforme(s)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-set-post-pw-existing",
+   "verdicts": [
+    {
+     "controle": "7e champ de /etc/shadow entre 0 et 45",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-tmout",
+   "verdicts": [
+    {
+     "controle": "TMOUT entre 1 et 900, readonly",
+     "statut": "ecart",
+     "constate": "aucune valeur persistante",
+     "motif": "TMOUT n'est fixe dans aucun fichier : la valeur ne survit pas au redemarrage"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-umask-etc-bashrc",
+   "verdicts": [
+    {
+     "controle": "umask au moins aussi strict que 027",
+     "statut": "ecart",
+     "constate": "aucune valeur persistante",
+     "motif": "umask n'est fixe dans aucun fichier : la valeur ne survit pas au redemarrage"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-umask-etc-login-defs",
+   "verdicts": [
+    {
+     "controle": "UMASK au moins aussi strict que 027",
+     "statut": "ecart",
+     "constate": "UMASK\t\t022",
+     "motif": "attendu umask au moins aussi strict que 027"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-umask-etc-profile",
+   "verdicts": [
+    {
+     "controle": "umask au moins aussi strict que 027",
+     "statut": "ecart",
+     "constate": "aucune valeur persistante",
+     "motif": "umask n'est fixe dans aucun fichier : la valeur ne survit pas au redemarrage"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-umask-root",
+   "verdicts": [
+    {
+     "controle": "umask de root au moins aussi strict que 0027",
+     "statut": "ecart",
+     "constate": "aucune valeur persistante",
+     "motif": "umask n'est fixe dans aucun fichier : la valeur ne survit pas au redemarrage"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-user-dot-group-ownership",
+   "verdicts": [
+    {
+     "controle": "groupe = groupe principal",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-user-dot-user-ownership",
+   "verdicts": [
+    {
+     "controle": "proprietaire = utilisateur",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-user-interactive-home-directory-exists",
+   "verdicts": [
+    {
+     "controle": "repertoires personnels presents",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-users-home-files-groupownership",
+   "verdicts": [
+    {
+     "controle": "groupe = groupe principal ou groupe dont l'utilisateur est membre",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-users-home-files-ownership",
+   "verdicts": [
+    {
+     "controle": "aucun fichier orphelin",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-accounts-users-home-files-permissions",
+   "verdicts": [
+    {
+     "controle": "pas d'ecriture groupe ni d'acces pour les autres",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-aide-build-database",
+   "verdicts": [
+    {
+     "controle": "/var/lib/aide/aide.db present",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-aide-check-audit-tools",
+   "verdicts": [
+    {
+     "controle": "les 6 outils d'audit surveilles",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-aide-scan-notification",
+   "verdicts": [
+    {
+     "controle": "rapport envoye a root@localhost",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-aide-verify-acls",
+   "verdicts": [
+    {
+     "controle": "acl dans les regles",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-aide-verify-ext-attributes",
+   "verdicts": [
+    {
+     "controle": "xattrs dans les regles",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-all-apparmor-profiles-enforced",
+   "verdicts": [
+    {
+     "controle": "0 profil complain, 0 processus non confine",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-all-apparmor-profiles-in-enforce-complain-mode",
+   "verdicts": [
+    {
+     "controle": "0 processus non confine avec profil",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-dac-modification-chmod",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S chmod (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour chmod",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-dac-modification-chown",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S chown (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour chown",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-dac-modification-fchmod",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S fchmod (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour fchmod",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-dac-modification-fchmodat",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S fchmodat (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour fchmodat",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-dac-modification-fchmodat2",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S fchmodat2 (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour fchmodat2",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-dac-modification-fchown",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S fchown (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour fchown",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-dac-modification-fchownat",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S fchownat (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour fchownat",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-dac-modification-fremovexattr",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S fremovexattr (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour fremovexattr",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-dac-modification-fsetxattr",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S fsetxattr (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour fsetxattr",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-dac-modification-lchown",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S lchown (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour lchown",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-dac-modification-lremovexattr",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S lremovexattr (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour lremovexattr",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-dac-modification-lsetxattr",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S lsetxattr (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour lsetxattr",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-dac-modification-removexattr",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S removexattr (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour removexattr",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-dac-modification-setxattr",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S setxattr (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour setxattr",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-dac-modification-umount2",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S umount2 (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour umount2",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-execution-chacl",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -F path=/usr/bin/chacl -F perm=x",
+     "statut": "ecart",
+     "constate": "execution de /usr/bin/chacl non auditee",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-execution-chcon",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -F path=/usr/bin/chcon -F perm=x",
+     "statut": "ecart",
+     "constate": "execution de /usr/bin/chcon non auditee",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-execution-setfacl",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -F path=/usr/bin/setfacl -F perm=x",
+     "statut": "ecart",
+     "constate": "execution de /usr/bin/setfacl non auditee",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-file-deletion-events-rename",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S rename (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour rename",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-file-deletion-events-renameat",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S renameat (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour renameat",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-file-deletion-events-renameat2",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S renameat2 (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour renameat2",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-file-deletion-events-rmdir",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S rmdir (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour rmdir",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-file-deletion-events-unlink",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S unlink (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour unlink",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-file-deletion-events-unlinkat",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S unlinkat (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour unlinkat",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-immutable",
+   "verdicts": [
+    {
+     "controle": "derniere regle = -e 2",
+     "statut": "ecart",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-kernel-module-loading-delete",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S delete_module (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour delete_module",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-kernel-module-loading-finit",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S finit_module (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour finit_module",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-kernel-module-loading-init",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S init_module (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour init_module",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-login-events-faillock",
+   "verdicts": [
+    {
+     "controle": "-w /var/run/faillock -p wa",
+     "statut": "ecart",
+     "constate": "aucune surveillance de /var/run/faillock (-w /var/run/faillock -p aw)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-login-events-lastlog",
+   "verdicts": [
+    {
+     "controle": "-w /var/log/lastlog -p wa",
+     "statut": "ecart",
+     "constate": "aucune surveillance de /var/log/lastlog (-w /var/log/lastlog -p aw)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-mac-modification-etc-apparmor-d",
+   "verdicts": [
+    {
+     "controle": "-w /etc/apparmor.d -p wa",
+     "statut": "ecart",
+     "constate": "aucune surveillance de /etc/apparmor.d (-w /etc/apparmor.d -p aw)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-mac-modification-etc-apparmor",
+   "verdicts": [
+    {
+     "controle": "-w /etc/apparmor -p wa",
+     "statut": "ecart",
+     "constate": "aucune surveillance de /etc/apparmor (-w /etc/apparmor -p aw)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-mac-modification",
+   "verdicts": [
+    {
+     "controle": "-w /etc/apparmor/ -p wa; -w /etc/apparmor.d/ -p wa",
+     "statut": "ecart",
+     "constate": "aucune surveillance de /etc/apparmor/ (-w /etc/apparmor/ -p aw)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-media-export",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S mount (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour mount",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-networkconfig-modification",
+   "verdicts": [
+    {
+     "controle": "-w /etc/issue -p wa; -w /etc/issue.net -p wa; -w /etc/hosts -p wa; -w /etc/networks -p wa; -w /etc/network/ -p wa; -a always,exit -S sethostname; -a always,exit -S setdomainname",
+     "statut": "ecart",
+     "constate": "aucune surveillance de /etc/issue (-w /etc/issue -p aw)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-privileged-commands-insmod",
+   "verdicts": [
+    {
+     "controle": "-w /sbin/insmod -p x",
+     "statut": "ecart",
+     "constate": "execution de /sbin/insmod non auditee",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-privileged-commands-kmod",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -F path=/usr/bin/kmod -F perm=x",
+     "statut": "ecart",
+     "constate": "execution de /usr/bin/kmod non auditee",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-privileged-commands-modprobe",
+   "verdicts": [
+    {
+     "controle": "-w /sbin/modprobe -p x",
+     "statut": "ecart",
+     "constate": "execution de /sbin/modprobe non auditee",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-privileged-commands-rmmod",
+   "verdicts": [
+    {
+     "controle": "-w /sbin/rmmod -p x",
+     "statut": "ecart",
+     "constate": "execution de /sbin/rmmod non auditee",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-privileged-commands-sudo",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -F path=/usr/bin/sudo -F perm=x",
+     "statut": "ecart",
+     "constate": "execution de /usr/bin/sudo non auditee",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-privileged-commands-usermod",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -F path=/usr/sbin/usermod -F perm=x",
+     "statut": "ecart",
+     "constate": "execution de /usr/sbin/usermod non auditee",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-session-events-btmp",
+   "verdicts": [
+    {
+     "controle": "-w /var/log/btmp -p wa",
+     "statut": "ecart",
+     "constate": "aucune surveillance de /var/log/btmp (-w /var/log/btmp -p aw)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-session-events-utmp",
+   "verdicts": [
+    {
+     "controle": "-w /var/run/utmp -p wa",
+     "statut": "ecart",
+     "constate": "aucune surveillance de /var/run/utmp (-w /var/run/utmp -p aw)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-session-events-wtmp",
+   "verdicts": [
+    {
+     "controle": "-w /var/log/wtmp -p wa",
+     "statut": "ecart",
+     "constate": "aucune surveillance de /var/log/wtmp (-w /var/log/wtmp -p aw)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-session-events",
+   "verdicts": [
+    {
+     "controle": "-w /var/run/utmp -p wa; -w /var/log/wtmp -p wa; -w /var/log/btmp -p wa",
+     "statut": "ecart",
+     "constate": "aucune surveillance de /var/run/utmp (-w /var/run/utmp -p aw)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-suid-auid-privilege-function",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S execve -F euid!=uid",
+     "statut": "ecart",
+     "constate": "aucune regle pour execve (euid!=uid)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-sysadmin-actions",
+   "verdicts": [
+    {
+     "controle": "-w /etc/sudoers -p wa; -w /etc/sudoers.d/ -p wa",
+     "statut": "ecart",
+     "constate": "aucune surveillance de /etc/sudoers (-w /etc/sudoers -p aw)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-time-adjtimex",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S adjtimex",
+     "statut": "ecart",
+     "constate": "aucune regle pour adjtimex",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-time-clock-settime",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S clock_settime -F a0=0x0",
+     "statut": "ecart",
+     "constate": "aucune regle pour clock_settime (a0=0x0)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-time-settimeofday",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S settimeofday",
+     "statut": "ecart",
+     "constate": "aucune regle pour settimeofday",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-time-watch-localtime",
+   "verdicts": [
+    {
+     "controle": "-w /etc/localtime -p wa",
+     "statut": "ecart",
+     "constate": "aucune surveillance de /etc/localtime (-w /etc/localtime -p aw)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-unsuccessful-file-modification-creat",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S creat (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour creat (exit=-EACCES); aucune regle pour creat (exit=-EPERM)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-unsuccessful-file-modification-ftruncate",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S ftruncate (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour ftruncate (exit=-EACCES); aucune regle pour ftruncate (exit=-EPERM)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-unsuccessful-file-modification-open",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S open (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour open (exit=-EACCES); aucune regle pour open (exit=-EPERM)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-unsuccessful-file-modification-openat",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S openat (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour openat (exit=-EACCES); aucune regle pour openat (exit=-EPERM)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-unsuccessful-file-modification-truncate",
+   "verdicts": [
+    {
+     "controle": "-a always,exit -S truncate (b32 et b64)",
+     "statut": "ecart",
+     "constate": "aucune regle pour truncate (exit=-EACCES); aucune regle pour truncate (exit=-EPERM)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-usergroup-modification-group",
+   "verdicts": [
+    {
+     "controle": "-w /etc/group -p wa",
+     "statut": "ecart",
+     "constate": "aucune surveillance de /etc/group (-w /etc/group -p aw)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-usergroup-modification-gshadow",
+   "verdicts": [
+    {
+     "controle": "-w /etc/gshadow -p wa",
+     "statut": "ecart",
+     "constate": "aucune surveillance de /etc/gshadow (-w /etc/gshadow -p aw)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-usergroup-modification-nsswitch-conf",
+   "verdicts": [
+    {
+     "controle": "-w /etc/nsswitch.conf -p wa",
+     "statut": "ecart",
+     "constate": "aucune surveillance de /etc/nsswitch.conf (-w /etc/nsswitch.conf -p aw)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-usergroup-modification-opasswd",
+   "verdicts": [
+    {
+     "controle": "-w /etc/security/opasswd -p wa",
+     "statut": "ecart",
+     "constate": "aucune surveillance de /etc/security/opasswd (-w /etc/security/opasswd -p aw)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-usergroup-modification-pam-conf",
+   "verdicts": [
+    {
+     "controle": "-w /etc/pam.conf -p wa",
+     "statut": "ecart",
+     "constate": "aucune surveillance de /etc/pam.conf (-w /etc/pam.conf -p aw)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-usergroup-modification-pamd",
+   "verdicts": [
+    {
+     "controle": "-w /etc/pam.d/ -p wa",
+     "statut": "ecart",
+     "constate": "aucune surveillance de /etc/pam.d/ (-w /etc/pam.d/ -p aw)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-usergroup-modification-passwd",
+   "verdicts": [
+    {
+     "controle": "-w /etc/passwd -p wa",
+     "statut": "ecart",
+     "constate": "aucune surveillance de /etc/passwd (-w /etc/passwd -p aw)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-rules-usergroup-modification-shadow",
+   "verdicts": [
+    {
+     "controle": "-w /etc/shadow -p wa",
+     "statut": "ecart",
+     "constate": "aucune surveillance de /etc/shadow (-w /etc/shadow -p aw)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-audit-sudo-log-events",
+   "verdicts": [
+    {
+     "controle": "-w /var/log/sudo.log -p wa",
+     "statut": "ecart",
+     "constate": "aucune surveillance de /var/log/sudo.log (-w /var/log/sudo.log -p aw)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-auditd-data-disk-error-action",
+   "verdicts": [
+    {
+     "controle": "disk_error_action dans syslog|single|halt",
+     "statut": "ecart",
+     "constate": "disk_error_action = SUSPEND",
+     "motif": "attendu syslog|single|halt"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-auditd-data-disk-full-action",
+   "verdicts": [
+    {
+     "controle": "disk_full_action dans halt|single",
+     "statut": "ecart",
+     "constate": "disk_full_action = SUSPEND",
+     "motif": "attendu halt|single"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-auditd-data-retention-action-mail-acct",
+   "verdicts": [
+    {
+     "controle": "action_mail_acct = root",
+     "statut": "conforme",
+     "constate": "action_mail_acct = root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-auditd-data-retention-admin-space-left-action",
+   "verdicts": [
+    {
+     "controle": "admin_space_left_action = halt (ou single)",
+     "statut": "ecart",
+     "constate": "admin_space_left_action = SUSPEND",
+     "motif": "attendu halt"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-auditd-data-retention-max-log-file-action",
+   "verdicts": [
+    {
+     "controle": "max_log_file_action = keep_logs",
+     "statut": "ecart",
+     "constate": "max_log_file_action = ROTATE",
+     "motif": "attendu keep_logs"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-auditd-data-retention-max-log-file",
+   "verdicts": [
+    {
+     "controle": "max_log_file au moins 6",
+     "statut": "conforme",
+     "constate": "max_log_file = 8",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-auditd-data-retention-space-left-action",
+   "verdicts": [
+    {
+     "controle": "space_left_action = email",
+     "statut": "ecart",
+     "constate": "space_left_action = SYSLOG",
+     "motif": "attendu email"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-check-ufw-active",
+   "verdicts": [],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-chronyd-configure-pool-and-server",
+   "verdicts": [
+    {
+     "controle": "au moins une ligne server ou pool",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-chronyd-run-as-chrony-user",
+   "verdicts": [
+    {
+     "controle": "user _chrony (ou absent)",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-chronyd-specify-remote-server",
+   "verdicts": [
+    {
+     "controle": "au moins une source distante",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-dconf-gnome-banner-enabled",
+   "verdicts": [
+    {
+     "controle": "banner-message-enable=true",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-dconf-gnome-disable-automount-open",
+   "verdicts": [
+    {
+     "controle": "automount-open=false",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-dconf-gnome-disable-automount",
+   "verdicts": [
+    {
+     "controle": "automount=false",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-dconf-gnome-disable-autorun",
+   "verdicts": [
+    {
+     "controle": "autorun-never=true",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-dconf-gnome-disable-user-list",
+   "verdicts": [
+    {
+     "controle": "disable-user-list=true",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-dconf-gnome-login-banner-text",
+   "verdicts": [
+    {
+     "controle": "banner-message-text renseigne",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-dconf-gnome-screensaver-idle-delay",
+   "verdicts": [
+    {
+     "controle": "idle-delay entre 1 et 900",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-dconf-gnome-screensaver-lock-delay",
+   "verdicts": [
+    {
+     "controle": "lock-delay entre 0 et 5",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-dconf-gnome-screensaver-lock-enabled",
+   "verdicts": [
+    {
+     "controle": "lock-enabled=true",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-dir-perms-world-writable-root-owned",
+   "verdicts": [
+    {
+     "controle": "proprietaire root",
+     "statut": "indetermine",
+     "constate": "commande impossible",
+     "motif": "commande introuvable ou interrompue sur ce systeme : rien a juger"
+    }
+   ],
+   "defauts": [
+    "delai depasse : find / -xdev -type d -perm -0002 -uid +0 -print 2>/dev/null"
+   ]
+  },
+  {
+   "fiche": "cac-dir-perms-world-writable-sticky-bits",
+   "verdicts": [
+    {
+     "controle": "bit sticky sur tout repertoire modifiable par tous",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-dir-system-commands-group-root-owned",
+   "verdicts": [
+    {
+     "controle": "groupe root",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-dir-system-commands-root-owned",
+   "verdicts": [
+    {
+     "controle": "proprietaire root",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-directory-groupowner-etc-ipsecd",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-directory-groupowner-etc-iptables",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-directory-groupowner-etc-nftables",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-directory-groupowner-etc-selinux",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "conforme",
+     "constate": "/etc/selinux/ root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-directory-groupowner-etc-sudoersd",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "conforme",
+     "constate": "/etc/sudoers.d/ root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-directory-owner-etc-ipsecd",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-directory-owner-etc-iptables",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-directory-owner-etc-nftables",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-directory-owner-etc-selinux",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "/etc/selinux/ root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-directory-owner-etc-sudoersd",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "/etc/sudoers.d/ root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-directory-permissions-etc-ipsecd",
+   "verdicts": [
+    {
+     "controle": "droits <= 0700",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-directory-permissions-etc-iptables",
+   "verdicts": [
+    {
+     "controle": "droits <= 0700",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-directory-permissions-etc-nftables",
+   "verdicts": [
+    {
+     "controle": "droits <= 0700",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-directory-permissions-etc-selinux",
+   "verdicts": [
+    {
+     "controle": "droits <= 0755",
+     "statut": "conforme",
+     "constate": "/etc/selinux/ 755",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-directory-permissions-etc-sudoersd",
+   "verdicts": [
+    {
+     "controle": "droits <= 0750",
+     "statut": "ecart",
+     "constate": "/etc/sudoers.d/ en 755 (au plus 0750)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-directory-permissions-var-log-audit",
+   "verdicts": [
+    {
+     "controle": "droits <= 0750",
+     "statut": "conforme",
+     "constate": "/var/log/audit 750",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-disable-host-auth",
+   "verdicts": [
+    {
+     "controle": "HostbasedAuthentication = no",
+     "statut": "conforme",
+     "constate": "hostbasedauthentication no",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-enable-pam-namespace",
+   "verdicts": [
+    {
+     "controle": "session pam_namespace.so",
+     "statut": "ecart",
+     "constate": "pam_namespace.so absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-ensure-logrotate-activated",
+   "verdicts": [
+    {
+     "controle": "rotation daily dans logrotate.conf",
+     "statut": "ecart",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-ensure-pam-wheel-group-empty",
+   "verdicts": [
+    {
+     "controle": "groupe sugroup present et vide",
+     "statut": "ecart",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-ensure-root-access-controlled",
+   "verdicts": [
+    {
+     "controle": "root avec un mot de passe defini ou verrouille",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-ensure-shadow-group-empty",
+   "verdicts": [
+    {
+     "controle": "groupe shadow sans membre",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-at-allow-exists",
+   "verdicts": [
+    {
+     "controle": "/etc/at.allow present",
+     "statut": "ecart",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-cron-allow-exists",
+   "verdicts": [
+    {
+     "controle": "/etc/cron.allow present",
+     "statut": "ecart",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-cron-deny-not-exist",
+   "verdicts": [
+    {
+     "controle": "/etc/cron.deny absent",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-at-allow",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-at-deny",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-backup-etc-group",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "conforme",
+     "constate": "/etc/group- root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-backup-etc-gshadow",
+   "verdicts": [
+    {
+     "controle": "groupe = shadow",
+     "statut": "conforme",
+     "constate": "/etc/gshadow- shadow",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-backup-etc-passwd",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "conforme",
+     "constate": "/etc/passwd- root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-backup-etc-shadow",
+   "verdicts": [
+    {
+     "controle": "groupe = shadow",
+     "statut": "conforme",
+     "constate": "/etc/shadow- shadow",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-cron-d",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "conforme",
+     "constate": "/etc/cron.d/ root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-cron-daily",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "conforme",
+     "constate": "/etc/cron.daily/ root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-cron-hourly",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "conforme",
+     "constate": "/etc/cron.hourly/ root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-cron-monthly",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "conforme",
+     "constate": "/etc/cron.monthly/ root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-cron-weekly",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "conforme",
+     "constate": "/etc/cron.weekly/ root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-crontab",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "conforme",
+     "constate": "/etc/crontab root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-etc-chrony-keys",
+   "verdicts": [
+    {
+     "controle": "groupe = chrony",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-etc-crypttab",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-etc-group",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "conforme",
+     "constate": "/etc/group root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-etc-gshadow",
+   "verdicts": [
+    {
+     "controle": "groupe = shadow",
+     "statut": "conforme",
+     "constate": "/etc/gshadow shadow",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-etc-ipsec-conf",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-etc-ipsec-secrets",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-etc-issue-net",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "conforme",
+     "constate": "/etc/issue.net root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-etc-issue",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "conforme",
+     "constate": "/etc/issue root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-etc-motd",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-etc-passwd",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "conforme",
+     "constate": "/etc/passwd root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-etc-security-opasswd-old",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-etc-security-opasswd",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "conforme",
+     "constate": "/etc/security/opasswd root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-etc-sestatus-conf",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-etc-shadow",
+   "verdicts": [
+    {
+     "controle": "groupe = shadow",
+     "statut": "conforme",
+     "constate": "/etc/shadow shadow",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-etc-shells",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "conforme",
+     "constate": "/etc/shells root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-etc-sudoers",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "conforme",
+     "constate": "/etc/sudoers root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-sshd-config",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "conforme",
+     "constate": "/etc/ssh/sshd_config root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-sshd-drop-in-config",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-systemmap",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-var-log-auth",
+   "verdicts": [
+    {
+     "controle": "groupe = adm ou root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-var-log-cloud-init",
+   "verdicts": [
+    {
+     "controle": "groupe = adm ou root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-var-log-journal",
+   "verdicts": [
+    {
+     "controle": "groupe = systemd-journal ou root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-var-log-lastlog",
+   "verdicts": [
+    {
+     "controle": "groupe = utmp ou root",
+     "statut": "conforme",
+     "constate": "/var/log/lastlog utmp",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-var-log-localmessages",
+   "verdicts": [
+    {
+     "controle": "groupe = adm ou root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-var-log-secure",
+   "verdicts": [
+    {
+     "controle": "groupe = adm ou root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-var-log-waagent",
+   "verdicts": [
+    {
+     "controle": "groupe = adm ou root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupowner-var-log-wbtmp",
+   "verdicts": [
+    {
+     "controle": "groupe = utmp ou root",
+     "statut": "conforme",
+     "constate": "2 fichier(s) conforme(s)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupownership-audit-configuration",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "conforme",
+     "constate": "2 fichier(s) conforme(s)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupownership-home-directories",
+   "verdicts": [
+    {
+     "controle": "groupe = groupe principal",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupownership-sshd-pub-key",
+   "verdicts": [
+    {
+     "controle": "groupe = root",
+     "statut": "conforme",
+     "constate": "3 fichier(s) conforme(s)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupownership-system-commands-dirs",
+   "verdicts": [
+    {
+     "controle": "groupe root ou systeme (GID < 1000)",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupownerships-var-log-apt",
+   "verdicts": [
+    {
+     "controle": "groupe = adm ou root",
+     "statut": "conforme",
+     "constate": "3 fichier(s) conforme(s)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupownerships-var-log-gdm",
+   "verdicts": [
+    {
+     "controle": "groupe = gdm ou root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupownerships-var-log-gdm3",
+   "verdicts": [
+    {
+     "controle": "groupe = gdm ou gdm3 ou root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupownerships-var-log-landscape",
+   "verdicts": [
+    {
+     "controle": "groupe = root ou landscape",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-groupownerships-var-log-sssd",
+   "verdicts": [
+    {
+     "controle": "groupe = sssd ou root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-at-allow",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-at-deny",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-backup-etc-group",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "/etc/group- root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-backup-etc-gshadow",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "/etc/gshadow- root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-backup-etc-passwd",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "/etc/passwd- root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-backup-etc-shadow",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "/etc/shadow- root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-cron-allow",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-cron-d",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "/etc/cron.d/ root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-cron-daily",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "/etc/cron.daily/ root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-cron-hourly",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "/etc/cron.hourly/ root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-cron-monthly",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "/etc/cron.monthly/ root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-cron-weekly",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "/etc/cron.weekly/ root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-crontab",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "/etc/crontab root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-etc-chrony-keys",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-etc-crypttab",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-etc-group",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "/etc/group root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-etc-gshadow",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "/etc/gshadow root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-etc-ipsec-conf",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-etc-ipsec-secrets",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-etc-issue-net",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "/etc/issue.net root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-etc-issue",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "/etc/issue root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-etc-motd",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-etc-passwd",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "/etc/passwd root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-etc-security-opasswd-old",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-etc-security-opasswd",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "/etc/security/opasswd root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-etc-sestatus-conf",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-etc-shadow",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "/etc/shadow root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-etc-shells",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "/etc/shells root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-etc-sudoers",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "/etc/sudoers root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-sshd-config",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "/etc/ssh/sshd_config root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-sshd-drop-in-config",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-systemmap",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-var-log-auth",
+   "verdicts": [
+    {
+     "controle": "proprietaire = syslog ou root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-var-log-cloud-init",
+   "verdicts": [
+    {
+     "controle": "proprietaire = syslog ou root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-var-log-journal",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-var-log-lastlog",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "/var/log/lastlog root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-var-log-localmessages",
+   "verdicts": [
+    {
+     "controle": "proprietaire = syslog ou root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-var-log-secure",
+   "verdicts": [
+    {
+     "controle": "proprietaire = syslog ou root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-var-log-waagent",
+   "verdicts": [
+    {
+     "controle": "proprietaire = syslog ou root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-owner-var-log-wbtmp",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "2 fichier(s) conforme(s)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-ownership-audit-configuration",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "2 fichier(s) conforme(s)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-ownership-binary-dirs",
+   "verdicts": [
+    {
+     "controle": "proprietaire root",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-ownership-home-directories",
+   "verdicts": [
+    {
+     "controle": "proprietaire = utilisateur",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-ownership-sshd-private-key",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "3 fichier(s) conforme(s)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-ownership-sshd-pub-key",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "3 fichier(s) conforme(s)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-ownership-var-log-audit-stig",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-ownerships-var-log-apt",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "conforme",
+     "constate": "3 fichier(s) conforme(s)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-ownerships-var-log-gdm",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-ownerships-var-log-gdm3",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-ownerships-var-log-landscape",
+   "verdicts": [
+    {
+     "controle": "proprietaire = root ou landscape",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-ownerships-var-log-sssd",
+   "verdicts": [
+    {
+     "controle": "proprietaire = sssd ou root",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permission-user-bash-history",
+   "verdicts": [
+    {
+     "controle": ".bash_history en 0600 au plus",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permission-user-init-files",
+   "verdicts": [
+    {
+     "controle": "pas d'ecriture pour le groupe ni les autres",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-backup-etc-group",
+   "verdicts": [
+    {
+     "controle": "droits <= 0644",
+     "statut": "conforme",
+     "constate": "/etc/group- 644",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-backup-etc-gshadow",
+   "verdicts": [
+    {
+     "controle": "droits <= 0640",
+     "statut": "conforme",
+     "constate": "/etc/gshadow- 640",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-backup-etc-passwd",
+   "verdicts": [
+    {
+     "controle": "droits <= 0644",
+     "statut": "conforme",
+     "constate": "/etc/passwd- 644",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-backup-etc-shadow",
+   "verdicts": [
+    {
+     "controle": "droits <= 0640",
+     "statut": "conforme",
+     "constate": "/etc/shadow- 640",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-binary-dirs",
+   "verdicts": [
+    {
+     "controle": "pas d'ecriture pour le groupe ni les autres",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-cron-d",
+   "verdicts": [
+    {
+     "controle": "droits <= 0700",
+     "statut": "ecart",
+     "constate": "/etc/cron.d/ en 755 (au plus 0700)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-cron-daily",
+   "verdicts": [
+    {
+     "controle": "droits <= 0700",
+     "statut": "ecart",
+     "constate": "/etc/cron.daily/ en 755 (au plus 0700)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-cron-hourly",
+   "verdicts": [
+    {
+     "controle": "droits <= 0700",
+     "statut": "ecart",
+     "constate": "/etc/cron.hourly/ en 755 (au plus 0700)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-cron-monthly",
+   "verdicts": [
+    {
+     "controle": "droits <= 0700",
+     "statut": "ecart",
+     "constate": "/etc/cron.monthly/ en 755 (au plus 0700)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-cron-weekly",
+   "verdicts": [
+    {
+     "controle": "droits <= 0700",
+     "statut": "ecart",
+     "constate": "/etc/cron.weekly/ en 755 (au plus 0700)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-crontab",
+   "verdicts": [
+    {
+     "controle": "droits <= 0600",
+     "statut": "ecart",
+     "constate": "/etc/crontab en 644 (au plus 0600)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-etc-audit-auditd",
+   "verdicts": [
+    {
+     "controle": "droits <= 0640",
+     "statut": "conforme",
+     "constate": "/etc/audit/auditd.conf 640",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-etc-audit-rules",
+   "verdicts": [
+    {
+     "controle": "droits <= 0640",
+     "statut": "conforme",
+     "constate": "/etc/audit/audit.rules 640",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-etc-audit-rulesd",
+   "verdicts": [
+    {
+     "controle": "droits <= 0600",
+     "statut": "ecart",
+     "constate": "/etc/audit/rules.d/audit.rules en 640 (au plus 0600)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-etc-chrony-keys",
+   "verdicts": [
+    {
+     "controle": "droits <= 0640",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-etc-crypttab",
+   "verdicts": [
+    {
+     "controle": "droits <= 0600",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-etc-group",
+   "verdicts": [
+    {
+     "controle": "droits <= 0644",
+     "statut": "conforme",
+     "constate": "/etc/group 644",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-etc-gshadow",
+   "verdicts": [
+    {
+     "controle": "droits <= 0640",
+     "statut": "conforme",
+     "constate": "/etc/gshadow 640",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-etc-ipsec-conf",
+   "verdicts": [
+    {
+     "controle": "droits <= 0644",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-etc-ipsec-secrets",
+   "verdicts": [
+    {
+     "controle": "droits <= 0644",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-etc-issue-net",
+   "verdicts": [
+    {
+     "controle": "droits <= 0644",
+     "statut": "conforme",
+     "constate": "/etc/issue.net 644",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-etc-issue",
+   "verdicts": [
+    {
+     "controle": "droits <= 0644",
+     "statut": "conforme",
+     "constate": "/etc/issue 644",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-etc-motd",
+   "verdicts": [
+    {
+     "controle": "droits <= 0644",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-etc-passwd",
+   "verdicts": [
+    {
+     "controle": "droits <= 0644",
+     "statut": "conforme",
+     "constate": "/etc/passwd 644",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-etc-security-opasswd-old",
+   "verdicts": [
+    {
+     "controle": "droits <= 0600",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-etc-security-opasswd",
+   "verdicts": [
+    {
+     "controle": "droits <= 0600",
+     "statut": "conforme",
+     "constate": "/etc/security/opasswd 600",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-etc-sestatus-conf",
+   "verdicts": [
+    {
+     "controle": "droits <= 0644",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-etc-shadow",
+   "verdicts": [
+    {
+     "controle": "droits <= 0640",
+     "statut": "conforme",
+     "constate": "/etc/shadow 640",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-etc-shells",
+   "verdicts": [
+    {
+     "controle": "droits <= 0644",
+     "statut": "conforme",
+     "constate": "/etc/shells 644",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-etc-sudoers",
+   "verdicts": [
+    {
+     "controle": "droits <= 0440",
+     "statut": "conforme",
+     "constate": "/etc/sudoers 440",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-home-directories",
+   "verdicts": [
+    {
+     "controle": "droits <= 0750",
+     "statut": "conforme",
+     "constate": "/home/ubuntu 750",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-sshd-config",
+   "verdicts": [
+    {
+     "controle": "droits <= 0600",
+     "statut": "ecart",
+     "constate": "/etc/ssh/sshd_config en 644 (au plus 0600)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-sshd-drop-in-config",
+   "verdicts": [
+    {
+     "controle": "droits <= 0600",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-sshd-private-key",
+   "verdicts": [
+    {
+     "controle": "droits <= 0600",
+     "statut": "conforme",
+     "constate": "3 fichier(s) conforme(s)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-sshd-pub-key",
+   "verdicts": [
+    {
+     "controle": "droits <= 0644",
+     "statut": "conforme",
+     "constate": "3 fichier(s) conforme(s)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-sudo",
+   "verdicts": [
+    {
+     "controle": "droits <= 4110",
+     "statut": "ecart",
+     "constate": "/usr/bin/sudo en 4755 (au plus 4110)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-systemmap",
+   "verdicts": [
+    {
+     "controle": "droits <= 0600",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-unauthorized-sgid",
+   "verdicts": [
+    {
+     "controle": "aucun SGID hors paquet",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-unauthorized-suid",
+   "verdicts": [
+    {
+     "controle": "aucun SUID hors paquet",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-unauthorized-world-writable",
+   "verdicts": [
+    {
+     "controle": "aucun fichier en ecriture pour les autres",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-ungroupowned",
+   "verdicts": [
+    {
+     "controle": "aucun fichier sans groupe",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-var-log-apt",
+   "verdicts": [
+    {
+     "controle": "droits <= 0644",
+     "statut": "conforme",
+     "constate": "3 fichier(s) conforme(s)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-var-log-audit",
+   "verdicts": [
+    {
+     "controle": "droits <= 0640",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-var-log-auth",
+   "verdicts": [
+    {
+     "controle": "droits <= 0640",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-var-log-cloud-init",
+   "verdicts": [
+    {
+     "controle": "droits <= 0644",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-var-log-gdm",
+   "verdicts": [
+    {
+     "controle": "droits <= 0660",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-var-log-gdm3",
+   "verdicts": [
+    {
+     "controle": "droits <= 0660",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-var-log-lastlog",
+   "verdicts": [
+    {
+     "controle": "droits <= 0664",
+     "statut": "conforme",
+     "constate": "/var/log/lastlog 664",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-var-log-localmessages",
+   "verdicts": [
+    {
+     "controle": "droits <= 0644",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-var-log-secure",
+   "verdicts": [
+    {
+     "controle": "droits <= 0640",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-var-log-sssd",
+   "verdicts": [
+    {
+     "controle": "droits <= 0660",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-var-log-syslog",
+   "verdicts": [
+    {
+     "controle": "droits <= 0640",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-var-log-waagent",
+   "verdicts": [
+    {
+     "controle": "droits <= 0644",
+     "statut": "indetermine",
+     "constate": "aucune ligne",
+     "motif": "fichier absent, ou illisible sans les droits root"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-file-permissions-var-log-wbtmp",
+   "verdicts": [
+    {
+     "controle": "droits <= 0664",
+     "statut": "conforme",
+     "constate": "2 fichier(s) conforme(s)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-gid-passwd-group-same",
+   "verdicts": [
+    {
+     "controle": "tous les GID de /etc/passwd definis",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-gnome-gdm-disable-xdmcp",
+   "verdicts": [
+    {
+     "controle": "Enable=false dans [xdmcp]",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-group-unique-id",
+   "verdicts": [
+    {
+     "controle": "aucun GID en double",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-group-unique-name",
+   "verdicts": [
+    {
+     "controle": "aucun nom de groupe en double",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-groups-no-zero-gid-except-root",
+   "verdicts": [
+    {
+     "controle": "aucun autre groupe en GID 0",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-has-nonlocal-mta",
+   "verdicts": [
+    {
+     "controle": "port 25 en boucle locale seulement",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-ip6tables-rules-for-open-ports",
+   "verdicts": [],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-iptables-rules-for-open-ports",
+   "verdicts": [],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-ldap-client-start-tls",
+   "verdicts": [
+    {
+     "controle": "ssl start_tls",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-ldap-client-tls-cacertpath",
+   "verdicts": [
+    {
+     "controle": "tls_cacertdir ou tls_cacertfile",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-logind-session-timeout",
+   "verdicts": [
+    {
+     "controle": "StopIdleSessionSec entre 1 et 600",
+     "statut": "ecart",
+     "constate": "aucune valeur persistante",
+     "motif": "StopIdleSessionSec n'est fixe dans aucun fichier : la valeur ne survit pas au redemarrage"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-mount-option-boot-noexec",
+   "verdicts": [
+    {
+     "controle": "/boot monte avec noexec",
+     "statut": "indetermine",
+     "constate": "pas de montage separe",
+     "motif": "le point de montage n'est pas une partition separee : voir la regle de partition dediee"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-mount-option-boot-nosuid",
+   "verdicts": [
+    {
+     "controle": "/boot monte avec nosuid",
+     "statut": "indetermine",
+     "constate": "pas de montage separe",
+     "motif": "le point de montage n'est pas une partition separee : voir la regle de partition dediee"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-mount-option-dev-shm-nodev",
+   "verdicts": [
+    {
+     "controle": "/dev/shm monte avec nodev",
+     "statut": "indetermine",
+     "constate": "aucune ligne dans /etc/fstab",
+     "motif": "montage non declare dans /etc/fstab (systemd .mount ?)"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-mount-option-dev-shm-noexec",
+   "verdicts": [
+    {
+     "controle": "/dev/shm monte avec noexec",
+     "statut": "indetermine",
+     "constate": "aucune ligne dans /etc/fstab",
+     "motif": "montage non declare dans /etc/fstab (systemd .mount ?)"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-mount-option-dev-shm-nosuid",
+   "verdicts": [
+    {
+     "controle": "/dev/shm monte avec nosuid",
+     "statut": "indetermine",
+     "constate": "aucune ligne dans /etc/fstab",
+     "motif": "montage non declare dans /etc/fstab (systemd .mount ?)"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-mount-option-home-nodev",
+   "verdicts": [
+    {
+     "controle": "/home monte avec nodev",
+     "statut": "indetermine",
+     "constate": "pas de montage separe",
+     "motif": "le point de montage n'est pas une partition separee : voir la regle de partition dediee"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-mount-option-home-noexec",
+   "verdicts": [
+    {
+     "controle": "/home monte avec noexec",
+     "statut": "indetermine",
+     "constate": "pas de montage separe",
+     "motif": "le point de montage n'est pas une partition separee : voir la regle de partition dediee"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-mount-option-home-nosuid",
+   "verdicts": [
+    {
+     "controle": "/home monte avec nosuid",
+     "statut": "indetermine",
+     "constate": "pas de montage separe",
+     "motif": "le point de montage n'est pas une partition separee : voir la regle de partition dediee"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-mount-option-opt-nosuid",
+   "verdicts": [
+    {
+     "controle": "/opt monte avec nosuid",
+     "statut": "indetermine",
+     "constate": "pas de montage separe",
+     "motif": "le point de montage n'est pas une partition separee : voir la regle de partition dediee"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-mount-option-srv-nosuid",
+   "verdicts": [
+    {
+     "controle": "/srv monte avec nosuid",
+     "statut": "indetermine",
+     "constate": "pas de montage separe",
+     "motif": "le point de montage n'est pas une partition separee : voir la regle de partition dediee"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-mount-option-tmp-nodev",
+   "verdicts": [
+    {
+     "controle": "/tmp monte avec nodev",
+     "statut": "indetermine",
+     "constate": "pas de montage separe",
+     "motif": "le point de montage n'est pas une partition separee : voir la regle de partition dediee"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-mount-option-tmp-noexec",
+   "verdicts": [
+    {
+     "controle": "/tmp monte avec noexec",
+     "statut": "indetermine",
+     "constate": "pas de montage separe",
+     "motif": "le point de montage n'est pas une partition separee : voir la regle de partition dediee"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-mount-option-tmp-nosuid",
+   "verdicts": [
+    {
+     "controle": "/tmp monte avec nosuid",
+     "statut": "indetermine",
+     "constate": "pas de montage separe",
+     "motif": "le point de montage n'est pas une partition separee : voir la regle de partition dediee"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-mount-option-var-log-audit-nodev",
+   "verdicts": [
+    {
+     "controle": "/var/log/audit monte avec nodev",
+     "statut": "indetermine",
+     "constate": "pas de montage separe",
+     "motif": "le point de montage n'est pas une partition separee : voir la regle de partition dediee"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-mount-option-var-log-audit-noexec",
+   "verdicts": [
+    {
+     "controle": "/var/log/audit monte avec noexec",
+     "statut": "indetermine",
+     "constate": "pas de montage separe",
+     "motif": "le point de montage n'est pas une partition separee : voir la regle de partition dediee"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-mount-option-var-log-audit-nosuid",
+   "verdicts": [
+    {
+     "controle": "/var/log/audit monte avec nosuid",
+     "statut": "indetermine",
+     "constate": "pas de montage separe",
+     "motif": "le point de montage n'est pas une partition separee : voir la regle de partition dediee"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-mount-option-var-log-nodev",
+   "verdicts": [
+    {
+     "controle": "/var/log monte avec nodev",
+     "statut": "indetermine",
+     "constate": "pas de montage separe",
+     "motif": "le point de montage n'est pas une partition separee : voir la regle de partition dediee"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-mount-option-var-log-noexec",
+   "verdicts": [
+    {
+     "controle": "/var/log monte avec noexec",
+     "statut": "indetermine",
+     "constate": "pas de montage separe",
+     "motif": "le point de montage n'est pas une partition separee : voir la regle de partition dediee"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-mount-option-var-log-nosuid",
+   "verdicts": [
+    {
+     "controle": "/var/log monte avec nosuid",
+     "statut": "indetermine",
+     "constate": "pas de montage separe",
+     "motif": "le point de montage n'est pas une partition separee : voir la regle de partition dediee"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-mount-option-var-nodev",
+   "verdicts": [
+    {
+     "controle": "/var monte avec nodev",
+     "statut": "indetermine",
+     "constate": "pas de montage separe",
+     "motif": "le point de montage n'est pas une partition separee : voir la regle de partition dediee"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-mount-option-var-noexec",
+   "verdicts": [
+    {
+     "controle": "/var monte avec noexec",
+     "statut": "indetermine",
+     "constate": "pas de montage separe",
+     "motif": "le point de montage n'est pas une partition separee : voir la regle de partition dediee"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-mount-option-var-nosuid",
+   "verdicts": [
+    {
+     "controle": "/var monte avec nosuid",
+     "statut": "indetermine",
+     "constate": "pas de montage separe",
+     "motif": "le point de montage n'est pas une partition separee : voir la regle de partition dediee"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-mount-option-var-tmp-nodev",
+   "verdicts": [
+    {
+     "controle": "/var/tmp monte avec nodev",
+     "statut": "indetermine",
+     "constate": "pas de montage separe",
+     "motif": "le point de montage n'est pas une partition separee : voir la regle de partition dediee"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-mount-option-var-tmp-noexec",
+   "verdicts": [
+    {
+     "controle": "/var/tmp monte avec noexec",
+     "statut": "indetermine",
+     "constate": "pas de montage separe",
+     "motif": "le point de montage n'est pas une partition separee : voir la regle de partition dediee"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-mount-option-var-tmp-nosuid",
+   "verdicts": [
+    {
+     "controle": "/var/tmp monte avec nosuid",
+     "statut": "indetermine",
+     "constate": "pas de montage separe",
+     "motif": "le point de montage n'est pas une partition separee : voir la regle de partition dediee"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-nftables-ensure-default-deny-policy",
+   "verdicts": [],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-nftables-rules-permanent",
+   "verdicts": [],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-no-direct-root-logins",
+   "verdicts": [
+    {
+     "controle": "aucune console autorisee",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-no-dirs-unowned-by-root",
+   "verdicts": [
+    {
+     "controle": "proprietaire root",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-no-empty-passwords-etc-shadow",
+   "verdicts": [
+    {
+     "controle": "aucun champ mot de passe vide",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-no-empty-passwords-unix",
+   "verdicts": [
+    {
+     "controle": "nullok absent",
+     "statut": "ecart",
+     "constate": "/etc/pam.d/common-auth:auth\t[success=1 default=ignore]\tpam_unix.so nullok",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-no-files-unowned-by-user",
+   "verdicts": [
+    {
+     "controle": "aucun fichier sans proprietaire",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-no-forward-files",
+   "verdicts": [
+    {
+     "controle": "aucun .forward",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-no-invalid-shell-accounts-unlocked",
+   "verdicts": [
+    {
+     "controle": "comptes hors /etc/shells verrouilles",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-no-netrc-files",
+   "verdicts": [
+    {
+     "controle": "aucun .netrc",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-no-nis-in-nsswitch",
+   "verdicts": [
+    {
+     "controle": "aucun service nis",
+     "statut": "ecart",
+     "constate": "netgroup:       nis",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-no-nologin-in-shells",
+   "verdicts": [
+    {
+     "controle": "nologin absent de /etc/shells",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-no-rsh-trust-files",
+   "verdicts": [
+    {
+     "controle": "aucun fichier de confiance rsh",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-no-shelllogin-for-systemaccounts",
+   "verdicts": [
+    {
+     "controle": "aucun compte systeme avec un shell de /etc/shells",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-aide-installed",
+   "verdicts": [
+    {
+     "controle": "paquet aide installe",
+     "statut": "ecart",
+     "constate": "aide absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-apparmor-installed",
+   "verdicts": [
+    {
+     "controle": "paquet apparmor installe",
+     "statut": "conforme",
+     "constate": "apparmor installe",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-apparmor-utils-installed",
+   "verdicts": [
+    {
+     "controle": "paquet apparmor-utils installe",
+     "statut": "conforme",
+     "constate": "apparmor-utils installe",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-audit-audispd-plugins-installed",
+   "verdicts": [
+    {
+     "controle": "paquet audispd-plugins installe",
+     "statut": "ecart",
+     "constate": "audispd-plugins absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-audit-installed",
+   "verdicts": [
+    {
+     "controle": "paquet auditd installe",
+     "statut": "conforme",
+     "constate": "auditd installe",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-autofs-removed",
+   "verdicts": [
+    {
+     "controle": "paquet autofs absent",
+     "statut": "conforme",
+     "constate": "autofs absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-avahi-removed",
+   "verdicts": [
+    {
+     "controle": "paquet avahi avahi-daemon absent",
+     "statut": "conforme",
+     "constate": "avahi / avahi-daemon absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-bind-removed",
+   "verdicts": [
+    {
+     "controle": "paquet bind bind9 absent",
+     "statut": "conforme",
+     "constate": "bind / bind9 absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-chrony-installed",
+   "verdicts": [],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-cups-removed",
+   "verdicts": [
+    {
+     "controle": "paquet cups absent",
+     "statut": "conforme",
+     "constate": "cups absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-dhcp-removed",
+   "verdicts": [
+    {
+     "controle": "paquet dhcp isc-dhcp-server absent",
+     "statut": "conforme",
+     "constate": "dhcp / isc-dhcp-server absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-dnsmasq-removed",
+   "verdicts": [
+    {
+     "controle": "paquet dnsmasq absent",
+     "statut": "conforme",
+     "constate": "dnsmasq absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-dovecot-removed",
+   "verdicts": [
+    {
+     "controle": "paquet dovecot dovecot-core absent",
+     "statut": "conforme",
+     "constate": "dovecot / dovecot-core absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-ftp-removed",
+   "verdicts": [
+    {
+     "controle": "paquet ftp absent",
+     "statut": "conforme",
+     "constate": "ftp absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-gdm-removed",
+   "verdicts": [
+    {
+     "controle": "paquet gdm gdm3 absent",
+     "statut": "conforme",
+     "constate": "gdm / gdm3 absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-inetutils-telnet-removed",
+   "verdicts": [
+    {
+     "controle": "paquet inetutils-telnet absent",
+     "statut": "conforme",
+     "constate": "inetutils-telnet absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-iptables-installed",
+   "verdicts": [],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-iptables-persistent-installed",
+   "verdicts": [],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-iptables-persistent-removed",
+   "verdicts": [
+    {
+     "controle": "paquet iptables-persistent absent",
+     "statut": "conforme",
+     "constate": "iptables-persistent absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-kea-removed",
+   "verdicts": [
+    {
+     "controle": "paquet kea absent",
+     "statut": "conforme",
+     "constate": "kea absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-logrotate-installed",
+   "verdicts": [
+    {
+     "controle": "paquet logrotate installe",
+     "statut": "ecart",
+     "constate": "logrotate absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-net-snmp-removed",
+   "verdicts": [
+    {
+     "controle": "paquet net-snmp snmp snmpd absent",
+     "statut": "conforme",
+     "constate": "net-snmp / snmp / snmpd absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-nfs-kernel-server-removed",
+   "verdicts": [
+    {
+     "controle": "paquet nfs-kernel-server absent",
+     "statut": "conforme",
+     "constate": "nfs-kernel-server absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-nftables-installed",
+   "verdicts": [],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-nginx-removed",
+   "verdicts": [
+    {
+     "controle": "paquet nginx absent",
+     "statut": "conforme",
+     "constate": "nginx absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-nis-removed",
+   "verdicts": [
+    {
+     "controle": "paquet nis absent",
+     "statut": "conforme",
+     "constate": "nis absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-openldap-clients-removed",
+   "verdicts": [
+    {
+     "controle": "paquet ldap-utils openldap-clients absent",
+     "statut": "conforme",
+     "constate": "ldap-utils / openldap-clients absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-openldap-servers-removed",
+   "verdicts": [
+    {
+     "controle": "paquet openldap-servers slapd absent",
+     "statut": "conforme",
+     "constate": "openldap-servers / slapd absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-pam-modules-installed",
+   "verdicts": [
+    {
+     "controle": "paquet libpam-modules installe",
+     "statut": "conforme",
+     "constate": "libpam-modules installe",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-pam-pwquality-installed",
+   "verdicts": [
+    {
+     "controle": "paquet libpam-pwquality installe",
+     "statut": "ecart",
+     "constate": "libpam-pwquality absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-pam-runtime-installed",
+   "verdicts": [
+    {
+     "controle": "paquet libpam-runtime installe",
+     "statut": "conforme",
+     "constate": "libpam-runtime installe",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-prelink-removed",
+   "verdicts": [
+    {
+     "controle": "paquet prelink absent",
+     "statut": "conforme",
+     "constate": "prelink absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-rpcbind-removed",
+   "verdicts": [
+    {
+     "controle": "paquet rpcbind absent",
+     "statut": "conforme",
+     "constate": "rpcbind absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-rsh-removed",
+   "verdicts": [
+    {
+     "controle": "paquet rsh rsh-client absent",
+     "statut": "conforme",
+     "constate": "rsh / rsh-client absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-rsh-server-removed",
+   "verdicts": [
+    {
+     "controle": "paquet rsh-server absent",
+     "statut": "conforme",
+     "constate": "rsh-server absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-rsyslog-gnutls-installed",
+   "verdicts": [
+    {
+     "controle": "paquet rsyslog-gnutls installe",
+     "statut": "ecart",
+     "constate": "rsyslog-gnutls absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-rsyslog-installed",
+   "verdicts": [
+    {
+     "controle": "paquet rsyslog installe",
+     "statut": "conforme",
+     "constate": "rsyslog installe",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-samba-removed",
+   "verdicts": [
+    {
+     "controle": "paquet samba absent",
+     "statut": "conforme",
+     "constate": "samba absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-sendmail-removed",
+   "verdicts": [
+    {
+     "controle": "paquet sendmail absent",
+     "statut": "conforme",
+     "constate": "sendmail absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-setroubleshoot-plugins-removed",
+   "verdicts": [
+    {
+     "controle": "paquet setroubleshoot-plugins absent",
+     "statut": "conforme",
+     "constate": "setroubleshoot-plugins absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-setroubleshoot-removed",
+   "verdicts": [
+    {
+     "controle": "paquet setroubleshoot absent",
+     "statut": "conforme",
+     "constate": "setroubleshoot absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-setroubleshoot-server-removed",
+   "verdicts": [
+    {
+     "controle": "paquet setroubleshoot-server absent",
+     "statut": "conforme",
+     "constate": "setroubleshoot-server absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-squid-removed",
+   "verdicts": [
+    {
+     "controle": "paquet squid absent",
+     "statut": "conforme",
+     "constate": "squid absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-sssd-installed",
+   "verdicts": [
+    {
+     "controle": "paquet sssd installe",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-sudo-installed",
+   "verdicts": [
+    {
+     "controle": "paquet sudo installe",
+     "statut": "conforme",
+     "constate": "sudo installe",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-talk-removed",
+   "verdicts": [
+    {
+     "controle": "paquet talk absent",
+     "statut": "conforme",
+     "constate": "talk absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-talk-server-removed",
+   "verdicts": [
+    {
+     "controle": "paquet talk-server absent",
+     "statut": "conforme",
+     "constate": "talk-server absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-telnet-removed",
+   "verdicts": [
+    {
+     "controle": "paquet telnet absent",
+     "statut": "conforme",
+     "constate": "telnet absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-telnet-server-removed",
+   "verdicts": [
+    {
+     "controle": "paquet telnet-server absent",
+     "statut": "conforme",
+     "constate": "telnet-server absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-tftp-removed",
+   "verdicts": [
+    {
+     "controle": "paquet tftp absent",
+     "statut": "conforme",
+     "constate": "tftp absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-timesyncd-installed",
+   "verdicts": [],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-tnftp-removed",
+   "verdicts": [
+    {
+     "controle": "paquet tnftp absent",
+     "statut": "conforme",
+     "constate": "tnftp absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-ufw-installed",
+   "verdicts": [],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-ufw-removed",
+   "verdicts": [],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-vsftpd-removed",
+   "verdicts": [
+    {
+     "controle": "paquet vsftpd absent",
+     "statut": "conforme",
+     "constate": "vsftpd absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-xinetd-removed",
+   "verdicts": [
+    {
+     "controle": "paquet xinetd absent",
+     "statut": "conforme",
+     "constate": "xinetd absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-xorg-x11-server-common-removed",
+   "verdicts": [
+    {
+     "controle": "paquet xorg-x11-server-common xserver-common absent",
+     "statut": "conforme",
+     "constate": "xorg-x11-server-common / xserver-common absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-ypbind-removed",
+   "verdicts": [
+    {
+     "controle": "paquet ypbind absent",
+     "statut": "conforme",
+     "constate": "ypbind absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-package-ypserv-removed",
+   "verdicts": [
+    {
+     "controle": "paquet ypserv absent",
+     "statut": "conforme",
+     "constate": "ypserv absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-partition-for-boot",
+   "verdicts": [
+    {
+     "controle": "/boot monte a part",
+     "statut": "ecart",
+     "constate": "pas de partition separee",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-partition-for-dev-shm",
+   "verdicts": [
+    {
+     "controle": "/dev/shm monte a part",
+     "statut": "conforme",
+     "constate": "partition separee : /dev/shm shm tmpfs",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-partition-for-home",
+   "verdicts": [
+    {
+     "controle": "/home monte a part",
+     "statut": "ecart",
+     "constate": "pas de partition separee",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-partition-for-opt",
+   "verdicts": [
+    {
+     "controle": "/opt monte a part",
+     "statut": "ecart",
+     "constate": "pas de partition separee",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-partition-for-srv",
+   "verdicts": [
+    {
+     "controle": "/srv monte a part",
+     "statut": "ecart",
+     "constate": "pas de partition separee",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-partition-for-tmp",
+   "verdicts": [
+    {
+     "controle": "/tmp monte a part",
+     "statut": "ecart",
+     "constate": "pas de partition separee",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-partition-for-usr",
+   "verdicts": [
+    {
+     "controle": "/usr monte a part",
+     "statut": "ecart",
+     "constate": "pas de partition separee",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-partition-for-var-log-audit",
+   "verdicts": [
+    {
+     "controle": "/var/log/audit monte a part",
+     "statut": "ecart",
+     "constate": "pas de partition separee",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-partition-for-var-log",
+   "verdicts": [
+    {
+     "controle": "/var/log monte a part",
+     "statut": "ecart",
+     "constate": "pas de partition separee",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-partition-for-var-tmp",
+   "verdicts": [
+    {
+     "controle": "/var/tmp monte a part",
+     "statut": "ecart",
+     "constate": "pas de partition separee",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-partition-for-var",
+   "verdicts": [
+    {
+     "controle": "/var monte a part",
+     "statut": "ecart",
+     "constate": "pas de partition separee",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-permissions-local-var-log",
+   "verdicts": [
+    {
+     "controle": "droits <= 0640",
+     "statut": "ecart",
+     "constate": "/var/log/faillog en 644 (au plus 0640); /var/log/alternatives.log en 644 (au plus 0640); /var/log/bootstrap.log en 644 (au plus 0640); /var/log/dpkg.log en 644 (au plus 0640)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-postfix-client-configure-mail-alias",
+   "verdicts": [
+    {
+     "controle": "alias root defini",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-postfix-network-listening-disabled",
+   "verdicts": [
+    {
+     "controle": "inet_interfaces = loopback-only",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-root-path-all-dirs",
+   "verdicts": [
+    {
+     "controle": "toutes les entrees sont des repertoires",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-root-path-no-dot",
+   "verdicts": [
+    {
+     "controle": "entrees absolues uniquement",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-rsyslog-filecreatemode",
+   "verdicts": [
+    {
+     "controle": "$FileCreateMode 0640 ou plus strict",
+     "statut": "conforme",
+     "constate": "/etc/rsyslog.conf:$FileCreateMode 0640",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-rsyslog-nolisten",
+   "verdicts": [
+    {
+     "controle": "aucun module de reception reseau",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-rsyslog-remote-loghost",
+   "verdicts": [
+    {
+     "controle": "une regle d'envoi presente",
+     "statut": "ecart",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-rsyslog-remote-tls-cacert",
+   "verdicts": [
+    {
+     "controle": "DefaultNetstreamDriverCAFile defini",
+     "statut": "ecart",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-rsyslog-remote-tls",
+   "verdicts": [
+    {
+     "controle": "omfwd avec StreamDriver gtls",
+     "statut": "ecart",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-security-patches-up-to-date",
+   "verdicts": [
+    {
+     "controle": "aucune mise a jour de securite en attente",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-service-timesyncd-configured",
+   "verdicts": [
+    {
+     "controle": "NTP= ou FallbackNTP= renseigne",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-set-ip6tables-default-rule",
+   "verdicts": [],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-set-iptables-default-rule",
+   "verdicts": [],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-set-ipv6-loopback-traffic",
+   "verdicts": [],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-set-loopback-traffic",
+   "verdicts": [],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-set-nftables-base-chain",
+   "verdicts": [],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-set-nftables-loopback-traffic",
+   "verdicts": [],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-set-nftables-table",
+   "verdicts": [],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-set-password-hashing-algorithm-logindefs",
+   "verdicts": [
+    {
+     "controle": "ENCRYPT_METHOD SHA512|YESCRYPT",
+     "statut": "conforme",
+     "constate": "ENCRYPT_METHOD SHA512",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-set-password-hashing-algorithm-systemauth",
+   "verdicts": [
+    {
+     "controle": "password pam_unix.so yescrypt",
+     "statut": "conforme",
+     "constate": "pam_unix.so obscure yescrypt",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-set-ufw-default-rule",
+   "verdicts": [],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-set-ufw-loopback-traffic",
+   "verdicts": [],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sshd-disable-empty-passwords",
+   "verdicts": [
+    {
+     "controle": "PermitEmptyPasswords = no",
+     "statut": "conforme",
+     "constate": "permitemptypasswords no",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sshd-disable-forwarding",
+   "verdicts": [
+    {
+     "controle": "DisableForwarding = yes",
+     "statut": "ecart",
+     "constate": "disableforwarding no",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sshd-disable-gssapi-auth",
+   "verdicts": [
+    {
+     "controle": "GSSAPIAuthentication = no",
+     "statut": "conforme",
+     "constate": "gssapiauthentication no",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sshd-disable-rhosts",
+   "verdicts": [
+    {
+     "controle": "IgnoreRhosts = yes",
+     "statut": "conforme",
+     "constate": "ignorerhosts yes",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sshd-disable-root-login",
+   "verdicts": [
+    {
+     "controle": "PermitRootLogin = no",
+     "statut": "ecart",
+     "constate": "permitrootlogin without-password",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sshd-do-not-permit-user-env",
+   "verdicts": [
+    {
+     "controle": "PermitUserEnvironment = no",
+     "statut": "conforme",
+     "constate": "permituserenvironment no",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sshd-enable-pam",
+   "verdicts": [
+    {
+     "controle": "UsePAM = yes",
+     "statut": "conforme",
+     "constate": "usepam yes",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sshd-enable-warning-banner-net",
+   "verdicts": [
+    {
+     "controle": "Banner configure (fichier de banniere)",
+     "statut": "ecart",
+     "constate": "banner none",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sshd-limit-user-access",
+   "verdicts": [
+    {
+     "controle": "au moins une directive Allow/Deny Users/Groups",
+     "statut": "ecart",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sshd-set-idle-timeout",
+   "verdicts": [
+    {
+     "controle": "ClientAliveInterval <= 300",
+     "statut": "ecart",
+     "constate": "clientaliveinterval 0",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sshd-set-keepalive",
+   "verdicts": [
+    {
+     "controle": "ClientAliveCountMax <= 3",
+     "statut": "conforme",
+     "constate": "clientalivecountmax 3",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sshd-set-login-grace-time",
+   "verdicts": [
+    {
+     "controle": "LoginGraceTime <= 60",
+     "statut": "ecart",
+     "constate": "logingracetime 120",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sshd-set-loglevel-info",
+   "verdicts": [
+    {
+     "controle": "LogLevel dans {INFO, VERBOSE}",
+     "statut": "conforme",
+     "constate": "loglevel INFO",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sshd-set-max-auth-tries",
+   "verdicts": [
+    {
+     "controle": "MaxAuthTries <= 4",
+     "statut": "ecart",
+     "constate": "maxauthtries 6",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sshd-set-max-sessions",
+   "verdicts": [
+    {
+     "controle": "MaxSessions <= 10",
+     "statut": "conforme",
+     "constate": "maxsessions 10",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sshd-set-maxstartups",
+   "verdicts": [
+    {
+     "controle": "MaxStartups 10:30:60 ou plus strict",
+     "statut": "ecart",
+     "constate": "maxstartups 10:30:100",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sshd-use-strong-ciphers",
+   "verdicts": [
+    {
+     "controle": "Ciphers limites a chacha20-poly1305, aes-gcm, aes-ctr",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sshd-use-strong-kex",
+   "verdicts": [
+    {
+     "controle": "KexAlgorithms limites a curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group14-sha256,sntrup761x25519-sha512@openssh.com",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sshd-use-strong-macs",
+   "verdicts": [
+    {
+     "controle": "MACs limites a hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256",
+     "statut": "ecart",
+     "constate": "MAC faible : umac-64-etm@openssh.com; MAC faible : umac-128-etm@openssh.com; MAC faible : hmac-sha1-etm@openssh.com (+3)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sssd-enable-pam-services",
+   "verdicts": [
+    {
+     "controle": "pam dans services",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sssd-ldap-configure-tls-reqcert",
+   "verdicts": [
+    {
+     "controle": "ldap_tls_reqcert = demand",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sssd-ldap-start-tls",
+   "verdicts": [
+    {
+     "controle": "ldap_id_use_start_tls = true",
+     "statut": "indetermine",
+     "constate": "sans objet",
+     "motif": "composant non installe : la regle ne s'applique pas"
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sudo-add-env-reset",
+   "verdicts": [
+    {
+     "controle": "Defaults env_reset",
+     "statut": "conforme",
+     "constate": "Defaults env_reset",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sudo-add-ignore-dot",
+   "verdicts": [
+    {
+     "controle": "Defaults ignore_dot",
+     "statut": "ecart",
+     "constate": "Defaults ignore_dot absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sudo-add-noexec",
+   "verdicts": [
+    {
+     "controle": "Defaults noexec",
+     "statut": "ecart",
+     "constate": "Defaults noexec absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sudo-add-requiretty",
+   "verdicts": [
+    {
+     "controle": "Defaults requiretty",
+     "statut": "ecart",
+     "constate": "Defaults requiretty absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sudo-add-umask",
+   "verdicts": [
+    {
+     "controle": "Defaults umask=0077",
+     "statut": "ecart",
+     "constate": "Defaults umask absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sudo-add-use-pty",
+   "verdicts": [
+    {
+     "controle": "Defaults use_pty",
+     "statut": "conforme",
+     "constate": "Defaults use_pty",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sudo-custom-logfile",
+   "verdicts": [
+    {
+     "controle": "Defaults logfile=/var/log/sudo.log",
+     "statut": "ecart",
+     "constate": "Defaults logfile absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sudo-dedicated-group",
+   "verdicts": [
+    {
+     "controle": "groupe de /usr/bin/sudo = sudogrp",
+     "statut": "ecart",
+     "constate": "root",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sudo-remove-no-authenticate",
+   "verdicts": [
+    {
+     "controle": "aucune ligne !authenticate",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sudo-require-authentication",
+   "verdicts": [
+    {
+     "controle": "aucune ligne NOPASSWD ou !authenticate",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sudo-require-reauthentication",
+   "verdicts": [
+    {
+     "controle": "Defaults timestamp_timeout <= 15",
+     "statut": "conforme",
+     "constate": "timestamp_timeout=15 (defaut)",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-sudoers-no-command-negation",
+   "verdicts": [
+    {
+     "controle": "aucune negation dans les specifications",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-systemd-journal-upload-server-tls",
+   "verdicts": [
+    {
+     "controle": "ServerKeyFile, ServerCertificateFile et TrustedCertificateFile definis",
+     "statut": "ecart",
+     "constate": "ServerKeyFile manquant; ServerCertificateFile manquant; TrustedCertificateFile manquant",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-systemd-journal-upload-url",
+   "verdicts": [
+    {
+     "controle": "URL= renseignee",
+     "statut": "ecart",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-ufw-rules-for-open-ports",
+   "verdicts": [],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-use-pam-wheel-group-for-su",
+   "verdicts": [
+    {
+     "controle": "auth pam_wheel.so group=sugroup use_uid",
+     "statut": "ecart",
+     "constate": "pam_wheel.so absent",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "cac-wireless-disable-interfaces",
+   "verdicts": [
+    {
+     "controle": "aucune interface wifi",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "crypto-certificats-tls-locaux",
+   "verdicts": [
+    {
+     "controle": "Signature SHA-1 ou MD5",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    },
+    {
+     "controle": "Cle RSA de moins de 2048 bits",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "crypto-cles-hotes-ssh",
+   "verdicts": [
+    {
+     "controle": "Cle d'hote DSA",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    },
+    {
+     "controle": "Cle d'hote RSA de moins de 3072 bits",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "crypto-ssh-echange-pq",
+   "verdicts": [
+    {
+     "controle": "Echange de cles hybride post-quantique active quand disponible",
+     "statut": "conforme",
+     "constate": "aucune ligne",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "dns-messagerie",
+   "verdicts": [],
+   "defauts": []
+  },
+  {
+   "fiche": "entetes-http",
+   "verdicts": [],
+   "defauts": []
+  },
+  {
+   "fiche": "ports-pare-feu",
+   "verdicts": [],
+   "defauts": []
+  },
+  {
+   "fiche": "ssh-durcissement",
+   "verdicts": [
+    {
+     "controle": "PermitRootLogin",
+     "statut": "ecart",
+     "constate": "permitrootlogin without-password",
+     "motif": ""
+    },
+    {
+     "controle": "PasswordAuthentication",
+     "statut": "ecart",
+     "constate": "passwordauthentication yes",
+     "motif": ""
+    },
+    {
+     "controle": "PermitEmptyPasswords",
+     "statut": "conforme",
+     "constate": "permitemptypasswords no",
+     "motif": ""
+    }
+   ],
+   "defauts": []
+  },
+  {
+   "fiche": "tls-configuration",
+   "verdicts": [],
+   "defauts": []
+  }
+ ]
+}

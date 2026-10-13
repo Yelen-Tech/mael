@@ -1,0 +1,15 @@
+# Dependances de developpement : installees en plus de requirements.txt
+# (CI et poste de dev, jamais en production).
+#
+# pytest : le harnais des tests du « brain ». Tous les modules
+# brain/tests_*.py sont ecrits en style pytest (fonctions nues,
+# fixtures, parametrize) et leurs docstrings documentent
+# « python -m pytest brain/tests_X.py -q ». unittest ne sait pas les
+# decouvrir ; sans pytest, brain/tests_codage.py casse meme
+# « manage.py test » a l'import.
+-r requirements.txt
+pytest>=8,<9
+# ruff : le lint exige en CI (etape « Lint », regles dans pyproject.toml).
+# Version figee sur la mineure : une nouvelle regle ne doit pas casser la
+# CI sans decision.
+ruff>=0.6,<0.7

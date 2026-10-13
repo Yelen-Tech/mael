@@ -1,0 +1,61 @@
+id: dns-messagerie
+titre: "DNS et protection de la messagerie (SPF/DKIM/DMARC)"
+domaine: dns
+schema: 2
+version: 1
+etat: verifie
+verifie_le: 2026-09-16
+teste_sur: []            # a remplir par les tests en conteneur (etape 2.5)
+applicable:
+  os: [linux]
+taxonomie:
+  theme: messagerie
+  type_controle: observation
+  niveaux: {cis: null, anssi: null}   # fiche manuelle hors referentiel
+source:
+  origine: manuel
+mots_cles: [dns, spf, dkim, dmarc, mail, messagerie, usurpation, domaine, mx, courriel]
+resume: >
+  Un domaine sans SPF/DKIM/DMARC peut etre usurpe : n'importe qui envoie des
+  courriels en se faisant passer pour lui (hameconnage). On lit les
+  enregistrements DNS publics, aucune action sur le systeme.
+
+observer:
+  - commande: "dig +short TXT DOMAINE | grep -i 'v=spf1'"
+    but: "Lire l'enregistrement SPF (qui a le droit d'envoyer pour le domaine)"
+    lecture: "Une ligne v=spf1 ... se terminant idealement par -all (strict) ou ~all (souple). Absent = pas de SPF."
+  - commande: "dig +short TXT _dmarc.DOMAINE"
+    but: "Lire la politique DMARC"
+    lecture: "v=DMARC1; p=... ; p=reject (strict), p=quarantine (moyen), p=none (surveillance seule), absent = pas de DMARC."
+  - commande: "dig +short MX DOMAINE"
+    but: "Voir les serveurs de messagerie declares"
+    lecture: "Liste des enregistrements MX (priorite + hote)."
+
+controles:
+  - controle: "SPF"
+    bon: "present, se terminant par -all ou ~all"
+    mauvais: "absent, ou +all (autorise tout le monde)"
+    gravite: moyenne
+    risque: "Sans SPF (ou avec +all), n'importe quel serveur peut envoyer au nom du domaine."
+    action: "Publier un enregistrement TXT SPF listant les emetteurs legitimes, termine par -all."
+    playbook: null
+    sans_playbook: "enregistrements DNS (SPF, DKIM, DMARC) chez l'hebergeur : correction manuelle"
+  - controle: "DMARC"
+    bon: "present, p=quarantine ou p=reject"
+    mauvais: "absent, ou p=none en cible finale"
+    gravite: moyenne
+    risque: "Sans DMARC applique, les courriels usurpes ne sont pas rejetes par les destinataires."
+    action: "Publier _dmarc en p=none pour observer, puis durcir vers quarantine/reject."
+    playbook: null
+    sans_playbook: "enregistrements DNS (SPF, DKIM, DMARC) chez l'hebergeur : correction manuelle"
+
+pieges:
+  - "Remplacer DOMAINE. SPF et DMARC sont des enregistrements TXT ; DMARC est sur le sous-domaine _dmarc."
+  - "DKIM se verifie sur un selecteur precis (selecteur._domainkey.DOMAINE) que l'on ne connait pas toujours a l'avance."
+  - "Un p=none n'est pas une faille en soi si c'est une phase d'observation : demander l'intention avant de conclure."
+
+referentiels:
+  - {nom: ANSSI, document: "Bonnes pratiques pour l'acquisition et l'exploitation de noms de domaine"}
+  - {nom: RFC, document: "RFC 7208 (SPF)"}
+  - {nom: RFC, document: "RFC 7489 (DMARC)"}
+  - {nom: autre, document: "M3AAWG - bonnes pratiques d'authentification du courriel"}

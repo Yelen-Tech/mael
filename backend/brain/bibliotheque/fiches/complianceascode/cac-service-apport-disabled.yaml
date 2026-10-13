@@ -1,0 +1,66 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-service-apport-disabled
+titre: Service apport desactive et arrete
+domaine: services
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: services-inutiles
+  type_controle: service-inactif
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: service_apport_disabled
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/apport/service_apport_disabled
+mots_cles:
+- apport
+- demarrage
+- service
+- services
+- systemd
+resume: Le service apport doit etre desactive et arrete. (regle service_apport_disabled, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: dpkg -s apport >/dev/null 2>&1 || echo 'SENTINELLE:SANS_OBJET'; systemctl is-enabled apport.service
+    2>/dev/null; systemctl is-active apport.service 2>/dev/null
+  but: Lire l'etat de demarrage et d'execution de apport
+  lecture: 'Attendu : « disabled » ou « masked » (ou service absent) puis « inactive ».'
+controles:
+- controle: service apport disabled/inactive
+  bon: disabled ou masked, inactive (ou absent)
+  mauvais: enabled ou active
+  gravite: moyenne
+  risque: Le service Apport modifie la configuration fs.suid_dumpable du noyau en cours d'execution, ce
+    qui empeche les autres durcissements d'etre persistants. Le desactiver evite ce comportement.
+  action: systemctl disable --now apport.service (ou mask) apres verification du besoin.
+  playbook: infra.service-desactiver
+  parametres:
+    service: apport
+  evaluation:
+  - commande: 0
+    lecteur: systemctl
+    comparateur: inactif
+pieges:
+- 'Regle limitee par la source a : package[apport]. Hors de ce cas, la commande repond « sans objet »
+  (aucun ecart).'
+- 'Un service peut etre demarre par une socket systemd : verifier aussi « systemctl list-sockets ».'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 1.5.5 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 1.5.5 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

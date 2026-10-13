@@ -1,0 +1,58 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-no-nis-in-nsswitch
+titre: NIS n'est pas utilise par nsswitch
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: authentification
+  type_controle: detection
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: no_nis_in_nsswitch
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/obsolete/nis/no_nis_in_nsswitch
+mots_cles:
+- annuaire
+- nis
+- nsswitch
+resume: NIS n'est pas utilise par nsswitch. (regle no_nis_in_nsswitch, ComplianceAsCode 0.1.82).
+observer:
+- commande: grep -E '^[a-z]+:.*\bnis\b' /etc/nsswitch.conf
+  but: Chercher nis dans /etc/nsswitch.conf
+  lecture: Chaque ligne est un element en defaut ; aucune ligne = conforme.
+controles:
+- controle: aucun service nis
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: 'NIS transmet les informations de comptes (dont les empreintes de mots de passe) sans protection
+    : il ne doit pas etre utilise.'
+  action: Retirer nis des lignes de /etc/nsswitch.conf.
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- 'Le motif de l''OCIL de la source omet le « : » des lignes de nsswitch.conf : la lecture ici l''accepte.'
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R69 (niveau intermediaire)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

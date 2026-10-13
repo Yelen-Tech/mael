@@ -1,0 +1,44 @@
+id: histoire-des-telecoms-et-reseaux
+schema: 1
+nom: Histoire des télécommunications et des réseaux
+resume: "Du télégraphe au TCP/IP : ARPANET (1969), la suite TCP/IP (1983) et le Web (1989-1991) ont bâti des réseaux conçus pour la coopération, dont les protocoles historiques restent peu sûrs par défaut."
+famille: histoire-geographie
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - télécommunications
+  - réseaux
+  - arpanet
+  - tcp ip
+  - dns
+  - web
+  - bgp
+  - ss7
+  - fibre optique
+  - internet
+caracteristiques:
+  prereseaux: "Télégraphe électrique dans les années 1830-1840, téléphone breveté par Bell en 1876, puis réseaux téléphoniques commutés mondiaux au XXe siècle."
+  commutation_de_paquets: "Concept développé dans les années 1960 (Baran, Davies) ; 1969 : ARPANET relie ses quatre premiers nœuds universitaires américains."
+  internet: "1974 : article fondateur de Cerf et Kahn ; 1983 : ARPANET bascule sur TCP/IP, date conventionnelle de naissance d'Internet ; 1983 : le DNS est spécifié."
+  web_et_generalisation: "1989-1991 : Tim Berners-Lee conçoit HTTP, HTML et les URL au CERN ; les années 1990 voient l'ouverture commerciale d'Internet et le déploiement massif de la fibre optique."
+  mobile: "Générations successives de téléphonie mobile : 2G (GSM, années 1990), 3G, 4G LTE et 5G (déploiements à partir de 2019)."
+securite:
+  - titre: Protocoles historiques sans sécurité native
+    risque: "BGP, DNS et SMTP ont été conçus entre acteurs de confiance : détournements de préfixes BGP, empoisonnement DNS et usurpation de courriels en découlent."
+    conseil: Déployer les protections additionnelles (RPKI, DNSSEC, SPF/DKIM/DMARC) et filtrer les annonces BGP.
+    gravite: elevee
+  - titre: Signalisation SS7
+    risque: Le réseau de signalisation téléphonique SS7, sans authentification, permet l'interception d'appels et de SMS (y compris les codes 2FA) par des acteurs ayant accès au réseau.
+    conseil: Ne pas fonder l'authentification forte sur le seul SMS et suivre les travaux de sécurisation des interconnexions.
+    gravite: elevee
+  - titre: Exposition de services historiques
+    risque: Telnet, FTP et autres services en clair des débuts des réseaux restent actifs sur des équipements anciens et exposent identifiants et données.
+    conseil: Désactiver les services en clair et les remplacer par SSH, SFTP et leurs équivalents chiffrés.
+    gravite: critique
+sources:
+  - titre: Internet Society — A Brief History of the Internet
+    url: https://www.internetsociety.org/internet/history-internet/brief-history-internet/
+  - titre: Encyclopaedia Britannica — Internet
+    url: https://www.britannica.com/technology/Internet

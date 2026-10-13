@@ -1,0 +1,151 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-audit-rules-networkconfig-modification
+titre: Audit des modifications de l'environnement reseau (nom d'hote, /etc/hosts, /etc/issue...)
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: audit
+  type_controle: regle-audit
+  niveaux:
+    cis: 2
+    anssi: renforce
+source:
+  origine: complianceascode
+  regle: audit_rules_networkconfig_modification
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/auditing/auditd_configure_rules/audit_rules_networkconfig_modification
+mots_cles:
+- audit
+- auditctl
+- auditd
+- hostname
+- hosts
+- journalisation
+- nom d'hote
+- reseau
+- sethostname
+- tracabilite
+resume: Audit des modifications de l'environnement reseau (nom d'hote, /etc/hosts, /etc/issue...). (regle
+  audit_rules_networkconfig_modification, ComplianceAsCode 0.1.82).
+observer:
+- commande: auditctl -l
+  but: Lire les regles d'audit CHARGEES dans le noyau
+  lecture: Une ligne par regle (-w chemin -p wa, ou -a always,exit -F arch=b64 -S appel...). « No rules
+    » = aucune regle.
+- commande: grep -hs '^-' /etc/audit/rules.d/*.rules
+  but: Lire les regles PERSISTANTES (rechargees au demarrage)
+  lecture: Memes regles qu'auditctl -l ; absentes ici = perdues au redemarrage.
+controles:
+- controle: -w /etc/issue -p wa; -w /etc/issue.net -p wa; -w /etc/hosts -p wa; -w /etc/networks -p wa;
+    -w /etc/network/ -p wa; -a always,exit -S sethostname; -a always,exit -S setdomainname
+  bon: toutes les regles chargees et persistantes
+  mauvais: regle absente (ou absente au redemarrage)
+  gravite: moyenne
+  risque: 'L''environnement reseau (nom d''hote, /etc/hosts, /etc/issue...) ne doit changer que par action
+    de l''administrateur : toute modification doit etre tracee.'
+  action: Ajouter la regle dans un fichier de /etc/audit/rules.d/ (ex. 50-sentinelle.rules), puis « augenrules
+    --load ». Si la configuration est immuable (-e 2), redemarrer.
+  playbook: infra.audit-regles
+  parametres:
+    regles: -w /etc/issue -p wa -k mael | -w /etc/issue.net -p wa -k mael | -w /etc/hosts -p wa -k mael
+      | -w /etc/networks -p wa -k mael | -w /etc/network/ -p wa -k mael | -a always,exit -F arch=b32 -S
+      sethostname -k mael | -a always,exit -F arch=b64 -S sethostname -k mael | -a always,exit -F arch=b32
+      -S setdomainname -k mael | -a always,exit -F arch=b64 -S setdomainname -k mael
+  evaluation:
+  - lecteur: audit
+    comparateur: surveille
+    champ: /etc/issue
+    attendu: wa
+    commande: 0
+  - lecteur: audit
+    comparateur: surveille
+    champ: /etc/issue
+    attendu: wa
+    commande: 1
+  - lecteur: audit
+    comparateur: surveille
+    champ: /etc/issue.net
+    attendu: wa
+    commande: 0
+  - lecteur: audit
+    comparateur: surveille
+    champ: /etc/issue.net
+    attendu: wa
+    commande: 1
+  - lecteur: audit
+    comparateur: surveille
+    champ: /etc/hosts
+    attendu: wa
+    commande: 0
+  - lecteur: audit
+    comparateur: surveille
+    champ: /etc/hosts
+    attendu: wa
+    commande: 1
+  - lecteur: audit
+    comparateur: surveille
+    champ: /etc/networks
+    attendu: wa
+    commande: 0
+  - lecteur: audit
+    comparateur: surveille
+    champ: /etc/networks
+    attendu: wa
+    commande: 1
+  - lecteur: audit
+    comparateur: surveille
+    champ: /etc/network/
+    attendu: wa
+    commande: 0
+  - lecteur: audit
+    comparateur: surveille
+    champ: /etc/network/
+    attendu: wa
+    commande: 1
+  - lecteur: audit
+    comparateur: appels
+    champ: sethostname
+    commande: 0
+  - lecteur: audit
+    comparateur: appels
+    champ: sethostname
+    commande: 1
+  - lecteur: audit
+    comparateur: appels
+    champ: setdomainname
+    commande: 0
+  - lecteur: audit
+    comparateur: appels
+    champ: setdomainname
+    commande: 1
+pieges:
+- auditctl -l et /etc/audit/rules.d exigent les droits root (sudo).
+- 'Une regle chargee a la main (auditctl -w) disparait au redemarrage : elle doit aussi etre dans /etc/audit/rules.d/
+  (puis augenrules --load).'
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 6.3.3.5 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 6.2.3.5 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 6.2.3.5 (niveau 2)
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R73 (niveau renforce)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

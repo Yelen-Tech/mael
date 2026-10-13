@@ -1,0 +1,69 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-file-permissions-user-cfg
+titre: Droits de /boot/grub/user.cfg (0600 au plus)
+domaine: systeme
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: demarrage
+  type_controle: droits-fichier
+  niveaux:
+    cis: null
+    anssi: renforce
+source:
+  origine: complianceascode
+  regle: file_permissions_user_cfg
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/bootloader-grub2/non-uefi/file_permissions_user_cfg
+mots_cles:
+- boot
+- chargeur
+- chmod
+- demarrage
+- droits
+- fichier
+- fichiers
+- grub
+- permissions
+- user
+resume: 'Droits de /boot/grub/user.cfg : 0600 ou plus strict (aucun droit en plus). (regle file_permissions_user_cfg,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: stat -c '%a %U %G %n' /boot/grub/user.cfg 2>/dev/null
+  but: Lire droits, proprietaire et groupe (droits)
+  lecture: '1re colonne = droits en octal : aucun bit ne doit depasser 0600. Aucune ligne = fichier absent.'
+controles:
+- controle: droits <= 0600
+  bon: 0600 ou plus strict (aucun droit en plus)
+  mauvais: toute autre valeur
+  gravite: moyenne
+  risque: grub.cfg et user.cfg decident quel noyau demarre et avec quels arguments (mode mono-utilisateur,
+    protections desactivees...). Qui peut les modifier prend la main au prochain demarrage ; qui peut
+    les lire y trouve les faiblesses de la configuration. Ils doivent etre reserves a root.
+  action: chmod 0600 sur les fichiers concernes (u-x,go-wx selon le cas).
+  playbook: infra.fichier-droits
+  parametres:
+    chemin: /boot/grub/user.cfg
+    mode: '0600'
+  evaluation:
+  - commande: 0
+    lecteur: stat
+    champ: droits
+    comparateur: droits_au_plus
+    attendu: '0600'
+pieges:
+- 'Sans sudo, certains fichiers (ex. /etc/shadow) ne sont pas lisibles par stat/find : relancer avec les
+  droits root.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R29 (niveau renforce)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

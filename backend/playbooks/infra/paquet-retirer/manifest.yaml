@@ -1,0 +1,19 @@
+id: infra.paquet-retirer
+titre: "Paquet : retirer un paquet"
+description: >
+  Retire le paquet (apt-get remove : la configuration est gardee). Refuse si le retrait emporterait d autres paquets.
+risque: moyen
+parametres:
+  - {nom: paquet, type: string, requis: true, motif: '^[a-z0-9][a-z0-9+.-]*( [a-z0-9][a-z0-9+.-]*)*$'}
+racine_requise: true
+reversible: true
+simulation: true
+idempotent: true
+redemarrage: false
+indisponibilite: "arret du service fourni par le paquet"
+source:
+  origine: complianceascode
+  version: 0.1.82
+  gabarit: shared/templates/package_removed/bash.template
+  ecarts: "arret si d autres paquets seraient retires ; version gardee pour reinstaller"
+references: [ANSSI-BP-028, CIS Benchmarks]

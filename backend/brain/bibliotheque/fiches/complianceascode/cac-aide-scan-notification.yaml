@@ -1,0 +1,62 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-aide-scan-notification
+titre: 'AIDE : rapport de controle envoye par courriel'
+domaine: systeme
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: integrite
+  type_controle: detection
+  niveaux:
+    cis: null
+    anssi: eleve
+source:
+  origine: complianceascode
+  regle: aide_scan_notification
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/software/integrity/software-integrity/aide/aide_scan_notification
+mots_cles:
+- aide
+- courriel
+- notification
+- rapport
+resume: 'AIDE : rapport de controle envoye par courriel. (regle aide_scan_notification, ComplianceAsCode
+  0.1.82).'
+observer:
+- commande: dpkg -s aide >/dev/null 2>&1 || echo 'SENTINELLE:SANS_OBJET'; grep -Rhs 'aide.*--check.*|.*mail'
+    /etc/crontab /etc/cron.d/
+  but: Chercher l'envoi du rapport AIDE
+  lecture: Une ligne = conforme ; aucune = ecart.
+controles:
+- controle: rapport envoye a root@localhost
+  bon: une ligne aide --check | mail
+  mauvais: rapport non transmis
+  gravite: moyenne
+  risque: 'Un controle d''integrite dont personne ne lit le resultat ne sert a rien : le rapport doit
+    parvenir aux administrateurs.'
+  action: Ajouter « | /bin/mail -s "$(hostname) - AIDE" root@localhost » a la tache AIDE.
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: presente
+pieges:
+- 'Sur Debian/Ubuntu, /etc/cron.daily/aide envoie deja un rapport (MAILTO de /etc/default/aide) : a verifier
+  avant de conclure.'
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R76 (niveau eleve)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

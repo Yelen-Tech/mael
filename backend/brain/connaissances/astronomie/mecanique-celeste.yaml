@@ -1,0 +1,43 @@
+id: mecanique-celeste
+schema: 1
+nom: "Mécanique céleste et éphémérides"
+resume: "La mécanique céleste décrit les orbites par six éléments képleriens et leurs perturbations ; le JPL publie les éphémérides de référence, accessibles par le système Horizons."
+famille: astronomie
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - éléments képleriens
+  - orbite
+  - éphémérides
+  - jpl
+  - horizons
+  - perturbations
+  - tle
+  - j2
+  - intégration numérique
+caracteristiques:
+  elements_kepleriens: "six paramètres définissent une orbite képlerienne à une époque donnée : demi-grand axe, excentricité, inclinaison, longitude du nœud ascendant, argument du périastre et anomalie moyenne"
+  perturbations: "l'orbite réelle s'écarte de l'ellipse idéale sous l'effet de l'aplatissement terrestre (coefficient J2), des marées, de la traîne atmosphérique, de la pression de radiation solaire et des tiers gravitants"
+  ephemerides_jpl: "le Jet Propulsion Laboratory publie les éphémérides planétaires de référence (séries DE) issues d'intégrations numériques ajustées sur les observations ; le système Horizons les sert en ligne et par API"
+  orbites_artificielles: "les satellites se suivent par des TLE (two-line elements), jeux d'éléments moyens rafraîchis régulièrement car la traîne et les perturbations les rendent caducs en quelques jours"
+  lien_informatique: "éphémérides et TLE alimentent la prévision de conjonctions et la surveillance de l'espace, domaines où la fraîcheur et l'intégrité des données déterminent la sécurité des satellites"
+securite:
+  - titre: Éléments orbitaux périmés
+    risque: "Un TLE de quelques jours peut induire une erreur de position de plusieurs kilomètres, faussant la prévention des collisions entre satellites ou l'identification d'un objet."
+    conseil: "Rafraîchir les éléments orbitaux depuis une source de référence (Space-Track, CelesTrak) et horodater chaque jeu d'éléments."
+    gravite: elevee
+  - titre: Intégrité des données d'éphémérides
+    risque: "Des éphémérides ou des TLE falsifiés en amont peuvent aveugler un système de surveillance de l'espace ou faire manquer une fenêtre de communication avec un satellite."
+    conseil: "Vérifier l'origine et l'empreinte des fichiers d'éléments, et recouper au moins deux sources indépendantes pour les opérations critiques."
+    gravite: moyenne
+  - titre: Approximations de modèle hors de leur domaine
+    risque: "Appliquer le problème à deux corps ou un propagateur SGP4 au-delà de son domaine de validité (orbites hautes, longues durées) produit des prévisions erronées sans avertissement."
+    conseil: "Connaître le domaine de validité de chaque modèle de propagation et valider sur des cas publiés (éphémérides Horizons) avant production."
+    gravite: moyenne
+sources:
+  - titre: "NASA/JPL — Horizons System"
+    url: https://ssd.jpl.nasa.gov/horizons/
+  - titre: "Wikipédia — Éléments orbitaux"
+    url: https://fr.wikipedia.org/wiki/%C3%89l%C3%A9ments_orbitaux

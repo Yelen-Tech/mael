@@ -1,0 +1,42 @@
+id: app.en-tetes-http
+titre: "En-tetes de securite HTTP"
+description: >
+  Ajoute les en-tetes de securite manquants (CSP, HSTS, X-Frame-Options,
+  Referrer-Policy, X-Content-Type-Options) et masque la version du serveur.
+gravite: moyenne
+risque: faible
+
+cibles:
+  - nginx
+  - apache
+
+parametres:
+  - nom: domaine
+    type: string
+    requis: true
+  - nom: politique_csp
+    type: string
+    defaut: "default-src 'self'; frame-ancestors 'none'"
+  - nom: duree_hsts
+    type: integer
+    defaut: 31536000
+
+racine_requise: true
+reversible: true
+simulation: true
+indisponibilite: "0 s - rechargement a chaud"
+idempotent: true
+
+references:
+  - OWASP Secure Headers Project
+  - ANSSI-BP-028
+  - CIS Benchmarks
+
+# Constats qui declenchent la proposition de ce playbook.
+repond_a:
+  - entete.content-security-policy
+  - entete.strict-transport-security
+  - entete.x-frame-options
+  - entete.referrer-policy
+  - entete.x-content-type-options
+  - entete.server

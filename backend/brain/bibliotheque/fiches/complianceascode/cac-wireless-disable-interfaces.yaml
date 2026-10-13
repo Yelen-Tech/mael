@@ -1,0 +1,68 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-wireless-disable-interfaces
+titre: Aucune interface reseau sans fil active
+domaine: reseau
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: exposition-reseau
+  type_controle: detection
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: wireless_disable_interfaces
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/network/network-wireless/wireless_software/wireless_disable_interfaces
+mots_cles:
+- interface
+- sans fil
+- wifi
+- wireless
+resume: Aucune interface reseau sans fil active. (regle wireless_disable_interfaces, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: ls -L -d /sys/class/net/*/wireless 2>/dev/null | xargs -r dirname | xargs -r basename -a
+  but: Lister les interfaces sans fil
+  lecture: Chaque ligne est un element en defaut ; aucune ligne = conforme.
+controles:
+- controle: aucune interface wifi
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: 'Une interface sans fil ouvre des attaques impossibles sur un reseau filaire : faux point d''acces,
+    association malveillante, pont vers le reseau interne. Sur un serveur, elle doit etre desactivee.'
+  action: Desactiver les interfaces listees (nmcli radio all off) ou retirer le materiel.
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- Non applicable sans materiel sans fil ; sur un portable, a valider avec l'exploitant.
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 3.1.2 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 3.1.2 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 3.1.2 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

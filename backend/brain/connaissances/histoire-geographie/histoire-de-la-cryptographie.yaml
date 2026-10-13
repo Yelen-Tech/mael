@@ -1,0 +1,44 @@
+id: histoire-de-la-cryptographie
+schema: 1
+nom: Histoire de la cryptographie
+resume: "Du chiffre de César aux standards modernes : Enigma cassée pendant la Seconde Guerre mondiale, puis Diffie-Hellman (1976) et RSA (1977) fondent la cryptographie à clé publique, couronnée par AES (2001)."
+famille: histoire-geographie
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - cryptographie
+  - enigma
+  - rsa
+  - diffie-hellman
+  - des
+  - aes
+  - chiffrement
+  - clé publique
+  - turing
+  - sha
+caracteristiques:
+  antiquite_classique: "Chiffre de César (décalage de lettres) puis chiffre de Vigenère (XVIe siècle), longtemps tenu pour indéchiffrable avant les analyses de fréquences."
+  enigma: "Machine électromécanique allemande des années 1930-1945 ; cassée par les Polonais puis par Bletchley Park (Turing, notamment), ce qui a accéléré la naissance de l'informatique."
+  age_moderne: "1976 : Diffie et Hellman publient l'échange de clés à clé publique ; 1977 : Rivest, Shamir et Adleman publient RSA ; 1977 : DES devient standard américain."
+  standards_actuels: "2001 : AES (algorithme Rijndael) remplace DES ; la famille SHA-2 et l'arrivée de SHA-3 (2015) cadrent le hachage moderne."
+  lecon_centrale: "La sécurité par le secret de l'algorithme échoue : le principe de Kerckhoffs (1883) impose que seule la clé soit secrète."
+securite:
+  - titre: Algorithmes obsolètes encore présents
+    risque: DES, 3DES, RC4, MD5 et SHA-1 sont cassés ou trop faibles mais subsistent dans des systèmes et des certificats anciens.
+    conseil: Migrer vers AES et SHA-2/SHA-3 et scanner régulièrement les configurations TLS pour détecter les suites obsolètes.
+    gravite: elevee
+  - titre: Cryptographie maison
+    risque: Concevoir son propre algorithme ou son propre protocole de chiffrement aboutit presque toujours à une cassure, comme l'illustre toute l'histoire du domaine.
+    conseil: N'utiliser que des algorithmes publics éprouvés via des bibliothèques reconnues et auditées.
+    gravite: critique
+  - titre: Menace du calcul quantique
+    risque: L'algorithme de Shor (1994) casserait RSA et les courbes elliptiques sur un ordinateur quantique suffisamment puissant ; le NIST a publié en 2024 des standards post-quantiques.
+    conseil: Suivre la migration post-quantique et inventorier dès maintenant les usages de cryptographie asymétrique à longue durée de vie.
+    gravite: moyenne
+sources:
+  - titre: NIST — Announcing the Advanced Encryption Standard (AES), FIPS 197
+    url: https://csrc.nist.gov/pubs/fips/197/final
+  - titre: Encyclopaedia Britannica — Enigma
+    url: https://www.britannica.com/topic/Enigma-German-code-device

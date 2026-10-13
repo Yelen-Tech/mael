@@ -1,0 +1,73 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-audit-rules-immutable
+titre: Configuration d'audit immuable (-e 2 en derniere regle)
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: audit
+  type_controle: detection
+  niveaux:
+    cis: 2
+    anssi: renforce
+source:
+  origine: complianceascode
+  regle: audit_rules_immutable
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/auditing/auditd_configure_rules/audit_rules_immutable
+mots_cles:
+- -e 2
+- audit
+- auditctl
+- immuable
+resume: Configuration d'audit immuable (-e 2 en derniere regle). (regle audit_rules_immutable, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: ls /etc/audit/rules.d/ >/dev/null || echo 'SENTINELLE:ILLISIBLE'; grep -hs '^[[:space:]]*[^#[:space:]]'
+    /etc/audit/rules.d/*.rules | tail -1 | grep -x -- '-e 2'
+  but: Lire la derniere regle d'audit persistante
+  lecture: « -e 2 » = regles figees jusqu'au redemarrage ; aucune ligne = modifiables a chaud.
+controles:
+- controle: derniere regle = -e 2
+  bon: -e 2
+  mauvais: autre derniere regle
+  gravite: moyenne
+  risque: 'Rendre la configuration d''audit immuable empeche qu''elle soit modifiee par erreur ou par
+    un attaquant pendant le fonctionnement. Contrepartie : tout changement legitime des regles exige un
+    redemarrage.'
+  action: Ajouter « -e 2 » a la fin du dernier fichier de /etc/audit/rules.d/ (ex. 99-finalize.rules),
+    puis redemarrer.
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: presente
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 6.3.3.20 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 6.2.3.20 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 6.2.3.20 (niveau 2)
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R73 (niveau renforce)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

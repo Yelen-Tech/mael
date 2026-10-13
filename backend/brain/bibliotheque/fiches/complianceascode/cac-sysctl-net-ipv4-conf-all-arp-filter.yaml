@@ -1,0 +1,80 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-sysctl-net-ipv4-conf-all-arp-filter
+titre: Parametre noyau net.ipv4.conf.all.arp_filter = 1
+domaine: reseau
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: parametres-reseau
+  type_controle: parametre-noyau
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: sysctl_net_ipv4_conf_all_arp_filter
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/network/network-kernel/network_host_and_router_parameters/sysctl_net_ipv4_conf_all_arp_filter
+mots_cles:
+- conf
+- filter
+- filtrage
+- ipv4
+- net.ipv4.conf.all.arp_filter
+- noyau
+- parametre
+- sysctl
+- usurpation
+resume: Le parametre noyau net.ipv4.conf.all.arp_filter doit valoir 1, en memoire et de facon persistante.
+  (regle sysctl_net_ipv4_conf_all_arp_filter, ComplianceAsCode 0.1.82).
+observer:
+- commande: sysctl -n net.ipv4.conf.all.arp_filter
+  but: Lire la valeur ACTIVE de net.ipv4.conf.all.arp_filter
+  lecture: 'Attendu : 1.'
+- commande: grep -Rs '^[[:space:]]*net\.ipv4\.conf\.all\.arp_filter[[:space:]]*=' /etc/sysctl.conf /etc/sysctl.d/
+    /run/sysctl.d/ /usr/local/lib/sysctl.d/ /usr/lib/sysctl.d/ 2>/dev/null
+  but: Verifier la valeur PERSISTANTE (appliquee au redemarrage)
+  lecture: 'Valeur retenue au demarrage = derniere affectation (fichiers tries par nom, /etc/sysctl.conf
+    en dernier) : attendu « net.ipv4.conf.all.arp_filter = 1 » ; aucune ligne = non persistant.'
+controles:
+- controle: net.ipv4.conf.all.arp_filter = 1
+  bon: 1 en memoire et au demarrage
+  mauvais: autre valeur, ou valeur non persistante
+  gravite: moyenne
+  risque: 'Sans filtrage ARP par interface, le noyau peut repondre sur une interface avec l''adresse d''une
+    autre : la machine revele des reseaux qu''elle relie et facilite l''usurpation ARP.'
+  action: Ecrire « net.ipv4.conf.all.arp_filter = 1 » dans /etc/sysctl.conf (lu en dernier) puis appliquer
+    avec sysctl --system.
+  playbook: infra.sysctl
+  parametres:
+    cle: net.ipv4.conf.all.arp_filter
+    valeur: '1'
+  evaluation:
+  - commande: 0
+    lecteur: valeur
+    comparateur: egal
+    attendu: '1'
+  - commande: 1
+    lecteur: affectations
+    comparateur: toutes_egales
+    champ: net.ipv4.conf.all.arp_filter
+    attendu: '1'
+    precedence: sysctl
+pieges:
+- 'Le fichier lu en dernier l''emporte (ordre alphabetique dans /etc/sysctl.d/) : verifier qu''aucun autre
+  fichier ne remet une autre valeur.'
+- 'Valeur corrigee par MAEL : ANSSI-BP-028 R12 demande arp_filter = 1 ; ComplianceAsCode 0.1.82 oublie
+  de fixer la valeur (defaut 0).'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R12 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

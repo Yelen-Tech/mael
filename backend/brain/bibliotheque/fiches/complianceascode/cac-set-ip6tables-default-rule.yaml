@@ -1,0 +1,66 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-set-ip6tables-default-rule
+titre: 'ip6tables : politique DROP sur INPUT (si iptables est l''outil retenu)'
+domaine: reseau
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: pare-feu
+  type_controle: detection
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: set_ip6tables_default_rule
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/network/network-iptables/iptables_activation/set_ip6tables_default_rule
+mots_cles:
+- drop
+- ip6tables
+- ipv6
+- politique
+resume: 'ip6tables : politique DROP sur INPUT. (regle set_ip6tables_default_rule, ComplianceAsCode 0.1.82).'
+observer:
+- commande: ip6tables -L INPUT -n | head -1
+  but: Lire la politique IPv6 de la chaine INPUT
+  lecture: 'Attendu : « Chain INPUT (policy DROP) » (non applicable si IPv6 est desactive).'
+controles:
+- controle: policy DROP
+  bon: Chain INPUT (policy DROP)
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: 'Dans ip6tables, la politique par defaut n''est appliquee qu''apres examen de toutes les regles
+    de la table. La mettre a DROP est la bonne conception d''un pare-feu : tout paquet non explicitement
+    permis ne doit pas etre accepte.'
+  action: ip6tables -P INPUT DROP, puis sauvegarder.
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation: []
+pieges:
+- 'Regle conditionnelle : ne s''applique que si iptables est l''outil retenu (var_network_filtering_service).
+  Demander ou constater l''outil en place avant de conclure ; le code ne juge pas cette regle seul.'
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 4.3.3.1 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 4.4.3.1 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 4.4.3.1 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

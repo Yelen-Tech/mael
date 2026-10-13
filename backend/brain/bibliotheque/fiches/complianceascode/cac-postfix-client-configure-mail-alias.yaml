@@ -1,0 +1,60 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-postfix-client-configure-mail-alias
+titre: Les courriels de root sont rediriges vers une adresse surveillee
+domaine: dns
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: messagerie
+  type_controle: detection
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: postfix_client_configure_mail_alias
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/mail/postfix_client/postfix_client_configure_mail_alias
+mots_cles:
+- aliases
+- courriel
+- messagerie
+- root
+resume: Les courriels de root sont rediriges vers une adresse surveillee. (regle postfix_client_configure_mail_alias,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: dpkg -s postfix >/dev/null 2>&1 || echo 'SENTINELLE:SANS_OBJET'; grep -Es '^root:[[:space:]]*[^[:space:]]+'
+    /etc/aliases
+  but: Lire l'alias de root
+  lecture: Une ligne = conforme ; aucune = ecart.
+controles:
+- controle: alias root defini
+  bon: 'une ligne « root: adresse »'
+  mauvais: aucun alias
+  gravite: moyenne
+  risque: 'De nombreux services alertent root par courriel (disque plein, echec d''AIDE...) : sans redirection
+    vers une adresse surveillee, ces alertes ne sont jamais lues.'
+  action: 'Ajouter « root: change_me@localhost » a /etc/aliases, puis newaliases.'
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: presente
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R75 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

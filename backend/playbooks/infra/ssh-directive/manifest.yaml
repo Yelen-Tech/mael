@@ -1,0 +1,24 @@
+id: infra.ssh-directive
+titre: "SSH : fixer une directive de sshd"
+description: >
+  Retire la directive de /etc/ssh/sshd_config et des fichiers de
+  /etc/ssh/sshd_config.d/, puis l'ecrit dans le fichier de durcissement
+  /etc/ssh/sshd_config.d/00-mael-durcissement.conf (lu en premier : la
+  premiere occurrence gagne), comme la source. sshd -t valide avant
+  rechargement ; sinon retour arriere automatique.
+risque: moyen
+parametres:
+  - {nom: directive, type: string, requis: true, motif: '^[A-Za-z]+$'}
+  - {nom: valeur, type: string, requis: true, motif: '^[A-Za-z0-9@,._:/+-]+( [A-Za-z0-9@,._:/+-]+)*$'}
+racine_requise: true
+reversible: true
+simulation: true
+idempotent: true
+redemarrage: false
+indisponibilite: "0 s - rechargement de sshd (garder une session ouverte)"
+source:
+  origine: complianceascode
+  version: 0.1.82
+  gabarit: shared/templates/sshd_lineinfile/bash.template (bash_sshd_remediation, config distribuee)
+  ecarts: "nom du fichier de durcissement ; validation sshd -t et retour arriere ; refus si sshd_config n'inclut pas sshd_config.d"
+references: [ANSSI (OpenSSH), CIS Benchmarks]

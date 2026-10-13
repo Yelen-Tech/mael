@@ -1,0 +1,68 @@
+id: entetes-http
+titre: "En-tetes de securite HTTP"
+domaine: web
+schema: 2
+version: 1
+etat: verifie
+verifie_le: 2026-09-16
+teste_sur: []            # a remplir par les tests en conteneur (etape 2.5)
+applicable:
+  os: [linux]
+taxonomie:
+  theme: web
+  type_controle: observation
+  niveaux: {cis: null, anssi: null}   # fiche manuelle hors referentiel
+source:
+  origine: manuel
+mots_cles: [http, en-tete, header, csp, hsts, x-frame-options, clickjacking, web, serveur]
+resume: >
+  Un serveur web devrait renvoyer des en-tetes qui protegent le navigateur du
+  visiteur (injection, clickjacking, downgrade). On lit les en-tetes de reponse,
+  on repere ceux qui manquent. Lecture seule.
+
+observer:
+  - commande: "curl -sI https://DOMAINE"
+    but: "Lire tous les en-tetes de reponse d'un coup"
+    lecture: "Presence/absence de Strict-Transport-Security, Content-Security-Policy, X-Frame-Options, X-Content-Type-Options, Referrer-Policy ; et la banniere Server."
+  - commande: "curl -sI https://DOMAINE | grep -iE 'strict-transport|content-security|x-frame|x-content-type|referrer-policy|^server'"
+    but: "Isoler les en-tetes de securite et la banniere serveur"
+    lecture: "Une ligne par en-tete present ; ce qui n'apparait pas est manquant."
+
+controles:
+  - controle: "Strict-Transport-Security (HSTS)"
+    bon: "present, max-age >= 15552000"
+    mauvais: "absent"
+    gravite: moyenne
+    risque: "Sans HSTS, un attaquant peut forcer une connexion en HTTP clair (downgrade) et intercepter."
+    action: "Ajouter l'en-tete HSTS. Playbook app.en-tetes-http disponible."
+    playbook: app.en-tetes-http
+  - controle: "Content-Security-Policy (CSP)"
+    bon: "present, restrictif"
+    mauvais: "absent"
+    gravite: moyenne
+    risque: "Sans CSP, une injection de script (XSS) s'execute sans entrave."
+    action: "Definir une CSP adaptee au site. Playbook app.en-tetes-http."
+    playbook: app.en-tetes-http
+  - controle: "X-Frame-Options"
+    bon: "DENY ou SAMEORIGIN"
+    mauvais: "absent"
+    gravite: faible
+    risque: "Sans lui, la page peut etre placee dans une iframe piege (clickjacking)."
+    action: "Ajouter X-Frame-Options: SAMEORIGIN (ou frame-ancestors en CSP)."
+    playbook: app.en-tetes-http
+  - controle: "Banniere Server"
+    bon: "masquee ou minimale"
+    mauvais: "version precise exposee (ex. nginx/1.18.0)"
+    gravite: faible
+    risque: "La version exacte aide un attaquant a cibler des failles connues."
+    action: "Masquer la version (server_tokens off sous nginx)."
+    playbook: app.en-tetes-http
+
+pieges:
+  - "Remplacer DOMAINE. Tester l'URL reelle : un en-tete peut n'apparaitre que sur https, pas sur http."
+  - "Un en-tete present mais mal configure (CSP en 'unsafe-inline') vaut presque son absence : lire la valeur, pas seulement la presence."
+
+referentiels:
+  - {nom: ANSSI, document: "Recommandations pour la securisation des sites web"}
+  - {nom: OWASP, document: "OWASP Secure Headers Project"}
+  - {nom: autre, document: "MDN Web Docs - HTTP headers"}

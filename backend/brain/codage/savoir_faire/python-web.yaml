@@ -1,0 +1,97 @@
+# Savoir-faire du specialiste Python : comptes, fichiers, FastAPI, Django.
+specialiste: python
+fiches:
+  - id: flask-connexion
+    titre: une connexion Flask avec mot de passe hache
+    gabarit: flask-connexion.py
+    mots: [connexion, login, compte, mot, passe, session, authentification, flask]
+    comment:
+      - "hacher a l'inscription (werkzeug.security.generate_password_hash), comparer avec check_password_hash"
+      - "app.secret_key lu dans os.environ ; SESSION_COOKIE_SECURE=True, SESSION_COOKIE_SAMESITE=\"Lax\""
+      - "le meme message (401) si le compte ou le mot de passe est faux ; session.clear() avant d'ouvrir la session"
+    pourquoi: "OWASP Authentication : jamais de mot de passe en clair ; une cle de session dans le code permet de forger des sessions ; vider la session evite sa fixation."
+    source: "Werkzeug, security helpers — https://werkzeug.palletsprojects.com/en/stable/utils/#module-werkzeug.security"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-04-08"
+    dependances:
+      - {nom: flask, type: python, pourquoi: "le serveur (werkzeug vient avec)"}
+      - {nom: "FLASK_SECRET_KEY", type: fichier, pourquoi: "variable d'environnement a documenter (README), jamais dans le code"}
+    juges: [secret-en-dur, hash-faible, cookie-faible]
+
+  - id: flask-televersement
+    titre: recevoir un fichier envoye
+    gabarit: flask-televersement.py
+    mots: [televerser, televersement, envoyer, fichier, upload, image, document]
+    comment:
+      - "app.config[\"MAX_CONTENT_LENGTH\"] borne la taille ; secure_filename() nettoie le nom"
+      - "une liste d'extensions permises ; 415 sinon ; enregistrer dans un dossier hors du code servi"
+      - "mieux : un nom choisi par le serveur (uuid4().hex + extension)"
+    pourquoi: "un nom ../../app.py ecrase le code ; un fichier .html televerse et servi devient une page piegee (OWASP File Upload)."
+    source: "Flask, Uploading Files — https://flask.palletsprojects.com/en/stable/patterns/fileuploads/"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-04-08"
+    dependances: []
+    juges: [traversee-chemin]
+
+  - id: fastapi-valide
+    titre: une route FastAPI validee
+    gabarit: fastapi-route.py
+    mots: [fastapi, api, route, pydantic, validation, json, commandes]
+    comment:
+      - "un modele pydantic par corps de requete, avec ses bornes : Field(gt=0, le=100)"
+      - "status_code=201 sur la creation ; HTTPException(status_code=404, detail=...) quand rien n'est trouve"
+      - "tester avec fastapi.testclient.TestClient(app)"
+    pourquoi: "la validation a lieu AVANT la fonction : une donnee hors bornes recoit 422 sans toucher a la base ; les codes HTTP disent le resultat (RFC 9110)."
+    source: "FastAPI, Request Body — https://fastapi.tiangolo.com/tutorial/body/"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-04-08"
+    dependances:
+      - {nom: fastapi, type: python, pourquoi: "le cadre (pydantic vient avec)"}
+      - {nom: httpx, type: python, pourquoi: "requis par TestClient pour les tests"}
+    juges: []
+
+  - id: configuration-par-environnement
+    titre: la configuration lue dans l'environnement
+    gabarit: config-env.py
+    mots: [configuration, config, secret, cle, environnement, variable, mot, passe, base]
+    comment:
+      - "os.environ[\"NOM\"] pour ce qui est obligatoire (erreur claire s'il manque), os.environ.get(\"NOM\", defaut) sinon"
+      - "un fichier .env.exemple qui liste les variables SANS leurs valeurs ; le vrai .env dans .gitignore"
+    pourquoi: "The Twelve-Factor App, III : la configuration varie d'un deploiement a l'autre, le code non ; un secret ecrit dans le code finit publie (CWE-798)."
+    source: "The Twelve-Factor App, Config — https://12factor.net/config"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances:
+      - {nom: .gitignore, type: fichier, pourquoi: "garde .env hors du depot"}
+    juges: [secret-en-dur]
+
+  - id: django-vue-protegee
+    titre: une vue Django protegee
+    gabarit: django-vue.py
+    mots: [django, vue, view, connexion, proprietaire, objet, compte]
+    comment:
+      - "@login_required sur la vue ; l'objet cherche AVEC son proprietaire : get_object_or_404(Commande, pk=pk, client=request.user)"
+      - "les formulaires Django pour valider ; {% csrf_token %} dans chaque formulaire POST"
+    pourquoi: "OWASP A01 (controle d'acces) : sans le filtre sur le proprietaire, changer l'id dans l'URL montre la commande d'un autre (IDOR)."
+    source: "Django, Using the authentication system — https://docs.djangoproject.com/en/stable/topics/auth/default/"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-04-08"
+    dependances:
+      - {nom: django, type: python, pourquoi: "le cadre"}
+    juges: [csrf-desactive]
+
+  - id: django-production
+    titre: des reglages Django de production
+    gabarit: django-settings.py
+    mots: [django, settings, reglages, production, deploiement, debug]
+    comment:
+      - "DEBUG = False ; SECRET_KEY et ALLOWED_HOSTS lus dans l'environnement"
+      - "SESSION_COOKIE_SECURE, CSRF_COOKIE_SECURE, SECURE_HSTS_SECONDS ; manage.py check --deploy avant de livrer"
+      - "le SQL brut seulement avec parametres : cursor.execute(\"... WHERE id = %s\", [id])"
+    pourquoi: "DEBUG=True affiche la configuration et le code a quiconque provoque une erreur ; check --deploy liste ce qui manque."
+    source: "Django, Deployment checklist — https://docs.djangoproject.com/en/stable/howto/deployment/checklist/"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-04-08"
+    dependances:
+      - {nom: django, type: python, pourquoi: "le cadre"}
+    juges: [debug-actif, hotes-ouverts, injection-sql]

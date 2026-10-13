@@ -1,0 +1,63 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-package-ypbind-removed
+titre: Paquet ypbind absent
+domaine: services
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: services-inutiles
+  type_controle: paquet-absent
+  niveaux:
+    cis: null
+    anssi: minimal
+source:
+  origine: complianceascode
+  regle: package_ypbind_removed
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/obsolete/nis/package_ypbind_removed
+mots_cles:
+- installe
+- logiciel
+- paquet
+- paquets
+- ypbind
+resume: Le paquet ypbind doit etre absent. (regle package_ypbind_removed, ComplianceAsCode 0.1.82).
+observer:
+- commande: dpkg-query -W -f='${binary:Package} ${Status}\n' ypbind 2>/dev/null
+  but: Savoir si ypbind est installe
+  lecture: « install ok installed » = installe ; aucune ligne ou « deinstall » = absent.
+  variantes:
+    rhel: rpm -q ypbind
+controles:
+- controle: paquet ypbind absent
+  bon: absent
+  mauvais: installe
+  gravite: moyenne
+  risque: 'NIS est intrinsequement peu sur : vulnerable aux denis de service et aux debordements de tampon,
+    avec une authentification faible des requetes sur les tables NIS. Il est generalement remplace par
+    LDAP : retirer le client ypbind est recommande.'
+  action: Desinstaller ypbind (apt purge) apres avoir verifie qu'aucun service n'en depend.
+  playbook: infra.paquet-retirer
+  parametres:
+    paquet: ypbind
+  evaluation:
+  - commande: 0
+    lecteur: dpkg
+    comparateur: absent
+    attendu:
+    - ypbind
+pieges:
+- 'Un paquet peut etre requis par une application metier : confirmer avec l''exploitant avant de le retirer.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R62 (niveau minimal)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

@@ -1,0 +1,80 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-mount-option-dev-shm-noexec
+titre: Option noexec sur /dev/shm
+domaine: fichiers
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: montage
+  type_controle: option-montage
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: mount_option_dev_shm_noexec
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/permissions/partitions/mount_option_dev_shm_noexec
+mots_cles:
+- memoire partagee
+- montage
+- noexec
+- option
+- partition
+resume: /dev/shm doit etre monte avec l'option noexec. (regle mount_option_dev_shm_noexec, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: findmnt -kn /dev/shm
+  but: Lire les options de montage ACTIVES de /dev/shm
+  lecture: La colonne des options doit contenir noexec. Aucune ligne = pas de montage separe.
+- commande: grep -E '[[:space:]]/dev/shm[[:space:]]' /etc/fstab
+  but: Verifier la configuration PERSISTANTE
+  lecture: La 4e colonne doit contenir noexec.
+controles:
+- controle: /dev/shm monte avec noexec
+  bon: noexec present (actif et dans /etc/fstab)
+  mauvais: noexec absent
+  gravite: moyenne
+  risque: 'Tout le monde peut ecrire dans ce repertoire partage : l''option noexec empeche d''y deposer
+    puis d''y lancer un programme, geste classique apres une intrusion.'
+  action: Ajouter noexec aux options de /dev/shm dans /etc/fstab puis remonter (mount -o remount /dev/shm).
+  playbook: infra.montage-option
+  parametres:
+    point: /dev/shm
+    option: noexec
+  evaluation:
+  - commande: 0
+    lecteur: findmnt
+    comparateur: option_presente
+    attendu: noexec
+  - commande: 1
+    lecteur: fstab
+    comparateur: option_presente
+    attendu: noexec
+pieges:
+- 'Sur Debian/Ubuntu, /dev/shm est monte par systemd (nosuid,nodev d''office) et absent de /etc/fstab
+  : l''absence de ligne fstab n''est pas un ecart. Pour noexec, ajouter une ligne « tmpfs /dev/shm tmpfs
+  defaults,nodev,nosuid,noexec 0 0 » a la main (le playbook refuse un point absent de fstab).'
+- 'Si /dev/shm n''est pas une partition separee, cette regle ne peut pas s''appliquer telle quelle : voir
+  la regle de partition dediee.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 1.1.2.2.4 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 1.1.2.2.4 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 1.1.2.2.4 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

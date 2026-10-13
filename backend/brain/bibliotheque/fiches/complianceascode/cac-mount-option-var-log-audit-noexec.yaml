@@ -1,0 +1,79 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-mount-option-var-log-audit-noexec
+titre: Option noexec sur /var/log/audit
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: audit
+  type_controle: option-montage
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: mount_option_var_log_audit_noexec
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/permissions/partitions/mount_option_var_log_audit_noexec
+mots_cles:
+- audit
+- journalisation
+- montage
+- noexec
+- option
+- partition
+resume: /var/log/audit doit etre monte avec l'option noexec. (regle mount_option_var_log_audit_noexec,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: findmnt -kn /var/log/audit
+  but: Lire les options de montage ACTIVES de /var/log/audit
+  lecture: La colonne des options doit contenir noexec. Aucune ligne = pas de montage separe.
+- commande: grep -E '[[:space:]]/var/log/audit[[:space:]]' /etc/fstab
+  but: Verifier la configuration PERSISTANTE
+  lecture: La 4e colonne doit contenir noexec.
+controles:
+- controle: /var/log/audit monte avec noexec
+  bon: noexec present (actif et dans /etc/fstab)
+  mauvais: noexec absent
+  gravite: moyenne
+  risque: 'Executer un programme depuis /var/log/audit n''est jamais necessaire : l''option noexec retire
+    a un attaquant un emplacement ou deposer et lancer du code.'
+  action: Ajouter noexec aux options de /var/log/audit dans /etc/fstab puis remonter (mount -o remount
+    /var/log/audit).
+  playbook: infra.montage-option
+  parametres:
+    point: /var/log/audit
+    option: noexec
+  evaluation:
+  - commande: 0
+    lecteur: findmnt
+    comparateur: option_presente
+    attendu: noexec
+  - commande: 1
+    lecteur: fstab
+    comparateur: option_presente
+    attendu: noexec
+pieges:
+- 'Si /var/log/audit n''est pas une partition separee, cette regle ne peut pas s''appliquer telle quelle
+  : voir la regle de partition dediee.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 1.1.2.7.4 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 1.1.2.7.4 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 1.1.2.7.4 (niveau 1)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

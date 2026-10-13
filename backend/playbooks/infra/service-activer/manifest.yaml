@@ -1,0 +1,20 @@
+id: infra.service-activer
+titre: "Service systemd : demasquer, demarrer et activer"
+description: >
+  Demasque, demarre et active le service, comme la source.
+  L'etat precedent (enabled/masked/active) est garde pour le retour arriere.
+risque: faible
+parametres:
+  - {nom: service, type: string, requis: true, motif: '^[A-Za-z0-9@_.-]+$'}
+racine_requise: true
+reversible: true
+simulation: true
+idempotent: true
+redemarrage: false
+indisponibilite: "0 s"
+source:
+  origine: complianceascode
+  version: 0.1.82
+  gabarit: shared/templates/service_enabled/bash.template
+  ecarts: "etat precedent garde et restaure"
+references: [ANSSI-BP-028, CIS Benchmarks]

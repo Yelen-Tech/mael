@@ -1,0 +1,70 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-sshd-use-strong-macs
+titre: 'SSH : uniquement des MAC forts (MACs)'
+domaine: acces
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: ssh
+  type_controle: detection
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: sshd_use_strong_macs
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/ssh/ssh_server/sshd_use_strong_macs
+mots_cles:
+- algorithmes
+- integrite
+- macs
+- md5
+- ssh
+resume: 'SSH : uniquement des MAC forts (MACs). (regle sshd_use_strong_macs, ComplianceAsCode 0.1.82).'
+observer:
+- commande: 'sshd -T 2>/dev/null | awk ''$1=="macs"{v=1; n=split($2,c,","); for(i=1;i<=n;i++) if (index(",hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,",
+    ","c[i]",")==0) print "MAC faible : "c[i]} END{if(!v) print "SENTINELLE:ILLISIBLE"}'''
+  but: Lister les MAC hors de la liste forte
+  lecture: Chaque ligne est un element en defaut ; aucune ligne = conforme.
+controles:
+- controle: MACs limites a hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: Les algorithmes d'integrite (MAC) MD5 et a 96 bits sont faibles et facilitent les attaques par
+    retrogradation. Un attaquant en position d'intercepteur qui casse l'algorithme peut dechiffrer le
+    tunnel SSH et capturer identifiants et donnees.
+  action: MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256
+    dans /etc/ssh/sshd_config.d/, puis recharger sshd.
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 5.1.15 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 5.1.15 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 5.1.15 (niveau 1)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

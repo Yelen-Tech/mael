@@ -1,0 +1,64 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-set-nftables-table
+titre: 'nftables : une table existe (si nftables est l''outil retenu)'
+domaine: reseau
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: pare-feu
+  type_controle: detection
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: set_nftables_table
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/network/network-nftables/set_nftables_table
+mots_cles:
+- nftables
+- pare-feu
+- table
+resume: 'nftables : une table existe. (regle set_nftables_table, ComplianceAsCode 0.1.82).'
+observer:
+- commande: nft list tables
+  but: Lister les tables nftables
+  lecture: Une ligne « table ... » = conforme ; aucune = aucune table.
+controles:
+- controle: au moins une table
+  bon: une ligne « table inet filter » (par exemple)
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: nftables n'a aucune table par defaut. Sans table construite, nftables ne filtre pas le trafic
+    reseau.
+  action: nft create table inet filter
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation: []
+pieges:
+- 'Regle conditionnelle : ne s''applique que si nftables est l''outil retenu (var_network_filtering_service).
+  Demander ou constater l''outil en place avant de conclure ; le code ne juge pas cette regle seul.'
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 4.2.4 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 4.3.4 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 4.3.4 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

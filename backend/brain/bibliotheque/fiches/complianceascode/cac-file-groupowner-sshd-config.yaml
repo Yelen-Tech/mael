@@ -1,0 +1,78 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-file-groupowner-sshd-config
+titre: 'Groupe de /etc/ssh/sshd_config : root'
+domaine: acces
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: ssh
+  type_controle: groupe-fichier
+  niveaux:
+    cis: 1
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: file_groupowner_sshd_config
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/ssh/file_groupowner_sshd_config
+mots_cles:
+- chgrp
+- config
+- fichier
+- fichiers
+- groupe
+- sshd
+resume: 'Groupe de /etc/ssh/sshd_config : root : groupe root. (regle file_groupowner_sshd_config, ComplianceAsCode
+  0.1.82).'
+observer:
+- commande: stat -c '%a %U %G %n' /etc/ssh/sshd_config 2>/dev/null
+  but: Lire droits, proprietaire et groupe (groupe)
+  lecture: '3e colonne = groupe : attendu root. Aucune ligne = fichier absent.'
+controles:
+- controle: groupe = root
+  bon: groupe root
+  mauvais: toute autre valeur
+  gravite: moyenne
+  risque: 'Les fichiers de configuration de SSH activent ou desactivent ses fonctions : un compte non
+    autorise qui peut les modifier (ou les lire, pour y reperer une faiblesse) peut ouvrir un acces ou
+    affaiblir le service. Ils doivent appartenir a root et n''etre modifiables que par lui.'
+  action: chgrp root sur les fichiers concernes.
+  playbook: infra.fichier-groupe
+  parametres:
+    chemin: /etc/ssh/sshd_config
+    groupe: root
+  evaluation:
+  - commande: 0
+    lecteur: stat
+    champ: groupe
+    comparateur: dans
+    attendu:
+    - '0'
+    - root
+pieges:
+- 'Sans sudo, certains fichiers (ex. /etc/shadow) ne sont pas lisibles par stat/find : relancer avec les
+  droits root.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 5.1.1 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 5.1.1 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 5.1.1 (niveau 1)
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R50 (niveau intermediaire)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

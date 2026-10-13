@@ -1,0 +1,42 @@
+id: systeme-solaire
+schema: 1
+nom: "Système solaire"
+resume: "Le Système solaire comprend le Soleil, huit planètes, des planètes naines et de petits corps répartis en ceintures ; ses distances se mesurent en unités astronomiques, l'UA valant 149 597 870,7 km."
+famille: astronomie
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - système solaire
+  - planètes
+  - unité astronomique
+  - ceinture d'astéroïdes
+  - ceinture de kuiper
+  - planète naine
+  - pluton
+  - échelles de distance
+caracteristiques:
+  composition: "le Soleil concentre plus de 99,8 % de la masse du système ; huit planètes (Mercure, Vénus, Terre, Mars, Jupiter, Saturne, Uranus, Neptune), des planètes naines (Cérès, Pluton, Éris) et de petits corps"
+  ordres_de_grandeur: "la Terre orbite à 1 UA (environ 150 millions de km), Jupiter à 5,2 UA, Neptune à environ 30 UA ; la lumière met environ 8 minutes 20 secondes à parcourir 1 UA"
+  ceintures: "ceinture d'astéroïdes entre Mars et Jupiter (environ 2 à 3,5 UA), ceinture de Kuiper au-delà de Neptune (environ 30 à 50 UA), nuage d'Oort hypothétique bien plus loin"
+  definition_planete: "selon la résolution de l'UAI de 2006, une planète orbite le Soleil, est en équilibre hydrostatique et a nettoyé son orbite ; Pluton, qui échoue au troisième critère, est classée planète naine"
+  lien_informatique: "les échelles planétaires expliquent la latence lumineuse des sondes (jusqu'à plusieurs heures aller-retour) et les éphémérides qui servent à caler les systèmes de navigation spatiale"
+securite:
+  - titre: Confusion d'unités de distance
+    risque: "Confondre kilomètres, UA et unités impériales dans un calcul de trajectoire ou de dimensionnement a déjà coûté une sonde : la perte de Mars Climate Orbiter en 1999 tient à une confusion entre livres-force et newtons."
+    conseil: "Fixer les unités dans les interfaces (SI de préférence), les nommer dans les schémas de données et vérifier la cohérence aux frontières des systèmes."
+    gravite: elevee
+  - titre: Sous-estimation de la latence lumineuse
+    risque: "Un logiciel de télémétrie ou de supervision qui suppose une latence faible devient inutilisable pour une sonde lointaine, où l'aller-retour radio atteint des heures."
+    conseil: "Concevoir les protocoles embarqués pour l'autonomie et la tolérance au délai, comme le fait DTN (Delay Tolerant Networking) pour les communications interplanétaires."
+    gravite: info
+  - titre: Données cataloguées non vérifiées
+    risque: "Les catalogues d'objets célestes (astéroïdes géocroiseurs notamment) sont révisés en continu ; un logiciel figé sur un ancien catalogue produit des alertes obsolètes."
+    conseil: "Consommer les données de référence à jour (Minor Planet Center, JPL) avec un contrôle de version des jeux de données."
+    gravite: moyenne
+sources:
+  - titre: "NASA Science — Solar System"
+    url: https://science.nasa.gov/solar-system/
+  - titre: "UAI — définition d'une planète (résolution de 2006)"
+    url: https://www.iau.org/public/themes/pluto/

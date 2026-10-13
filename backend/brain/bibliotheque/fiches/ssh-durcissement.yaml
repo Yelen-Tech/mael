@@ -1,0 +1,73 @@
+id: ssh-durcissement
+titre: "Durcissement du service SSH"
+domaine: acces
+schema: 2
+version: 1
+etat: verifie
+verifie_le: 2026-09-16
+teste_sur: []            # a remplir par les tests en conteneur (etape 2.5)
+applicable:
+  os: [linux]
+  services: [openssh]
+taxonomie:
+  theme: ssh
+  type_controle: configuration
+  niveaux: {cis: null, anssi: null}   # fiche manuelle hors referentiel
+source:
+  origine: manuel
+mots_cles: [ssh, sshd, root, authentification, mot de passe, port 22, force brute, cles]
+resume: >
+  SSH est la porte d'entree d'administration la plus visee. On verifie qui peut
+  se connecter, comment (cle ou mot de passe), et si le compte root est
+  joignable directement. On lit /etc/ssh/sshd_config, jamais on ne le modifie
+  sans validation.
+
+observer:
+  - commande: "grep -Ei '^\\s*(PermitRootLogin|PasswordAuthentication|PubkeyAuthentication|Port|Protocol|PermitEmptyPasswords)' /etc/ssh/sshd_config"
+    but: "Lire les reglages sensibles de SSH"
+    lecture: "Chaque directive et sa valeur. Une directive absente prend la valeur par defaut du systeme."
+  - commande: "sshd -T 2>/dev/null | grep -Ei 'permitrootlogin|passwordauthentication|pubkeyauthentication|port|permitemptypasswords'"
+    but: "Voir la configuration EFFECTIVE (defauts compris), pas seulement le fichier"
+    lecture: "Valeurs reellement appliquees par le service."
+
+controles:
+  - controle: "PermitRootLogin"
+    bon: "no"
+    mauvais: "yes"
+    gravite: elevee
+    risque: "Connexion directe possible au compte root par force brute ; une seule reussite donne tout le systeme."
+    action: "Mettre PermitRootLogin no, puis recharger SSH."
+    playbook: null
+    sans_playbook: "fiche manuelle : les memes directives ont leur playbook (infra.ssh-directive) dans les fiches cac-sshd-*"
+    evaluation:          # le code juge la sortie de sshd -T (etape 5)
+      - {commande: 1, lecteur: sshd_t, champ: permitrootlogin, comparateur: egal, attendu: "no"}
+  - controle: "PasswordAuthentication"
+    bon: "no (cles uniquement)"
+    mauvais: "yes"
+    gravite: moyenne
+    risque: "Mots de passe exposes a la force brute et au bourrage d'identifiants."
+    action: "Passer aux cles SSH puis PasswordAuthentication no."
+    playbook: null
+    sans_playbook: "fiche manuelle : les memes directives ont leur playbook (infra.ssh-directive) dans les fiches cac-sshd-*"
+    evaluation:          # le code juge la sortie de sshd -T (etape 5)
+      - {commande: 1, lecteur: sshd_t, champ: passwordauthentication, comparateur: egal, attendu: "no"}
+  - controle: "PermitEmptyPasswords"
+    bon: "no"
+    mauvais: "yes"
+    gravite: critique
+    risque: "Connexion sans aucun mot de passe."
+    action: "Mettre PermitEmptyPasswords no immediatement."
+    playbook: null
+    sans_playbook: "fiche manuelle : les memes directives ont leur playbook (infra.ssh-directive) dans les fiches cac-sshd-*"
+    evaluation:          # le code juge la sortie de sshd -T (etape 5)
+      - {commande: 1, lecteur: sshd_t, champ: permitemptypasswords, comparateur: egal, attendu: "no"}
+
+pieges:
+  - "Recharger SSH pendant qu'on est connecte peut couper la session : garder une seconde session ouverte avant d'appliquer."
+  - "prohibit-password (= sans mot de passe mais cle root autorisee) n'est pas 'no' : a discuter selon le besoin d'admin distant."
+  - "sshd -T reflete la config effective ; le fichier seul peut etre trompeur (Include, Match)."
+
+referentiels:
+  - {nom: ANSSI, document: "Recommandations pour un usage securise d'(Open)SSH"}
+  - {nom: ANSSI, document: "Recommandations de configuration d'un systeme GNU/Linux (BP-028)"}
+  - {nom: CIS, document: "CIS Benchmarks Linux (Ubuntu, Debian, RHEL) - configuration du serveur SSH"}

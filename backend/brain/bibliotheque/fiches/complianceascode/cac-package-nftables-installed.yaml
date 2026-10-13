@@ -1,0 +1,64 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-package-nftables-installed
+titre: Paquet nftables installe (si nftables est l'outil retenu)
+domaine: reseau
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: pare-feu
+  type_controle: paquet-present
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: package_nftables_installed
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/network/network-nftables/package_nftables_installed
+mots_cles:
+- installe
+- logiciel
+- nftables
+- paquet
+- paquets
+resume: Le paquet nftables doit etre installe. (regle package_nftables_installed, ComplianceAsCode 0.1.82).
+observer:
+- commande: dpkg-query -W -f='${binary:Package} ${Status}\n' nftables 2>/dev/null
+  but: Savoir si nftables est installe
+  lecture: « install ok installed » = installe ; aucune ligne ou « deinstall » = absent.
+controles:
+- controle: paquet nftables installe
+  bon: installe
+  mauvais: absent
+  gravite: moyenne
+  risque: 'nftables est le filtrage de paquets moderne du noyau Linux : sans lui (ou un autre pare-feu),
+    la machine n''est pas protegee des menaces venues du reseau.'
+  action: Installer nftables avec le gestionnaire de paquets.
+  playbook: infra.paquet-installer
+  parametres:
+    paquet: nftables
+  evaluation: []
+pieges:
+- 'Regle conditionnelle : ne s''applique que si nftables est l''outil retenu (var_network_filtering_service).
+  Demander ou constater l''outil en place avant de conclure ; le code ne juge pas cette regle seul.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 4.2.1 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 4.3.1 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 4.3.1 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

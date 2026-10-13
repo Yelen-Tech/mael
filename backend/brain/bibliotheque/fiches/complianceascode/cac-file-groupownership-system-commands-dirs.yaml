@@ -1,0 +1,61 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-file-groupownership-system-commands-dirs
+titre: Les executables systeme ont le groupe root ou un groupe systeme
+domaine: fichiers
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: fichiers-systeme
+  type_controle: detection
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: file_groupownership_system_commands_dirs
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/permissions/files/permissions_within_important_dirs/file_groupownership_system_commands_dirs
+mots_cles:
+- /usr/bin
+- binaires
+- executables
+- groupe
+resume: Les executables systeme ont le groupe root ou un groupe systeme. (regle file_groupownership_system_commands_dirs,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: find -L /bin /sbin /usr/bin /usr/sbin /usr/local/bin /usr/local/sbin -gid +999 -printf '%g
+    %p\n' 2>/dev/null
+  but: Chercher les executables dont le groupe n'est pas un groupe systeme (GID >= 1000)
+  lecture: Chaque ligne est un element en defaut ; aucune ligne = conforme.
+controles:
+- controle: groupe root ou systeme (GID < 1000)
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: 'Un executable systeme rattache a un groupe d''utilisateurs ordinaire peut etre modifie par
+    les membres de ce groupe : ils pourraient pieger une commande executee ensuite avec des privileges
+    eleves.'
+  action: chgrp root FICHIER
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R50 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

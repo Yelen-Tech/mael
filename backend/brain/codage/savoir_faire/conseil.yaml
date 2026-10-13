@@ -1,0 +1,186 @@
+# Savoir-faire pour les VRAIS problemes (12 problemes valides par le
+# responsable le 08/10/2026) : corriger, diagnostiquer, migrer, traduire,
+# brancher un service externe. Le conseil des professeurs les consulte.
+#
+# hypotheses : pour un DIAGNOSTIC, les causes connues a departager (la
+# methode exige au moins deux hypotheses, tirees de la bibliotheque, jamais
+# inventees). verifier : comment prouver que c'est regle.
+specialiste: conseil
+fiches:
+  - id: service-externe
+    titre: brancher un service externe (paiement, meteo, SMS...)
+    mots: [paiement, payer, orange, moov, money, mobile, meteo, sms, service, externe, api, cle, temps, reel, direct]
+    comment:
+      - "JAMAIS inventer l'adresse ni le format d'une API externe : partir de la documentation officielle du fournisseur"
+      - "la cle d'acces dans une variable d'environnement, jamais dans le code ; le mode test (bac a sable) du fournisseur d'abord"
+      - "prevoir l'echec : delai depasse, service indisponible, reponse refusee — et le dire a l'utilisateur"
+    pourquoi: "The Twelve-Factor App, IV : un service externe est une ressource attachee, configuree de l'exterieur ; une API devinee ne marche jamais et peut faire perdre de l'argent."
+    source: "The Twelve-Factor App, Backing services — https://12factor.net/backing-services"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances:
+      - {nom: "documentation officielle du fournisseur", type: fichier, pourquoi: "a demander a la personne : elle seule y a acces"}
+      - {nom: "cles d'acces (mode test puis reel)", type: fichier, pourquoi: "a demander a la personne, a mettre en variable d'environnement"}
+    verifier: ["un paiement ou un appel en mode test reussit", "un echec du service est affiche proprement"]
+    juges: [secret-en-dur]
+
+  - id: anti-spam-formulaire
+    titre: arreter le spam d'un formulaire
+    mots: [spam, spams, robots, formulaire, contact, recoit, centaines, messages, indesirables]
+    comment:
+      - "un champ piege invisible (cache par CSS, pas par type=hidden) : rempli = robot, message rejete sans erreur visible"
+      - "limiter les envois : pas plus de quelques messages par adresse IP et par heure (compteur en session ou en base)"
+      - "garder le jeton CSRF et la verification des champs ; en dernier recours seulement, un CAPTCHA accessible"
+    pourquoi: "des centaines de messages par jour viennent de robots (OWASP Automated Threats : le spam automatise) ; le champ piege et la limite les arretent sans gener les humains, contrairement a un CAPTCHA (WCAG 1.1.1)."
+    source: "OWASP Automated Threats to Web Applications — https://owasp.org/www-project-automated-threats-to-web-applications/"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    verifier: ["un envoi avec le champ piege rempli est rejete", "un humain envoie toujours son message"]
+    juges: [csrf-desactive]
+
+  - id: envoyer-un-email
+    titre: envoyer un e-mail depuis le serveur
+    mots: [email, mail, courriel, envoie, envoyer, envoi, reservation, notification, chaque]
+    comment:
+      - "un e-mail part TOUJOURS du serveur, jamais d'une page HTML seule : il faut un serveur SMTP (celui de l'hebergeur ou un service d'envoi)"
+      - "Python : smtplib + email.message.EmailMessage, connexion chiffree (starttls) ; PHP : une bibliotheque eprouvee (PHPMailer), pas mail() brut"
+      - "adresse, identifiant et mot de passe SMTP lus dans l'environnement ; jamais l'adresse du destinataire prise dans le formulaire (relais de spam)"
+    pourquoi: "sans SMTP aucun message ne part ; un destinataire choisi par l'utilisateur transforme le formulaire en relais de spam (injection d'en-tetes, CWE-93)."
+    source: "Python, smtplib — https://docs.python.org/3/library/smtplib.html"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances:
+      - {nom: "serveur SMTP (adresse, identifiant, mot de passe)", type: fichier, pourquoi: "a demander a la personne ou a son hebergeur"}
+    verifier: ["un e-mail de test arrive a l'adresse prevue"]
+    juges: [secret-en-dur]
+
+  - id: mesurer-avant-d-optimiser
+    titre: une application lente — mesurer avant de corriger
+    mots: [lent, lente, lenteur, secondes, rapide, performance, repond, temps, ralenti, trop]
+    comment:
+      - "MESURER d'abord : chronometrer la route, profiler (cProfile en Python), compter les requetes SQL d'une page"
+      - "corriger la cause mesuree, puis remesurer avec la meme methode"
+    pourquoi: "deviner la cause d'une lenteur fait corriger le mauvais endroit ; seule une mesure avant/apres prouve le gain (methode : une cause a la fois)."
+    source: "Python, The Python Profilers — https://docs.python.org/3/library/profile.html"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    hypotheses:
+      - "requetes N+1 : une requete SQL par element au lieu d'une seule"
+      - "index manquant sur une colonne cherchee (WHERE, JOIN)"
+      - "appel reseau lent a un service externe dans la requete"
+      - "calcul refait a chaque appel au lieu d'etre garde"
+    dependances: []
+    verifier: ["meme mesure avant et apres : temps et nombre de requetes"]
+    juges: []
+
+  - id: migrer-une-base
+    titre: changer de base de donnees sans perdre les donnees
+    mots: [migrer, migration, passer, postgresql, postgres, mysql, sqlite, base, donnees, perdre, transferer]
+    comment:
+      - "SAUVEGARDER d'abord (copie du fichier SQLite, export complet) et verifier que la sauvegarde se relit"
+      - "recreer le schema dans la nouvelle base (types, cles, contraintes), puis copier les donnees table par table"
+      - "COMPTER les lignes de chaque table avant et apres ; essayer d'abord sur une copie, jamais sur la base en service"
+    pourquoi: "une migration sans sauvegarde peut perdre des donnees pour de bon ; compter les lignes prouve que rien n'a ete perdu."
+    source: "PostgreSQL, pg_dump — https://www.postgresql.org/docs/current/app-pgdump.html"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances:
+      - {nom: "acces a la nouvelle base (adresse, identifiant)", type: fichier, pourquoi: "a demander a la personne"}
+    verifier: ["meme nombre de lignes dans chaque table avant et apres", "l'application marche sur la nouvelle base"]
+    juges: [injection-sql]
+
+  - id: traduire-un-site
+    titre: une seconde langue pour un site
+    mots: [anglais, anglaise, english, traduire, traduction, version, langue, langues, multilingue]
+    comment:
+      - "une page par langue (index.html, en/index.html), chacune avec son lang (lang=\"en\")"
+      - "des liens hreflang entre les versions, et un lien visible pour changer de langue"
+      - "une traduction automatique est RELUE par un humain avant publication"
+    pourquoi: "WCAG 2.2, 3.1.1 : la langue declaree fait lire la page avec la bonne prononciation ; une traduction non relue peut dire le contraire du texte."
+    source: "W3C Internationalization, Declaring language in HTML — https://www.w3.org/International/questions/qa-html-language-declarations"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    verifier: ["chaque page a le bon lang", "les liens entre versions marchent"]
+    juges: [lang]
+
+  - id: proteger-une-api
+    titre: reserver une API aux utilisateurs connectes
+    mots: [proteger, protege, securiser, connectes, connecte, authentification, ajouter, supprimer, acces, droits]
+    comment:
+      - "une verification sur CHAQUE route sensible (decorateur) : non connecte -> 401, connecte sans le droit -> 403"
+      - "connexion par mot de passe hache (ou jeton) ; le droit verifie cote serveur, jamais seulement en masquant un bouton"
+      - "un test par cas : sans connexion (401), sans droit (403), avec droit (200/201)"
+    pourquoi: "OWASP A01 (controle d'acces defaillant), premier risque du Top 10 : une route oubliee suffit a tout ouvrir."
+    source: "OWASP Authorization Cheat Sheet — https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    verifier: ["les trois cas 401 / 403 / 200 testes"]
+    juges: [hash-faible]
+
+  - id: corriger-sans-tout-refaire
+    titre: corriger un site existant sans tout refaire
+    mots: [corriger, mal, affiche, deborde, zoomer, telephone, mobile, casse, probleme, existant]
+    comment:
+      - "partir des fichiers EXISTANTS : trouver la cause (ici : viewport absent, largeurs fixes en px) et ne toucher que ce qui la porte"
+      - "garder le contenu et l'apparence voulus par la personne ; rejuger apres la correction"
+    pourquoi: "tout refaire perd ce qui marchait et ce que la personne a choisi ; une correction ciblee se verifie (le meme juge passe)."
+    source: "W3C, Understanding SC 1.4.10 Reflow — https://www.w3.org/WAI/WCAG22/Understanding/reflow"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    hypotheses:
+      - "meta viewport absente : le telephone affiche la page de bureau reduite"
+      - "largeurs fixes en px (blocs, images) plus larges que l'ecran"
+    dependances:
+      - {nom: "les fichiers actuels du site", type: fichier, pourquoi: "a demander a la personne (ou le dossier du projet)"}
+    verifier: ["plus de defilement horizontal a 320 px (juge debordement-mobile)"]
+    juges: [viewport, debordement-mobile]
+
+  - id: erreur-element-null
+    titre: « Cannot read properties of null »
+    mots: [cannot, read, properties, "null", erreur, script, marche, javascript, undefined]
+    comment:
+      - "lire la ligne de l'erreur : c'est l'element cherche juste avant qui vaut null"
+      - "verifier que l'id cherche existe dans CETTE page, et que le script est charge avec defer (ou en fin de body)"
+    pourquoi: "getElementById / querySelector rendent null si l'element n'existe pas encore ou pas du tout ; un appel sur null arrete tout le script."
+    source: "MDN, Document.getElementById — https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    hypotheses:
+      - "l'element vise est absent de la page (id faux ou autre page)"
+      - "le script s'execute avant que la page soit chargee (pas de defer)"
+    dependances: []
+    verifier: ["la console du navigateur ne montre plus l'erreur (juge js-erreur-execution)"]
+    juges: [js-erreur-execution, selecteur-mort]
+
+  - id: gerer-un-stock
+    titre: gerer un stock (entrees, sorties, alerte)
+    mots: [stock, stocks, entrees, sorties, alerte, seuil, inventaire, reste, quantite, gerer]
+    comment:
+      - "une table des articles (quantite >= 0 par contrainte CHECK) et une table des mouvements (entree / sortie, date, quantite)"
+      - "chaque mouvement met a jour la quantite DANS une transaction ; une sortie plus grande que le stock est refusee"
+      - "l'alerte compare la quantite au seuil ; les tests visent le seuil exact et ses voisins (seuil - 1, seuil, seuil + 1)"
+    pourquoi: "une contrainte CHECK garde le stock juste meme si le code se trompe ; les erreurs de seuil (< contre <=) se cachent exactement a la limite."
+    source: "SQLite, CREATE TABLE (CHECK constraints) — https://www.sqlite.org/lang_createtable.html"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    verifier: ["les tests au seuil - 1, au seuil et au seuil + 1 passent", "une sortie trop grande est refusee"]
+    juges: [injection-sql]
+
+  - id: demande-trop-grande
+    titre: une demande trop grande pour un seul chantier
+    mots: [comme, jumia, amazon, facebook, complet, complete, tout, grand, plateforme, marketplace, application]
+    comment:
+      - "dire franchement que la demande depasse un chantier (paiement, comptes, vendeurs, livraison...)"
+      - "proposer une PREMIERE ETAPE qui marche seule : par exemple accueil + catalogue + fiche produit + contact"
+      - "lister ce qui viendra ensuite, dans l'ordre, pour que la personne choisisse"
+    pourquoi: "livrer par increments utilisables est la base du travail iteratif ; un chantier trop grand pour 8 fichiers echoue entierement au lieu de livrer une partie qui marche."
+    source: "The Scrum Guide (Increment) — https://scrumguides.org/scrum-guide.html"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    verifier: ["la premiere etape marche seule et la personne valide la suite"]
+    juges: []

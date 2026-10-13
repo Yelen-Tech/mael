@@ -1,0 +1,69 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-accounts-user-interactive-home-directory-exists
+titre: Chaque utilisateur interactif a un repertoire personnel existant
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: sessions
+  type_controle: detection
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: accounts_user_interactive_home_directory_exists
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/accounts/accounts-session/accounts_user_interactive_home_directory_exists
+mots_cles:
+- home
+- repertoire personnel
+- repertoires personnels
+- utilisateurs
+resume: Chaque utilisateur interactif a un repertoire personnel existant. (regle accounts_user_interactive_home_directory_exists,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: 'awk -F: ''($3 >= 1000 && $7 !~ /(nologin|false)$/) {print $6}'' /etc/passwd | xargs -r ls
+    -d 2>&1 >/dev/null'
+  but: Lister les repertoires personnels manquants
+  lecture: Chaque ligne « ls ... No such file or directory » = repertoire manquant ; aucune = conforme.
+controles:
+- controle: repertoires personnels presents
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: Si le repertoire personnel declare d'un utilisateur interactif n'existe pas, l'utilisateur peut
+    se retrouver avec / comme repertoire courant a la connexion. Cela peut causer un deni de service (impossibilite
+    d'acceder aux fichiers de configuration) et lui donner la vision de fichiers systeme normalement inaccessibles.
+  action: mkdir /home/COMPTE, puis chown COMPTE:GROUPE et chmod 0750.
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 7.2.9 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 7.2.9 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 7.2.9 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

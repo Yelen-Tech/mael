@@ -1,0 +1,78 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-postfix-network-listening-disabled
+titre: postfix n'ecoute que localement (inet_interfaces = loopback-only)
+domaine: dns
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: messagerie
+  type_controle: configuration
+  niveaux:
+    cis: 1
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: postfix_network_listening_disabled
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/mail/postfix_client/postfix_network_listening_disabled
+mots_cles:
+- inet
+- inet_interfaces
+- interfaces
+- messagerie
+- postfix
+- smtp
+resume: postfix n'ecoute que localement (inet_interfaces = loopback-only). (regle postfix_network_listening_disabled,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: dpkg -s postfix >/dev/null 2>&1 || echo 'SENTINELLE:SANS_OBJET'; grep -Es '^[[:space:]]*(export[[:space:]]+|readonly[[:space:]]+)?inet_interfaces[[:space:]]*='
+    /etc/postfix/main.cf
+  but: Lire inet_interfaces dans /etc/postfix/main.cf
+  lecture: Valeur de inet_interfaces ; aucune ligne = non defini.
+controles:
+- controle: inet_interfaces = loopback-only
+  bon: inet_interfaces = loopback-only
+  mauvais: autre valeur, ou non defini
+  gravite: moyenne
+  risque: Un postfix limite a la boucle locale accepte les messages de la machine (rapports cron...) sans
+    s'exposer aux attaques venues du reseau.
+  action: Ecrire « inet_interfaces = loopback-only » dans /etc/postfix/main.cf, puis redemarrer postfix.
+  playbook: infra.cle-valeur
+  parametres:
+    fichier: /etc/postfix/main.cf
+    cle: inet_interfaces
+    valeur: loopback-only
+    format: egal_espaces
+  evaluation:
+  - commande: 0
+    lecteur: affectations
+    comparateur: toutes_egales
+    champ: inet_interfaces
+    attendu: loopback-only
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 2.1.21 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 2.1.21 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 2.1.21 (niveau 1)
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R74 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

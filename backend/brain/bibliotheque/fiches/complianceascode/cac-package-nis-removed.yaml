@@ -1,0 +1,69 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-package-nis-removed
+titre: Paquet nis absent
+domaine: services
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: services-inutiles
+  type_controle: paquet-absent
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: package_nis_removed
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/deprecated/package_nis_removed
+mots_cles:
+- installe
+- logiciel
+- nis
+- paquet
+- paquets
+resume: Le paquet nis doit etre absent. (regle package_nis_removed, ComplianceAsCode 0.1.82).
+observer:
+- commande: dpkg-query -W -f='${binary:Package} ${Status}\n' nis 2>/dev/null
+  but: Savoir si nis est installe
+  lecture: « install ok installed » = installe ; aucune ligne ou « deinstall » = absent.
+controles:
+- controle: paquet nis absent
+  bon: absent
+  mauvais: installe
+  gravite: faible
+  risque: NIS est l'ancien service SUN de gestion centralisee des comptes, de plus en plus remplace par
+    LDAP. NIS ne supporte pas efficacement les contraintes de securite, les ACL, etc., et ne doit pas
+    etre utilise.
+  action: Desinstaller nis (apt purge) apres avoir verifie qu'aucun service n'en depend.
+  playbook: infra.paquet-retirer
+  parametres:
+    paquet: nis
+  evaluation:
+  - commande: 0
+    lecteur: dpkg
+    comparateur: absent
+    attendu:
+    - nis
+pieges:
+- 'Un paquet peut etre requis par une application metier : confirmer avec l''exploitant avant de le retirer.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 2.2.1 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 2.2.1 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 2.2.1 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

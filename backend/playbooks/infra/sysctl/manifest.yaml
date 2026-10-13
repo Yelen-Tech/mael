@@ -1,0 +1,23 @@
+id: infra.sysctl
+titre: "Parametre noyau (sysctl) : valeur active et persistante"
+description: >
+  Met un parametre sysctl a la valeur attendue, en memoire et de facon
+  persistante (/etc/sysctl.conf), et neutralise (commente) les autres
+  definitions dans /etc/sysctl.d, /run/sysctl.d, /usr/local/lib/sysctl.d et
+  /etc/ufw/sysctl.conf.
+risque: faible
+parametres:
+  - {nom: cle, type: string, requis: true, motif: '^[a-z0-9_.-]+$'}
+  - {nom: valeur, type: string, requis: true, motif: '^[0-9 ]+$'}
+racine_requise: true
+reversible: true
+simulation: true
+idempotent: true
+redemarrage: false
+indisponibilite: "0 s - applique a chaud"
+source:
+  origine: complianceascode
+  version: 0.1.82
+  gabarit: shared/templates/sysctl/bash.template
+  ecarts: "sauvegarde de chaque fichier modifie, retour arriere si sysctl -w echoue"
+references: [ANSSI-BP-028, CIS Benchmarks]

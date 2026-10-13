@@ -1,0 +1,69 @@
+# Savoir-faire du specialiste JavaScript, cote SERVEUR (Node.js, Express).
+specialiste: js
+contexte: serveur
+fiches:
+  - id: express-durci
+    titre: un serveur Express durci
+    gabarit: express-base.js
+    mots: [express, serveur, node, nodejs, backend, api]
+    comment:
+      - "app.disable(\"x-powered-by\") ; app.use(helmet()) pour les en-tetes de securite"
+      - "corps de requete borne : app.use(express.json({ limit: \"100kb\" }))"
+      - "un gestionnaire d'erreurs final qui journalise et repond 500 sans la pile d'appels"
+      - "le port lu dans process.env.PORT"
+    pourquoi: "OWASP : les en-tetes (CSP, HSTS, nosniff) bloquent des attaques entieres ; une pile d'appels envoyee au client devoile le code ; un corps sans limite epuise la memoire."
+    source: "Express, Production Best Practices: Security — https://expressjs.com/en/advanced/best-practice-security.html"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-04-08"
+    dependances:
+      - {nom: express, type: npm, pourquoi: "le serveur"}
+      - {nom: helmet, type: npm, pourquoi: "les en-tetes de securite"}
+      - {nom: package.json, type: fichier, pourquoi: "les dependances declarees et bornees"}
+    juges: [cors-ouvert, debug-actif]
+
+  - id: express-sql-parametre
+    titre: une route Express qui interroge la base
+    gabarit: express-route.js
+    mots: [express, route, sql, base, requete, produits, api]
+    comment:
+      - "toujours des parametres : db.prepare(\"SELECT * FROM produits WHERE id = ?\").get(id) (ou $1 avec PostgreSQL)"
+      - "convertir et verifier l'entree : const id = Number(req.params.id); if (!Number.isInteger(id)) return res.status(400)..."
+      - "404 si rien n'est trouve, 201 a la creation"
+    pourquoi: "une valeur collee dans le SQL est une injection (OWASP, CWE-89) ; req.params est toujours une chaine fournie par l'utilisateur."
+    source: "OWASP SQL Injection Prevention Cheat Sheet — https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances:
+      - {nom: "pilote de base (better-sqlite3, pg...)", type: fichier, pourquoi: "declare dans package.json"}
+    juges: [injection-sql]
+
+  - id: express-connexion
+    titre: une connexion Express avec mot de passe hache
+    gabarit: express-connexion.js
+    mots: [connexion, login, mot, passe, compte, session, express, authentification]
+    comment:
+      - "comparer avec bcrypt.compare(mdp, compte.hash) — le mot de passe n'est jamais stocke en clair"
+      - "le meme message d'erreur si le compte n'existe pas ou si le mot de passe est faux (401)"
+      - "apres la connexion : req.session.regenerate(...) ; cookie httpOnly, secure, sameSite \"lax\""
+    pourquoi: "OWASP : un hachage lent (bcrypt) resiste au vol de la base ; deux messages differents revelent quels comptes existent ; regenerer la session evite la fixation de session."
+    source: "OWASP Authentication Cheat Sheet — https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances:
+      - {nom: bcrypt, type: npm, pourquoi: "le hachage des mots de passe"}
+      - {nom: express-session, type: npm, pourquoi: "la session"}
+    juges: [hash-faible, cookie-faible]
+
+  - id: express-fichier-sans-traversee
+    titre: servir un fichier sans sortir du dossier
+    gabarit: express-fichier.js
+    mots: [fichier, telecharger, servir, document, chemin, express, pdf]
+    comment:
+      - "resoudre le chemin : const p = path.resolve(RACINE, req.params.nom) ; refuser si !p.startsWith(RACINE + path.sep)"
+      - "ou ne servir que des noms connus (liste ou identifiant en base), jamais un chemin fourni tel quel"
+    pourquoi: "un nom comme ../../.env sort du dossier et livre des secrets (traversee de chemin, CWE-22)."
+    source: "OWASP Path Traversal — https://owasp.org/www-community/attacks/Path_Traversal"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    juges: [traversee-chemin]

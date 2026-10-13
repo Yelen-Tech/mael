@@ -1,0 +1,76 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-file-owner-backup-etc-shadow
+titre: 'Proprietaire de /etc/shadow- : root'
+domaine: fichiers
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: comptes
+  type_controle: proprietaire-fichier
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: file_owner_backup_etc_shadow
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/permissions/files/permissions_important_account_files/file_owner_backup_etc_shadow
+mots_cles:
+- chown
+- comptes
+- fichier
+- fichiers
+- mots de passe
+- proprietaire
+- shadow
+resume: 'Proprietaire de /etc/shadow- : root : proprietaire root. (regle file_owner_backup_etc_shadow,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: stat -c '%a %U %G %n' /etc/shadow- 2>/dev/null
+  but: Lire droits, proprietaire et groupe (proprietaire)
+  lecture: '2e colonne = proprietaire : attendu root. Aucune ligne = fichier absent.'
+controles:
+- controle: proprietaire = root
+  bon: proprietaire root
+  mauvais: toute autre valeur
+  gravite: moyenne
+  risque: /etc/shadow (et sa copie /etc/shadow-) contient les empreintes des mots de passe. Lisible par
+    un autre compte, il permet de les casser hors ligne ; modifiable, il permet de changer le mot de passe
+    de root. Il doit appartenir a root, au groupe shadow, en 0640 au plus.
+  action: chown root sur les fichiers concernes.
+  playbook: infra.fichier-proprietaire
+  parametres:
+    chemin: /etc/shadow-
+    proprietaire: root
+  evaluation:
+  - commande: 0
+    lecteur: stat
+    champ: proprietaire
+    comparateur: dans
+    attendu:
+    - '0'
+    - root
+pieges:
+- 'Sans sudo, certains fichiers (ex. /etc/shadow) ne sont pas lisibles par stat/find : relancer avec les
+  droits root.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 7.1.6 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 7.1.6 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 7.1.6 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

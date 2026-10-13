@@ -1,0 +1,64 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-package-ufw-installed
+titre: Paquet ufw installe (si ufw est l'outil retenu)
+domaine: reseau
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: pare-feu
+  type_controle: paquet-present
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: package_ufw_installed
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/network/network-ufw/package_ufw_installed
+mots_cles:
+- installe
+- logiciel
+- paquet
+- paquets
+- ufw
+resume: Le paquet ufw doit etre installe. (regle package_ufw_installed, ComplianceAsCode 0.1.82).
+observer:
+- commande: dpkg-query -W -f='${binary:Package} ${Status}\n' ufw 2>/dev/null
+  but: Savoir si ufw est installe
+  lecture: « install ok installed » = installe ; aucune ligne ou « deinstall » = absent.
+controles:
+- controle: paquet ufw installe
+  bon: installe
+  mauvais: absent
+  gravite: moyenne
+  risque: 'ufw pilote simplement le filtrage des paquets du noyau : sans lui (ou un autre pare-feu), aucun
+    filtrage reseau n''est possible sur la machine.'
+  action: Installer ufw avec le gestionnaire de paquets.
+  playbook: infra.paquet-installer
+  parametres:
+    paquet: ufw
+  evaluation: []
+pieges:
+- 'Regle conditionnelle : ne s''applique que si ufw est l''outil retenu (var_network_filtering_service).
+  Demander ou constater l''outil en place avant de conclure ; le code ne juge pas cette regle seul.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 4.1.1 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 4.2.1 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 4.2.1 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

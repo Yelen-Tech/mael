@@ -1,0 +1,75 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-package-rsh-removed
+titre: Paquet rsh / rsh-client absent
+domaine: services
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: services-inutiles
+  type_controle: paquet-absent
+  niveaux:
+    cis: 1
+    anssi: minimal
+source:
+  origine: complianceascode
+  regle: package_rsh_removed
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/obsolete/r_services/package_rsh_removed
+mots_cles:
+- client
+- installe
+- logiciel
+- paquet
+- paquets
+- rsh
+- rsh-client
+resume: Le paquet rsh / rsh-client doit etre absent. (regle package_rsh_removed, ComplianceAsCode 0.1.82).
+observer:
+- commande: dpkg-query -W -f='${binary:Package} ${Status}\n' rsh rsh-client 2>/dev/null
+  but: Savoir si rsh rsh-client est installe
+  lecture: « install ok installed » = installe ; aucune ligne ou « deinstall » = absent.
+controles:
+- controle: paquet rsh rsh-client absent
+  bon: absent
+  mauvais: installe
+  gravite: moyenne
+  risque: Les clients rsh, rcp et rlogin sont anciens, pleins de failles et remplaces par SSH. Meme sans
+    serveur, les retirer evite qu'un utilisateur les emploie par erreur et envoie ses identifiants en
+    clair.
+  action: Desinstaller rsh rsh-client (apt purge) apres avoir verifie qu'aucun service n'en depend.
+  playbook: infra.paquet-retirer
+  parametres:
+    paquet: rsh rsh-client
+  evaluation:
+  - commande: 0
+    lecteur: dpkg
+    comparateur: absent
+    attendu:
+    - rsh
+    - rsh-client
+pieges:
+- 'Un paquet peut etre requis par une application metier : confirmer avec l''exploitant avant de le retirer.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 2.2.2 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 2.2.2 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 2.2.2 (niveau 1)
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R62 (niveau minimal)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

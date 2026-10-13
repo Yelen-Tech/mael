@@ -1,0 +1,48 @@
+id: langage-python
+schema: 1
+nom: Python
+resume: Langage interprété à typage dynamique et fort, à ramasse-miettes ; sa souplesse (évaluation dynamique, désérialisation) est sa principale source de vulnérabilités.
+famille: langage
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - python
+  - pickle
+  - désérialisation
+  - eval
+  - injection de commandes
+  - subprocess
+  - dépendances
+  - pypi
+caracteristiques:
+  paradigmes:
+    - impératif
+    - orienté objet
+    - fonctionnel
+  typage: dynamique, fort (annotations de type optionnelles non vérifiées à l'exécution)
+  execution: interprété en bytecode (CPython), compilation à la volée possible (PyPy)
+  memoire: ramasse-miettes (comptage de références + collecteur générationnel)
+securite:
+  - titre: Désérialisation pickle
+    risque: pickle.loads sur des données non fiables exécute du code arbitraire — la documentation elle-même le dit.
+    conseil: Ne jamais désérialiser de données externes avec pickle ; utiliser json ou un format sûr.
+    gravite: critique
+  - titre: Évaluation dynamique (eval, exec)
+    risque: eval ou exec sur une entrée utilisateur exécute du code arbitraire dans le processus.
+    conseil: Ne jamais évaluer une entrée externe ; pour du littéral, ast.literal_eval seulement.
+    gravite: elevee
+  - titre: Injection de commandes (subprocess shell=True)
+    risque: Passer une chaîne avec shell=True et des données externes laisse injecter des commandes shell.
+    conseil: Toujours une liste d'arguments avec shell=False ; échapper ce qui doit l'être.
+    gravite: critique
+  - titre: Dépendances typosquattées
+    risque: Un paquet PyPI au nom voisin d'un paquet légitime installe du code malveillant au poste de travail ou en production.
+    conseil: Épingler versions et empreintes (requirements hachés, pip-audit) et vérifier les noms.
+    gravite: moyenne
+sources:
+  - titre: Python — Security Considerations (documentation officielle)
+    url: https://docs.python.org/3/library/security_warnings.html
+  - titre: Python — module pickle (avertissement officiel)
+    url: https://docs.python.org/3/library/pickle.html

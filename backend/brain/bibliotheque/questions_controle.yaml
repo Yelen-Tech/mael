@@ -1,0 +1,110 @@
+# Jeu de CONTROLE : questions ecrites APRES le reglage du lexique, jamais
+# utilisees pour l'ajuster. Il mesure la generalisation (le jeu de reference
+# peut etre sur-ajuste, puisqu'on corrige la recherche en le regardant).
+#
+# Regle : on mesure, on note, on ne retouche ni le lexique ni la recherche
+# pour faire passer ces questions. Quand on veut s'en servir pour corriger,
+# on les deplace dans questions_reference.yaml et on en ecrit de nouvelles.
+#
+# Mesure : python -m brain.bibliotheque.evaluation --controle
+systeme: ubuntu:22.04
+services: [openssh]
+
+questions:
+  - {theme: ssh, question: "Peut-on ouvrir une session SSH directement en administrateur ?",
+     attendues: [cac-sshd-disable-root-login, ssh-durcissement]}
+  - {theme: ssh, question: "Le serveur SSH autorise-t-il l'authentification par hôte ?",
+     attendues: [cac-disable-host-auth]}
+  - {theme: ssh, question: "Combien de sessions simultanées par connexion SSH ?",
+     attendues: [cac-sshd-set-max-sessions]}
+  - {theme: ssh, question: "PAM est-il utilisé par sshd ?",
+     attendues: [cac-sshd-enable-pam]}
+  - {theme: ssh, question: "LogLevel de sshd",
+     attendues: [cac-sshd-set-loglevel-info]}
+  - {theme: ssh, question: "le temps d'inactivité avant déconnexion SSH",
+     attendues: [cac-sshd-set-idle-timeout, cac-sshd-set-keepalive]}
+  - {theme: parametres-reseau, question: "Les réponses aux pings en broadcast sont-elles ignorées ?",
+     attendues: [cac-sysctl-net-ipv4-icmp-echo-ignore-broadcasts]}
+  - {theme: parametres-reseau, question: "La machine envoie-t-elle des sollicitations de routeur en IPv6 ?",
+     attendues: [cac-sysctl-net-ipv6-conf-all-router-solicitations,
+                 cac-sysctl-net-ipv6-conf-default-router-solicitations]}
+  - {theme: parametres-reseau, question: "Protection contre les attaques SYN flood",
+     attendues: [cac-sysctl-net-ipv4-tcp-syncookies]}
+  - {theme: parametres-noyau, question: "La randomisation de la mémoire est-elle active ?",
+     attendues: [cac-sysctl-kernel-randomize-va-space, cac-kernel-config-randomize-memory,
+                 cac-kernel-config-randomize-base]}
+  - {theme: modules-noyau, question: "Le stockage USB peut-il être utilisé ?",
+     attendues: [cac-kernel-module-usb-storage-disabled]}
+  - {theme: modules-noyau, question: "squashfs est-il bloqué ?",
+     attendues: [cac-kernel-module-squashfs-disabled]}
+  - {theme: sudo, question: "Le fichier sudoers appartient-il à root ?",
+     attendues: [cac-file-owner-etc-sudoers]}
+  - {theme: planification, question: "Les droits de /etc/cron.daily sont-ils assez stricts ?",
+     attendues: [cac-file-permissions-cron-daily, cac-file-owner-cron-daily,
+                 cac-file-groupowner-cron-daily]}
+  - {theme: services-inutiles, question: "Le paquet rsh est-il présent ?",
+     attendues: [cac-package-rsh-removed, cac-package-rsh-server-removed]}
+  - {theme: services-inutiles, question: "Un serveur DHCP tourne-t-il ?",
+     attendues: [cac-package-dhcp-removed]}
+  - {theme: services-inutiles, question: "Le service NFS est-il arrêté ?",
+     attendues: [cac-service-nfs-disabled, cac-package-nfs-kernel-server-removed]}
+  - {theme: services-inutiles, question: "Samba est-il installé ?",
+     attendues: [cac-package-samba-removed]}
+  - {theme: services-inutiles, question: "Le paquet prelink est-il supprimé ?",
+     attendues: [cac-package-prelink-removed]}
+  - {theme: compilation-noyau, question: "Le noyau exige-t-il des modules signés ?",
+     attendues: [cac-kernel-config-module-sig-force, cac-kernel-config-module-sig]}
+  - {theme: demarrage, question: "Le démarrage active-t-il l'isolation des tables de pages (PTI) ?",
+     attendues: [cac-grub2-pti-argument]}
+  - {theme: audit, question: "Est-ce que la journalisation d'audit est installée ?",
+     attendues: [cac-package-audit-installed, cac-service-auditd-enabled]}
+  - {theme: controle-acces, question: "Le système de contrôle d'accès AppArmor est-il en place ?",
+     attendues: [cac-package-apparmor-installed, cac-apparmor-configured]}
+  - {theme: web, question: "Mon site web a-t-il HSTS ?",
+     attendues: [entetes-http]}
+  - {theme: tls, question: "Le certificat TLS de mon domaine est-il encore valide ?",
+     attendues: [tls-configuration]}
+  - {theme: messagerie, question: "Ma messagerie est-elle protégée contre l'usurpation ?",
+     attendues: [dns-messagerie]}
+  - {theme: journalisation, question: "Voit-on des échecs de connexion répétés dans les journaux ?",
+     attendues: [journaux-authentification]}
+  # Ajoutees le 18/09/2026 (couverture audit / authentification / sudo /
+  # partitions), ecrites avant toute mesure ; remplacent les 2 questions
+  # deplacees vers la reference (regressions dues aux nouvelles fiches).
+  - {theme: audit, question: "Les modifications de /etc/passwd sont-elles tracées ?",
+     attendues: [cac-audit-rules-usergroup-modification-passwd]}
+  - {theme: authentification, question: "Au bout de combien d'échecs de connexion un compte est-il verrouillé ?",
+     attendues: [cac-accounts-passwords-pam-faillock-deny]}
+  - {theme: montage, question: "/var/log est-il sur une partition à part ?",
+     attendues: [cac-partition-for-var-log]}
+  # Ajoutees le 18/09/2026 (recettes : comptes, sessions, expiration), ecrites
+  # avant mesure ; remplacent la question sudo deplacee en reference.
+  - {theme: comptes, question: "Un autre compte que root a-t-il l'UID 0 ?",
+     attendues: [cac-accounts-no-uid-except-zero]}
+  - {theme: sessions, question: "Les sessions shell inactives sont-elles fermées automatiquement ?",
+     attendues: [cac-accounts-tmout]}
+  - {theme: comptes, question: "Y a-t-il des comptes sans mot de passe ?",
+     attendues: [cac-no-empty-passwords-etc-shadow, cac-no-empty-passwords-unix]}
+  - {theme: authentification, question: "Quelle est la durée de validité maximale des mots de passe ?",
+     attendues: [cac-accounts-maximum-age-login-defs, cac-accounts-password-set-max-life-existing]}
+  # Ajoutees le 18/09/2026 (3e vague : auditd.conf, fichiers systeme,
+  # journalisation), ecrites avant mesure ; remplacent la question sur le
+  # transfert de paquets deplacee en reference.
+  - {theme: audit, question: "Que fait auditd quand le disque des journaux est plein ?",
+     attendues: [cac-auditd-data-disk-full-action]}
+  - {theme: fichiers-systeme, question: "Y a-t-il des fichiers modifiables par n'importe qui ?",
+     attendues: [cac-file-permissions-unauthorized-world-writable]}
+  - {theme: journalisation, question: "Les journaux sont-ils envoyés vers un serveur central ?",
+     attendues: [cac-rsyslog-remote-loghost, cac-systemd-journal-upload-url]}
+  - {theme: fichiers-systeme, question: "Des programmes setuid ont-ils été ajoutés hors des paquets ?",
+     attendues: [cac-file-permissions-unauthorized-suid]}
+  # Ajoutees le 19/09/2026 (theme cryptographie : cles d'hote SSH, echange
+  # post-quantique, certificats TLS locaux), ecrites avant mesure.
+  - {theme: cryptographie, question: "Les clés d'hôte SSH sont-elles assez longues ?",
+     attendues: [crypto-cles-hotes-ssh]}
+  - {theme: cryptographie, question: "Le serveur SSH fait-il de l'échange de clés post-quantique ?",
+     attendues: [crypto-ssh-echange-pq]}
+  - {theme: cryptographie, question: "Un certificat local est-il encore signé en SHA-1 ?",
+     attendues: [crypto-certificats-tls-locaux]}
+  - {theme: cryptographie, question: "Peut-on proposer du TLS hybride post-quantique sur les services ?",
+     attendues: [crypto-certificats-tls-locaux, crypto-ssh-echange-pq]}

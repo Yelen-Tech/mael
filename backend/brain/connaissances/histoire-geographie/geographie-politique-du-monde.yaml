@@ -1,0 +1,44 @@
+id: geographie-politique-du-monde
+schema: 1
+nom: Géographie politique du monde
+resume: "Organisation du monde en États souverains : l'ONU compte 193 États membres et 2 observateurs, chacun avec capitale, frontières et juridiction propres, ce qui détermine le droit applicable aux données et aux systèmes."
+famille: histoire-geographie
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - géographie politique
+  - pays
+  - états
+  - capitales
+  - frontières
+  - onu
+  - iso 3166
+  - codes pays
+  - juridiction
+  - géolocalisation
+caracteristiques:
+  etats_membres_onu: "193 États membres, auxquels s'ajoutent 2 États observateurs (le Saint-Siège et l'État de Palestine)."
+  codes_normalises: "La norme ISO 3166-1 attribue à chaque pays des codes alpha-2 (FR, US, CN) et alpha-3 (FRA, USA, CHN), utilisés partout en informatique."
+  territoires_particuliers: "De nombreux territoires ne sont pas des États (DOM français, Porto Rico, Hong Kong) mais disposent de codes et de juridictions distincts."
+  statut_conteste: "Certaines entités ont un statut contesté (Taïwan, Kosovo, Sahara occidental) ; les listes de pays varient selon les sources."
+  plus_grands_pays: "Par superficie : Russie, Canada, Chine, États-Unis, Brésil ; par population : Inde et Chine dépassent chacune 1,4 milliard d'habitants."
+securite:
+  - titre: Géolocalisation IP et filtrage par pays
+    risque: Les bases de géolocalisation IP (GeoIP) sont approximatives et vite obsolètes ; un blocage ou une alerte fondés sur le pays d'une IP peuvent être trompeurs ou contournés par VPN.
+    conseil: Traiter le pays d'origine d'une IP comme un indice, jamais comme une preuve, et maintenir les bases GeoIP à jour.
+    gravite: moyenne
+  - titre: Juridiction des données
+    risque: Le pays où sont hébergées des données détermine le droit applicable (accès gouvernementaux, protection des données) ; ignorer la géographie politique expose à des conflits de lois.
+    conseil: Cartographier précisément où résident les données et les sauvegardes, et vérifier la juridiction des fournisseurs cloud.
+    gravite: elevee
+  - titre: Listes de pays périmées ou incohérentes
+    risque: Coder en dur une liste de pays provoque des bogues (pays renommés, codes changés) et des erreurs de conformité sur les listes de sanctions.
+    conseil: Utiliser les codes ISO 3166 et des référentiels maintenus plutôt que des listes internes figées.
+    gravite: info
+sources:
+  - titre: Nations unies — États membres
+    url: https://www.un.org/fr/about-us/member-states
+  - titre: ISO 3166 — Codes de pays
+    url: https://www.iso.org/iso-3166-country-codes.html

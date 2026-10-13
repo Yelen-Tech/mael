@@ -1,0 +1,68 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-directory-permissions-etc-nftables
+titre: Droits de /etc/nftables/ (0700 au plus)
+domaine: reseau
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: pare-feu
+  type_controle: droits-fichier
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: directory_permissions_etc_nftables
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/network/network-nftables/directory_permissions_etc_nftables
+mots_cles:
+- chmod
+- droits
+- fichier
+- fichiers
+- nftables
+- permissions
+resume: 'Droits de /etc/nftables/ : 0700 ou plus strict (aucun droit en plus). (regle directory_permissions_etc_nftables,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: dpkg -s nftables >/dev/null 2>&1 || echo 'SENTINELLE:SANS_OBJET'; stat -c '%a %U %G %n' /etc/nftables/
+    2>/dev/null
+  but: Lire droits, proprietaire et groupe (droits)
+  lecture: '1re colonne = droits en octal : aucun bit ne doit depasser 0700. Aucune ligne = fichier absent.'
+controles:
+- controle: droits <= 0700
+  bon: 0700 ou plus strict (aucun droit en plus)
+  mauvais: toute autre valeur
+  gravite: moyenne
+  risque: 'Des droits corrects sur /etc/nftables sont importants car ce repertoire contient la configuration
+    nftables. Le proteger est essentiel a la securite : restreindre les droits garantit le controle exclusif
+    de la configuration nftables.'
+  action: chmod 0700 sur les fichiers concernes (u-x,go-wx selon le cas).
+  playbook: infra.fichier-droits
+  parametres:
+    chemin: /etc/nftables/
+    mode: '0700'
+  evaluation:
+  - commande: 0
+    lecteur: stat
+    champ: droits
+    comparateur: droits_au_plus
+    attendu: '0700'
+pieges:
+- 'Regle limitee par la source a : package[nftables]. Hors de ce cas, la commande repond « sans objet
+  » (aucun ecart).'
+- 'Sans sudo, certains fichiers (ex. /etc/shadow) ne sont pas lisibles par stat/find : relancer avec les
+  droits root.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R50 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

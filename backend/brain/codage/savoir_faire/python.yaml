@@ -1,0 +1,50 @@
+# Savoir-faire du specialiste Python (API et base de donnees).
+specialiste: python
+fiches:
+  - id: api-flask-sqlite
+    titre: une API Flask avec une base SQLite
+    mots: [api, flask, route, routes, produits, lister, ajouter, supprimer, json, rest, crud]
+    comment:
+      - "une fonction creer_app(chemin_base) qui cree l'app et ouvre la base : les tests lui passent une base jetable"
+      - "une route par action : GET /api/produits (liste), GET /api/produits/<int:id> (un, 404 sinon), POST /api/produits (201 + l'objet cree), DELETE /api/produits/<int:id> (204)"
+      - "verifier le JSON recu (request.get_json(silent=True)) : 400 si un champ manque"
+      - "jamais app.run(debug=True) dans le code livre"
+    pourquoi: "les codes HTTP disent le resultat (RFC 9110) ; une app creee par fonction se teste sans toucher a la vraie base ; debug=True ouvre une console qui execute du code a distance."
+    source: "Flask, Application Factories — https://flask.palletsprojects.com/en/stable/patterns/appfactories/"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-04-08"
+    dependances:
+      - {nom: flask, type: python, pourquoi: "le serveur web (la version du conteneur de tests, verifiee en ligne)"}
+      - {nom: requirements.txt, type: fichier, pourquoi: "les dependances declarees : flask, pytest"}
+    juges: [debug-actif]
+
+  - id: requetes-sqlite-sures
+    titre: des requetes SQL sures et des transactions
+    mots: [base, donnees, sqlite, sql, table, requete, enregistrer, stocker]
+    comment:
+      - "sqlite3 de la bibliotheque standard ; le schema cree au demarrage : CREATE TABLE IF NOT EXISTS produits (id INTEGER PRIMARY KEY, nom TEXT NOT NULL, prix REAL NOT NULL CHECK (prix >= 0))"
+      - "TOUJOURS des parametres : cur.execute(\"SELECT * FROM produits WHERE id = ?\", (id,)) — jamais de f-string ni de + dans le SQL"
+      - "une ecriture = une transaction : with connexion: ... (commit automatique, annulation si erreur)"
+      - "connexion.row_factory = sqlite3.Row pour rendre des dictionnaires"
+    pourquoi: "une valeur collee dans le SQL est une injection SQL (OWASP, CWE-89) ; NOT NULL et CHECK gardent la base juste meme si le code se trompe ; la transaction evite une base a moitie ecrite."
+    source: "Python, module sqlite3 — https://docs.python.org/3/library/sqlite3.html ; OWASP SQL Injection Prevention Cheat Sheet"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    juges: [injection-sql]
+
+  - id: tests-pytest
+    titre: des tests automatiques qui tournent
+    mots: [tests, test, automatiques, pytest, verifier, tester]
+    comment:
+      - "un fichier tests/test_app.py ; une fixture qui cree l'app sur une base jetable (tmp_path / \"test.db\") et rend app.test_client()"
+      - "un test par route ET par cas limite : liste vide, produit absent (404), JSON incomplet (400), suppression puis lecture (404)"
+      - "chaque test verifie le code HTTP ET le contenu"
+    pourquoi: "MAEL execute les tests dans un conteneur sans reseau (couche 7) : seule l'execution prouve la justesse ; les cas limites sont ce que les evaluations publiques testent."
+    source: "pytest, How to use fixtures — https://docs.pytest.org/en/stable/how-to/fixtures.html"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-04-08"
+    dependances:
+      - {nom: pytest, type: python, pourquoi: "lance les tests (la version du conteneur de tests, verifiee en ligne)"}
+      - {nom: tests/test_app.py, type: fichier, pourquoi: "les tests doivent etre au plan"}
+    juges: [py-syntaxe]

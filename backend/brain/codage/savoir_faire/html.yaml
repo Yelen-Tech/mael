@@ -1,0 +1,79 @@
+# Savoir-faire du specialiste HTML : le COMMENT et le POURQUOI.
+# Chaque fiche : mots (ce qui l'appelle), comment (etapes courtes), pourquoi
+# (la norme), source, verifie_le / revoir_apres (recence), dependances (ce
+# qu'il faut pour realiser la tache), juges (les regles qu'elle fait tenir).
+specialiste: html
+fiches:
+  - id: page-complete
+    titre: une page complete et accessible
+    mots: [page, accueil, site, vitrine, html, contact, galerie, propos]
+    comment:
+      - "<!DOCTYPE html>, <html lang=\"fr\"> (la langue du contenu), <meta charset=\"utf-8\">, <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">, un <title> propre a la page"
+      - "un seul <main> pour le contenu, un seul <h1>, puis des <h2>/<h3> sans sauter de niveau"
+      - "la feuille de style du plan dans le <head> ; le script du plan en fin de <head> avec defer"
+    pourquoi: "WCAG 2.2 : 3.1.1 (langue), 2.4.2 (titre de page), 1.3.1 (structure par les titres) ; le viewport evite le zoom force sur telephone (1.4.10 reflow)."
+    source: "W3C WCAG 2.2 — https://www.w3.org/TR/WCAG22/"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances:
+      - {nom: "feuille de style du plan", type: fichier, pourquoi: "la page la charge : elle doit exister au plan"}
+    juges: [doctype, lang, charset, viewport, title]
+
+  - id: menu-commun
+    titre: le meme menu sur toutes les pages
+    mots: [menu, navigation, nav, pages, site, entete, header, telephone]
+    comment:
+      - "un <nav aria-label=\"Menu principal\"> avec une liste <ul> de liens vers TOUTES les pages du plan, dans le meme ordre sur chaque page"
+      - "la page courante marquee aria-current=\"page\""
+      - "sur telephone : un <button type=\"button\" aria-expanded=\"false\" aria-controls=\"menu\"> qui ouvre la liste <ul id=\"menu\">"
+    pourquoi: "WCAG 2.2 : 3.2.3 (navigation coherente d'une page a l'autre), 2.4.5 (plusieurs moyens d'atteindre une page), 4.1.2 (nom, role et etat du bouton)."
+    source: "WAI-ARIA APG, motif Disclosure — https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances:
+      - {nom: "script du menu", type: fichier, pourquoi: "le bouton aria-expanded a besoin d'un script qui bascule l'etat"}
+    juges: [nom-accessible, button-type, critere-non-tenu]
+
+  - id: entete-pied-dans-la-page
+    titre: en-tete et pied de page
+    mots: [entete, header, pied, footer, mentions, reseaux]
+    comment:
+      - "<header> et <footer> s'ecrivent DANS chaque page, pas dans des fichiers a part (un site statique n'a pas d'inclusion)"
+      - "le pied de page ne pointe que vers des pages du plan ; une page absente (mentions legales) se cree au plan ou ne se lie pas"
+    pourquoi: "sans serveur ni outil d'assemblage, un header.html seul n'est jamais affiche ; un lien vers une page absente est casse (WCAG 2.4.4, but du lien)."
+    source: "HTML Living Standard, elements header/footer — https://html.spec.whatwg.org/multipage/sections.html"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    juges: [fichier-absent, critere-non-tenu]
+
+  - id: formulaire-accessible
+    titre: un formulaire que tout le monde peut remplir
+    mots: [formulaire, contact, inscription, adhesion, reservation, champ, message, envoyer]
+    comment:
+      - "chaque champ a son <label for> relie a l'id du champ ; required pour les obligatoires ; type=\"email\" / \"tel\" selon la donnee"
+      - "autocomplete (name, email, tel) pour aider la saisie"
+      - "un <button type=\"submit\"> avec un texte qui dit l'action"
+      - "method=\"post\" des qu'il y a des donnees personnelles (jamais un mot de passe en GET)"
+    pourquoi: "WCAG 2.2 : 1.3.1 et 3.3.2 (etiquettes), 1.3.5 (but de la saisie) ; OWASP : les donnees sensibles ne passent pas dans l'URL."
+    source: "W3C WAI Forms Tutorial — https://www.w3.org/WAI/tutorials/forms/"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances:
+      - {nom: "traitement du formulaire", type: fichier, pourquoi: "un formulaire statique a besoin d'une adresse d'envoi (script serveur ou service) : sinon le dire dans la page"}
+    juges: [champ-sans-label, button-type, mdp-en-get]
+
+  - id: images-et-galerie
+    titre: images et galerie
+    mots: [galerie, photos, images, portfolio, plats, pains, produits]
+    comment:
+      - "chaque <img> a un alt qui dit ce que l'image montre (alt=\"\" seulement si elle est decorative)"
+      - "width et height sur chaque image (pas de saut de mise en page), loading=\"lazy\" hors du premier ecran"
+      - "<figure> + <figcaption> quand la legende compte"
+    pourquoi: "WCAG 2.2 : 1.1.1 (texte de remplacement) ; width/height evitent les decalages au chargement (Core Web Vitals, CLS)."
+    source: "W3C WAI Images Tutorial — https://www.w3.org/WAI/tutorials/images/"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances:
+      - {nom: "les fichiers images", type: fichier, pourquoi: "absents : MAEL cree des images provisoires a remplacer"}
+    juges: [img-alt]

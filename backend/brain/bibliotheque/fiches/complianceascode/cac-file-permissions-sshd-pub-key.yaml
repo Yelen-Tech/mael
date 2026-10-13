@@ -1,0 +1,78 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-file-permissions-sshd-pub-key
+titre: Droits des fichiers *.pub de /etc/ssh/ (0644 au plus)
+domaine: acces
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: ssh
+  type_controle: droits-fichier
+  niveaux:
+    cis: 1
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: file_permissions_sshd_pub_key
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/ssh/file_permissions_sshd_pub_key
+mots_cles:
+- chmod
+- droits
+- fichier
+- fichiers
+- permissions
+resume: 'Droits des fichiers *.pub de /etc/ssh/ : 0644 ou plus strict (aucun droit en plus). (regle file_permissions_sshd_pub_key,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: find /etc/ssh/ -maxdepth 1 -type f -regextype posix-extended -regex '^.*\.pub$' -printf '%m
+    %u %g %p\n' 2>/dev/null
+  but: Lire droits, proprietaire et groupe (droits)
+  lecture: '1re colonne = droits en octal : aucun bit ne doit depasser 0644. Aucune ligne = fichier absent.'
+controles:
+- controle: droits <= 0644
+  bon: 0644 ou plus strict (aucun droit en plus)
+  mauvais: toute autre valeur
+  gravite: moyenne
+  risque: Si un compte non autorise peut modifier une cle publique d'hote SSH, il peut la remplacer et
+    compromettre l'authentification du serveur aupres des clients.
+  action: chmod 0644 sur les fichiers concernes (u-x,go-wx selon le cas).
+  playbook: infra.fichiers-motif
+  parametres:
+    dossier: /etc/ssh/
+    regex: ^.*\.pub$
+    nature: droits
+    valeur: '0644'
+    recursif: non
+  evaluation:
+  - commande: 0
+    lecteur: stat
+    champ: droits
+    comparateur: droits_au_plus
+    attendu: '0644'
+pieges:
+- 'Sans sudo, certains fichiers (ex. /etc/shadow) ne sont pas lisibles par stat/find : relancer avec les
+  droits root.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 5.1.3 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 5.1.3 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 5.1.3 (niveau 1)
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R50 (niveau intermediaire)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

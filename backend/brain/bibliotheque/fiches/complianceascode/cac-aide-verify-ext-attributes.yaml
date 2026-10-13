@@ -1,0 +1,60 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-aide-verify-ext-attributes
+titre: AIDE verifie les attributs etendus (option xattrs)
+domaine: systeme
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: integrite
+  type_controle: detection
+  niveaux:
+    cis: null
+    anssi: eleve
+source:
+  origine: complianceascode
+  regle: aide_verify_ext_attributes
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/software/integrity/software-integrity/aide/aide_verify_ext_attributes
+mots_cles:
+- aide
+- attributs
+- integrite
+- xattrs
+resume: AIDE verifie les attributs etendus (option xattrs). (regle aide_verify_ext_attributes, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: dpkg -s aide >/dev/null 2>&1 || echo 'SENTINELLE:SANS_OBJET'; grep -hEs '^[^#]*\bxattrs\b'
+    /etc/aide/aide.conf /etc/aide/aide.conf.d/*
+  but: Chercher l'option xattrs dans les regles AIDE
+  lecture: Une ligne = conforme ; aucune = ecart.
+controles:
+- controle: xattrs dans les regles
+  bon: une ligne
+  mauvais: xattrs absent
+  gravite: faible
+  risque: 'Les attributs etendus portent des metadonnees de securite (capacites, etiquettes) : les modifier
+    peut donner des privileges a un programme sans toucher a son contenu. AIDE doit aussi les verifier.'
+  action: Ajouter xattrs a la regle utilisee.
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: presente
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R76 (niveau eleve)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

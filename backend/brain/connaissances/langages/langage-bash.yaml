@@ -1,0 +1,47 @@
+id: langage-bash
+schema: 1
+nom: Bash
+resume: Shell de script sans typage où tout est chaîne ; l'absence de guillemets et l'évaluation dynamique y sont la cause quasi unique des injections de commandes.
+famille: langage
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - bash
+  - shell
+  - script
+  - sh
+  - injection de commandes
+  - guillemets
+  - eval
+  - mktemp
+caracteristiques:
+  paradigmes:
+    - impératif
+    - script shell
+  typage: aucun (toute valeur est une chaîne de caractères)
+  execution: interprété, ligne à ligne
+  memoire: non applicable (chaînes et tableaux gérés par l'interpréteur)
+securite:
+  - titre: Injection de commandes
+    risque: Une variable non citée ou passée à eval laisse une entrée externe exécuter des commandes arbitraires.
+    conseil: Guillemets systématiques ("$var"), jamais eval, tableaux pour les listes d'arguments.
+    gravite: critique
+  - titre: Découpage et globbing non voulus
+    risque: $var non citée est découpée sur les espaces et les motifs sont expansés (*, ?) — fichiers faux ou supprimés.
+    conseil: Toujours citer, set -f si le globbing n'est pas voulu, vérifier avec ShellCheck.
+    gravite: elevee
+  - titre: Fichiers temporaires prévisibles
+    risque: Un nom de fichier temporaire prévisible dans /tmp permet un lien symbolique piégé (écrasement de fichier arbitraire).
+    conseil: Toujours mktemp / mktemp -d, jamais un nom fixe.
+    gravite: moyenne
+  - titre: Erreurs silencieuses
+    risque: Par défaut le script continue après une commande en échec — une sauvegarde « réussie » peut être vide.
+    conseil: set -euo pipefail en tête de script et codes de retour vérifiés.
+    gravite: moyenne
+sources:
+  - titre: Manuel de référence Bash (GNU)
+    url: https://www.gnu.org/software/bash/manual/bash.html
+  - titre: ShellCheck — wiki des pièges du shell
+    url: https://www.shellcheck.net/wiki/

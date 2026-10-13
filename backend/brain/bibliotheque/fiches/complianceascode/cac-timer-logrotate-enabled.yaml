@@ -1,0 +1,60 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-timer-logrotate-enabled
+titre: Minuteur logrotate.timer active
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: journalisation
+  type_controle: service-actif
+  niveaux:
+    cis: null
+    anssi: renforce
+source:
+  origine: complianceascode
+  regle: timer_logrotate_enabled
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/logging/log_rotation/timer_logrotate_enabled
+mots_cles:
+- logrotate
+- minuteur
+- systemd
+- timer
+resume: L'unite systemd logrotate.timer doit etre activee. (regle timer_logrotate_enabled, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: dpkg -s logrotate >/dev/null 2>&1 || echo 'SENTINELLE:SANS_OBJET'; systemctl is-enabled logrotate.timer
+    2>/dev/null; systemctl is-active logrotate.timer 2>/dev/null
+  but: Lire l'etat de logrotate.timer
+  lecture: 'Attendu : « enabled » puis « active ».'
+controles:
+- controle: logrotate.timer enabled/active
+  bon: enabled et active
+  mauvais: disabled ou inactive
+  gravite: moyenne
+  risque: 'Des journaux qui ne tournent pas grossissent jusqu''a remplir la partition de /var/log : les
+    nouveaux evenements, souvent ceux d''une attaque en cours, ne sont plus enregistres.'
+  action: systemctl enable --now logrotate.timer
+  playbook: infra.service-activer
+  parametres:
+    service: logrotate.timer
+  evaluation:
+  - commande: 0
+    lecteur: systemctl
+    comparateur: actif
+pieges:
+- 'Regle limitee par la source a : package[logrotate]. Hors de ce cas, la commande repond « sans objet
+  » (aucun ecart).'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R71 (niveau renforce)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

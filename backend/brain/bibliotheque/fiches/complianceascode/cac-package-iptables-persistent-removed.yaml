@@ -1,0 +1,74 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-package-iptables-persistent-removed
+titre: Paquet iptables-persistent absent
+domaine: reseau
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: pare-feu
+  type_controle: paquet-absent
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: package_iptables-persistent_removed
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/network/network-iptables/package_iptables-persistent_removed
+mots_cles:
+- installe
+- iptables
+- iptables-persistent
+- logiciel
+- paquet
+- paquets
+- persistent
+resume: Le paquet iptables-persistent doit etre absent. (regle package_iptables-persistent_removed, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: dpkg -s ufw >/dev/null 2>&1 || echo 'SENTINELLE:SANS_OBJET'; dpkg-query -W -f='${binary:Package}
+    ${Status}\n' iptables-persistent 2>/dev/null
+  but: Savoir si iptables-persistent est installe
+  lecture: « install ok installed » = installe ; aucune ligne ou « deinstall » = absent.
+controles:
+- controle: paquet iptables-persistent absent
+  bon: absent
+  mauvais: installe
+  gravite: moyenne
+  risque: 'iptables-persistent recharge ses propres regles au demarrage : avec ufw, les deux jeux de regles
+    se contredisent et le filtrage devient imprevisible.'
+  action: Desinstaller iptables-persistent (apt purge) apres avoir verifie qu'aucun service n'en depend.
+  playbook: infra.paquet-retirer
+  parametres:
+    paquet: iptables-persistent
+  evaluation:
+  - commande: 0
+    lecteur: dpkg
+    comparateur: absent
+    attendu:
+    - iptables-persistent
+pieges:
+- 'Regle limitee par la source a : package[ufw]. Hors de ce cas, la commande repond « sans objet » (aucun
+  ecart).'
+- 'Un paquet peut etre requis par une application metier : confirmer avec l''exploitant avant de le retirer.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 4.1.2 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 4.2.2 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 4.2.2 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

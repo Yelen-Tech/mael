@@ -1,0 +1,125 @@
+# Lexique de la RECHERCHE (etape 3 du pipeline) — sans modele, deterministe.
+#
+# themes     : mots (francais ou techniques) qui orientent une question vers un
+#              theme de la taxonomie. Plusieurs themes peuvent etre detectes ;
+#              ils recoivent un bonus de classement (aiguillage souple).
+# synonymes  : un terme de la question -> termes ajoutes a la recherche
+#              (le catalogue importe parle souvent anglais technique).
+#
+# Ecrire les termes sans accents, en minuscules. Une expression de plusieurs
+# mots est reconnue telle quelle dans la question.
+# Toute modification se juge avec : python -m brain.bibliotheque.evaluation
+
+themes:
+  ssh: [ssh, sshd, openssh]
+  authentification: [pam, pwquality, faillock, "mot de passe fort", "complexite des mots de passe"]
+  comptes: [passwd, shadow, gshadow, "compte", "comptes utilisateurs",
+            "fichier des mots de passe", "mots de passe chiffres"]
+  sudo: [sudo, sudoers, "elevation de privileges"]
+  sessions: [umask, tmout, inactivite, "repertoire personnel", "repertoires personnels",
+             "fichiers d'initialisation", bash_history, "session inactive"]
+  pare-feu: [pare-feu, parefeu, firewall, ufw, nftables, iptables, firewalld]
+  exposition-reseau: [port, ports, ecoute, expose, exposes, exposition]
+  parametres-reseau: [routage, routeur, passerelle, redirection, redirections, icmp, syn, rp_filter,
+                      "chemin inverse", martien, martiens, ipv6, ipv4, arp,
+                      "routage par la source", autoconfiguration, forwarding]
+  parametres-noyau: [aslr, ptrace, dmesg, kptr, sysctl, "core dump", "espace d'adressage"]
+  modules-noyau: ["module", "modules", usb, "cle usb", cramfs, squashfs, dccp, sctp,
+                  rds, tipc, "systeme de fichiers"]
+  compilation-noyau: [compile, compilation, "compile avec", signe, signes, signature,
+                      "protection de pile", stackprotector, config_]
+  demarrage: [demarrage, boot, grub, spectre, meltdown, mitigation, "arguments du noyau"]
+  controle-acces: [apparmor, selinux, "controle d'acces obligatoire"]
+  integrite: [aide, integrite, "controle d'integrite"]
+  montage: [monte, montage, monter, noexec, nosuid, nodev, partition, /tmp, /var/tmp,
+            /dev/shm, shm]
+  fichiers-systeme: [droits, permissions, proprietaire, "qui peut lire",
+                     "qui peut modifier"]
+  planification: [cron, crontab, "taches planifiees", planification]
+  journalisation: [rsyslog, journald, logs, journaux, journalisation, logrotate]
+  audit: [audit, auditd, "regles d'audit"]
+  synchronisation-heure: [heure, horloge, chrony, ntp, timesyncd, "synchronisation de l'heure"]
+  services-inutiles: [telnet, ftp, vsftpd, avahi, cups, impression, bluetooth, snmp,
+                      nis, rsh, talk, tftp, xinetd, "interface graphique", xorg, gdm,
+                      samba, nfs, dhcp, squid, dovecot, slapd, ldap, rpcbind]
+  tls: [tls, ssl, certificat, https, chiffrement]
+  cryptographie: [quantique, post-quantique, rsa, ecdsa, ed25519, dsa,
+                  "cle d'hote", "cles d'hote", x509, openssl, kex, mlkem,
+                  sntrup, "echange de cles", signature, empreinte, hybride]
+  web: ["en-tete", "en-tetes", entete, header, headers, "site web", site, hsts, csp]
+  messagerie: [spf, dkim, dmarc, mx, messagerie, courriel, usurpation]
+
+# Expressions reecrites avant la recherche.
+remplacements:
+  "groupe proprietaire": "groupe"
+
+synonymes:
+  envoie: [send_redirects, send]
+  envoyer: [send_redirects, send]
+  accepte: [accept]
+  droits: [permissions]
+  proprietaire: [owner]
+  martien: [martians]
+  martiens: [martians]
+  aslr: [randomize_va_space, randomize]
+  "espace d'adressage": [randomize_va_space]
+  routage: [ip_forward, forwarding]
+  routeur: [ip_forward, forwarding]
+  # Expressions plus longues : elles l'emportent sur « routeur » seul.
+  "annonces de routeur": [accept_ra]
+  "annonce de routeur": [accept_ra]
+  passerelle: [ip_forward, forwarding]
+  "chemin inverse": [rp_filter]
+  "routage par la source": [accept_source_route, source_route]
+  inondation: [syncookies]
+  syn: [syncookies]
+  autoconfiguration: [autoconf, accept_ra]
+  signe: [module_sig, sig, sig_force]
+  signes: [module_sig, sig, sig_force]
+  signature: [module_sig, sig]
+  "protection de pile": [stackprotector, stackprotector_strong]
+  pile: [stackprotector]
+  "cle usb": [usb-storage, usb_storage]
+  usb: [usb-storage, usb_storage]
+  impression: [cups]
+  heure: [chrony, timesyncd, ntp]
+  horloge: [chrony, timesyncd]
+  "interface graphique": [xorg, gdm, xserver, x11]
+  graphique: [xorg, gdm]
+  ftp: [vsftpd, tnftp, ftp]
+  telnet: [telnet, inetutils-telnet, telnet-server]
+  dmesg: [dmesg_restrict]
+  ptrace: [ptrace_scope, yama]
+  bannieres: [banner]
+  banniere: [banner]
+  tentatives: [maxauthtries]
+  inactives: [clientaliveinterval, clientalivecountmax]
+  inactive: [clientaliveinterval, clientalivecountmax]
+  tunnels: [disableforwarding, forwarding]
+  delai: [logingracetime]
+  "mots de passe vides": [permitemptypasswords]
+  root: [permitrootlogin]
+  "force brute": [maxauthtries, failed]
+  "integrite des fichiers": [aide]
+  en marche: [enabled, active]
+  # Couverture du 18/09/2026 (audit, authentification, partitions).
+  "options de montage": [mount_option]
+  "option de montage": [mount_option]
+  executer: [noexec]
+  execution: [noexec]
+  "partition a part": [partition_for]
+  "partition separee": [partition_for]
+  "mots de passe chiffres": [shadow]
+  "qui peut lire": [permissions, owner]
+  "qui peut modifier": [permissions, owner]
+  "mot de passe chiffre": [shadow]
+  verrouille: [faillock, deny]
+  verrouillage: [faillock, deny]
+  tracees: [audit_rules]
+  tracee: [audit_rules]
+  "journal dedie": [logfile]
+  journalise: [logfile, log]
+  journalisees: [logfile, log]
+  "transfert de paquets": [ip_forward, forwarding]
+  installe: [installed, package]
+  installes: [installed, package]

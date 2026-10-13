@@ -1,0 +1,44 @@
+id: physique-quantique
+schema: 1
+nom: "Physique quantique (qubits et QKD)"
+resume: "Mécanique quantique appliquée au calcul et à la cryptographie : les qubits menacent RSA et ECC via l'algorithme de Shor, tandis que la distribution quantique de clés exploite la mesure pour détecter l'écoute."
+famille: physique
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - physique quantique
+  - mécanique quantique
+  - qubit
+  - superposition
+  - intrication
+  - distribution quantique de clés
+  - qkd
+  - bb84
+  - algorithme de shor
+  - cryptographie post-quantique
+  - théorème de non-clonage
+caracteristiques:
+  notions_fondamentales: "superposition d'états, intrication, théorème de non-clonage, effet de la mesure sur l'état quantique"
+  protocoles: "BB84 (Bennett et Brassard, 1984) pour la distribution quantique de clés ; algorithme de Shor (1994) pour la factorisation"
+  ordres_de_grandeur: "cassage de RSA-2048 estimé à plusieurs milliers de qubits logiques corrigés d'erreurs, alors que les machines actuelles n'offrent que des centaines de qubits physiques bruités"
+  lien_informatique: "menace « stocker maintenant, déchiffrer plus tard » sur les chiffrements à clé publique, migration vers la cryptographie post-quantique (standards NIST FIPS 203, 204 et 205 publiés en 2024)"
+securite:
+  - titre: Stocker maintenant, déchiffrer plus tard
+    risque: "Des chiffrements RSA ou ECC capturés aujourd'hui pourront être déchiffrés le jour où un ordinateur quantique suffisamment puissant exécutera l'algorithme de Shor."
+    conseil: "Inventorier les usages de cryptographie asymétrique et planifier la migration vers les algorithmes post-quantiques normalisés par le NIST."
+    gravite: elevee
+  - titre: Surestimation de la QKD
+    risque: "La QKD protège l'échange de clés en détectant l'écoute sur le canal quantique, mais n'authentifie pas à elle seule les extrémités et reste vulnérable aux attaques sur les détecteurs réels."
+    conseil: "Traiter la QKD comme un complément : authentification classique obligatoire et validation de l'implémentation matérielle."
+    gravite: moyenne
+  - titre: Confusion entre QKD et post-quantique
+    risque: "Confondre QKD et cryptographie post-quantique conduit à investir dans du matériel spécialisé alors que la menace principale se traite par logiciel."
+    conseil: "Rappeler que la post-quantique s'exécute sur les ordinateurs classiques actuels et constitue la voie de migration recommandée par les agences."
+    gravite: info
+sources:
+  - titre: "NIST — Post-Quantum Cryptography Standardization"
+    url: https://csrc.nist.gov/projects/post-quantum-cryptography
+  - titre: "NIST — Quantum Information Science"
+    url: https://www.nist.gov/quantum-information-science

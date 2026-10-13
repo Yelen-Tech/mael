@@ -1,0 +1,19 @@
+id: infra.audit-regles
+titre: "auditd : ajouter des regles d'audit persistantes"
+description: >
+  Ajoute les regles (separees par « | ») a /etc/audit/rules.d/60-mael.rules puis recharge (augenrules --load). Les regles deja presentes ne sont pas dupliquees.
+risque: faible
+parametres:
+  - {nom: regles, type: string, requis: true, motif: '^-[wa] [A-Za-z0-9/_.,=!<>:-]+( [A-Za-z0-9/_.,=!<>:-]+)*( \| -[wa] [A-Za-z0-9/_.,=!<>:-]+( [A-Za-z0-9/_.,=!<>:-]+)*)*$'}
+racine_requise: true
+reversible: true
+simulation: true
+idempotent: true
+redemarrage: false
+indisponibilite: "0 s"
+source:
+  origine: complianceascode
+  version: 0.1.82
+  gabarit: shared/templates/audit_rules_*/bash.template (augenrules)
+  ecarts: "fichier dedie 60-mael.rules ; echec si la configuration est immuable (-e 2)"
+references: [ANSSI-BP-028, CIS Benchmarks]

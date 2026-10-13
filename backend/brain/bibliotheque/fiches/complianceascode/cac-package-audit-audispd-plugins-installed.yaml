@@ -1,0 +1,70 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-package-audit-audispd-plugins-installed
+titre: Paquet audispd-plugins installe
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: audit
+  type_controle: paquet-present
+  niveaux:
+    cis: 2
+    anssi: null
+source:
+  origine: complianceascode
+  regle: package_audit-audispd-plugins_installed
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/auditing/package_audit-audispd-plugins_installed
+mots_cles:
+- audispd
+- audispd-plugins
+- installe
+- logiciel
+- paquet
+- paquets
+- plugins
+resume: Le paquet audispd-plugins doit etre installe. (regle package_audit-audispd-plugins_installed,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: dpkg-query -W -f='${binary:Package} ${Status}\n' audispd-plugins 2>/dev/null
+  but: Savoir si audispd-plugins est installe
+  lecture: « install ok installed » = installe ; aucune ligne ou « deinstall » = absent.
+controles:
+- controle: paquet audispd-plugins installe
+  bon: installe
+  mauvais: absent
+  gravite: moyenne
+  risque: 'Des traces conservees a un seul endroit peuvent etre effacees ou modifiees : les greffons d''audispd
+    permettent de les envoyer vers un serveur distant.'
+  action: Installer audispd-plugins avec le gestionnaire de paquets.
+  playbook: infra.paquet-installer
+  parametres:
+    paquet: audispd-plugins
+  evaluation:
+  - commande: 0
+    lecteur: dpkg
+    comparateur: installe
+    attendu:
+    - audispd-plugins
+pieges: []
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 6.3.1.1 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 6.2.1.1 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 6.2.1.1 (niveau 2)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

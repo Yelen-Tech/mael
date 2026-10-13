@@ -1,0 +1,43 @@
+id: thermodynamique-et-energie
+schema: 1
+nom: "Thermodynamique et énergie (datacenters)"
+resume: Lois de la thermodynamique appliquées aux datacenters, dont la consommation mondiale avoisinait 460 TWh en 2022 selon l'AIE ; refroidissement et efficacité énergétique sont des enjeux de disponibilité.
+famille: physique
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - thermodynamique
+  - énergie
+  - datacenter
+  - centre de données
+  - refroidissement
+  - pue
+  - consommation électrique
+  - carnot
+  - entropie
+  - surchauffe
+caracteristiques:
+  notions_fondamentales: "premier principe (conservation de l'énergie), second principe (entropie), rendement de Carnot, transferts thermiques (conduction, convection, rayonnement)"
+  ordres_de_grandeur: "consommation électrique mondiale des datacenters estimée autour de 460 TWh en 2022, soit près de 2 % de la demande mondiale selon l'AIE ; le PUE idéal vaut 1,0 et les bons centres atteignent environ 1,1 à 1,2"
+  metriques: "PUE (Power Usage Effectiveness) : rapport entre l'énergie totale du site et celle des seuls équipements informatiques"
+  lien_informatique: "dimensionnement électrique et thermique des salles serveurs, throttling thermique des processeurs, continuité de service (onduleurs, groupes électrogènes)"
+securite:
+  - titre: Surchauffe et indisponibilité
+    risque: "Une panne de climatisation fait grimper la température en quelques minutes dans une salle dense ; les équipements se mettent en protection ou s'arrêtent, provoquant une indisponibilité."
+    conseil: "Surveiller température et humidité en continu, tester les bascules sur groupes électrogènes et prévoir des procédures d'arrêt ordonné."
+    gravite: elevee
+  - titre: Déni de service énergétique
+    risque: "Un attaquant qui force la charge CPU (cryptominage, boucles) augmente consommation et chaleur, pouvant déclencher coupures ou facturation excessive en environnement cloud."
+    conseil: "Plafonner la consommation par charge de travail (quotas, cgroups) et alerter sur les dérives de consommation électrique."
+    gravite: moyenne
+  - titre: Mauvaise interprétation du PUE
+    risque: "Optimiser le PUE au détriment de la redondance (suppression de lignes de refroidissement doublées) dégrade la résilience réelle du site."
+    conseil: "Suivre le PUE avec des indicateurs de disponibilité et de redondance, jamais isolément."
+    gravite: info
+sources:
+  - titre: "AIE — Electricity 2024 : Analysis and forecast to 2026"
+    url: https://www.iea.org/reports/electricity-2024
+  - titre: "The Green Grid — PUE : A Comprehensive Examination of the Metric"
+    url: https://www.thegreengrid.org/en/resources/library-and-tools/237-WP%2349---PUE%3A-A-Comprehensive-Examination-of-the-Metric

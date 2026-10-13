@@ -1,0 +1,59 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-sudo-dedicated-group
+titre: 'sudo : /usr/bin/sudo appartient au groupe dedie sudogrp'
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: sudo
+  type_controle: detection
+  niveaux:
+    cis: null
+    anssi: renforce
+source:
+  origine: complianceascode
+  regle: sudo_dedicated_group
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/software/sudo/sudo_dedicated_group
+mots_cles:
+- dedie
+- elevation
+- groupe
+- sudo
+resume: 'sudo : /usr/bin/sudo appartient au groupe dedie sudogrp. (regle sudo_dedicated_group, ComplianceAsCode
+  0.1.82).'
+observer:
+- commande: stat -c '%G' /usr/bin/sudo | grep -vx 'sudogrp'
+  but: Lire le groupe proprietaire de /usr/bin/sudo
+  lecture: Une ligne = autre groupe que sudogrp ; aucune = conforme.
+controles:
+- controle: groupe de /usr/bin/sudo = sudogrp
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: 'Rattacher sudo a un groupe dedie limite son execution aux seuls administrateurs : les autres
+    comptes ne peuvent meme pas le lancer, ni exploiter une faille de sudo.'
+  action: chgrp sudogrp /usr/bin/sudo et chmod 4710 /usr/bin/sudo (seul ce groupe execute sudo).
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R38 (niveau renforce)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

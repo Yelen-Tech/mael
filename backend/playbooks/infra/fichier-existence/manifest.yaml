@@ -1,0 +1,20 @@
+id: infra.fichier-existence
+titre: "Fichier present (avec droits) ou absent"
+description: >
+  Cree le fichier (touch, droits 0640 au plus, proprietaire root) ou le supprime apres sauvegarde, comme la source.
+risque: faible
+parametres:
+  - {nom: chemin, type: string, requis: true, motif: '^/[A-Za-z0-9._/+-]+$'}
+  - {nom: etat, type: string, requis: true, motif: '^(present|absent)$'}
+racine_requise: true
+reversible: true
+simulation: true
+idempotent: true
+redemarrage: false
+indisponibilite: "0 s"
+source:
+  origine: complianceascode
+  version: 0.1.82
+  gabarit: shared/templates/file_existence/bash.template
+  ecarts: "sauvegarde avant suppression"
+references: [ANSSI-BP-028, CIS Benchmarks]

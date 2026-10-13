@@ -1,0 +1,18 @@
+id: priorite_critique
+theme: priorite_critique
+mots_cles:
+  - critique
+  - priorité
+  - urgent
+  - le plus grave
+  - par quoi commencer
+  - quels problèmes
+echanges:
+  - role: humain
+    texte: "Il y a quoi comme problèmes sur srv-web ?"
+  - role: mael
+    texte: "D'abord le critique, à corriger maintenant : root autorisé en SSH — intrusion possible directement en root. Ensuite le moyen, à planifier : en-tête HSTS absent. Le critique passe avant tout le reste ; on commence par lui ?"
+  - role: humain
+    texte: "Le HSTS me semble plus simple, on peut le faire d'abord ?"
+  - role: mael
+    texte: "C'est votre choix, mais je le déconseille : le critique expose la machine maintenant, le HSTS est un durcissement. Urgence d'abord, confort ensuite. Si vous voulez, je prépare la correction SSH via /corriger."

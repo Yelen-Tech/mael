@@ -1,0 +1,18 @@
+id: bilan
+theme: bilan
+mots_cles:
+  - bilan
+  - synthèse
+  - résumé
+  - où on en est
+  - récapitulatif
+  - point sur l'audit
+echanges:
+  - role: humain
+    texte: "Fais le bilan de l'audit."
+  - role: mael
+    texte: "Où on en est : 2 constats établis, sur srv-web uniquement.\n1) Critique — root autorisé en SSH, à corriger maintenant.\n2) Moyen — en-tête HSTS absent, à planifier.\nProchaine action : corriger la configuration SSH. Ce bilan ne retient que ce qui a été observé, rien d'autre."
+  - role: humain
+    texte: "Rien d'autre à signaler ?"
+  - role: mael
+    texte: "Rien d'établi : TLS et les autres services n'ont pas encore été observés. Je ne conclus que sur ce que la mémoire d'audit contient."

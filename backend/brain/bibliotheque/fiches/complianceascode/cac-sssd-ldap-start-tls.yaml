@@ -1,0 +1,72 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-sssd-ldap-start-tls
+titre: 'SSSD : TLS pour toutes les requetes LDAP (ldap_id_use_start_tls = true)'
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: authentification
+  type_controle: configuration
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: sssd_ldap_start_tls
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/sssd/sssd-ldap/sssd_ldap_start_tls
+mots_cles:
+- ldap
+- ldap_id_use_start_tls
+- sssd
+- start
+- start_tls
+- tls
+resume: 'SSSD : TLS pour toutes les requetes LDAP (ldap_id_use_start_tls = true). (regle sssd_ldap_start_tls,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: dpkg -s sssd >/dev/null 2>&1 || echo 'SENTINELLE:SANS_OBJET'; head -c0 /etc/sssd/sssd.conf
+    || echo 'SENTINELLE:ILLISIBLE'; grep -EsR '^[[:space:]]*(export[[:space:]]+|readonly[[:space:]]+)?ldap_id_use_start_tls[[:space:]]*='
+    /etc/sssd/sssd.conf /etc/sssd/conf.d/
+  but: Lire ldap_id_use_start_tls dans /etc/sssd/sssd.conf, /etc/sssd/conf.d/
+  lecture: Valeur de ldap_id_use_start_tls ; aucune ligne = non defini.
+controles:
+- controle: ldap_id_use_start_tls = true
+  bon: ldap_id_use_start_tls = true
+  mauvais: autre valeur, ou non defini
+  gravite: elevee
+  risque: Sans chiffrement, les echanges LDAP (dont les identifiants) circulent en clair et peuvent etre
+    lus ou modifies sans detection. Utiliser start_tls plutot que LDAP sur SSL.
+  action: Ecrire « ldap_id_use_start_tls = true » dans /etc/sssd/sssd.conf.
+  playbook: infra.cle-valeur
+  parametres:
+    fichier: /etc/sssd/sssd.conf
+    cle: ldap_id_use_start_tls
+    valeur: 'true'
+    format: egal
+  evaluation:
+  - commande: 0
+    lecteur: affectations
+    comparateur: toutes_egales
+    champ: ldap_id_use_start_tls
+    attendu: 'true'
+    accepte:
+    - 'True'
+    - 'yes'
+pieges:
+- Ne s'applique que si id_provider = ldap ou ipa.
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R67 (niveau intermediaire)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

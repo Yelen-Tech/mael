@@ -1,0 +1,69 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-mount-option-boot-nosuid
+titre: Option nosuid sur /boot
+domaine: fichiers
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: montage
+  type_controle: option-montage
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: mount_option_boot_nosuid
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/permissions/partitions/mount_option_boot_nosuid
+mots_cles:
+- boot
+- montage
+- nosuid
+- option
+- partition
+resume: /boot doit etre monte avec l'option nosuid. (regle mount_option_boot_nosuid, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: findmnt -kn /boot
+  but: Lire les options de montage ACTIVES de /boot
+  lecture: La colonne des options doit contenir nosuid. Aucune ligne = pas de montage separe.
+- commande: grep -E '[[:space:]]/boot[[:space:]]' /etc/fstab
+  but: Verifier la configuration PERSISTANTE
+  lecture: La 4e colonne doit contenir nosuid.
+controles:
+- controle: /boot monte avec nosuid
+  bon: nosuid present (actif et dans /etc/fstab)
+  mauvais: nosuid absent
+  gravite: moyenne
+  risque: 'Un programme SUID ou SGID s''execute avec les droits de son proprietaire, souvent root : l''option
+    nosuid empeche qu''un tel programme depose sur cette partition serve a elever ses privileges.'
+  action: Ajouter nosuid aux options de /boot dans /etc/fstab puis remonter (mount -o remount /boot).
+  playbook: infra.montage-option
+  parametres:
+    point: /boot
+    option: nosuid
+  evaluation:
+  - commande: 0
+    lecteur: findmnt
+    comparateur: option_presente
+    attendu: nosuid
+  - commande: 1
+    lecteur: fstab
+    comparateur: option_presente
+    attendu: nosuid
+pieges:
+- 'Si /boot n''est pas une partition separee, cette regle ne peut pas s''appliquer telle quelle : voir
+  la regle de partition dediee.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R28 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

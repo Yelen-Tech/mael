@@ -1,0 +1,69 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-ensure-pam-wheel-group-empty
+titre: Le groupe de su (sugroup) existe et est vide
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: authentification
+  type_controle: detection
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: ensure_pam_wheel_group_empty
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/accounts/accounts-restrictions/root_logins/ensure_pam_wheel_group_empty
+mots_cles:
+- groupe
+- pam_wheel
+- root
+- su
+- wheel
+resume: Le groupe de su (sugroup) existe et est vide. (regle ensure_pam_wheel_group_empty, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: grep -E '^sugroup:[^:]*:[^:]*:$' /etc/group
+  but: Verifier que le groupe sugroup existe sans membre
+  lecture: 'Une ligne « sugroup:x:GID: » = conforme ; aucune = groupe absent ou avec des membres.'
+controles:
+- controle: groupe sugroup present et vide
+  bon: une ligne sans membre
+  mauvais: groupe absent, ou avec des membres
+  gravite: moyenne
+  risque: su permet d'executer des commandes sous l'identite d'un autre compte, le plus souvent root.
+    En reserver l'usage a un groupe dedie (vide par defaut) empeche un compte quelconque de tenter de
+    devenir root.
+  action: groupadd sugroup (sans membre), reference par pam_wheel.so dans /etc/pam.d/su.
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: presente
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 5.2.7 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 5.2.7 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 5.2.7 (niveau 1)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

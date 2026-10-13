@@ -1,0 +1,43 @@
+id: thermochimie
+schema: 1
+nom: Thermochimie et gestion thermique
+resume: Chaleur des réactions, capacité thermique et transferts (conduction, convection, rayonnement) ; fondements du refroidissement des serveurs et de la continuité de service des datacenters.
+famille: chimie
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - thermochimie
+  - chaleur
+  - capacité thermique
+  - conduction
+  - convection
+  - refroidissement
+  - datacenter
+  - serveur
+  - pue
+  - emballement thermique
+caracteristiques:
+  notions_fondamentales: "Toute transformation physique ou chimique échange de la chaleur ; les transferts suivent la conduction, la convection et le rayonnement."
+  ordres_de_grandeur: "La capacité thermique massique de l'eau (~4,18 kJ/(kg·K)) est environ quatre fois celle de l'air (~1,0 kJ/(kg·K)) : d'où l'efficacité du watercooling."
+  indicateurs_datacenter: "Le PUE (rapport énergie totale / énergie informatique) mesure l'efficacité du refroidissement ; un PUE proche de 1 indique peu de surconsommation annexe."
+  lien_informatique: "La puissance dissipée par les processeurs impose climatisation, free cooling ou immersion ; une dérive thermique arrête ou dégrade les serveurs."
+securite:
+  - titre: Perte de refroidissement en salle machine
+    risque: Une panne de climatisation provoque l'arrêt thermique des serveurs en quelques minutes, avec coupure de service et pertes de données possibles.
+    conseil: Mettre des sondes de température avec alertes et arrêt progressif automatique, et prévoir une climatisation redondante.
+    gravite: critique
+  - titre: Emballement thermique des batteries lithium-ion
+    risque: Une cellule défectueuse ou surchargée chauffe de façon auto-entretenue, jusqu'à l'incendie difficile à éteindre dans une baie ou un onduleur.
+    conseil: Choisir des onduleurs à batteries supervisées (BMS), séparer les zones batteries et installer une détection incendie adaptée.
+    gravite: elevee
+  - titre: Confondre température mesurée et point chaud réel
+    risque: Une sonde mal placée masque un point chaud local (baie dense, flux d'air court-circuité) qui dégrade les composants en silence.
+    conseil: Multiplier les points de mesure (entrée/sortie d'air, haut et bas de baie) et respecter les plages recommandées par les constructeurs.
+    gravite: moyenne
+sources:
+  - titre: ASHRAE — Datacom Series (dont Thermal Guidelines for Data Processing Environments)
+    url: https://www.ashrae.org/technical-resources/bookstore/datacom-series
+  - titre: Wikipédia — Transfert thermique
+    url: https://fr.wikipedia.org/wiki/Transfert_thermique

@@ -1,0 +1,83 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-grub2-audit-backlog-limit-argument
+titre: Argument de demarrage audit_backlog_limit=8192
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: audit
+  type_controle: argument-demarrage
+  niveaux:
+    cis: 2
+    anssi: null
+source:
+  origine: complianceascode
+  regle: grub2_audit_backlog_limit_argument
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/auditing/grub2_audit_backlog_limit_argument
+mots_cles:
+- argument
+- audit
+- audit_backlog_limit
+- backlog
+- demarrage
+- grub
+- journalisation
+- limit
+- noyau
+resume: Le noyau doit demarrer avec au moins audit_backlog_limit=8192. (regle grub2_audit_backlog_limit_argument,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: cat /proc/cmdline
+  but: Lire les arguments du demarrage EN COURS
+  lecture: 'Attendu : au moins audit_backlog_limit=8192.'
+- commande: grep -E '^GRUB_CMDLINE_LINUX' /etc/default/grub
+  but: Verifier la configuration persistante de GRUB
+  lecture: audit_backlog_limit=8192 doit figurer dans GRUB_CMDLINE_LINUX.
+controles:
+- controle: argument au moins audit_backlog_limit=8192
+  bon: au moins audit_backlog_limit=8192 dans /proc/cmdline et /etc/default/grub
+  mauvais: argument absent ou valeur plus faible
+  gravite: faible
+  risque: 'Avant le demarrage d''auditd, les evenements d''audit attendent dans une file : si elle deborde
+    au demarrage, des evenements sont perdus. audit_backlog_limit en fixe la taille.'
+  action: Ajouter audit_backlog_limit=8192 a GRUB_CMDLINE_LINUX dans /etc/default/grub, regenerer la configuration
+    (update-grub) et redemarrer.
+  playbook: infra.grub-argument
+  parametres:
+    argument: audit_backlog_limit=8192
+    action: ajouter
+  evaluation:
+  - commande: 0
+    lecteur: cmdline
+    champ: audit_backlog_limit
+    comparateur: au_moins
+    attendu: '8192'
+  - commande: 1
+    lecteur: grub
+    champ: audit_backlog_limit
+    comparateur: au_moins
+    attendu: '8192'
+pieges:
+- 'Le changement ne prend effet qu''apres redemarrage : planifier la fenetre de maintenance.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 6.3.1.4 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 6.2.1.4 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 6.2.1.4 (niveau 2)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

@@ -1,0 +1,46 @@
+id: langage-cpp
+schema: 1
+nom: C++
+resume: Extension orientée objet du C, compilée et sans ramasse-miettes ; elle hérite des pièges mémoire du C et ajoute ceux liés à la durée de vie des objets.
+famille: langage
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - c++
+  - cpp
+  - mémoire
+  - itérateur
+  - pointeurs intelligents
+  - raii
+  - conteneur
+  - use-after-free
+  - durée de vie
+  - objet
+caracteristiques:
+  paradigmes:
+    - impératif
+    - orienté objet
+    - générique (templates)
+  typage: statique, fort (avec conversions héritées du C)
+  execution: compilé en code machine natif
+  memoire: manuelle, assistée par RAII et pointeurs intelligents
+securite:
+  - titre: Débordement de tampon hérité du C
+    risque: L'usage des tableaux bruts et des fonctions C sans borne expose aux mêmes corruptions mémoire qu'en C.
+    conseil: Préférer std::string, std::vector et les accès vérifiés (at()) aux tableaux et pointeurs bruts.
+    gravite: critique
+  - titre: Use-after-free et durée de vie des objets
+    risque: Conserver une référence ou un pointeur vers un objet détruit mène à des comportements indéfinis exploitables.
+    conseil: Utiliser des pointeurs intelligents (RAII) — unique_ptr, shared_ptr — qui détruisent l'objet automatiquement.
+    gravite: elevee
+  - titre: Invalidation d'itérateurs
+    risque: Modifier un conteneur pendant qu'on le parcourt invalide les itérateurs et provoque des accès hors limites.
+    conseil: Ne pas modifier un conteneur durant l'itération, ou récupérer l'itérateur rendu par erase/insert.
+    gravite: moyenne
+sources:
+  - titre: SEI CERT C++ Coding Standard
+    url: https://wiki.sei.cmu.edu/confluence/pages/viewpage.action?pageId=88046682
+  - titre: Standard C++ (isocpp.org)
+    url: https://isocpp.org/

@@ -1,0 +1,24 @@
+# Conteneur de TESTS de l'atelier de code MAEL (couche 7, execution.py).
+# Construit UNE fois (reseau necessaire a la construction seulement) :
+#   docker build -t mael-tests-python - < brain/codage/conteneur/Dockerfile.python
+# (SANS contexte : l'image ne copie rien. Avec « . », Docker enverrait tout
+# backend/, venv compris — constate le 09/10/2026.)
+# A l'execution : --network none, memoire / processeur plafonnes, utilisateur
+# 65534 (sans droits), fichiers COPIES (aucun volume de l'hote).
+# A FIGER par empreinte sha256 apres la premiere construction (comme les
+# images du banc : banc/resoudre_empreintes.py).
+FROM python:3.12-slim
+
+# Les bibliotheques que le code ecrit par le modele utilise le plus : pas de
+# reseau a l'execution, donc tout doit etre deja la. Licences permissives
+# (pytest MIT, Flask BSD, SQLAlchemy MIT, FastAPI MIT, httpx BSD).
+# Connexion lente : delai long et nouvelles tentatives (1re construction du
+# 08/10 tombee sur « Read timed out »).
+RUN pip install --no-cache-dir --timeout 120 --retries 10 \
+        "pytest>=9,<10" "flask>=3,<4" "sqlalchemy>=2,<3" \
+        "fastapi>=0.115,<1" "httpx>=0.27,<1" \
+    && mkdir -p /travail
+
+WORKDIR /travail
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+CMD ["sleep", "infinity"]

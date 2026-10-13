@@ -1,0 +1,72 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-ensure-shadow-group-empty
+titre: Le groupe shadow n'a aucun membre (ni membre declare, ni groupe principal)
+domaine: fichiers
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: comptes
+  type_controle: detection
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: ensure_shadow_group_empty
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/accounts/accounts-restrictions/account_expiration/ensure_shadow_group_empty
+mots_cles:
+- group
+- groupe
+- membres
+- shadow
+resume: Le groupe shadow n'a aucun membre (ni membre declare, ni groupe principal). (regle ensure_shadow_group_empty,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: 'awk -F: ''NR==FNR{if ($1 == "shadow") {g=$3; if ($4 != "") print "membres de shadow : "$4};
+    next} g != "" && $4 == g {print $1": groupe principal shadow"}'' /etc/group /etc/passwd'
+  but: Lire les membres du groupe shadow et les comptes dont c'est le groupe principal
+  lecture: Chaque ligne est un element en defaut ; aucune ligne = conforme.
+controles:
+- controle: groupe shadow sans membre
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: Les membres du groupe shadow peuvent lire /etc/shadow. Un attaquant qui obtient cette lecture
+    casse les empreintes de mots de passe hors ligne et y trouve les dates d'expiration utiles pour viser
+    d'autres comptes.
+  action: Retirer les membres du groupe shadow (gpasswd -d COMPTE shadow) ; changer le groupe principal
+    des comptes listes (usermod -g GROUPE COMPTE).
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- 'Changer le groupe principal d''un compte peut perturber un service : la source ne le corrige jamais
+  automatiquement.'
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 7.2.4 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 7.2.4 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 7.2.4 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

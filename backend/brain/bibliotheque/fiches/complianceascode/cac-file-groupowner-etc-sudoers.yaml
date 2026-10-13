@@ -1,0 +1,65 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-file-groupowner-etc-sudoers
+titre: 'Groupe de /etc/sudoers : root'
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: sudo
+  type_controle: groupe-fichier
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: file_groupowner_etc_sudoers
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/software/sudo/file_groupowner_etc_sudoers
+mots_cles:
+- chgrp
+- fichier
+- fichiers
+- groupe
+- sudoers
+resume: 'Groupe de /etc/sudoers : root : groupe root. (regle file_groupowner_etc_sudoers, ComplianceAsCode
+  0.1.82).'
+observer:
+- commande: stat -c '%a %U %G %n' /etc/sudoers 2>/dev/null
+  but: Lire droits, proprietaire et groupe (groupe)
+  lecture: '3e colonne = groupe : attendu root. Aucune ligne = fichier absent.'
+controles:
+- controle: groupe = root
+  bon: groupe root
+  mauvais: toute autre valeur
+  gravite: moyenne
+  risque: /etc/sudoers et /etc/sudoers.d decident qui peut devenir root. Qui peut y ecrire s'accorde tous
+    les droits ; qui peut les lire connait les comptes a viser. Ils doivent appartenir a root et rester
+    fermes aux autres.
+  action: chgrp root sur les fichiers concernes.
+  playbook: infra.fichier-groupe
+  parametres:
+    chemin: /etc/sudoers
+    groupe: root
+  evaluation:
+  - commande: 0
+    lecteur: stat
+    champ: groupe
+    comparateur: dans
+    attendu:
+    - root
+pieges:
+- 'Sans sudo, certains fichiers (ex. /etc/shadow) ne sont pas lisibles par stat/find : relancer avec les
+  droits root.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R50 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

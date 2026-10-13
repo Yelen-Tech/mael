@@ -1,0 +1,47 @@
+id: langage-php
+schema: 1
+nom: PHP
+resume: Langage web interprété à typage dynamique historiquement faible ; injections SQL, inclusions de fichiers et désérialisation y ont fait des décennies de compromissions.
+famille: langage
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - php
+  - web
+  - injection sql
+  - xss
+  - inclusion de fichiers
+  - lfi
+  - unserialize
+  - désérialisation
+caracteristiques:
+  paradigmes:
+    - impératif
+    - orienté objet
+  typage: dynamique, faible historiquement (comparaisons == avec coercition), typage progressif depuis PHP 7/8
+  execution: interprété (Zend Engine), le plus souvent derrière un serveur web
+  memoire: ramasse-miettes (comptage de références + collecteur de cycles)
+securite:
+  - titre: Injection SQL
+    risque: Une requête construite par concaténation laisse une entrée externe lire ou modifier toute la base.
+    conseil: Requêtes préparées (PDO ou mysqli), jamais de donnée interpolée dans le SQL.
+    gravite: critique
+  - titre: Inclusion de fichiers (LFI/RFI)
+    risque: include ou require sur un chemin issu d'une entrée externe inclut un fichier local ou distant arbitraire.
+    conseil: Liste blanche de chemins autorisés, jamais de donnée externe dans un chemin d'inclusion.
+    gravite: elevee
+  - titre: XSS par affichage non échappé
+    risque: echo d'une entrée utilisateur sans échappement exécute du script chez la victime.
+    conseil: htmlspecialchars sur toute donnée affichée, moteur de templates avec échappement par défaut.
+    gravite: elevee
+  - titre: Désérialisation (unserialize)
+    risque: unserialize sur des données externes déclenche des méthodes magiques (__wakeup, __destruct) exploitables.
+    conseil: Ne pas désérialiser de données externes ; utiliser json_decode.
+    gravite: elevee
+sources:
+  - titre: Manuel PHP — Sécurité (documentation officielle)
+    url: https://www.php.net/manual/fr/security.php
+  - titre: OWASP — Top 10 des risques applicatifs web
+    url: https://owasp.org/www-project-top-ten/

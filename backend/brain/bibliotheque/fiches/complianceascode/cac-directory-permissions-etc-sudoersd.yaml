@@ -1,0 +1,65 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-directory-permissions-etc-sudoersd
+titre: Droits de /etc/sudoers.d/ (0750 au plus)
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: sudo
+  type_controle: droits-fichier
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: directory_permissions_etc_sudoersd
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/software/sudo/directory_permissions_etc_sudoersd
+mots_cles:
+- chmod
+- droits
+- fichier
+- fichiers
+- permissions
+- sudoers
+resume: 'Droits de /etc/sudoers.d/ : 0750 ou plus strict (aucun droit en plus). (regle directory_permissions_etc_sudoersd,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: stat -c '%a %U %G %n' /etc/sudoers.d/ 2>/dev/null
+  but: Lire droits, proprietaire et groupe (droits)
+  lecture: '1re colonne = droits en octal : aucun bit ne doit depasser 0750. Aucune ligne = fichier absent.'
+controles:
+- controle: droits <= 0750
+  bon: 0750 ou plus strict (aucun droit en plus)
+  mauvais: toute autre valeur
+  gravite: moyenne
+  risque: /etc/sudoers et /etc/sudoers.d decident qui peut devenir root. Qui peut y ecrire s'accorde tous
+    les droits ; qui peut les lire connait les comptes a viser. Ils doivent appartenir a root et rester
+    fermes aux autres.
+  action: chmod 0750 sur les fichiers concernes (u-x,go-wx selon le cas).
+  playbook: infra.fichier-droits
+  parametres:
+    chemin: /etc/sudoers.d/
+    mode: '0750'
+  evaluation:
+  - commande: 0
+    lecteur: stat
+    champ: droits
+    comparateur: droits_au_plus
+    attendu: '0750'
+pieges:
+- 'Sans sudo, certains fichiers (ex. /etc/shadow) ne sont pas lisibles par stat/find : relancer avec les
+  droits root.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R50 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

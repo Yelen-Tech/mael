@@ -1,0 +1,52 @@
+# CI MAEL — lint ruff, puis tests du backend (pytest et Django).
+#
+# Lint : ruff (regles dans backend/pyproject.toml) tourne avant les tests ;
+# un code qui ne se lit pas ne se teste pas.
+#
+# Backend : deux suites.
+#   - « brain » : brain/tests_*.py, fonctions nues ecrites pour pytest
+#     (motif configure dans backend/pyproject.toml). Aucun modele, aucun
+#     reseau ; les couches qui dependent d'outils externes (node/acorn,
+#     navigateur) se mettent en skip proprement quand ils sont absents.
+#   - Django : manage.py test. Sans services : par defaut les reglages
+#     tombent sur SQLite, le cache locmem et un broker Celery memory://
+#     (config/settings.py), donc ni Redis ni Postgres en CI.
+#
+# Frontend : pas de tests ni de lint definis dans package.json ; la porte
+# d'entree est le build (tsc -b && vite build), qui inclut le controle
+# TypeScript.
+
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            backend/requirements.txt
+            backend/requirements-dev.txt
+
+      - name: Dependances
+        run: pip install -r requirements-dev.txt
+
+      - name: Lint (ruff)
+        run: python -m ruff check .
+
+      - name: Tests du brain (pytest)
+        run: python -m pytest -q
+
+      - name: Tests Django
+        run: python manage.py test

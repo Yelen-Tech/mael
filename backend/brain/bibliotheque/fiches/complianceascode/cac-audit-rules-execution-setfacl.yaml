@@ -1,0 +1,85 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-audit-rules-execution-setfacl
+titre: Audit de l'execution de setfacl
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: audit
+  type_controle: regle-audit
+  niveaux:
+    cis: 2
+    anssi: null
+source:
+  origine: complianceascode
+  regle: audit_rules_execution_setfacl
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/auditing/auditd_configure_rules/audit_execution_acl_commands/audit_rules_execution_setfacl
+mots_cles:
+- audit
+- auditctl
+- auditd
+- commande
+- execution
+- journalisation
+- privilegiee
+- setfacl
+- tracabilite
+resume: Chaque execution de /usr/bin/setfacl (commande privilegiee) doit etre tracee par auditd. (regle
+  audit_rules_execution_setfacl, ComplianceAsCode 0.1.82).
+observer:
+- commande: auditctl -l
+  but: Lire les regles d'audit CHARGEES dans le noyau
+  lecture: Une ligne par regle (-w chemin -p wa, ou -a always,exit -F arch=b64 -S appel...). « No rules
+    » = aucune regle.
+- commande: grep -hs '^-' /etc/audit/rules.d/*.rules
+  but: Lire les regles PERSISTANTES (rechargees au demarrage)
+  lecture: Memes regles qu'auditctl -l ; absentes ici = perdues au redemarrage.
+controles:
+- controle: -a always,exit -F path=/usr/bin/setfacl -F perm=x
+  bon: regle d'execution sur /usr/bin/setfacl
+  mauvais: regle absente (ou absente au redemarrage)
+  gravite: moyenne
+  risque: Sans trace de ces commandes sensibles, il est difficile de reconstituer un incident, de relier
+    les evenements entre eux et d'en identifier le responsable.
+  action: Ajouter la regle dans un fichier de /etc/audit/rules.d/ (ex. 50-sentinelle.rules), puis « augenrules
+    --load ». Si la configuration est immuable (-e 2), redemarrer.
+  playbook: infra.audit-regles
+  parametres:
+    regles: -a always,exit -F path=/usr/bin/setfacl -F perm=x -F auid>=1000 -F auid!=unset -k mael
+  evaluation:
+  - lecteur: audit
+    comparateur: execution
+    champ: /usr/bin/setfacl
+    attendu: x
+    commande: 0
+  - lecteur: audit
+    comparateur: execution
+    champ: /usr/bin/setfacl
+    attendu: x
+    commande: 1
+pieges:
+- auditctl -l et /etc/audit/rules.d exigent les droits root (sudo).
+- 'Une regle chargee a la main (auditctl -w) disparait au redemarrage : elle doit aussi etre dans /etc/audit/rules.d/
+  (puis augenrules --load).'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 6.3.3.16 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 6.2.3.16 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 6.2.3.16 (niveau 2)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

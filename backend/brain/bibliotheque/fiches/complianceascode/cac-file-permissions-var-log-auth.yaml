@@ -1,0 +1,74 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-file-permissions-var-log-auth
+titre: Droits de /var/log/auth.log (0640 au plus)
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: journalisation
+  type_controle: droits-fichier
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: file_permissions_var_log_auth
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/permissions/files/permissions_var_log_dir/file_permissions_var_log_auth
+mots_cles:
+- auth
+- chmod
+- droits
+- fichier
+- fichiers
+- permissions
+resume: 'Droits de /var/log/auth.log : 0640 ou plus strict (aucun droit en plus). (regle file_permissions_var_log_auth,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: stat -c '%a %U %G %n' /var/log/auth.log 2>/dev/null
+  but: Lire droits, proprietaire et groupe (droits)
+  lecture: '1re colonne = droits en octal : aucun bit ne doit depasser 0640. Aucune ligne = fichier absent.'
+controles:
+- controle: droits <= 0640
+  bon: 0640 ou plus strict (aucun droit en plus)
+  mauvais: toute autre valeur
+  gravite: moyenne
+  risque: Le journal d'authentification (/var/log/auth.log, /var/log/secure sur RHEL) trace les connexions
+    et les elevations de droits ; il contient parfois un mot de passe tape par erreur a la place de l'identifiant.
+    Seul le personnel autorise doit pouvoir le lire, et personne ne doit pouvoir le modifier pour effacer
+    ses traces.
+  action: chmod 0640 sur les fichiers concernes (u-x,go-wx selon le cas).
+  playbook: infra.fichier-droits
+  parametres:
+    chemin: /var/log/auth.log
+    mode: '0640'
+  evaluation:
+  - commande: 0
+    lecteur: stat
+    champ: droits
+    comparateur: droits_au_plus
+    attendu: '0640'
+pieges:
+- 'Sans sudo, certains fichiers (ex. /etc/shadow) ne sont pas lisibles par stat/find : relancer avec les
+  droits root.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 6.2.2.1 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 6.1.4.1 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 6.1.4.1 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

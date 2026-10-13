@@ -1,0 +1,3623 @@
+# Relectures des fiches importees de ComplianceAsCode.
+# Une entree valide la fiche tant que son empreinte (faits relus)
+# ne change pas ; sinon la fiche repasse en brouillon.
+account_disable_post_pw_expiration:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: cdb691bb9d54fd58
+account_unique_id:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 83f7389bdc8d61ec
+account_unique_name:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ce4a940d7f7aefe0
+accounts_maximum_age_login_defs:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 925db802a40fef8a
+accounts_minimum_age_login_defs:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 9e78970647dd0506
+accounts_no_uid_except_zero:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 5c2cb7e39cf0b3ed
+accounts_password_all_shadowed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 19dd6717ee63ee05
+accounts_password_last_change_is_in_past:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c01520d7e290b8c7
+accounts_password_pam_dcredit:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 15575cdca6cf9933
+accounts_password_pam_dictcheck:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 38c8d57079d569ad
+accounts_password_pam_difok:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e532ad322c8126bc
+accounts_password_pam_enforce_root:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 410f293f23061b29
+accounts_password_pam_lcredit:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1ac56e08260a2551
+accounts_password_pam_maxrepeat:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1de1a1ade9439f29
+accounts_password_pam_maxsequence:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 6216ec7815c9a769
+accounts_password_pam_minclass:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ce50fb98e6b5b012
+accounts_password_pam_minlen:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: fd525a5d95297754
+accounts_password_pam_ocredit:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 378b25584b686e1b
+accounts_password_pam_pwhistory_enabled:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4365e42bd2404a56
+accounts_password_pam_pwhistory_enforce_root:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 0fddad7fc841faf0
+accounts_password_pam_pwhistory_use_authtok:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 6933a8c37afb3597
+accounts_password_pam_pwquality_enabled:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 07ba838c41d96a65
+accounts_password_pam_retry:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e0c7c98e6f0fa007
+accounts_password_pam_ucredit:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7412d06fcc352240
+accounts_password_pam_unix_authtok:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1c18c5036a3eed3f
+accounts_password_pam_unix_enabled:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: fe8b4d7cac7c179d
+accounts_password_pam_unix_no_remember:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 53db887ce0134570
+accounts_password_set_max_life_existing:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: cc8baead66530380
+accounts_password_set_max_life_root:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ef980a2018a967c3
+accounts_password_set_min_life_existing:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d2040e2c4abed012
+accounts_password_warn_age_login_defs:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a7e43672544b386c
+accounts_passwords_pam_faillock_deny:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 3e30b98b352da2ee
+accounts_passwords_pam_faillock_deny_root:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 45d32226c52bede4
+accounts_passwords_pam_faillock_enabled:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c35de8b4ac129caa
+accounts_passwords_pam_faillock_interval:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 88ae94e91d37d1bc
+accounts_passwords_pam_faillock_root_unlock_time:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 2be6439f7ae5c203
+accounts_passwords_pam_faillock_unlock_time:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 8e3bce498c132e3b
+accounts_polyinstantiated_tmp:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b18bcedb9e42c5d3
+accounts_polyinstantiated_var_tmp:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: f54a73b2ca83ffb2
+accounts_root_gid_zero:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 3768bc10df67c1ba
+accounts_root_path_dirs_no_write:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a831f0bfa323a321
+accounts_set_post_pw_existing:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: dc2242bd6aaa4c57
+accounts_tmout:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ed6598976d321384
+accounts_umask_etc_bashrc:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c13ad28c5dc60fa9
+accounts_umask_etc_login_defs:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e42b1d8180dd36f6
+accounts_umask_etc_profile:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c692400b091484e3
+accounts_umask_root:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: fdc4727b491eeffe
+accounts_user_dot_group_ownership:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 47fa22f4e4acb9b3
+accounts_user_dot_user_ownership:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ad3582360be3b8b6
+accounts_user_interactive_home_directory_exists:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7a219712d00be243
+accounts_users_home_files_groupownership:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 972b5d363ac2547f
+accounts_users_home_files_ownership:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 72232c8d43b3496f
+accounts_users_home_files_permissions:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: abe080d9b4833d85
+aide_build_database:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: dc52712f31c8d70d
+aide_check_audit_tools:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 2bdd3d5aa7b00967
+aide_periodic_checking_systemd_timer:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 3fff76f6939cb2ac
+aide_periodic_cron_checking:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 08e04045b01fc66f
+aide_scan_notification:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1c9b9417bffed889
+aide_verify_acls:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 97decf32dcd93877
+aide_verify_ext_attributes:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e038a97c1e499aba
+all_apparmor_profiles_enforced:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4d904758cb711d6b
+all_apparmor_profiles_in_enforce_complain_mode:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 08c58b6464009057
+apparmor_configured:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ef86fc139f5565b0
+audit_rules_dac_modification_chmod:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 8783d77aaa8d3b94
+audit_rules_dac_modification_chown:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c8ff81f01c1dd982
+audit_rules_dac_modification_fchmod:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 55a3a065c2c41349
+audit_rules_dac_modification_fchmodat:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 3e65c41847db7831
+audit_rules_dac_modification_fchmodat2:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 5361747282a13549
+audit_rules_dac_modification_fchown:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d62c4a2c978df021
+audit_rules_dac_modification_fchownat:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b8616b810337392f
+audit_rules_dac_modification_fremovexattr:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 05ffd70546f831cd
+audit_rules_dac_modification_fsetxattr:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: beb7933fd1de080d
+audit_rules_dac_modification_lchown:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: da433c7d8eaf237a
+audit_rules_dac_modification_lremovexattr:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 870658ca13de9cc3
+audit_rules_dac_modification_lsetxattr:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 884cb96c27251123
+audit_rules_dac_modification_removexattr:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d3dff7eb9d26618d
+audit_rules_dac_modification_setxattr:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 39e81816905896a6
+audit_rules_dac_modification_umount2:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: aea975822ad89dec
+audit_rules_execution_chacl:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 2f45b1a1eeb75ca7
+audit_rules_execution_chcon:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 784636336d7b671d
+audit_rules_execution_setfacl:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 49c3ba074181d3eb
+audit_rules_file_deletion_events_rename:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 531baf2b08f2f8d7
+audit_rules_file_deletion_events_renameat:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4795b3de71367d22
+audit_rules_file_deletion_events_renameat2:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: bfa23c6a404b523b
+audit_rules_file_deletion_events_rmdir:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ab0f0ffe0bfb1199
+audit_rules_file_deletion_events_unlink:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: eff7c95b81832f3e
+audit_rules_file_deletion_events_unlinkat:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: f7eabf0fd5a49791
+audit_rules_immutable:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e1e61cfdbaa9075f
+audit_rules_kernel_module_loading_delete:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 776b05df28a3d323
+audit_rules_kernel_module_loading_finit:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 9fb91e4e459f5214
+audit_rules_kernel_module_loading_init:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b4edb956ab2132d5
+audit_rules_login_events_faillock:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e795bd7e8450d8f8
+audit_rules_login_events_lastlog:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 26484f13cce7534f
+audit_rules_mac_modification:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ac18bbb52e534bd6
+audit_rules_mac_modification_etc_apparmor:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4a664ea8575517c5
+audit_rules_mac_modification_etc_apparmor_d:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 5cee9410ef2f4631
+audit_rules_media_export:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4453ce48fda8e712
+audit_rules_networkconfig_modification:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b1a98e5b32075f81
+audit_rules_privileged_commands_insmod:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4bc4b6b5cbccb7d6
+audit_rules_privileged_commands_kmod:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: be93f49536970d87
+audit_rules_privileged_commands_modprobe:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: f1178e219816dc1a
+audit_rules_privileged_commands_rmmod:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 21c2ab3e6d81ab76
+audit_rules_privileged_commands_sudo:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: dfbbc75658c94ffa
+audit_rules_privileged_commands_usermod:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 212082d340f0ab93
+audit_rules_session_events:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: cbc4951ec966b2cb
+audit_rules_session_events_btmp:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: de84083b92fb25e5
+audit_rules_session_events_utmp:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e095f3cbae5a3f00
+audit_rules_session_events_wtmp:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b01439ed5a628627
+audit_rules_suid_auid_privilege_function:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 0224aa2af4a8dc59
+audit_rules_sysadmin_actions:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d74256e87fee51be
+audit_rules_time_adjtimex:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 466308fa638ce08f
+audit_rules_time_clock_settime:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e5e9566dff1af7ca
+audit_rules_time_settimeofday:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 02be10ce603b3e0c
+audit_rules_time_watch_localtime:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b1eb2129a17ed65b
+audit_rules_unsuccessful_file_modification_creat:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 3edb058229199109
+audit_rules_unsuccessful_file_modification_ftruncate:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 2cf65aa7012fdda0
+audit_rules_unsuccessful_file_modification_open:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: dab6a27f4b380093
+audit_rules_unsuccessful_file_modification_openat:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 48a1c899b1875855
+audit_rules_unsuccessful_file_modification_truncate:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a3a75b587564fddd
+audit_rules_usergroup_modification_group:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 62d344ed801f371a
+audit_rules_usergroup_modification_gshadow:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 37eb99dcf7e8ff4c
+audit_rules_usergroup_modification_nsswitch_conf:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7cc6196ece5ce429
+audit_rules_usergroup_modification_opasswd:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 31316b95b2253804
+audit_rules_usergroup_modification_pam_conf:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 8712976bae1e46e5
+audit_rules_usergroup_modification_pamd:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e3a38a20a2316195
+audit_rules_usergroup_modification_passwd:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 6deca631cc113d53
+audit_rules_usergroup_modification_shadow:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 0785d78587c5e74a
+audit_sudo_log_events:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 798c5e4ff43a749a
+auditd_data_disk_error_action:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: bb11253049a87c5e
+auditd_data_disk_full_action:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b063434d190532f7
+auditd_data_retention_action_mail_acct:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 8438a1cf25cd94b3
+auditd_data_retention_admin_space_left_action:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ad71e46b76db071c
+auditd_data_retention_max_log_file:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 824e805066a550c1
+auditd_data_retention_max_log_file_action:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: cc33d689e1aa97a2
+auditd_data_retention_space_left_action:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 0f4b30ba8f1ac512
+check_ufw_active:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 20e7d81a18cfd33a
+chronyd_configure_pool_and_server:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 3601d378e94ae98b
+chronyd_run_as_chrony_user:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 41910268e0b61c5d
+chronyd_specify_remote_server:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a1237bfee1b3bc0e
+dconf_gnome_banner_enabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: af79b44ba26e33ba
+dconf_gnome_disable_automount:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 5d120add83993a38
+dconf_gnome_disable_automount_open:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 209d4a288d2c6c52
+dconf_gnome_disable_autorun:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: f75a5062389ed221
+dconf_gnome_disable_user_list:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 5c02b50b257b3f3f
+dconf_gnome_login_banner_text:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ef2d64a531c50493
+dconf_gnome_screensaver_idle_delay:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b6b37dc7650acb0d
+dconf_gnome_screensaver_lock_delay:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ebfed54561713507
+dconf_gnome_screensaver_lock_enabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 60b4a423004da1dd
+dir_perms_world_writable_root_owned:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 327645d2d8bc91b2
+dir_perms_world_writable_sticky_bits:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a6991abf9ffd8815
+dir_system_commands_group_root_owned:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7482509c88ec4a86
+dir_system_commands_root_owned:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 67abbad93060c074
+directory_groupowner_etc_ipsecd:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a0bbb382d27be905
+directory_groupowner_etc_iptables:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 223b51c3cf76a18d
+directory_groupowner_etc_nftables:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 84cb43a9e182df05
+directory_groupowner_etc_selinux:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e38fbc456a4d3ea3
+directory_groupowner_etc_sudoersd:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: fd730caeb86e70c9
+directory_groupowner_etc_sysctld:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 9d2089b7195f4be3
+directory_owner_etc_ipsecd:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 537458fee73e48bb
+directory_owner_etc_iptables:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 3d651df4e40f37a0
+directory_owner_etc_nftables:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 9272c78e2a855535
+directory_owner_etc_selinux:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: fef363d66690650f
+directory_owner_etc_sudoersd:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: f76fe2f8db7a459a
+directory_owner_etc_sysctld:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: dc32807412230c77
+directory_permissions_etc_ipsecd:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1e1fad228cc66390
+directory_permissions_etc_iptables:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7198232930ef7abe
+directory_permissions_etc_nftables:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 058f6afa33d97b40
+directory_permissions_etc_selinux:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e86cd2c1c405db39
+directory_permissions_etc_sudoersd:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d360421ad1c0e5d3
+directory_permissions_etc_sysctld:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 760a91e5a39f94fb
+directory_permissions_var_log_audit:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ec4ac2a6881cfa00
+disable_host_auth:
+  verifie_le: '2026-09-17'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 73ea321253ff59fe
+disable_users_coredumps:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c7871a209979d6bd
+enable_pam_namespace:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ed7b649e3c5d76cf
+ensure_logrotate_activated:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7e257e7d29c88d5b
+ensure_pam_wheel_group_empty:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 76b8d3086fb56bf6
+ensure_root_access_controlled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 26198d97abf43d21
+ensure_shadow_group_empty:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 693c80813d43a317
+file_at_allow_exists:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: cd99ee9c3d396444
+file_cron_allow_exists:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 66601922bade5047
+file_cron_deny_not_exist:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d55f69d14fa34579
+file_groupowner_at_allow:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b8599b2ecc9e934f
+file_groupowner_at_deny:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 082301e567943f36
+file_groupowner_backup_etc_group:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: fc74544b34ae0589
+file_groupowner_backup_etc_gshadow:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 6aba68912a679cf9
+file_groupowner_backup_etc_passwd:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: f2f801a8b2967b06
+file_groupowner_backup_etc_shadow:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 96e6e2b068ac5ad7
+file_groupowner_cron_d:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 9abc19bd898cb22e
+file_groupowner_cron_daily:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 85e8b7091e798aa0
+file_groupowner_cron_hourly:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 5c95df6515ec1c01
+file_groupowner_cron_monthly:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7407ec9dcc1d828d
+file_groupowner_cron_weekly:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 9a901450fce83c15
+file_groupowner_crontab:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 625a85a6331aabaf
+file_groupowner_etc_chrony_keys:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: cbc54e67dbf3a50b
+file_groupowner_etc_crypttab:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: f8766551fbdb60d5
+file_groupowner_etc_group:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b9df8406bf6c5d22
+file_groupowner_etc_gshadow:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 834fbeac602e05d0
+file_groupowner_etc_ipsec_conf:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: fe97c893746bca8a
+file_groupowner_etc_ipsec_secrets:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 39ca39108dc175e2
+file_groupowner_etc_issue:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 89352df4cdebf2bd
+file_groupowner_etc_issue_net:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 60031e8ec743cad9
+file_groupowner_etc_motd:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 3d2e3b1a9cf1a22a
+file_groupowner_etc_passwd:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 64f8e81fa8b20ffb
+file_groupowner_etc_security_opasswd:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 098c58f6d8ef4546
+file_groupowner_etc_security_opasswd_old:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 566e32400063597c
+file_groupowner_etc_sestatus_conf:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 2c3b23a925171fb8
+file_groupowner_etc_shadow:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e748ccc630d15ed2
+file_groupowner_etc_shells:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b2bc9279dd28dadd
+file_groupowner_etc_sudoers:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 9de999202b8f88f3
+file_groupowner_grub2_cfg:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7a711a0dd847ce11
+file_groupowner_sshd_config:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e7e327a9b8c13937
+file_groupowner_sshd_drop_in_config:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 567bab011a1636c1
+file_groupowner_systemmap:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 6df5096445199d13
+file_groupowner_user_cfg:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c10c5b1e54089892
+file_groupowner_var_log_auth:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 0d8733d8ed49839a
+file_groupowner_var_log_cloud_init:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 11c9642c4302d029
+file_groupowner_var_log_journal:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 638e60ef161fceca
+file_groupowner_var_log_lastlog:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: abb1e6c257fe2b2d
+file_groupowner_var_log_localmessages:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1329cbbfbbe89876
+file_groupowner_var_log_secure:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: f7c1ca8dfb946ad4
+file_groupowner_var_log_waagent:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 8cd64be1f7c0f294
+file_groupowner_var_log_wbtmp:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 67c9c6e1731e09fb
+file_groupownership_audit_configuration:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e28a81ab2c052442
+file_groupownership_home_directories:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1df21391ab4470cf
+file_groupownership_sshd_pub_key:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 462442c0fb175d61
+file_groupownership_system_commands_dirs:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 9265b55a9f7d56a0
+file_groupownerships_var_log_apt:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 5ef8115d9511ba06
+file_groupownerships_var_log_gdm:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 9e649b7cf0f2445e
+file_groupownerships_var_log_gdm3:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7f3d6f87e4af7adf
+file_groupownerships_var_log_landscape:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 3097e9ec07231f2a
+file_groupownerships_var_log_sssd:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1950572e2d2961b1
+file_owner_at_allow:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 15f91ce41017d180
+file_owner_at_deny:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: f176ac3d24a4ce6a
+file_owner_backup_etc_group:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 74594fe0606f05c6
+file_owner_backup_etc_gshadow:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b9b7fcf09ebf808a
+file_owner_backup_etc_passwd:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4f69801ebec57264
+file_owner_backup_etc_shadow:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 6518b75f7d77d057
+file_owner_cron_allow:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c6f026f3525a842f
+file_owner_cron_d:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: fe5ce936f384caa7
+file_owner_cron_daily:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: bcf411cb35f62728
+file_owner_cron_hourly:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 8f6d02957ede0a3f
+file_owner_cron_monthly:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 5ff77d92be863c09
+file_owner_cron_weekly:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4ad406751663b7f6
+file_owner_crontab:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 5d4faf32b118bdb0
+file_owner_etc_chrony_keys:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 68c698713f84b6d4
+file_owner_etc_crypttab:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 53366fbc37d411ca
+file_owner_etc_group:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 484c0ff08ea2bd84
+file_owner_etc_gshadow:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a9df0c4cfbe08d0a
+file_owner_etc_ipsec_conf:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1c26a60b34c3643e
+file_owner_etc_ipsec_secrets:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7fb7e6a5d72955fd
+file_owner_etc_issue:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ad35d2dbd9a09136
+file_owner_etc_issue_net:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 9e92290cd3946ff1
+file_owner_etc_motd:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 8a6d4906cc545eb5
+file_owner_etc_passwd:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1a48d5f95a8bcc69
+file_owner_etc_security_opasswd:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d21866f1d281e4c6
+file_owner_etc_security_opasswd_old:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ff5e864d258112bc
+file_owner_etc_sestatus_conf:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 9391be0362fd7959
+file_owner_etc_shadow:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a2e9114ce8a4614d
+file_owner_etc_shells:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a9510d8832a1e027
+file_owner_etc_sudoers:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 2d97319e3321f162
+file_owner_grub2_cfg:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 80ca85f1495259c9
+file_owner_sshd_config:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 119d4a4fb7e34c2e
+file_owner_sshd_drop_in_config:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 384a283f867fa0c5
+file_owner_systemmap:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 3c8363b2d81347db
+file_owner_user_cfg:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a4a0cfa04cd92631
+file_owner_var_log_auth:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4b8f2f19e107c47d
+file_owner_var_log_cloud_init:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1376db1e1889d52b
+file_owner_var_log_journal:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 53a4e4985b49e663
+file_owner_var_log_lastlog:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7e0e15a29d2e0702
+file_owner_var_log_localmessages:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 186501f2e1b46c9e
+file_owner_var_log_secure:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ebd24e2081e8398e
+file_owner_var_log_waagent:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c1b348b05ba0d957
+file_owner_var_log_wbtmp:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 48c1741ceb310de0
+file_ownership_audit_configuration:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 2577f9d113aea174
+file_ownership_binary_dirs:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 5ec3b4f2e09c5dae
+file_ownership_home_directories:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 5cc9cc45acf96fa7
+file_ownership_sshd_private_key:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1f0a6d62ede22f57
+file_ownership_sshd_pub_key:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b2966115c9b5460d
+file_ownership_var_log_audit_stig:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 38b704a1254b0a68
+file_ownerships_var_log_apt:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4b7f993e8ac72012
+file_ownerships_var_log_gdm:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 71cbad546ad37954
+file_ownerships_var_log_gdm3:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: f3e69e447845235d
+file_ownerships_var_log_landscape:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4920b40dde6b2c06
+file_ownerships_var_log_sssd:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 52ae8c2ee1ea89f6
+file_permission_user_bash_history:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: fd0c450cb48bf4a1
+file_permission_user_init_files:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 586768a508daa0d0
+file_permissions_backup_etc_group:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 84a561c9cc36bb2b
+file_permissions_backup_etc_gshadow:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c584a4c0775f725c
+file_permissions_backup_etc_passwd:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d8a616ba0ca51d2e
+file_permissions_backup_etc_shadow:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 580f8ba66d4650fd
+file_permissions_binary_dirs:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 0b409fe7666fca21
+file_permissions_cron_d:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e37121060b973084
+file_permissions_cron_daily:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 8d0b519c4e32e5dc
+file_permissions_cron_hourly:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 533ff9a09abf5499
+file_permissions_cron_monthly:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 46ac4e46c0080971
+file_permissions_cron_weekly:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: f224e3a67d5968d9
+file_permissions_crontab:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c4f4a798874332a7
+file_permissions_etc_audit_auditd:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 702e27890811e356
+file_permissions_etc_audit_rules:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 9a6991d0418f1cc2
+file_permissions_etc_audit_rulesd:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7edc46931739ea96
+file_permissions_etc_chrony_keys:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c9389c0d38864bb4
+file_permissions_etc_crypttab:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ef06d1ae92592302
+file_permissions_etc_group:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4a139d2ce1e17344
+file_permissions_etc_gshadow:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 28c4be908f1bac1c
+file_permissions_etc_ipsec_conf:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 2196a10df77b3950
+file_permissions_etc_ipsec_secrets:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a06cb15c51d91335
+file_permissions_etc_issue:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 76ae000008f60ad8
+file_permissions_etc_issue_net:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 3c69fb9c2ce46ddb
+file_permissions_etc_motd:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 67b75f1e956a8e82
+file_permissions_etc_passwd:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 0d705f8bf66bb0e4
+file_permissions_etc_security_opasswd:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 34facc7506618239
+file_permissions_etc_security_opasswd_old:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c868b73797c30cbc
+file_permissions_etc_sestatus_conf:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: f76cfd933d30e8a2
+file_permissions_etc_shadow:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 51b55f9f91a04058
+file_permissions_etc_shells:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a30f237f9a814d74
+file_permissions_etc_sudoers:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c92987a169100724
+file_permissions_grub2_cfg:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7d7cd729992fed19
+file_permissions_home_directories:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 65ea16272fe3bf9b
+file_permissions_sshd_config:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 74677f43faaf3eec
+file_permissions_sshd_drop_in_config:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7cd1b509eeea288a
+file_permissions_sshd_private_key:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ae4676960aa93f21
+file_permissions_sshd_pub_key:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 95325c95bf030717
+file_permissions_sudo:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 363ad90d7c21fd29
+file_permissions_systemmap:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 9416ea0bc03ac237
+file_permissions_unauthorized_sgid:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 5323be9757b2cd40
+file_permissions_unauthorized_suid:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1c8a4730c37998f0
+file_permissions_unauthorized_world_writable:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: f9683946c6950d7e
+file_permissions_ungroupowned:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ebc8fc6f2c158b00
+file_permissions_user_cfg:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: bd5e9d4d7225ff23
+file_permissions_var_log_apt:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 37aca022032c91e9
+file_permissions_var_log_audit:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1cc9c32988fd27f1
+file_permissions_var_log_auth:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 78aeb2869c3884c5
+file_permissions_var_log_cloud-init:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7ca0c53d90a61ba2
+file_permissions_var_log_gdm:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: f9b59b085baab4cc
+file_permissions_var_log_gdm3:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 89729736f59f9d19
+file_permissions_var_log_lastlog:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 6017dbda9f27094c
+file_permissions_var_log_localmessages:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a16dd16d1b769ac7
+file_permissions_var_log_secure:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 35ee017777fd6ab0
+file_permissions_var_log_sssd:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e8c104d40570c650
+file_permissions_var_log_syslog:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 41fa6822b96bd70a
+file_permissions_var_log_waagent:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 71a57a0f53fdb7bb
+file_permissions_var_log_wbtmp:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 356ea01a09e750a3
+firewall_single_service_active:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 368181dfd0b08dc7
+gid_passwd_group_same:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d5b1060ce77ca1f1
+gnome_gdm_disable_xdmcp:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 73e9daf942d0dbbf
+group_unique_id:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7ce02e0720dca38e
+group_unique_name:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 8166fd47f841b0f7
+groups_no_zero_gid_except_root:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ccd86110be924d07
+grub2_audit_argument:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: f164c0c5faf8ac03
+grub2_audit_backlog_limit_argument:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 69919eee5989782f
+grub2_enable_apparmor:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e1aec0e81a1c2638
+grub2_enable_iommu_force:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 3a79e3b17d8db1a7
+grub2_l1tf_argument:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e3a899b84855043e
+grub2_mce_argument:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d8f7dc42e72252c1
+grub2_mds_argument:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 9885e93c6fe4ffbc
+grub2_nosmap_argument_absent:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 08e2a72de584667c
+grub2_nosmep_argument_absent:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 561483ed26562a57
+grub2_page_alloc_shuffle_argument:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 078f3e2169b3a7dd
+grub2_page_poison_argument:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 0fc12531c6ff4d16
+grub2_password:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 70b2579cc6f9e392
+grub2_pti_argument:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 6b0782458b4ef1d4
+grub2_rng_core_default_quality_argument:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 38a63d77bc825d86
+grub2_slab_nomerge_argument:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 0578e5e9648181cf
+grub2_slub_debug_argument:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 2dbf83309f2b93f6
+grub2_spec_store_bypass_disable_argument:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 5ff9243c0f8bd5b9
+grub2_spectre_v2_argument:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 28776c9ad35750bf
+grub2_uefi_password:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 01221dd0176e1164
+has_nonlocal_mta:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1c97d5b5b65489ea
+ip6tables_rules_for_open_ports:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d85d41b8b6d72a9b
+iptables_rules_for_open_ports:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a0b6ed6f27c35fb9
+kernel_config_acpi_custom_method:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7e43dd0bdeeb515d
+kernel_config_arm64_sw_ttbr0_pan:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4ae74fe960c25933
+kernel_config_binfmt_misc:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d2b2edc82c38b76f
+kernel_config_bug:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 6cdefba8382cdb8d
+kernel_config_bug_on_data_corruption:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: bbc77180928687f6
+kernel_config_compat_brk:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 08451964f48cb5e9
+kernel_config_compat_vdso:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 86e4c8b7bae913aa
+kernel_config_debug_credentials:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: cc2e7d9b8eca6865
+kernel_config_debug_fs:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: dc6745dfbcb7a656
+kernel_config_debug_list:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e4e0fd57e331348c
+kernel_config_debug_notifiers:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 13a16845ab9a6722
+kernel_config_debug_sg:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 278422ceb41c362f
+kernel_config_debug_wx:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: cf833a1c20aa0fed
+kernel_config_default_mmap_min_addr:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1b2350e66978643e
+kernel_config_devkmem:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: abb6aed061e61c07
+kernel_config_fortify_source:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 77d87a731e948b92
+kernel_config_gcc_plugin_latent_entropy:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4c7f9f750a1c59e9
+kernel_config_gcc_plugin_randstruct:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 90200b2d47ed893c
+kernel_config_gcc_plugin_stackleak:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 069717bb40e30714
+kernel_config_gcc_plugin_structleak:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: fe1aca44baa489a8
+kernel_config_gcc_plugin_structleak_byref_all:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7915c459c0e8ac9d
+kernel_config_hardened_usercopy:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d12390ea2e22e1c7
+kernel_config_hardened_usercopy_fallback:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 597cad750bcecc0c
+kernel_config_hibernation:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d709e06091330001
+kernel_config_ia32_emulation:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7af67b87395c0fc7
+kernel_config_kexec:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 309f6d0be9dda94e
+kernel_config_legacy_ptys:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e360df55e31955d6
+kernel_config_legacy_vsyscall_emulate:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 6aa2f5eba03e4a6e
+kernel_config_legacy_vsyscall_none:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d46b891260357df5
+kernel_config_legacy_vsyscall_xonly:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 02e12b2dca66f1e1
+kernel_config_modify_ldt_syscall:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b213175561516376
+kernel_config_module_sig:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: cf5a9bfad2c6f3f5
+kernel_config_module_sig_all:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c04251e5fb77ed86
+kernel_config_module_sig_force:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: efb3cc98da173b08
+kernel_config_module_sig_hash:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 8230f2e743909608
+kernel_config_module_sig_key:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: def1f7103f73d45c
+kernel_config_module_sig_sha512:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ca682c21fdf53e02
+kernel_config_page_poisoning:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 0901a4ab7afac5e5
+kernel_config_page_poisoning_no_sanity:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7dd0086483807132
+kernel_config_page_poisoning_zero:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c9f7e4ca78900442
+kernel_config_page_table_isolation:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: cde345eafba24889
+kernel_config_panic_on_oops:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 3c0d36073346ac44
+kernel_config_panic_timeout:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 9b93fbe8cc417197
+kernel_config_proc_kcore:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 6fb0d3fb623e4d45
+kernel_config_randomize_base:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b68b8732176991f5
+kernel_config_randomize_memory:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d405801845404cb3
+kernel_config_refcount_full:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d1d21bb55f3e5dd1
+kernel_config_retpoline:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b01ee44b0bbedc76
+kernel_config_sched_stack_end_check:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d6ab23449ae0bf58
+kernel_config_seccomp:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d56fe8e03d51f228
+kernel_config_seccomp_filter:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 9eb8a6fc05e7f398
+kernel_config_security:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b92db9985874cc01
+kernel_config_security_dmesg_restrict:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ba0ce1bc70a5405c
+kernel_config_security_writable_hooks:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: cf61b52ea35e151b
+kernel_config_security_yama:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e3244571ac2bd274
+kernel_config_slab_freelist_hardened:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4e0604e8b7251848
+kernel_config_slab_freelist_random:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: f8beda1da63f4fc2
+kernel_config_slab_merge_default:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d1f9b939ddcdd2a2
+kernel_config_slub_debug:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: f5c2d1a6dd8728e5
+kernel_config_stackprotector:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1c54dc5efcceb221
+kernel_config_stackprotector_strong:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: f07242dccf89c53a
+kernel_config_strict_kernel_rwx:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 513385f54f74a930
+kernel_config_strict_module_rwx:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 72f7b3b421205fd2
+kernel_config_syn_cookies:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 8551e2dacad8923f
+kernel_config_unmap_kernel_at_el0:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d60a933e5a6485b4
+kernel_config_vmap_stack:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 2b719977d33b12d9
+kernel_config_x86_vsyscall_emulation:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 5b12bfb23bf36711
+kernel_module_cramfs_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 3eb86a4ffce07fa2
+kernel_module_dccp_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 170d67f6863cf679
+kernel_module_freevxfs_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 238b26796d3793c2
+kernel_module_hfs_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 072e13835441d632
+kernel_module_hfsplus_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e63ab61b5ff005e9
+kernel_module_jffs2_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7168f545c2dd67e6
+kernel_module_overlayfs_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 748975126e7725c9
+kernel_module_rds_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 793d31a930d4f351
+kernel_module_sctp_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d964871c40e7f3f8
+kernel_module_squashfs_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 015b8016c1d27299
+kernel_module_tipc_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 790ed6a44d3337ab
+kernel_module_udf_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 0eedcacc6270c80f
+kernel_module_usb-storage_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 438725f86c31edac
+ldap_client_start_tls:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4e2d1e3c783a0ae7
+ldap_client_tls_cacertpath:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 23146702c81dc627
+logging_services_active:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 8a5396d0811461a3
+logind_session_timeout:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 62cdd4df170ca965
+mount_option_boot_noexec:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 6b21a21ab41f6a0c
+mount_option_boot_nosuid:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c4088854a574c14c
+mount_option_dev_shm_nodev:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4d1499de279724e1
+mount_option_dev_shm_noexec:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ace59239a07aace7
+mount_option_dev_shm_nosuid:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 8b360b7c648bbbc0
+mount_option_home_nodev:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1b9fb712624e83e3
+mount_option_home_noexec:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 946841b539f42429
+mount_option_home_nosuid:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: eb5b84a5d81de4fe
+mount_option_nodev_nonroot_local_partitions:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 2e9ec33c8eb2feaf
+mount_option_opt_nosuid:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 56cd28e1cecdd0e0
+mount_option_srv_nosuid:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 592500f2e6b1580d
+mount_option_tmp_nodev:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 6b0dee71d5e27e4e
+mount_option_tmp_noexec:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 223d39ea51cf3ecd
+mount_option_tmp_nosuid:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ae63454cd4b4ac9d
+mount_option_var_log_audit_nodev:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 67781bc0c408127a
+mount_option_var_log_audit_noexec:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 48ab30b544411f87
+mount_option_var_log_audit_nosuid:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 9159a938cba91677
+mount_option_var_log_nodev:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7d0c3bbd6651168e
+mount_option_var_log_noexec:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 30bfd36c29ef2570
+mount_option_var_log_nosuid:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 8fbebd374ee06d56
+mount_option_var_nodev:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ba6602e1eefc663f
+mount_option_var_noexec:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e9c19996891af81f
+mount_option_var_nosuid:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 36fc2330bae198af
+mount_option_var_tmp_nodev:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 26849be06582a331
+mount_option_var_tmp_noexec:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a143f813a11ecfd5
+mount_option_var_tmp_nosuid:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 644a6d64314597cd
+nftables_ensure_default_deny_policy:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 149dd5a3938cbdc7
+nftables_rules_permanent:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 76e95268c7e7f8df
+no_direct_root_logins:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a55203b8b5dbde23
+no_dirs_unowned_by_root:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b2a8f08ec7b0f6f4
+no_empty_passwords_etc_shadow:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1fce7b9d8639cf00
+no_empty_passwords_unix:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d3567a998cf1b7f6
+no_files_unowned_by_user:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: f99a8f6c4f9727a4
+no_forward_files:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 0f0fc1e2ea0b75cd
+no_invalid_shell_accounts_unlocked:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 482f2f8928b39732
+no_netrc_files:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e91cbe648840814d
+no_nis_in_nsswitch:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ff21286dab72faee
+no_nologin_in_shells:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b43eba82f00f9998
+no_rsh_trust_files:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1cf735714fbb4070
+no_shelllogin_for_systemaccounts:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 91123d52a4eaad31
+ntp_single_service_active:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 929e9ae0a519556a
+package_aide_installed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 9312b872c94a400b
+package_apparmor-utils_installed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 2b803fc6dbcd3bfa
+package_apparmor_installed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: bcf2dc3fbbf831c2
+package_audit-audispd-plugins_installed:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a73884b6dfeb0bab
+package_audit_installed:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b7a9f8dc1df7e2d4
+package_autofs_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: df1aed232444bd3f
+package_avahi_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 249a582bfa87c91b
+package_bind_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7660b0deae43044e
+package_chrony_installed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b66727e71ee53f21
+package_cups_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 629857cac6f87a77
+package_dhcp_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b0fc8b7cfb94000a
+package_dnsmasq_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4a7cafb1b3c6f7e0
+package_dovecot_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a90b613cefcd6323
+package_ftp_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1a9d866a07961db6
+package_gdm_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 2f1c5deb3283ad23
+package_inetutils-telnet_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 35547338fa11bbce
+package_iptables-persistent_installed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4ee71f7920925130
+package_iptables-persistent_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d6561868ba521e24
+package_iptables_installed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c4ec9116766b510c
+package_kea_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1dd1251391b315ad
+package_logrotate_installed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 5294e6298b251626
+package_net-snmp_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c006f98df52033ad
+package_nfs-kernel-server_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ef4d97ce3aa7eaaf
+package_nftables_installed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 526569452a56f580
+package_nginx_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 3828d6cb5abdeffb
+package_nis_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 462d6053983c5586
+package_openldap-clients_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ebc98bf943fe9878
+package_openldap-servers_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 31e1b52526f1a86d
+package_pam_modules_installed:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: fff1752485c7e4ba
+package_pam_pwquality_installed:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ad6cefbc175bee3a
+package_pam_runtime_installed:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 0274ad9c06f4306a
+package_prelink_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b091b8f876b3077c
+package_rpcbind_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: efafebd7ebc026c3
+package_rsh-server_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 10cdf5b2778e23e9
+package_rsh_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1103746fd35e1a79
+package_rsyslog-gnutls_installed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a2e5895144804d46
+package_rsyslog_installed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: abbabf43c2fc5f1d
+package_samba_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: aa08b190a2be4028
+package_sendmail_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a2ce77a98d19b5bb
+package_setroubleshoot-plugins_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 84783a0c58b34263
+package_setroubleshoot-server_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 00622340ee6b87a3
+package_setroubleshoot_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e9a06bcb344b9da3
+package_squid_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a57ae3a5997a83e1
+package_sssd_installed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 0f03097ac5134317
+package_sudo_installed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ea5fd34d36c81e73
+package_systemd-journal-remote_installed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 92f9f8bf096d9a38
+package_talk-server_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 5ef976ced0621846
+package_talk_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1a3e707a3b93ea6b
+package_telnet-server_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 35bac3dee0ad996f
+package_telnet_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a1b6c575ab3c1ca3
+package_tftp_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c4f046bb92267c3c
+package_timesyncd_installed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 0f37e8643f4db2e8
+package_tnftp_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7a3a634023120990
+package_ufw_installed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 8607e4dc8e58271f
+package_ufw_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e34da2b5574a0191
+package_vsftpd_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 50bbe7f33b7b0432
+package_xinetd_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 0d57387859b7ec28
+package_xorg-x11-server-common_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 933b9b2e920d3c22
+package_ypbind_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 0489e2b0efadb1ab
+package_ypserv_removed:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 07aefa936f1b1b1e
+partition_for_boot:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 634b5e570313efe1
+partition_for_dev_shm:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 94e700b44cbd9f5d
+partition_for_home:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 23f6fcd907738d97
+partition_for_opt:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7725d35c6f4e7d07
+partition_for_srv:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 3b5ff08d44021fdb
+partition_for_tmp:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: bb997ee433c969fb
+partition_for_usr:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 45198218a45b4d55
+partition_for_var:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1eee1cc22e69d1ef
+partition_for_var_log:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 5f456e921a7bbdf1
+partition_for_var_log_audit:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 70784c8deb858bd9
+partition_for_var_tmp:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c60d4fbdb370fed4
+permissions_local_var_log:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 658d4beb009d87fd
+postfix_client_configure_mail_alias:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 42572aff7b0e20d6
+postfix_network_listening_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c9ca0de1a969acaf
+prefer_64bit_os:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: aaf1689cf6291f20
+root_path_all_dirs:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 130d5251f403070e
+root_path_no_dot:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 6e7b9e9f417e07e9
+rsyslog_filecreatemode:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 37932f577c8a51b4
+rsyslog_nolisten:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a5cae99a9c915df5
+rsyslog_remote_loghost:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 750e079198df0733
+rsyslog_remote_tls:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 77dc0aac87d59423
+rsyslog_remote_tls_cacert:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 94d6d7563df3ddfc
+security_patches_up_to_date:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: f566cc6135ac5925
+service_apport_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 847e99ae30f20fa6
+service_auditd_enabled:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1b2e9f47edbb994e
+service_autofs_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4bc74cf7ceefab0b
+service_avahi-daemon_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 48879ba44c6388ac
+service_bluetooth_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 9b439257740ff858
+service_chronyd_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d8c5b685ec4462ba
+service_chronyd_enabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 9fd427a1c80e2013
+service_chronyd_or_ntpd_enabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 342ee4e64bfbefdf
+service_cron_enabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 6be4c136327bf09d
+service_cups_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4f55e177958a187a
+service_dnsmasq_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: aba653f6264bdc9d
+service_dovecot_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4b0fc14505d1cbbb
+service_named_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 821b3a9d07b0d101
+service_nfs_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ac9ecba25063a899
+service_nftables_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ffed08ce95cff49f
+service_nftables_enabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 70f435f7ae2c9048
+service_nginx_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a095721a9cb54735
+service_rpcbind_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e082ebfd80ec6811
+service_rsyslog_enabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4476ffba1cd6a1bf
+service_slapd_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 46584b9f31d8bad3
+service_snmpd_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1e2914f71d83e6d9
+service_squid_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 06071658def4ae61
+service_sssd_enabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: f0de7d6a5870acda
+service_systemd-journal-upload_enabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1242c9b6c034b9d3
+service_systemd-journald_enabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b0b233257f617495
+service_timesyncd_configured:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 9b91588eb2e44def
+service_timesyncd_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 5969c44fe4df9f55
+service_timesyncd_enabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 194d3c417fc7706e
+service_ufw_enabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 043723c409bc3ce9
+service_vsftpd_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 2ac40c9dd2266b6d
+service_xinetd_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7b6a1101686768e3
+service_ypserv_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 276f3a763d300439
+set_ip6tables_default_rule:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 77808595374c6c0e
+set_iptables_default_rule:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1fd49f50b7f4c580
+set_ipv6_loopback_traffic:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: de62a578c54452c0
+set_loopback_traffic:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a6214c219c201394
+set_nftables_base_chain:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 90b2eb0a31853ff1
+set_nftables_loopback_traffic:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c8970c72d7022cca
+set_nftables_table:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 8652d2561b61317f
+set_password_hashing_algorithm_logindefs:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 93dfa1aad1f72d6f
+set_password_hashing_algorithm_systemauth:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 79e8b8aa1c4c823c
+set_ufw_default_rule:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 2027bf01b5e61325
+set_ufw_loopback_traffic:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c96cd0ebdd100bee
+socket_systemd-journal-remote_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1f43861677fda436
+sshd_disable_empty_passwords:
+  verifie_le: '2026-09-17'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d604801e6e601774
+sshd_disable_forwarding:
+  verifie_le: '2026-09-17'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 675ca7ab719b8e8f
+sshd_disable_gssapi_auth:
+  verifie_le: '2026-09-17'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b8daa8dae829b55d
+sshd_disable_rhosts:
+  verifie_le: '2026-09-17'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 0c4a82962f0c9cfb
+sshd_disable_root_login:
+  verifie_le: '2026-09-17'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d025f0692a623778
+sshd_do_not_permit_user_env:
+  verifie_le: '2026-09-17'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 37cc56d7eb8d733d
+sshd_enable_pam:
+  verifie_le: '2026-09-17'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 292145264d675960
+sshd_enable_warning_banner_net:
+  verifie_le: '2026-09-17'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e93da42b3e54b067
+sshd_limit_user_access:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 0daca15f819e25a2
+sshd_set_idle_timeout:
+  verifie_le: '2026-09-17'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 96d7a88cc1796587
+sshd_set_keepalive:
+  verifie_le: '2026-09-17'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 71f2082c80cd2652
+sshd_set_login_grace_time:
+  verifie_le: '2026-09-17'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 976de3b4c39ba4ef
+sshd_set_loglevel_info:
+  verifie_le: '2026-09-17'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 31a2fbe6cc4b5c25
+sshd_set_max_auth_tries:
+  verifie_le: '2026-09-17'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 982ca828880e685e
+sshd_set_max_sessions:
+  verifie_le: '2026-09-17'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e69f859c41f3b0de
+sshd_set_maxstartups:
+  verifie_le: '2026-09-17'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 89d580f9b8612886
+sshd_use_strong_ciphers:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 0ca7cdb9262169a5
+sshd_use_strong_kex:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a777b31348f39b19
+sshd_use_strong_macs:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7ad0a27ab7703e76
+sssd_enable_pam_services:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 340afcf035d3387e
+sssd_ldap_configure_tls_reqcert:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e167410693809250
+sssd_ldap_start_tls:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e7f176aa0912f035
+sudo_add_env_reset:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4a69ea3d5f3478cf
+sudo_add_ignore_dot:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 8ba4ebccd5903043
+sudo_add_noexec:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a32650ef5841c0ca
+sudo_add_requiretty:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 8afbf037faeac238
+sudo_add_umask:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c7d27807d4bf38d3
+sudo_add_use_pty:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 3e0c7bc6209db7ae
+sudo_custom_logfile:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 9bfc915ec3cdeac0
+sudo_dedicated_group:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 252a3c85573d5534
+sudo_remove_no_authenticate:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 2178cd3ead71d472
+sudo_require_authentication:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: f410cbf2079fd33a
+sudo_require_reauthentication:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d59c62ce658e2c69
+sudoers_no_command_negation:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 57a40b7fc1665294
+sysctl_fs_protected_fifos:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: a63be95577bc2cb8
+sysctl_fs_protected_hardlinks:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 2a1f0c5f16fa76f5
+sysctl_fs_protected_regular:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4cac017125395836
+sysctl_fs_protected_symlinks:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 8302048c48dd4256
+sysctl_fs_suid_dumpable:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 8c698ad45e92d1f4
+sysctl_kernel_dmesg_restrict:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 5600969d3a620242
+sysctl_kernel_kptr_restrict:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 3aae120d24942f7c
+sysctl_kernel_modules_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 593997f3c766c2eb
+sysctl_kernel_panic_on_oops:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ace420492231c433
+sysctl_kernel_perf_cpu_time_max_percent:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 0bea77c54c8d8461
+sysctl_kernel_perf_event_max_sample_rate:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 44d014554bc92dc4
+sysctl_kernel_perf_event_paranoid:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 5dd9b7908ab13aac
+sysctl_kernel_pid_max:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 305ea500137a588f
+sysctl_kernel_randomize_va_space:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7b487f70e03be47a
+sysctl_kernel_sysrq:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: ba9e277eed3eac72
+sysctl_kernel_unprivileged_bpf_disabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 2dfe62b35c38b1d0
+sysctl_kernel_yama_ptrace_scope:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 86b8017faecab1ab
+sysctl_net_core_bpf_jit_harden:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1e3be7d4aed6cf1d
+sysctl_net_ipv4_conf_all_accept_local:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 4c92513dbecc828b
+sysctl_net_ipv4_conf_all_accept_redirects:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 27bd85ac8afd0f26
+sysctl_net_ipv4_conf_all_accept_source_route:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: f9fbce7b40bf19b2
+sysctl_net_ipv4_conf_all_arp_filter:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 874652290c6bfc46
+sysctl_net_ipv4_conf_all_arp_ignore:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e1115246fcfdec60
+sysctl_net_ipv4_conf_all_drop_gratuitous_arp:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: cd33983913a6139b
+sysctl_net_ipv4_conf_all_log_martians:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 8d1473af1c93c494
+sysctl_net_ipv4_conf_all_route_localnet:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 76f78747c06dc0eb
+sysctl_net_ipv4_conf_all_rp_filter:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7231504f28c27ad4
+sysctl_net_ipv4_conf_all_secure_redirects:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e54ec8da851d09e7
+sysctl_net_ipv4_conf_all_send_redirects:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 64d51ab618f7a0c0
+sysctl_net_ipv4_conf_all_shared_media:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: d7a37ec912071e80
+sysctl_net_ipv4_conf_default_accept_redirects:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 0a40acd8a97bcebf
+sysctl_net_ipv4_conf_default_accept_source_route:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 2f13de13205749ed
+sysctl_net_ipv4_conf_default_log_martians:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 32d8bd5b21da9608
+sysctl_net_ipv4_conf_default_rp_filter:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: bd62206c13ffa64c
+sysctl_net_ipv4_conf_default_secure_redirects:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 569ffd17e9672615
+sysctl_net_ipv4_conf_default_send_redirects:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e0da1a7893f4912c
+sysctl_net_ipv4_conf_default_shared_media:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 2a6ef45ce70e11fb
+sysctl_net_ipv4_icmp_echo_ignore_broadcasts:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 97f75994d4d06e77
+sysctl_net_ipv4_icmp_ignore_bogus_error_responses:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 1ce5f98a222b982c
+sysctl_net_ipv4_ip_forward:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 5b0637a225812834
+sysctl_net_ipv4_tcp_rfc1337:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: bc435243907ae453
+sysctl_net_ipv4_tcp_syncookies:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 3944f64b53519b22
+sysctl_net_ipv6_conf_all_accept_ra:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 819b314ec1bcafa4
+sysctl_net_ipv6_conf_all_accept_ra_defrtr:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 67f274cbc56b9bc2
+sysctl_net_ipv6_conf_all_accept_ra_pinfo:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 991332d18580c22e
+sysctl_net_ipv6_conf_all_accept_ra_rtr_pref:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 57f0b2e6a8ffc545
+sysctl_net_ipv6_conf_all_accept_redirects:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: cb0d8adbf69801af
+sysctl_net_ipv6_conf_all_accept_source_route:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: f7860376fe44306c
+sysctl_net_ipv6_conf_all_autoconf:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 5c642a8937f18488
+sysctl_net_ipv6_conf_all_forwarding:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7edd8002d862991a
+sysctl_net_ipv6_conf_all_max_addresses:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 3a0d4914f68c12bb
+sysctl_net_ipv6_conf_all_router_solicitations:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 5360bfa0092af787
+sysctl_net_ipv6_conf_default_accept_ra:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 861a09d6f8033428
+sysctl_net_ipv6_conf_default_accept_ra_defrtr:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 2b77335cd23e89b5
+sysctl_net_ipv6_conf_default_accept_ra_pinfo:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 86d76356a843ffc5
+sysctl_net_ipv6_conf_default_accept_ra_rtr_pref:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 8ca1d08a3cfc0fd4
+sysctl_net_ipv6_conf_default_accept_redirects:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 82abbb2dc11fd360
+sysctl_net_ipv6_conf_default_accept_source_route:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: fb201eb72b57b9ed
+sysctl_net_ipv6_conf_default_autoconf:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e3d088ca79fef257
+sysctl_net_ipv6_conf_default_max_addresses:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 405744c0f4158de9
+sysctl_net_ipv6_conf_default_router_solicitations:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 7ecb35803ee82dd9
+sysctl_vm_mmap_min_addr:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 0876129704dd9087
+systemd_journal_upload_server_tls:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: c6aa814642d2a63e
+systemd_journal_upload_url:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: fa0593671400971f
+timer_logrotate_enabled:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: b17474e640d805fa
+ufw_rules_for_open_ports:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: e97164716ffe3258
+use_pam_wheel_group_for_su:
+  verifie_le: '2026-09-18'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 244b347f567df430
+wireless_disable_interfaces:
+  verifie_le: '2026-09-19'
+  relu_par: assistant IA (Claude), par delegation du responsable du projet
+  version_source: 0.1.82
+  empreinte: 21c136a0cc840d9f

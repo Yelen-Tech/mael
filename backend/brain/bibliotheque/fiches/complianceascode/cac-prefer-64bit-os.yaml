@@ -1,0 +1,57 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-prefer-64bit-os
+titre: Systeme d'exploitation 64 bits
+domaine: systeme
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: demarrage
+  type_controle: detection
+  niveaux:
+    cis: null
+    anssi: renforce
+source:
+  origine: complianceascode
+  regle: prefer_64bit_os
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/software/prefer_64bit_os
+mots_cles:
+- 64 bits
+- architecture
+- uname
+resume: Systeme d'exploitation 64 bits. (regle prefer_64bit_os, ComplianceAsCode 0.1.82).
+observer:
+- commande: uname -m | grep -Ev '^(x86_64|aarch64|ppc64le|s390x)$'
+  but: Lire l'architecture du systeme
+  lecture: Chaque ligne est un element en defaut ; aucune ligne = conforme.
+controles:
+- controle: architecture 64 bits
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: 'Un systeme 64 bits offre un espace d''adresses bien plus large a la randomisation (ASLR) et
+    toujours le bit de non-execution (NX) : l''exploitation des failles memoire y est plus difficile.'
+  action: Reinstaller en 64 bits si le processeur le permet (lscpu | grep 'CPU op-mode').
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R1 (niveau renforce)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

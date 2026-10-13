@@ -1,0 +1,69 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-partition-for-var
+titre: Partition separee pour /var
+domaine: fichiers
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: montage
+  type_controle: partition-separee
+  niveaux:
+    cis: 2
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: partition_for_var
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/software/disk_partitioning/partition_for_var
+mots_cles:
+- disque
+- montage
+- partition
+- separee
+resume: /var doit etre une partition (ou un montage) separe. (regle partition_for_var, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: findmnt -kn /var
+  but: Voir si /var est un montage separe
+  lecture: Une ligne = montage separe ; aucune = meme partition que son parent.
+controles:
+- controle: /var monte a part
+  bon: montage separe
+  mauvais: /var sur la partition de son parent
+  gravite: faible
+  risque: '/var grossit avec les journaux, caches et files d''attente : sur sa propre partition, il ne
+    peut pas remplir le disque du systeme, et recoit des options de montage plus strictes.'
+  action: 'Prevoir une partition (ou un volume LVM) dedie a /var et la declarer dans /etc/fstab : se planifie,
+    surtout sur un systeme en production.'
+  playbook: null
+  sans_playbook: 'partition dediee : repartitionnement a planifier, non automatisable'
+  evaluation:
+  - commande: 0
+    lecteur: findmnt
+    comparateur: monte
+pieges:
+- 'Repartitionner un systeme en service est risque : a planifier (ou a appliquer aux prochaines installations).'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 1.1.2.4.1 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 1.1.2.4.1 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 1.1.2.4.1 (niveau 2)
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R28 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

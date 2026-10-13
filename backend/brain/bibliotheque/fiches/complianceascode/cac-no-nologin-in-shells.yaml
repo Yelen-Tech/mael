@@ -1,0 +1,67 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-no-nologin-in-shells
+titre: nologin n'est pas declare comme shell valide (/etc/shells)
+domaine: fichiers
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: comptes
+  type_controle: detection
+  niveaux:
+    cis: 2
+    anssi: null
+source:
+  origine: complianceascode
+  regle: no_nologin_in_shells
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/accounts/accounts-restrictions/no_nologin_in_shells
+mots_cles:
+- nologin
+- shell
+- shells
+resume: nologin n'est pas declare comme shell valide (/etc/shells). (regle no_nologin_in_shells, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: grep nologin /etc/shells
+  but: Chercher nologin dans /etc/shells
+  lecture: Chaque ligne est un element en defaut ; aucune ligne = conforme.
+controles:
+- controle: nologin absent de /etc/shells
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: /etc/shells dit quels shells sont de vrais shells de connexion ; chsh, ftp et d'autres programmes
+    s'y fient pour restreindre un compte. Y declarer nologin fait passer des comptes bloques pour des
+    comptes interactifs.
+  action: Retirer les lignes nologin de /etc/shells.
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 5.4.3.1 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 5.4.3.1 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 5.4.3.1 (niveau 2)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

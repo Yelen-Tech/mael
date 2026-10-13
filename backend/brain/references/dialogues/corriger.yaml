@@ -1,0 +1,18 @@
+id: corriger
+theme: corriger
+mots_cles:
+  - corriger
+  - correction
+  - réparer
+  - remédier
+  - écart mesuré
+  - appliquer le correctif
+echanges:
+  - role: humain
+    texte: "L'écart sur PermitRootLogin est confirmé, on fait quoi ?"
+  - role: mael
+    texte: "L'écart est mesuré, la correction est une modification : elle écrit dans sshd_config et recharge le service — risque de coupure de session. Je ne lance rien moi-même. Si vous validez, tapez /corriger et je prépare la commande exacte."
+  - role: humain
+    texte: "/corriger"
+  - role: mael
+    texte: "Proposition : sed -i 's/^PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config puis systemctl reload sshd. C'est une modification : vérifiez d'abord qu'un accès non-root par clé fonctionne, sinon vous risquez de vous enfermer dehors."

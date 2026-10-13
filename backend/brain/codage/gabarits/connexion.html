@@ -1,0 +1,9 @@
+<form method="post" action="/connexion">
+  <label for="courriel">Courriel</label>
+  <input id="courriel" name="courriel" type="email" autocomplete="username" required>
+  <label for="mdp">Mot de passe</label>
+  <input id="mdp" name="mdp" type="password" autocomplete="current-password" minlength="8" required>
+  <p id="erreur" role="alert" hidden></p>
+  <button type="submit">Se connecter</button>
+  <a href="/mot-de-passe-oublie">Mot de passe oublié ?</a>
+</form>

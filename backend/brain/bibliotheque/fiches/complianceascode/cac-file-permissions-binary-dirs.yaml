@@ -1,0 +1,60 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-file-permissions-binary-dirs
+titre: Les executables systeme ne sont pas modifiables par le groupe ni les autres
+domaine: fichiers
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: fichiers-systeme
+  type_controle: detection
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: file_permissions_binary_dirs
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/permissions/files/permissions_within_important_dirs/file_permissions_binary_dirs
+mots_cles:
+- /usr/bin
+- binaires
+- droits
+- executables
+resume: Les executables systeme ne sont pas modifiables par le groupe ni les autres. (regle file_permissions_binary_dirs,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: find -L /bin /sbin /usr/bin /usr/sbin /usr/libexec /usr/local/bin /usr/local/sbin -perm /022
+    -printf '%m %p\n' 2>/dev/null
+  but: Chercher les executables modifiables par le groupe ou les autres
+  lecture: Chaque ligne est un element en defaut ; aucune ligne = conforme.
+controles:
+- controle: pas d'ecriture pour le groupe ni les autres
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: 'Les executables systeme sont executes par des utilisateurs privilegies et des services systeme
+    : des droits restrictifs sont necessaires pour que leur execution ne puisse pas etre detournee.'
+  action: chmod go-w FICHIER
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R50 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

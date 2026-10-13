@@ -1,0 +1,75 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-sysctl-fs-protected-fifos
+titre: Parametre noyau fs.protected_fifos = 2
+domaine: noyau
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: parametres-noyau
+  type_controle: parametre-noyau
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: sysctl_fs_protected_fifos
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/permissions/files/sysctl_fs_protected_fifos
+mots_cles:
+- fifos
+- fs.protected_fifos
+- noyau
+- parametre
+- protected
+- sysctl
+resume: Le parametre noyau fs.protected_fifos doit valoir 2, en memoire et de facon persistante. (regle
+  sysctl_fs_protected_fifos, ComplianceAsCode 0.1.82).
+observer:
+- commande: sysctl -n fs.protected_fifos
+  but: Lire la valeur ACTIVE de fs.protected_fifos
+  lecture: 'Attendu : 2.'
+- commande: grep -Rs '^[[:space:]]*fs\.protected_fifos[[:space:]]*=' /etc/sysctl.conf /etc/sysctl.d/ /run/sysctl.d/
+    /usr/local/lib/sysctl.d/ /usr/lib/sysctl.d/ 2>/dev/null
+  but: Verifier la valeur PERSISTANTE (appliquee au redemarrage)
+  lecture: 'Valeur retenue au demarrage = derniere affectation (fichiers tries par nom, /etc/sysctl.conf
+    en dernier) : attendu « fs.protected_fifos = 2 » ; aucune ligne = non persistant.'
+controles:
+- controle: fs.protected_fifos = 2
+  bon: 2 en memoire et au demarrage
+  mauvais: autre valeur, ou valeur non persistante
+  gravite: moyenne
+  risque: 'Interdit d''ouvrir une FIFO appartenant a un autre utilisateur dans un repertoire partage (comme
+    /tmp) : un programme ne peut plus etre piege a ecrire dans une FIFO preparee par un attaquant.'
+  action: Ecrire « fs.protected_fifos = 2 » dans /etc/sysctl.conf (lu en dernier) puis appliquer avec
+    sysctl --system.
+  playbook: infra.sysctl
+  parametres:
+    cle: fs.protected_fifos
+    valeur: '2'
+  evaluation:
+  - commande: 0
+    lecteur: valeur
+    comparateur: egal
+    attendu: '2'
+  - commande: 1
+    lecteur: affectations
+    comparateur: toutes_egales
+    champ: fs.protected_fifos
+    attendu: '2'
+    precedence: sysctl
+pieges:
+- 'Le fichier lu en dernier l''emporte (ordre alphabetique dans /etc/sysctl.d/) : verifier qu''aucun autre
+  fichier ne remet une autre valeur.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R14 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

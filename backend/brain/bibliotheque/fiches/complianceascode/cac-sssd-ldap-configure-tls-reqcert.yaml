@@ -1,0 +1,68 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-sssd-ldap-configure-tls-reqcert
+titre: 'SSSD : certificat du serveur LDAP exige (ldap_tls_reqcert = demand)'
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: authentification
+  type_controle: configuration
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: sssd_ldap_configure_tls_reqcert
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/sssd/sssd-ldap/sssd_ldap_configure_tls_reqcert
+mots_cles:
+- certificat
+- ldap
+- ldap_tls_reqcert
+- reqcert
+- sssd
+- tls
+resume: 'SSSD : certificat du serveur LDAP exige (ldap_tls_reqcert = demand). (regle sssd_ldap_configure_tls_reqcert,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: dpkg -s sssd >/dev/null 2>&1 || echo 'SENTINELLE:SANS_OBJET'; head -c0 /etc/sssd/sssd.conf
+    || echo 'SENTINELLE:ILLISIBLE'; grep -EsR '^[[:space:]]*(export[[:space:]]+|readonly[[:space:]]+)?ldap_tls_reqcert[[:space:]]*='
+    /etc/sssd/sssd.conf /etc/sssd/conf.d/
+  but: Lire ldap_tls_reqcert dans /etc/sssd/sssd.conf, /etc/sssd/conf.d/
+  lecture: Valeur de ldap_tls_reqcert ; aucune ligne = non defini.
+controles:
+- controle: ldap_tls_reqcert = demand
+  bon: ldap_tls_reqcert = demand
+  mauvais: autre valeur, ou non defini
+  gravite: moyenne
+  risque: Si le certificat du serveur LDAP n'est pas exige, un faux serveur peut usurper l'annuaire et
+    compromettre les sessions d'authentification.
+  action: Ecrire « ldap_tls_reqcert = demand » dans /etc/sssd/sssd.conf, puis redemarrer sssd.
+  playbook: infra.cle-valeur
+  parametres:
+    fichier: /etc/sssd/sssd.conf
+    cle: ldap_tls_reqcert
+    valeur: demand
+    format: egal
+  evaluation:
+  - commande: 0
+    lecteur: affectations
+    comparateur: toutes_egales
+    champ: ldap_tls_reqcert
+    attendu: demand
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R67 (niveau intermediaire)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

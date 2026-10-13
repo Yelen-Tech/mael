@@ -1,0 +1,68 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-no-dirs-unowned-by-root
+titre: 'PATH : tous les repertoires appartiennent a root'
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: sessions
+  type_controle: detection
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: no_dirs_unowned_by_root
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/accounts/accounts-session/root_paths/no_dirs_unowned_by_root
+mots_cles:
+- path
+- proprietaire
+- root
+resume: 'PATH : tous les repertoires appartiennent a root. (regle no_dirs_unowned_by_root, ComplianceAsCode
+  0.1.82).'
+observer:
+- commande: echo "$PATH" | tr ':' '\n' | xargs -r stat -L -c '%U %n' 2>/dev/null | grep -v '^root '
+  but: Lire le proprietaire des repertoires du PATH
+  lecture: Chaque ligne est un element en defaut ; aucune ligne = conforme.
+controles:
+- controle: proprietaire root
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: Des repertoires du PATH de root qui ne lui appartiennent pas permettent a des utilisateurs non
+    privilegies de manipuler son environnement d'execution, jusqu'a une elevation de privileges ou l'execution
+    de code malveillant.
+  action: chown root REPERTOIRE
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- 'C''est le PATH du shell d''audit : lancer l''audit en tant que root (sudo -i) pour lire celui de root.'
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 5.4.2.5 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 5.4.2.5 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 5.4.2.5 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

@@ -1,0 +1,64 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-package-prelink-removed
+titre: Paquet prelink absent
+domaine: services
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: services-inutiles
+  type_controle: paquet-absent
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: package_prelink_removed
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/software/integrity/package_prelink_removed
+mots_cles:
+- installe
+- logiciel
+- paquet
+- paquets
+- prelink
+resume: Le paquet prelink doit etre absent. (regle package_prelink_removed, ComplianceAsCode 0.1.82).
+observer:
+- commande: dpkg-query -W -f='${binary:Package} ${Status}\n' prelink 2>/dev/null
+  but: Savoir si prelink est installe
+  lecture: « install ok installed » = installe ; aucune ligne ou « deinstall » = absent.
+controles:
+- controle: paquet prelink absent
+  bon: absent
+  mauvais: installe
+  gravite: moyenne
+  risque: L'utilisation du paquet prelink nuit au fonctionnement d'AIDE car il modifie les binaires. La
+    preliaison peut aussi aggraver les degats d'une faille dans une bibliotheque courante comme libc.
+  action: Desinstaller prelink (apt purge) apres avoir verifie qu'aucun service n'en depend.
+  playbook: infra.paquet-retirer
+  parametres:
+    paquet: prelink
+  evaluation:
+  - commande: 0
+    lecteur: dpkg
+    comparateur: absent
+    attendu:
+    - prelink
+pieges:
+- 'Un paquet peut etre requis par une application metier : confirmer avec l''exploitant avant de le retirer.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 1.5.4 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 1.5.4 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

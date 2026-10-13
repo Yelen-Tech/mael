@@ -1,0 +1,76 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-file-groupowner-sshd-drop-in-config
+titre: 'Groupe de tous les fichiers de /etc/ssh/sshd_config.d/ : root'
+domaine: acces
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: ssh
+  type_controle: groupe-fichier
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: file_groupowner_sshd_drop_in_config
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/ssh/file_groupowner_sshd_drop_in_config
+mots_cles:
+- chgrp
+- config
+- fichier
+- fichiers
+- groupe
+- sshd
+- tous
+resume: 'Groupe de tous les fichiers de /etc/ssh/sshd_config.d/ : root : groupe root. (regle file_groupowner_sshd_drop_in_config,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: find /etc/ssh/sshd_config.d/ -maxdepth 1 -type f -regextype posix-extended -regex '^.*$' -printf
+    '%m %u %g %p\n' 2>/dev/null
+  but: Lire droits, proprietaire et groupe (groupe)
+  lecture: '3e colonne = groupe : attendu root. Aucune ligne = fichier absent.'
+controles:
+- controle: groupe = root
+  bon: groupe root
+  mauvais: toute autre valeur
+  gravite: moyenne
+  risque: 'Les fichiers de configuration de SSH activent ou desactivent ses fonctions : un compte non
+    autorise qui peut les modifier (ou les lire, pour y reperer une faiblesse) peut ouvrir un acces ou
+    affaiblir le service. Ils doivent appartenir a root et n''etre modifiables que par lui.'
+  action: chgrp root sur les fichiers concernes.
+  playbook: infra.fichiers-motif
+  parametres:
+    dossier: /etc/ssh/sshd_config.d/
+    regex: ^.*$
+    nature: groupe
+    valeur: root
+    recursif: non
+  evaluation:
+  - commande: 0
+    lecteur: stat
+    champ: groupe
+    comparateur: dans
+    attendu:
+    - '0'
+    - root
+pieges:
+- 'Sans sudo, certains fichiers (ex. /etc/shadow) ne sont pas lisibles par stat/find : relancer avec les
+  droits root.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 5.1.1 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 5.1.1 (niveau 1)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

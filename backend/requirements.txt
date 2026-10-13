@@ -1,0 +1,34 @@
+Django==6.0.6
+djangorestframework==3.17.1
+djangorestframework_simplejwt==5.5.1
+django-cors-headers==4.9.0
+django-filter==25.2
+psycopg2-binary==2.9.12
+dj-database-url==2.3.0
+python-decouple==3.8
+gunicorn==23.0.0
+whitenoise==6.9.0
+
+# file d'attente et cache
+celery==5.4.0
+redis==5.2.1
+
+# cerveau
+httpx==0.28.1
+pydantic==2.10.4
+
+# renseignement
+python-dateutil==2.9.0
+
+# cerveau -- bibliotheque & playbooks (fiches et manifestes YAML)
+PyYAML==6.0.3
+
+# atelier de code -- couche 6 (pages ouvertes dans un navigateur sans ecran)
+# 1.61.0 = Chromium 1228 (deja installe : pas de second telechargement).
+# Absent = la couche 6 le dit dans le bilan, le reste de MAEL marche.
+playwright==1.61.0
+
+# atelier de code -- images provisoires (option A) au vrai format (.jpg, .webp...)
+# Licence HPND (permissive). Absent : seuls .png et .svg sont fabriques.
+Pillow==12.3.0
+sqlglot==30.19.0

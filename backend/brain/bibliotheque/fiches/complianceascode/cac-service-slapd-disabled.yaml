@@ -1,0 +1,67 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-service-slapd-disabled
+titre: Service slapd desactive et arrete
+domaine: services
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: services-inutiles
+  type_controle: service-inactif
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: service_slapd_disabled
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/ldap/openldap_server/service_slapd_disabled
+mots_cles:
+- demarrage
+- service
+- services
+- slapd
+- systemd
+resume: Le service slapd doit etre desactive et arrete. (regle service_slapd_disabled, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: systemctl is-enabled slapd.service 2>/dev/null; systemctl is-active slapd.service 2>/dev/null
+  but: Lire l'etat de demarrage et d'execution de slapd
+  lecture: 'Attendu : « disabled » ou « masked » (ou service absent) puis « inactive ».'
+controles:
+- controle: service slapd disabled/inactive
+  bon: disabled ou masked, inactive (ou absent)
+  mauvais: enabled ou active
+  gravite: moyenne
+  risque: Si le systeme n'a pas besoin de servir de serveur LDAP, desactiver ce logiciel est recommande
+    pour reduire la surface d'attaque potentielle.
+  action: systemctl disable --now slapd.service (ou mask) apres verification du besoin.
+  playbook: infra.service-desactiver
+  parametres:
+    service: slapd
+  evaluation:
+  - commande: 0
+    lecteur: systemctl
+    comparateur: inactif
+pieges:
+- 'Un service peut etre demarre par une socket systemd : verifier aussi « systemctl list-sockets ».'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 2.1.7 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 2.1.7 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 2.1.7 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

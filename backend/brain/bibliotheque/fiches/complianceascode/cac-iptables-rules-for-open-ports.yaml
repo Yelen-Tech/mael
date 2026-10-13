@@ -1,0 +1,66 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-iptables-rules-for-open-ports
+titre: 'iptables : une regle pour chaque port ouvert (IPv4) (si iptables est l''outil retenu)'
+domaine: reseau
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: pare-feu
+  type_controle: detection
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: iptables_rules_for_open_ports
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/network/network-iptables/iptables_ruleset_modifications/iptables_rules_for_open_ports
+mots_cles:
+- iptables
+- ouverts
+- ports
+resume: 'iptables : une regle pour chaque port ouvert (IPv4). (regle iptables_rules_for_open_ports, ComplianceAsCode
+  0.1.82).'
+observer:
+- commande: ss -4tuln
+  but: Lister les ports IPv4 ouverts, a comparer a iptables -L INPUT -v -n
+  lecture: 'Liste des ports en ecoute (IPv4) : chacun doit avoir une regle dans iptables -L INPUT -v -n.'
+controles:
+- controle: regle pour chaque port ouvert
+  bon: tous les ports couverts
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: 'Chaque port en ecoute doit etre explicitement autorise ou refuse par le pare-feu. Un port sans
+    regle depend de la seule politique par defaut : un service peut etre bloque par erreur, ou expose
+    sans qu''on l''ait decide.'
+  action: iptables -A INPUT -p PROTO --dport PORT -j ACCEPT (ou DROP) pour chaque port non couvert.
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation: []
+pieges:
+- 'Regle conditionnelle : ne s''applique que si iptables est l''outil retenu (var_network_filtering_service).
+  Demander ou constater l''outil en place avant de conclure ; le code ne juge pas cette regle seul.'
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 4.3.2.4 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 4.4.2.4 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 4.4.2.4 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

@@ -1,0 +1,43 @@
+id: chimie-analytique-et-tracabilite
+schema: 1
+nom: Chimie analytique et traçabilité
+resume: "Méthodes d'analyse (spectroscopie, chromatographie) appliquées aux marqueurs, encres de sécurité et isotopes : authentifier les documents et objets, et appuyer la preuve technique."
+famille: chimie
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - chimie analytique
+  - spectroscopie
+  - chromatographie
+  - marqueur
+  - encre de sécurité
+  - isotope
+  - traçabilité
+  - authentification
+  - preuve
+  - expertise forensique
+caracteristiques:
+  methodes: "La spectroscopie (infrarouge, Raman, masse) identifie les composés ; la chromatographie sépare les mélanges ; l'analyse isotopique trace l'origine géographique d'un matériau."
+  marquage: "Encres invisibles révélées sous UV, marqueurs moléculaires ou isotopiques dosés en trace : ils authentifient billets, documents et produits contre la contrefaçon."
+  lien_informatique: "L'expertise forensique combine analyse chimique (encres, supports) et analyse numérique ; la traçabilité physique complète les journaux électroniques."
+  preuve: "La valeur probante dépend de la chaîne de conservation : scellés, traçabilité des prélèvements, méthodes reproductibles et laboratoires accrédités."
+securite:
+  - titre: Chaîne de conservation rompue
+    risque: Un scellé physique ou un support analysé sans traçabilité documentée devient irrecevable comme preuve, même si l'analyse technique est correcte.
+    conseil: Consigner chaque transfert (qui, quand, pourquoi), photographier les scellés et utiliser des empreintes de hachage pour les copies numériques associées.
+    gravite: elevee
+  - titre: Contrefaçon des marqueurs de sécurité
+    risque: Les encres UV simples et hologrammes bas de gamme sont reproduits ; s'y fier seul laisse passer des documents ou pièces falsifiés.
+    conseil: Combiner plusieurs niveaux de marquage (visible, UV, moléculaire) et vérifier auprès de l'émetteur pour les documents à fort enjeu.
+    gravite: moyenne
+  - titre: Interpréter une analyse sans expertise
+    risque: Un spectre ou un chromatogramme mal interprété conduit à accuser à tort ou à disculper un matériau, avec des conséquences juridiques.
+    conseil: Faire valider les résultats par un laboratoire accrédité et documenter la méthode, les limites de détection et les incertitudes.
+    gravite: moyenne
+sources:
+  - titre: Wikipédia — Chimie analytique
+    url: https://fr.wikipedia.org/wiki/Chimie_analytique
+  - titre: IUPAC — Gold Book (Compendium of Chemical Terminology)
+    url: https://goldbook.iupac.org/

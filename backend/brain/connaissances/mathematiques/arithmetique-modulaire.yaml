@@ -1,0 +1,41 @@
+id: arithmetique-modulaire
+schema: 1
+nom: Arithmétique modulaire
+resume: Calcul sur les restes de la division euclidienne ; avec le petit théorème de Fermat et l'inverse modulaire, elle constitue le socle de RSA, de Diffie-Hellman et de nombreuses primitives cryptographiques.
+famille: mathematiques
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - arithmétique modulaire
+  - modulo
+  - congruence
+  - petit théorème de fermat
+  - théorème d'euler
+  - inverse modulaire
+  - exponentiation modulaire
+  - théorème des restes chinois
+  - rsa
+caracteristiques:
+  notions_fondamentales: "Congruences et classes de restes modulo n ; petit théorème de Fermat et généralisation d'Euler ; algorithme d'Euclide étendu et inverse modulaire ; théorème des restes chinois ; exponentiation modulaire rapide."
+  liens_informatiques: "Fonctionnement interne de RSA (clés inverses l'une de l'autre) ; échange de clés Diffie-Hellman dans un groupe multiplicatif ; fonctions de hachage, sommes de contrôle et tables de hachage."
+  ordres_de_grandeur: "L'exponentiation modulaire rapide calcule a^e mod n en O(log e) multiplications, ce qui rend RSA praticable même avec des exposants de plusieurs centaines de bits."
+securite:
+  - titre: Opérations modulaires à temps variable
+    risque: Une exponentiation modulaire dont le temps dépend de la clé fuit des bits par canal auxiliaire temporel.
+    conseil: Utiliser des implémentations à temps constant fournies par les bibliothèques cryptographiques éprouvées.
+    gravite: elevee
+  - titre: Module RSA partagé ou faible
+    risque: Deux clés RSA partageant un facteur premier se cassent par un simple calcul de pgcd ; cela s'est observé sur des clés réelles mal générées.
+    conseil: Garantir une génération de nombres premiers avec une entropie suffisante et vérifier l'absence de facteurs communs dans un parc de clés.
+    gravite: critique
+  - titre: Débordements avant réduction modulaire
+    risque: Multiplier de grands entiers avant de réduire modulo n peut déborder en arithmétique entière native et fausser silencieusement le calcul.
+    conseil: Réduire à chaque étape ou utiliser des bibliothèques d'entiers de précision arbitraire.
+    gravite: moyenne
+sources:
+  - titre: Wikipédia — Arithmétique modulaire
+    url: https://fr.wikipedia.org/wiki/Arithm%C3%A9tique_modulaire
+  - titre: NIST FIPS 186-5 — Digital Signature Standard
+    url: https://csrc.nist.gov/pubs/fips/186-5/final

@@ -1,0 +1,13 @@
+:root { --texte: #1d1d1f; --fond: #ffffff; --accent: #0b57d0; }
+* { box-sizing: border-box; }
+html { font-size: 100%; } /* respecte la taille choisie par le lecteur */
+body { margin: 0; font: 1rem/1.5 system-ui, sans-serif; color: var(--texte); background: var(--fond); }
+img { max-width: 100%; height: auto; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+@media (prefers-color-scheme: dark) {
+  :root { --texte: #f2f2f2; --fond: #121212; --accent: #8ab4f8; }
+}

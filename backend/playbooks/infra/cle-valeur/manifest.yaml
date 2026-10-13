@@ -1,0 +1,24 @@
+id: infra.cle-valeur
+titre: "Fichier de configuration : fixer CLE = valeur"
+description: >
+  Remplace la ou les lignes actives de CLE par la valeur attendue, sinon l'ajoute (bash_replace_or_append de la source). Formats : CLE=v, CLE = v, CLE v, CLE seule, ou readonly CLE=v + export (shell).
+risque: faible
+parametres:
+  - {nom: fichier, type: string, requis: true, motif: '^/(etc|root)/[A-Za-z0-9._/-]+$'}
+  - {nom: cle, type: string, requis: true, motif: '^\$?[A-Za-z_][A-Za-z0-9_-]*$'}
+  - {nom: valeur, type: string, requis: false, motif: '^[A-Za-z0-9@,._:/+=|-]*( [A-Za-z0-9@,._:/+=|-]+)*$'}
+  - {nom: format, type: string, requis: true, motif: '^(egal|egal_espaces|espace|cle_seule|readonly)$'}
+# revenir.sh retrouve l'etat par le fichier ET la cle.
+parametres_revenir: [fichier, cle]
+racine_requise: true
+reversible: true
+simulation: true
+idempotent: true
+redemarrage: false
+indisponibilite: "0 s"
+source:
+  origine: complianceascode
+  version: 0.1.82
+  gabarit: shared/macros/10-bash.jinja (bash_replace_or_append) ; shared/templates/accounts_password/bash.template
+  ecarts: "fichier sauvegarde, cree si absent ; lignes existantes remplacees"
+references: [ANSSI-BP-028, CIS Benchmarks]

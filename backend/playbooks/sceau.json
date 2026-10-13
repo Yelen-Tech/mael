@@ -1,0 +1,131 @@
+{
+ "_commun": {
+  "mael.sh": "a92fccc318b244b79914c0c9b335b08866ba89c70673725b4bc7a6101dce8aa7"
+ },
+ "app.en-tetes-http": {
+  "appliquer.sh": "b27c55cbeec03e8dd21b57c8eecebe5aa0a1b6ad3c51e7e7ce61daf0c416ff8d",
+  "detecter.sh": "8911ebd0dd12d69f7dfa8d01fcaa1bccac10af2753d79786146c064c96719214",
+  "manifest.yaml": "ab688062c15b2e0db925bb2118d01e1d88d6442daa730ab05c73c721de520534",
+  "revenir.sh": "4fbad837c8536b3d8765844d8c0191b8a443ef850603106ab32d19223a25081a",
+  "verifier.sh": "d13cdd4262148a2e6ca4a05862fbcc98fb1f1b9786de1a772b48e39eefa537bf"
+ },
+ "infra.audit-regles": {
+  "appliquer.sh": "dc3dba159d37bdeef05111a280cfc525c47c2a569f8ea6a9224e090b29c83682",
+  "detecter.sh": "fbf3112a9cead4ee56ddfd9af76abd2d70bf2dd3e9f00998f5f17428e2d27b96",
+  "manifest.yaml": "bfeb391ebfac4822e94a2adc7338ad15ad5611fafe194566fc8b739cb63ab997",
+  "revenir.sh": "180f1f9ca47e6a6e2bf4aa04299fc69795d266905fbe57ecda0f5fa929d64c6b",
+  "verifier.sh": "e2ecb1aa996102648979b090308b86f7cc12929cb9e96623880c9f54d0d8723e"
+ },
+ "infra.cle-valeur": {
+  "appliquer.sh": "640293aa9ddc3da65263ac933a6d3832ffd2cfae72a456119cd4d263030aeef3",
+  "detecter.sh": "3f2c8e6427cb447f30aae609757af6ac1a48b05f1b26368720576a8ecfe7093e",
+  "manifest.yaml": "6933603ace6a6bab76f3143ebd5a116c1e4167d78d26c6e219a7dcc62e59bc22",
+  "revenir.sh": "012d938178b6e96788120dcfd125aba46768f09e76fb72e8a2f246159ef90491",
+  "verifier.sh": "9f79df8b19bcc05cc2cb199f3d041b5b2682d18dfbe466283a27b3260161ea4b"
+ },
+ "infra.fichier-droits": {
+  "appliquer.sh": "aed9d22983343101ed960f02a5d7d4d525f539305d34bd125d45e5688642eacd",
+  "detecter.sh": "4245611ed641c1472327db214d9845ae35d140d509b7a3aaecebf43afd22a76b",
+  "manifest.yaml": "2c538f10b209ce42b0dbbc1820aebbe7b511cb618bbe4f49b13aacbc488dd497",
+  "revenir.sh": "ae63f618e2719d80c4be9e8abe70a280726798017b1e6ac6c58e1432470ffa86",
+  "verifier.sh": "7557acc8623659c6c52b4449d13f1dcf7cf19ce9e6c52945c645be2a37ec268c"
+ },
+ "infra.fichier-existence": {
+  "appliquer.sh": "063245617417a0ba03a89c020c3eb830ec6f1285dec8ad28151ab21411402a37",
+  "detecter.sh": "0e969e78bd929f74b4665b93d803bbc530ff8509ef19f9dbd74170570bfe422d",
+  "manifest.yaml": "fbb459787827118ef66a830c84616b76be0634a192b1e687d562910bc01c5a91",
+  "revenir.sh": "722fabc61fd53334fd8e830b3f3e4e216617057f58b80830d7a2458d1fa27830",
+  "verifier.sh": "69dcb8283c81e64b4f0a3bf5cb16ac57771ede2dfcaa35101cd3b3d34bb60203"
+ },
+ "infra.fichier-groupe": {
+  "appliquer.sh": "0d139cf49b86f883aa8a39fe6c044c5ca04afeb0f8afcc964fb2f2d71f0c46ac",
+  "detecter.sh": "3dff7a9149b6f943f50adff66b0cf96564a768c61c62e31f2b910a193768e112",
+  "manifest.yaml": "a701d3937c1508e5978c988a349bb86cba64ddb266f8cb655a43efff6759bc5f",
+  "revenir.sh": "5266aaee7b4ee8bbdb0c7a4a07c4d01f9c2e912bdc47cfa07caf7790ac0e314a",
+  "verifier.sh": "7029bd310d5fbaf6e762c870b84aeb0bea96d917ffa3c6e10cc5adad44fc6813"
+ },
+ "infra.fichier-proprietaire": {
+  "appliquer.sh": "9a7d34476b6d6ce2905bea6df741ffc7a24979474c6a4db32eb88bb67aa3afa3",
+  "detecter.sh": "4258e00d90ad934cee9ca32f984d560647c6a05bf37ed775ad67eb47a4e73ade",
+  "manifest.yaml": "f544af85239e5f93231cfb2368870ff9224c2df5b7ef4e10e02a2153b59c660c",
+  "revenir.sh": "aaafade65bd31cc112d94f8efc802878ae69372b610bee8eb524bd6a2623a6ba",
+  "verifier.sh": "da034cb5e46e749ace3af18d226cd13b0b0537b724ff58233ee4d453653d77b0"
+ },
+ "infra.fichiers-motif": {
+  "appliquer.sh": "a4182379e387413fdefa2bac5a85205fada6b7a01b6303d1ddba8376da4b077c",
+  "detecter.sh": "fa543ff6ae0884c15702ce360baa3ce1cddc45d87e2275f20037e71b1622469e",
+  "manifest.yaml": "b31cf4b4730aed41acf392e2003b945ac90a160a43ffa39aff4f640cab8908e2",
+  "revenir.sh": "7031221a2c85bf83ed7d46d3d5ba7428de3f24971f4939ece36cb32bfea2952c",
+  "verifier.sh": "182c5e088e9552794e8ae384f8b70bf270959a7f24ea9f213dead1a7b50323cb"
+ },
+ "infra.grub-argument": {
+  "appliquer.sh": "9dd21134ecad30dae01207ad3f4814ba90caa2f92af8fac16888b9e8bb577d11",
+  "detecter.sh": "fec2b7e84587f9c9e56c68dd3158e2493f17c41b9b52a668cf64f62e38448017",
+  "manifest.yaml": "7b21f2d8200dc01ea0887af66b746cc8f9edd43b5f9878bf02133ccf4d926658",
+  "revenir.sh": "0ac5b852e2e31597c83082967f068cb2b548512841ceda2694f60e5db0f963f4",
+  "verifier.sh": "08eee5ae583426b519c111ed418a2ae7cfacc9a7a5dff8833ee9312e2b5e27de"
+ },
+ "infra.module-interdit": {
+  "appliquer.sh": "0fc2263c47f1fc8b8fc412abd1bd466c79e0beadf7f906b61336119ce147c89c",
+  "detecter.sh": "1953773cade4a605d58cea141c45da5d238c826307cc1f325feb6650ee6d66e0",
+  "manifest.yaml": "942422ccc303df4730dea632f2a072ef4a1aea1d68da51b3ba561a48505b309c",
+  "revenir.sh": "534dbf6a0da95110fec6aa4132fa7dae82411e0fc164cd239b153d3ea21f4072",
+  "verifier.sh": "81f4f9fbfeb5662efd7d8089cdbd7e76846a40a8d60b3a42ef04dd449291b54f"
+ },
+ "infra.montage-option": {
+  "appliquer.sh": "1ea0a3db736816f536bdff2c97ec352243de0d422a4e9c8a1da2c72810c5696d",
+  "detecter.sh": "04487b73f5be9434b5e3448c3133b564037d1041537b113581e65710fc47dc2e",
+  "manifest.yaml": "275aae52c9a9f8e74bdec004703ebc8bc1f6d5534337e8c29b76c717ede32092",
+  "revenir.sh": "3f5cc11f256be0352f347766fc14bdc324d6ce55b9cd11ae4708321dc66bc781",
+  "verifier.sh": "e00a0e15cd720aa92326b9fa5c5c48e6cff65c764f4470887a084260f3ca6f18"
+ },
+ "infra.paquet-installer": {
+  "appliquer.sh": "8710ec3260bf048ceb73448b972944a2dadf7fcf8e3d0a48ef7bf0fd72a72214",
+  "detecter.sh": "3a177ca03494803663a3b0f3027c4e507b505879f66dc3628c005d6725f59687",
+  "manifest.yaml": "86b1673c2126377f51f0826b223d0e83ffff5d71cfc623d9fc54daaf6b34e471",
+  "revenir.sh": "86143883295848eda152dcc1988c5ed2086abd6ce2d45b23a248fde4b34dcc25",
+  "verifier.sh": "d3d7d5f85d3b76421036ec50611b1f1a9d272a6008f96077eeaef12d751df584"
+ },
+ "infra.paquet-retirer": {
+  "appliquer.sh": "29a17430c07cf7eb5e5f8454c91dfcd86d845efbe1835781751c4a6f333b5198",
+  "detecter.sh": "e9e7ea2d69862760cbbc8c3d5d5299e07a4947c7cc754f513fe4e4bccd8e7af6",
+  "manifest.yaml": "9f24b63a14b61804fc41c3adec1c0fa10ed89a2a0d8fe4883ff69cc74008594c",
+  "revenir.sh": "59a3c2753ca8cc41a59c72f7011b15608fdd21dfb81957e52b2ddf5687504f22",
+  "verifier.sh": "92756144d182d8bdb84c33caa0b4a213ce934ed581dc27db3702d4035bb42d6d"
+ },
+ "infra.service-activer": {
+  "appliquer.sh": "40ab10a43af59f3220ef349dc8fb4d69ed94e430ec1594ab9869acba1641a156",
+  "detecter.sh": "2a32c2a45e802b1bc465d63afb249964c98c774e71ee9d104f0b1c2be12bfd8a",
+  "manifest.yaml": "af4521c18968d3f629e1558c477d795947e1ddcb015eacba72301e3ee498faa9",
+  "revenir.sh": "a9fb0bb96f8086dc8c9709ac90f9e8f1121895194395787593c609c397636a75",
+  "verifier.sh": "2bdbf013d9235e2caa65eed1f668a07b409360deb452adf8a7026be9d9e8afce"
+ },
+ "infra.service-desactiver": {
+  "appliquer.sh": "2c10b1e19f4bed5ed189bcfbe7d56847555be5666545029de465933c792a22ee",
+  "detecter.sh": "54bd06671367dbfa34572241f239935f842afe8602def904acdd43a54a6983a5",
+  "manifest.yaml": "8da3429491d3048503cf3acf7a6f55c9102a5f9e88c1309b2f7eca9efecbfa31",
+  "revenir.sh": "63a33b02fe113bd416a03106f49a748b0dc39bac9c922c1af342eba6092f20b5",
+  "verifier.sh": "c416af2c5df888e1bcb76c562fb4fc994e11c15325dfd3cac0cfdb5e46b5790d"
+ },
+ "infra.ssh-directive": {
+  "appliquer.sh": "3e90e22832439ea4645f975f9572bdb3cd9c5a928494bdb1235c9d7edbaf5d20",
+  "detecter.sh": "e8b1e7d9e3bdf54b44683158a5c1d321312841b7ba3db8dd4294cd486c566565",
+  "manifest.yaml": "84fd35fae0a82cb8a128cd7bb286327b1e71db1521ad9825140ed6819a44e540",
+  "revenir.sh": "b44d99fbf6967b3ae67841eda7f96a5575eac4ec1e4fbf2eeed02e92b56c8b22",
+  "verifier.sh": "7cc8ef961e97a36887019835006617b4125691118b7e08a8065f9eb2c96bbcf9"
+ },
+ "infra.sudo-defaults": {
+  "appliquer.sh": "856963cc8feeb08d997a57ea644a3ebfcbf1daa54e1ba8d0e511134162ffa622",
+  "detecter.sh": "e617437413a2980981705a25e96b4b13b55badfe9ddb0badc67d40b3af23ab24",
+  "manifest.yaml": "50e7cd9490cbfc2ccacea492b0648be85293176434f7e6abb208b5d770702d7a",
+  "revenir.sh": "7903263a84bdb89b134019abbb34464cf59f2dcaef40764aeadf5c71e4b47614",
+  "verifier.sh": "fd2267d987ef101ce6bab491d41ef3453741fb03a05d5f63603a9965964438b1"
+ },
+ "infra.sysctl": {
+  "appliquer.sh": "a9e68f300bb57c17acd3a1a688eb279231c4041c4088ff93d572f7568557abd6",
+  "detecter.sh": "6d9ff45007836c4911a6beeb866fdc22979f89eb52b5e72e82b780bad7b1bf54",
+  "manifest.yaml": "0f4789a50cf5f9f011cba9d59ff6d4e9a6e2d0987ad3573d4488c0cb0cba43f0",
+  "revenir.sh": "243a8b3e7698690ab3749df1a6d5bc918793f95db943e7f7a8e7e21a473a5e1f",
+  "verifier.sh": "839db9bd62166536ddf3bda394c0999e0faf1b21c9bc2c7bb7125047d98b2cf1"
+ }
+}

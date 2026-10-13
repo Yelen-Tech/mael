@@ -1,0 +1,59 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-accounts-users-home-files-ownership
+titre: 'Fichiers des repertoires personnels : proprietaire valide'
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: sessions
+  type_controle: detection
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: accounts_users_home_files_ownership
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/accounts/accounts-session/accounts_users_home_files_ownership
+mots_cles:
+- home
+- nouser
+- orphelin
+- proprietaire
+resume: 'Fichiers des repertoires personnels : proprietaire valide. (regle accounts_users_home_files_ownership,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: find /home -xdev -nouser 2>/dev/null
+  but: Chercher les fichiers sans proprietaire valide sous /home
+  lecture: Chaque ligne est un element en defaut ; aucune ligne = conforme.
+controles:
+- controle: aucun fichier orphelin
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: Si les fichiers des repertoires personnels n'appartiennent pas a leurs utilisateurs, des utilisateurs
+    non autorises peuvent y acceder ; c'est aussi un signe possible de compromission.
+  action: chown -R UTILISATEUR /home/UTILISATEUR (ou supprimer les fichiers orphelins).
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R50 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

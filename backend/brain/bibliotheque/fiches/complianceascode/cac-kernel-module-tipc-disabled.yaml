@@ -1,0 +1,74 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-kernel-module-tipc-disabled
+titre: Module noyau tipc desactive
+domaine: noyau
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: modules-noyau
+  type_controle: module-desactive
+  niveaux:
+    cis: 2
+    anssi: null
+source:
+  origine: complianceascode
+  regle: kernel_module_tipc_disabled
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/network/network-uncommon/kernel_module_tipc_disabled
+mots_cles:
+- module
+- modules
+- noyau
+- tipc
+resume: Le module noyau tipc ne doit pas pouvoir etre charge. (regle kernel_module_tipc_disabled, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: grep -Rs 'tipc' /etc/modprobe.d/ /lib/modprobe.d/ 2>/dev/null
+  but: Voir si tipc est interdit de chargement
+  lecture: 'Attendu : « install tipc /bin/false » (ou /bin/true) et « blacklist tipc ».'
+- commande: lsmod | grep -w 'tipc'
+  but: Voir si tipc est charge en ce moment
+  lecture: Aucune ligne = non charge.
+controles:
+- controle: module tipc non chargeable
+  bon: install tipc /bin/false + blacklist, non charge
+  mauvais: aucune interdiction, ou module charge
+  gravite: faible
+  risque: 'Ces protocoles reseau rarement utilises (DCCP, RDS, SCTP, TIPC) ont connu des failles exploitables
+    a distance ou localement : les desactiver protege contre celles qui restent a decouvrir.'
+  action: Ajouter « install tipc /bin/false » et « blacklist tipc » dans /etc/modprobe.d/tipc.conf, puis
+    decharger le module.
+  playbook: infra.module-interdit
+  parametres:
+    module: tipc
+  evaluation:
+  - commande: 0
+    lecteur: modprobe
+    comparateur: interdit
+    champ: tipc
+  - commande: 1
+    lecteur: aucune_ligne
+    comparateur: vide
+pieges:
+- Verifier qu'aucun materiel ou usage (ex. stockage USB) n'a besoin du module avant de l'interdire.
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 3.2.2 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 3.2.2 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 3.2.2 (niveau 2)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

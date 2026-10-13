@@ -1,0 +1,44 @@
+id: geographie-physique
+schema: 1
+nom: Géographie physique
+resume: "Relief, océans et climats structurent l'implantation des infrastructures numériques : câbles sous-marins sur les fonds marins, datacenters soumis aux risques sismiques, inondations et canicules."
+famille: histoire-geographie
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - géographie physique
+  - continents
+  - océans
+  - relief
+  - climat
+  - risques naturels
+  - séisme
+  - inondation
+  - datacenter
+  - câble sous-marin
+caracteristiques:
+  continents: "Sept continents conventionnels : Afrique, Antarctique, Asie, Europe, Amérique du Nord, Océanie, Amérique du Sud."
+  oceans: "Cinq océans : Pacifique (le plus vaste), Atlantique, Indien, Austral (Austral ou Antarctique) et Arctique."
+  reliefs_extrêmes: "Point culminant : Everest (environ 8 849 m) ; fosse la plus profonde : fosse des Mariannes (environ 11 000 m sous le niveau de la mer)."
+  climats: "Classification de Köppen en grandes zones (équatoriale, tropicale, aride, tempérée, continentale, polaire), déterminante pour le refroidissement des datacenters."
+  risques_naturels: "Ceinture de feu du Pacifique pour les séismes, deltas et plaines alluviales pour les inondations, zones cycloniques tropicales."
+securite:
+  - titre: Implantation des datacenters
+    risque: Un datacenter en zone sismique, inondable ou cyclonique peut être détruit ou isolé ; une seule région sinistrée interrompt les services qui n'y sont concentrés.
+    conseil: Vérifier l'aléa naturel du site et répartir les copies sur des régions géographiquement distantes et à risques décorrélés.
+    gravite: elevee
+  - titre: Fragilité des câbles sous-marins
+    risque: L'essentiel du trafic intercontinental transite par des câbles posés sur les fonds marins, vulnérables aux chaluts, ancres et séismes sous-marins.
+    conseil: Pour les services critiques, exiger des fournisseurs des routes câblées diversifiées et prévoir des liens de secours.
+    gravite: moyenne
+  - titre: Climat et continuité d'activité
+    risque: Canicules et sécheresses dégradent le refroidissement et l'approvisionnement en eau et en électricité des centres de données.
+    conseil: Intégrer les scénarios climatiques dans le plan de continuité et surveiller la capacité de refroidissement réelle.
+    gravite: moyenne
+sources:
+  - titre: Encyclopaedia Britannica — Earth
+    url: https://www.britannica.com/place/Earth
+  - titre: UNESCO — Océans
+    url: https://www.unesco.org/fr/ocean

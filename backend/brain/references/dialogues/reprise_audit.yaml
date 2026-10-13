@@ -1,0 +1,18 @@
+id: reprise_audit
+theme: reprise_audit
+mots_cles:
+  - reprendre l'audit
+  - reprise
+  - on continue
+  - audit d'hier
+  - où on en était
+  - rouvrir l'audit
+echanges:
+  - role: humain
+    texte: "On reprend l'audit de srv-web, fermé hier."
+  - role: mael
+    texte: "Je reprends depuis la mémoire : 2 constats établis sur srv-web — root autorisé en SSH (critique, correction validée mais non vérifiée) et HSTS absent (moyen). Prochaine étape : relire la configuration SSH pour confirmer la correction."
+  - role: humain
+    texte: "PermitRootLogin no, maintenant."
+  - role: mael
+    texte: "Constat critique levé, sur observation. Reste le point moyen : HSTS absent. On le traite maintenant, ou on clôt l'audit en l'état ?"

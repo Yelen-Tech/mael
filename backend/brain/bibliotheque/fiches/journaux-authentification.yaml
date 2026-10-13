@@ -1,0 +1,63 @@
+id: journaux-authentification
+titre: "Journaux d'authentification et tentatives d'intrusion"
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+verifie_le: 2026-09-16
+teste_sur: []            # a remplir par les tests en conteneur (etape 2.5)
+applicable:
+  os: [linux]
+taxonomie:
+  theme: journalisation
+  type_controle: observation
+  niveaux: {cis: null, anssi: null}   # fiche manuelle hors referentiel
+source:
+  origine: manuel
+mots_cles: [journaux, logs, authentification, connexion, intrusion, force brute, fail2ban, auth, echec, sudo]
+resume: >
+  Les journaux d'authentification revelent les tentatives de connexion echouees
+  (force brute), les connexions reussies et les elevations de privileges. On lit
+  les journaux, on ne les modifie ni ne les efface JAMAIS (effacer des traces
+  est une action d'attaquant, bloquee).
+
+observer:
+  - commande: "journalctl -u ssh -u sshd --since '24 hours ago' --no-pager | grep -Ei 'failed|invalid user' | tail -n 50"
+    but: "Voir les echecs de connexion SSH des dernieres 24 h"
+    lecture: "'Failed password' / 'Invalid user' repetes depuis une meme IP = force brute. Compter les IP distinctes."
+    variantes:
+      alpine: "grep -Ei 'failed|invalid user' /var/log/messages | tail -n 50"
+  - commande: "journalctl _COMM=sudo --since '24 hours ago' --no-pager | tail -n 30"
+    but: "Lire les usages de sudo (elevation de privileges)"
+    lecture: "Qui a fait quoi en root, et si des tentatives ont echoue (authentication failure)."
+  - commande: "systemctl is-active fail2ban 2>/dev/null; sudo fail2ban-client status sshd 2>/dev/null"
+    but: "Verifier si une protection anti-force-brute est active"
+    lecture: "'active' + une liste d'IP bannies = protection en place. Sinon, la force brute n'est pas freinee."
+
+controles:
+  - controle: "Force brute SSH non freinee"
+    bon: "fail2ban actif, ou tres peu d'echecs"
+    mauvais: "nombreux 'Failed password' d'une meme IP et aucune protection"
+    gravite: elevee
+    risque: "Un attaquant essaie des milliers de mots de passe sans etre bloque ; finit par en trouver un."
+    action: "Installer/activer fail2ban (ou equivalent) et privilegier les cles SSH."
+    playbook: null
+    sans_playbook: "analyse de journaux : rien a corriger automatiquement"
+  - controle: "Journaux absents ou coupes"
+    bon: "journaux presents et continus"
+    mauvais: "trou dans les journaux, ou service de journalisation arrete"
+    gravite: elevee
+    risque: "Sans journaux, une intrusion passe inapercue et ne peut etre analysee."
+    action: "Verifier et reactiver la journalisation (rsyslog/journald), en conserver une copie hors machine."
+    playbook: null
+    sans_playbook: "analyse de journaux : rien a corriger automatiquement"
+
+pieges:
+  - "Le nom de l'unite varie : 'ssh' (Debian/Ubuntu) ou 'sshd' (RHEL). Sur les vieux systemes, lire /var/log/auth.log ou /var/log/secure."
+  - "Beaucoup d'echecs est NORMAL sur une IP publique (bruit d'Internet) : ce qui compte est l'absence de protection, pas le simple volume."
+  - "Ne JAMAIS proposer d'effacer ou de tronquer un journal : c'est un geste d'attaquant, et c'est bloque."
+
+referentiels:
+  - {nom: ANSSI, document: "Recommandations de securite pour la mise en oeuvre d'un systeme de journalisation"}
+  - {nom: ANSSI, document: "Recommandations de configuration d'un systeme GNU/Linux (BP-028)"}
+  - {nom: CIS, document: "CIS Benchmarks Linux (Ubuntu, Debian, RHEL) - journalisation et audit"}

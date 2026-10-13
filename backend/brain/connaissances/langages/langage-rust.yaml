@@ -1,0 +1,46 @@
+id: langage-rust
+schema: 1
+nom: Rust
+resume: Langage compilé dont le système d'ownership et d'emprunt garantit la sécurité mémoire sans ramasse-miettes dans le code safe ; le danger se concentre dans les blocs unsafe.
+famille: langage
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - rust
+  - ownership
+  - propriété
+  - emprunt
+  - borrow
+  - unsafe
+  - mémoire
+  - course
+  - unwrap
+  - cargo
+caracteristiques:
+  paradigmes:
+    - impératif
+    - fonctionnel
+    - concurrent
+  typage: statique, fort
+  execution: compilé en code machine natif (via LLVM)
+  memoire: ownership et emprunts vérifiés à la compilation, sans ramasse-miettes
+securite:
+  - titre: Sécurité mémoire du code safe
+    risque: En code safe, l'ownership et les emprunts empêchent à la compilation courses de données et use-after-free.
+    conseil: Rester en code safe autant que possible et laisser le compilateur refuser les accès dangereux.
+    gravite: info
+  - titre: Blocs unsafe
+    risque: Un bloc unsafe désactive les garanties du compilateur ; une erreur y réintroduit corruptions mémoire et comportements indéfinis.
+    conseil: Réduire unsafe au minimum, l'encapsuler derrière une API sûre et le relire avec le plus grand soin.
+    gravite: elevee
+  - titre: unwrap() en production
+    risque: unwrap() ou expect() sur un None/Err provoque un panic, déni de service dans un service en production.
+    conseil: Propager les erreurs avec ? ou les traiter explicitement plutôt que d'appeler unwrap().
+    gravite: moyenne
+sources:
+  - titre: The Rust Programming Language (le livre officiel)
+    url: https://doc.rust-lang.org/book/
+  - titre: The Rustonomicon (unsafe)
+    url: https://doc.rust-lang.org/nomicon/

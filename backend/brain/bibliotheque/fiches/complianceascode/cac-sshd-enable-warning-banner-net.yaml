@@ -1,0 +1,82 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-sshd-enable-warning-banner-net
+titre: 'SSH : banniere d''avertissement a la connexion (Banner /etc/issue.net)'
+domaine: acces
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+  services:
+  - openssh
+taxonomie:
+  theme: ssh
+  type_controle: configuration
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: sshd_enable_warning_banner_net
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/ssh/ssh_server/sshd_enable_warning_banner_net
+mots_cles:
+- avertissement
+- banner
+- banniere
+- legal
+- message
+- ssh
+- sshd
+resume: La directive sshd Banner doit valoir « /etc/issue.net » (regle sshd_enable_warning_banner_net,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: sudo sshd -T 2>/dev/null | grep -i '^banner '
+  but: Lire la valeur EFFECTIVE de Banner
+  lecture: 'Attendu : « banner /chemin/fichier ». « none » ou aucune ligne = pas de banniere.'
+- commande: grep -Ris '^[[:space:]]*Banner[[:space:]]' /etc/ssh/sshd_config /etc/ssh/sshd_config.d/ 2>/dev/null
+  but: Trouver ou Banner est defini dans les fichiers
+  lecture: Chaque ligne donne le fichier et la valeur ecrite ; aucune ligne = valeur par defaut.
+controles:
+- controle: Banner configure (fichier de banniere)
+  bon: Banner <chemin d'un fichier> (ex. /etc/issue.net)
+  mauvais: Banner none, ou absent
+  gravite: moyenne
+  risque: La banniere rappelle la politique d'usage avant la connexion et facilite d'eventuelles poursuites
+    ; elle ne doit pas reveler d'information sur le proprietaire ou le systeme.
+  action: Definir « Banner /etc/issue.net » dans /etc/ssh/sshd_config (ou un fichier de /etc/ssh/sshd_config.d/),
+    controler avec sshd -t, puis recharger SSH en gardant une session ouverte.
+  playbook: infra.ssh-directive
+  parametres:
+    directive: Banner
+    valeur: /etc/issue.net
+  evaluation:
+  - comparateur: fichier
+    attendu: /etc/issue.net
+    commande: 0
+    lecteur: sshd_t
+    champ: banner
+pieges:
+- sshd -T exige les droits root ; sans sudo, la commande ne renvoie rien.
+- 'Plusieurs fichiers peuvent definir la directive (Include /etc/ssh/sshd_config.d/*.conf) : la PREMIERE
+  occurrence gagne ; sshd -T donne la valeur effective.'
+- 'Regle Sentinelle : la source exige le fichier /etc/issue.net ; tout fichier de banniere existant est
+  accepte.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 5.1.5 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 5.1.5 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 5.1.5 (niveau 1)
+verifie_le: '2026-09-17'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

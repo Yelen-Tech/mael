@@ -1,0 +1,12 @@
+# Configuration gitleaks de MAEL : les regles par defaut, plus deux faux
+# positifs verifies un par un le 12/10/2026.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Faux positifs verifies"
+# Le sceau de la bibliotheque contient les empreintes SHA-256 des fiches ;
+# le nom de certaines fiches contient « password », d'ou la confusion.
+paths = ['''backend/brain/bibliotheque/sceau\.json''']
+# Un plafond de quota (nombre) dans un scenario de test.
+regexes = ['''plafond_mensuel=\d''']

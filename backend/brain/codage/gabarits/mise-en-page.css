@@ -1,0 +1,8 @@
+.conteneur { width: min(100% - 2rem, 70rem); margin-inline: auto; }
+.grille { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+.entete { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
+.galerie { list-style: none; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); }
+@media (min-width: 48rem) {
+  #bouton-menu { display: none; }
+  #menu[hidden] { display: block; }
+}

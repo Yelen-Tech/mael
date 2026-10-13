@@ -1,0 +1,43 @@
+id: propagation-radio-et-tempest
+schema: 1
+nom: "Propagation radio et TEMPEST"
+resume: Toute électronique rayonne involontairement des signaux électromagnétiques ; l'interception de ces émissions compromettantes (TEMPEST) permet de reconstruire à distance écrans, frappes clavier et données.
+famille: physique
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - propagation radio
+  - tempest
+  - émissions compromettantes
+  - van eck
+  - canal auxiliaire
+  - side channel
+  - fuite électromagnétique
+  - écoute électronique
+  - antenne
+  - blindage
+caracteristiques:
+  notions_fondamentales: "propagation des ondes radio (espace libre, réflexion, diffraction), rayonnement involontaire des câbles et commutateurs numériques, modulation parasite"
+  historique: "TEMPEST est un mot de code de la NSA désignant l'étude des émissions compromettantes ; Wim van Eck a publié en 1985 la première démonstration publique de reconstruction d'écran à distance"
+  ordres_de_grandeur: "les fuites d'écrans et de câbles sont captables de quelques mètres à quelques dizaines de mètres selon l'équipement, le brouillage ambiant et la sensibilité du récepteur"
+  lien_informatique: "attaque passive sans logiciel ni contact : reconstruction d'affichage, de frappes clavier (y compris sans fil) et d'opérations de chiffrement par rayonnement"
+securite:
+  - titre: Interception des émissions d'affichage
+    risque: "Les signaux vidéo (câbles VGA/HDMI, dalles) rayonnent une image reconstituable à distance avec un récepteur radio logiciel et une antenne."
+    conseil: "Espacer physiquement les équipements sensibles des façades, utiliser des câbles blindés et, pour les salles classifiées, des équipements certifiés TEMPEST."
+    gravite: elevee
+  - titre: Canaux auxiliaires acoustiques et radio des claviers
+    risque: "Frappes clavier filaires, sans fil ou acoustiques sont interceptables (émissions radio des claviers sans fil non chiffrés, analyse sonore des touches)."
+    conseil: "Vérifier le chiffrement des périphériques sans fil et contrôler l'environnement physique des postes traitant des secrets."
+    gravite: moyenne
+  - titre: Négliger la zone de contrôle physique
+    risque: "Un attaquant stationné dans un véhicule ou un local voisin reste hors de portée des contrôles d'accès classiques tout en captant les fuites."
+    conseil: "Définir un périmètre de contrôle électromagnétique (distance de sécurité) en fonction de la sensibilité des données traitées."
+    gravite: moyenne
+sources:
+  - titre: "NSA — TEMPEST: A Signal Problem (Cryptologic Spectrum, document déclassifié)"
+    url: https://www.nsa.gov/portals/75/documents/news-features/declassified-documents/cryptologic-spectrum/tempest.pdf
+  - titre: "ANSSI — Publications"
+    url: https://www.cyber.gouv.fr/publications

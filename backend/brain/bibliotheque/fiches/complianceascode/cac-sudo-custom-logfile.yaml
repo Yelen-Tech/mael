@@ -1,0 +1,73 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-sudo-custom-logfile
+titre: 'sudo : Defaults logfile=/var/log/sudo.log'
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: sudo
+  type_controle: option-sudo
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: sudo_custom_logfile
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/software/sudo/sudo_custom_logfile
+mots_cles:
+- defaults
+- elevation
+- logfile
+- privileges
+- sudo
+- sudoers
+resume: La configuration de sudo doit contenir « Defaults logfile=/var/log/sudo.log ». (regle sudo_custom_logfile,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: grep -Rhs '^[[:space:]]*Defaults' /etc/sudoers /etc/sudoers.d/
+  but: Lire les options globales de sudo
+  lecture: 'Attendu : une ligne contenant logfile=/var/log/sudo.log ; « !logfile » = desactive.'
+controles:
+- controle: Defaults logfile=/var/log/sudo.log
+  bon: Defaults logfile=/var/log/sudo.log
+  mauvais: option absente ou desactivee
+  gravite: faible
+  risque: 'Un journal dedie trace chaque commande passee par sudo, avec son auteur : indispensable pour
+    reconstituer ce qu''un administrateur (ou un intrus) a fait en root.'
+  action: Ajouter « Defaults logfile=/var/log/sudo.log » avec visudo -f /etc/sudoers.d/sentinelle (jamais
+    d'edition directe).
+  playbook: infra.sudo-defaults
+  parametres:
+    option: logfile
+    valeur: /var/log/sudo.log
+  evaluation:
+  - commande: 0
+    lecteur: sudo_defaults
+    comparateur: option
+    champ: logfile
+    attendu: /var/log/sudo.log
+pieges:
+- '/etc/sudoers n''est lisible que par root : lancer la lecture avec sudo.'
+- 'Une erreur de syntaxe dans sudoers bloque sudo : toujours passer par visudo.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 5.2.3 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 5.2.3 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 5.2.3 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

@@ -1,0 +1,74 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-grub2-enable-apparmor
+titre: AppArmor active au demarrage (apparmor=1 security=apparmor)
+domaine: systeme
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: controle-acces
+  type_controle: detection
+  niveaux:
+    cis: 1
+    anssi: renforce
+source:
+  origine: complianceascode
+  regle: grub2_enable_apparmor
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/apparmor/grub2_enable_apparmor
+mots_cles:
+- apparmor
+- arguments
+- demarrage
+- grub
+resume: AppArmor active au demarrage (apparmor=1 security=apparmor). (regle grub2_enable_apparmor, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: awk '{for (i = 1; i <= NF; i++) a[$i] = 1} END{if (!("apparmor=1" in a)) print "apparmor=1
+    absent"; if (!("security=apparmor" in a)) print "security=apparmor absent"}' /proc/cmdline
+  but: Lire les arguments AppArmor du demarrage en cours
+  lecture: Chaque ligne est un element en defaut ; aucune ligne = conforme.
+controles:
+- controle: apparmor=1 et security=apparmor presents
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: 'AppArmor doit etre active des le demarrage du noyau : sinon des processus lances avant son
+    chargement tournent sans confinement.'
+  action: Ajouter « apparmor=1 security=apparmor » a GRUB_CMDLINE_LINUX dans /etc/default/grub, update-grub,
+    redemarrer.
+  playbook: infra.grub-argument
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+  parametres:
+    argument: apparmor=1 security=apparmor
+    action: ajouter
+pieges:
+- Lit le demarrage EN COURS ; verifier aussi /etc/default/grub (persistance).
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 1.3.1.2 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 1.3.1.2 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 1.3.1.2 (niveau 1)
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R45 (niveau renforce)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

@@ -1,0 +1,42 @@
+id: coordonnees-celestes
+schema: 1
+nom: "Coordonnées célestes"
+resume: "Les positions célestes se repèrent dans des systèmes de coordonnées (équatorial, écliptique) fondés sur l'ascension droite et la déclinaison, ramenées à une époque de référence à cause de la précession."
+famille: astronomie
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - ascension droite
+  - déclinaison
+  - coordonnées équatoriales
+  - écliptique
+  - précession
+  - époque de référence
+  - j2000
+  - astronomie et astrologie
+caracteristiques:
+  systeme_equatorial: "analogue céleste de la longitude et de la latitude : l'ascension droite se mesure en heures, minutes et secondes (24 heures pour 360 degrés), la déclinaison en degrés, de -90 à +90"
+  systeme_ecliptique: "coordonnées rapportées au plan de l'orbite terrestre (longitude et latitude écliptiques), commode pour les planètes ; l'écliptique est inclinée d'environ 23,44 degrés sur l'équateur céleste"
+  epoque_de_reference: "à cause de la précession (cycle d'environ 26 000 ans), les coordonnées dérivent lentement ; tout catalogue précise son époque, par exemple J2000.0, et il faut convertir avant de comparer"
+  autres_systemes: "le système horizontal (azimut, hauteur) dépend du lieu et de l'instant d'observation ; le système galactique sert à la structure de la Voie lactée"
+  lien_informatique: "les bases d'astrométrie (Gaia, Simbad) et les planétariums logiciels illustrent la gestion de référentiels, d'époques et de conversions, problème voisin des systèmes d'information géographique"
+securite:
+  - titre: "Astronomie et astrologie : ne pas confondre"
+    risque: "L'astrologie assigne aux positions planétaires une influence sur les personnes ou les événements ; aucune étude contrôlée n'a jamais validé cette prétention, qui relève de la croyance et non de la science."
+    conseil: "Traiter l'astronomie comme une science empirique vérifiable et l'astrologie comme un discours sans fondement empirique ; ne jamais laisser un système d'information mélanger les deux sans étiquetage explicite."
+    gravite: info
+  - titre: Époque de référence oubliée
+    risque: "Comparer des coordonnées publiées à des époques différentes (B1950, J2000, époque courante) sans conversion produit des erreurs de pointage pouvant dépasser la taille du champ visé."
+    conseil: "Toujours stocker l'époque avec la coordonnée et appliquer les transformations standard (précession, nutation) avant tout calcul."
+    gravite: moyenne
+  - titre: Unités d'ascension droite mal interprétées
+    risque: "Lire une ascension droite en degrés alors qu'elle est exprimée en heures introduit une erreur d'un facteur quinze, catastrophique pour un pointage de télescope ou une identification d'objet."
+    conseil: "Typer les champs (heures sexagésimales contre degrés décimaux) et valider les plages de valeurs à l'entrée des données."
+    gravite: moyenne
+sources:
+  - titre: "Wikipédia — Coordonnées célestes"
+    url: https://fr.wikipedia.org/wiki/Coordonn%C3%A9es_c%C3%A9lestes
+  - titre: "UAI — Union astronomique internationale"
+    url: https://www.iau.org/

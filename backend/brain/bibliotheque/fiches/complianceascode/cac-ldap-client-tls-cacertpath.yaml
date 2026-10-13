@@ -1,0 +1,60 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-ldap-client-tls-cacertpath
+titre: 'Client LDAP (nslcd) : certificat d''autorite TLS defini'
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: authentification
+  type_controle: detection
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: ldap_client_tls_cacertpath
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/ldap/openldap_client/ldap_client_tls_cacertpath
+mots_cles:
+- certificat
+- ldap
+- nslcd
+- tls
+resume: 'Client LDAP (nslcd) : certificat d''autorite TLS defini. (regle ldap_client_tls_cacertpath, ComplianceAsCode
+  0.1.82).'
+observer:
+- commande: dpkg -s nslcd >/dev/null 2>&1 || echo 'SENTINELLE:SANS_OBJET'; grep -Es '^[[:space:]]*tls_cacert(dir|file)[[:space:]]+'
+    /etc/nslcd.conf
+  but: Lire le certificat d'autorite de nslcd
+  lecture: Une ligne = conforme ; aucune = ecart.
+controles:
+- controle: tls_cacertdir ou tls_cacertfile
+  bon: une ligne
+  mauvais: aucune autorite definie
+  gravite: moyenne
+  risque: 'Sans autorite de certification definie, le client LDAP ne peut pas verifier le certificat du
+    serveur : un faux serveur peut se faire passer pour l''annuaire.'
+  action: Ecrire « tls_cacertfile /chemin/ca.pem » dans /etc/nslcd.conf.
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: presente
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R67 (niveau intermediaire)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

@@ -1,0 +1,59 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-rsyslog-remote-tls-cacert
+titre: 'rsyslog : certificat d''autorite pour l''envoi TLS (DefaultNetstreamDriverCAFile)'
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: journalisation
+  type_controle: detection
+  niveaux:
+    cis: null
+    anssi: renforce
+source:
+  origine: complianceascode
+  regle: rsyslog_remote_tls_cacert
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/logging/rsyslog_sending_messages/rsyslog_remote_tls_cacert
+mots_cles:
+- ca
+- certificat
+- rsyslog
+- tls
+resume: 'rsyslog : certificat d''autorite pour l''envoi TLS (DefaultNetstreamDriverCAFile). (regle rsyslog_remote_tls_cacert,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: grep -Es 'DefaultNetstreamDriverCAFile' /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+  but: Chercher le certificat d'autorite de l'envoi TLS
+  lecture: Une ligne = conforme ; aucune = ecart.
+controles:
+- controle: DefaultNetstreamDriverCAFile defini
+  bon: une ligne
+  mauvais: aucune ligne
+  gravite: moyenne
+  risque: Sans certificat d'autorite, rsyslog ne peut pas verifier l'identite du serveur de journaux ;
+    avec le pilote TLS actif, le service refuse meme de demarrer.
+  action: global(DefaultNetstreamDriverCAFile="/chemin/ca.pem") dans /etc/rsyslog.conf.
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: presente
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R71 (niveau renforce)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

@@ -1,0 +1,65 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-enable-pam-namespace
+titre: 'PAM : pam_namespace.so dans /etc/pam.d/login (present)'
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: authentification
+  type_controle: option-pam
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: enable_pam_namespace
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/accounts/accounts-pam/enable_pam_namespace
+mots_cles:
+- authentification
+- login
+- namespace
+- pam
+- pam_namespace
+resume: /etc/pam.d/login doit appeler pam_namespace.so. (regle enable_pam_namespace, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: grep -Es '^[[:space:]]*session[[:space:]].*pam_namespace\.so' /etc/pam.d/login
+  but: Lire la ligne pam_namespace.so de /etc/pam.d/login
+  lecture: 'Attendu : « session pam_namespace.so » ; aucune ligne = module absent.'
+controles:
+- controle: session pam_namespace.so
+  bon: session pam_namespace.so
+  mauvais: module absent, ou option absente / plus faible
+  gravite: faible
+  risque: 'pam_namespace donne a chaque session ses propres repertoires (ex. /tmp prive par utilisateur)
+    : un utilisateur ne peut plus pieger les fichiers temporaires d''un autre ni y lire ses donnees.'
+  action: Ajouter ou completer la ligne session ... pam_namespace.so dans /etc/pam.d/login (edition directe)
+    en gardant une session root ouverte.
+  playbook: null
+  sans_playbook: 'pile PAM : a modifier avec pam-auth-update et une session root ouverte (une erreur peut
+    bloquer toute connexion)'
+  evaluation:
+  - commande: 0
+    lecteur: pam
+    comparateur: arguments
+    champ: pam_namespace.so
+    attendu: []
+pieges:
+- 'Une erreur dans /etc/pam.d peut bloquer toute connexion : garder une session root ouverte pendant la
+  modification.'
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R55 (niveau intermediaire)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

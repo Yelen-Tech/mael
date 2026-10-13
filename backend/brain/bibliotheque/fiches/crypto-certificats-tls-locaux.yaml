@@ -1,0 +1,96 @@
+id: crypto-certificats-tls-locaux
+titre: "Certificats TLS locaux : signature et taille de cle"
+domaine: tls
+schema: 2
+version: 1
+etat: verifie
+verifie_le: 2026-09-19
+relu_par: "assistant IA (Kimi), par delegation du responsable du projet"
+teste_sur: []            # a remplir par les tests en conteneur (etape 2.5)
+applicable:
+  os: [linux]
+taxonomie:
+  theme: cryptographie
+  type_controle: detection
+  niveaux: {cis: null, anssi: null}   # fiche manuelle hors referentiel
+source:
+  origine: manuel
+mots_cles: [tls, certificat, x509, openssl, sha1, md5, signature, rsa, cle,
+            post-quantique, x25519mlkem768, hybride]
+resume: >
+  Les certificats des services locaux (web, mail...) ne doivent plus etre
+  signes en SHA-1 ou MD5, ni reposer sur une cle RSA trop courte. On lit les
+  certificats presents dans les repertoires de services courants — jamais le
+  bundle de CA systeme (/etc/ssl/certs), qui contient des racines historiques
+  legitimes. En annexe : la recommandation post-quantique pour l'echange TLS.
+
+observer:
+  - commande: "openssl x509 -in CERTIFICAT -noout -text"
+    but: "Lire un certificat precis (remplacer CERTIFICAT par le chemin du fichier)"
+    lecture: "Signature Algorithm (sha256 attendu, sha1/md5 interdits), Public-Key (RSA >= 2048 bits), dates de validite."
+  - commande: 'find -L /etc/letsencrypt/live /etc/nginx /etc/apache2 /etc/postfix -type f \( -name "*.pem" -o -name "*.crt" \) 2>/dev/null | while read c; do openssl x509 -in "$c" -noout -text 2>/dev/null | awk -v c="$c" ''/Signature Algorithm:/ && tolower($0) ~ /sha1|md5/ {print c" : "$0; exit}''; done'
+    but: "Repérer les certificats de services signes en SHA-1 ou MD5"
+    lecture: "Chaque ligne est un certificat en defaut ; aucune ligne = conforme."
+  - commande: 'find -L /etc/letsencrypt/live /etc/nginx /etc/apache2 /etc/postfix -type f \( -name "*.pem" -o -name "*.crt" \) 2>/dev/null | while read c; do openssl x509 -in "$c" -noout -text 2>/dev/null | awk -v c="$c" ''/Public Key Algorithm: rsaEncryption/{rsa=1} /Public-Key:/{split($0,a,"[()]"); split(a[2],b," "); if(rsa && b[1]+0<2048) print c" : cle RSA "b[1]" bits"}''; done'
+    but: "Repérer les certificats de services avec une cle RSA trop courte"
+    lecture: "Chaque ligne est un certificat en defaut ; aucune ligne = conforme."
+  # Relecture 19/09/2026 (Claude) : OpenSSL >= 3.5 propose X25519MLKEM768
+  # PAR DEFAUT ; « version >= 3.5 » ne prouve donc ni ecart ni conformite.
+  # Seul un test distant des services (testssl.sh, etape Docker) le juge.
+  - commande: 'openssl version'
+    but: "Savoir si OpenSSL sait faire l'echange hybride X25519MLKEM768"
+    lecture: "OpenSSL >= 3.5 : groupe hybride propose par defaut, verifier qu'aucun service ne restreint ses groupes (nginx ssl_ecdh_curve, Apache SSLOpenSSLConfCmd Groups/Curves). OpenSSL < 3.5 (Ubuntu 24.04 : 3.0) : recommandation reportee."
+
+controles:
+  - controle: "Signature SHA-1 ou MD5"
+    bon: "signature en SHA-256 ou mieux"
+    mauvais: "sha1WithRSAEncryption, md5WithRSAEncryption"
+    gravite: elevee
+    risque: "SHA-1 et MD5 sont casses en collision : un attaquant peut forger
+      un certificat et usurper le service."
+    action: "Refaire signer le certificat par l'autorite en SHA-256+ ;
+      remplacer et recharger le service."
+    playbook: null
+    sans_playbook: "certificats propres a chaque service et a chaque autorite :
+      correction manuelle"
+    evaluation:
+      - {commande: 1, lecteur: lignes, comparateur: vide}
+  - controle: "Cle RSA de moins de 2048 bits"
+    bon: "RSA >= 2048 bits (3072 pour du long terme) ou ECDSA P-256+"
+    mauvais: "RSA 1024 bits ou moins"
+    gravite: moyenne
+    risque: "Une cle RSA courte est factorisable : le certificat ne protege
+      plus la confidentialite ni l'authenticite du service."
+    action: "Regenerer une cle RSA 3072 bits ou ECDSA P-256, refaire signer,
+      remplacer."
+    playbook: null
+    sans_playbook: "certificats propres a chaque service et a chaque autorite :
+      correction manuelle"
+    evaluation:
+      - {commande: 2, lecteur: lignes, comparateur: vide}
+  - controle: "Groupe hybride post-quantique TLS (X25519MLKEM768)"
+    bon: "groupe hybride propose par les services TLS quand OpenSSL >= 3.5"
+    mauvais: "OpenSSL >= 3.5 sans groupe hybride propose"
+    gravite: info
+    risque: "Sans echange hybride, le trafic TLS enregistre aujourd'hui sera
+      dechiffrable par un ordinateur quantique futur (« harvest now, decrypt
+      later »). Menace a long terme, pas une faille immediate."
+    action: "Recommandation : avec OpenSSL 3.5+, ne pas restreindre les
+      groupes TLS des services (X25519MLKEM768 est propose par defaut) ;
+      sinon planifier la montee de version. Ne rien casser en attendant."
+    playbook: null
+    sans_playbook: "recommandation conditionnee a la version d'OpenSSL et a la
+      configuration de chaque service : decision humaine"
+
+pieges:
+  - "Ne PAS scanner /etc/ssl/certs : c'est le magasin de confiance systeme,
+    ses racines historiques ne sont pas des certificats de service."
+  - "Le detecteur ne couvre que les repertoires courants ; un certificat
+    ailleurs (application, conteneur) se lit avec la commande a parametre
+    CERTIFICAT."
+  - "Ed25519 est une bonne signature classique mais PAS post-quantique ; le
+    post-quantique TLS passe par l'echange hybride, pas par la signature."
+
+referentiels:
+  - {nom: ANSSI, document: "Recommandations de securite relatives a TLS"}
+  - {nom: RFC, document: "RFC 8996 - depreciation de TLS 1.0 et TLS 1.1"}

@@ -1,0 +1,77 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-package-xorg-x11-server-common-removed
+titre: Paquet xorg-x11-server-common / xserver-common absent
+domaine: services
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: services-inutiles
+  type_controle: paquet-absent
+  niveaux:
+    cis: 2
+    anssi: null
+source:
+  origine: complianceascode
+  regle: package_xorg-x11-server-common_removed
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/xwindows/disabling_xwindows/package_xorg-x11-server-common_removed
+mots_cles:
+- common
+- installe
+- logiciel
+- paquet
+- paquets
+- server
+- xorg
+- xorg-x11-server-common
+- xserver
+- xserver-common
+resume: Le paquet xorg-x11-server-common / xserver-common doit etre absent. (regle package_xorg-x11-server-common_removed,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: dpkg-query -W -f='${binary:Package} ${Status}\n' xorg-x11-server-common xserver-common 2>/dev/null
+  but: Savoir si xorg-x11-server-common xserver-common est installe
+  lecture: « install ok installed » = installe ; aucune ligne ou « deinstall » = absent.
+controles:
+- controle: paquet xorg-x11-server-common xserver-common absent
+  bon: absent
+  mauvais: installe
+  gravite: moyenne
+  risque: Ne pas installer les paquets de services inutiles diminue la surface d'attaque du systeme. Le
+    systeme X windows a un long historique de failles de securite et ne doit pas etre installe sans approbation
+    et justification documentee.
+  action: Desinstaller xorg-x11-server-common xserver-common (apt purge) apres avoir verifie qu'aucun
+    service n'en depend.
+  playbook: infra.paquet-retirer
+  parametres:
+    paquet: xorg-x11-server-common xserver-common
+  evaluation:
+  - commande: 0
+    lecteur: dpkg
+    comparateur: absent
+    attendu:
+    - xorg-x11-server-common
+    - xserver-common
+pieges:
+- 'Un paquet peut etre requis par une application metier : confirmer avec l''exploitant avant de le retirer.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 2.1.20 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 2.1.20 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 2.1.20 (niveau 2)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

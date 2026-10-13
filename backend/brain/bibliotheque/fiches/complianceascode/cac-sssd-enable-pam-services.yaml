@@ -1,0 +1,60 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-sssd-enable-pam-services
+titre: 'SSSD : service pam active'
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: authentification
+  type_controle: detection
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: sssd_enable_pam_services
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/sssd/sssd_enable_pam_services
+mots_cles:
+- annuaire
+- pam
+- services
+- sssd
+resume: 'SSSD : service pam active. (regle sssd_enable_pam_services, ComplianceAsCode 0.1.82).'
+observer:
+- commande: dpkg -s sssd >/dev/null 2>&1 || echo 'SENTINELLE:SANS_OBJET'; head -c0 /etc/sssd/sssd.conf
+    || echo 'SENTINELLE:ILLISIBLE'; grep -Ehs '^[[:space:]]*services[[:space:]]*=.*\bpam\b' /etc/sssd/sssd.conf
+    /etc/sssd/conf.d/*.conf
+  but: Lire les services de SSSD
+  lecture: Une ligne = conforme ; aucune = ecart.
+controles:
+- controle: pam dans services
+  bon: services = ..., pam
+  mauvais: pam absent
+  gravite: moyenne
+  risque: 'Sans le service pam de SSSD, les comptes de l''annuaire ne s''authentifient pas par SSSD :
+    la politique centrale (verrouillage, expiration) ne s''applique pas de facon coherente.'
+  action: Ajouter pam a « services = » dans la section [sssd] de /etc/sssd/sssd.conf.
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: presente
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R67 (niveau intermediaire)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

@@ -1,0 +1,61 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-rsyslog-remote-loghost
+titre: Les journaux sont envoyes a un serveur distant (rsyslog)
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: journalisation
+  type_controle: detection
+  niveaux:
+    cis: null
+    anssi: renforce
+source:
+  origine: complianceascode
+  regle: rsyslog_remote_loghost
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/logging/rsyslog_sending_messages/rsyslog_remote_loghost
+mots_cles:
+- centralisation
+- journaux
+- omfwd
+- rsyslog
+- serveur distant
+resume: Les journaux sont envoyes a un serveur distant (rsyslog). (regle rsyslog_remote_loghost, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: grep -Es '^[^#]*(@@?[A-Za-z0-9\[]|omfwd)' /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+  but: Chercher une regle d'envoi des journaux vers un serveur distant
+  lecture: Une ligne = conforme ; aucune = ecart.
+controles:
+- controle: une regle d'envoi presente
+  bon: une ligne « *.* @@serveur » ou action(type="omfwd" ...)
+  mauvais: aucun envoi distant
+  gravite: moyenne
+  risque: Envoyer les journaux a un serveur central garde une copie hors d'atteinte si la machine est
+    compromise et que ses journaux locaux ne sont plus fiables ; cela donne aussi une vue d'ensemble du
+    parc.
+  action: Ajouter « *.* @@serveur-journaux:514 » (TCP) ou une action omfwd dans /etc/rsyslog.d/.
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: presente
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R71 (niveau renforce)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

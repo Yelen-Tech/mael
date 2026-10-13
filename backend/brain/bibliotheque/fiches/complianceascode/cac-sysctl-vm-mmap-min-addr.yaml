@@ -1,0 +1,75 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-sysctl-vm-mmap-min-addr
+titre: Parametre noyau vm.mmap_min_addr = 65536
+domaine: noyau
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: parametres-noyau
+  type_controle: parametre-noyau
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: sysctl_vm_mmap_min_addr
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/permissions/restrictions/sysctl_vm_mmap_min_addr
+mots_cles:
+- addr
+- mmap
+- noyau
+- parametre
+- sysctl
+- vm.mmap_min_addr
+resume: Le parametre noyau vm.mmap_min_addr doit valoir 65536, en memoire et de facon persistante. (regle
+  sysctl_vm_mmap_min_addr, ComplianceAsCode 0.1.82).
+observer:
+- commande: sysctl -n vm.mmap_min_addr
+  but: Lire la valeur ACTIVE de vm.mmap_min_addr
+  lecture: 'Attendu : 65536.'
+- commande: grep -Rs '^[[:space:]]*vm\.mmap_min_addr[[:space:]]*=' /etc/sysctl.conf /etc/sysctl.d/ /run/sysctl.d/
+    /usr/local/lib/sysctl.d/ /usr/lib/sysctl.d/ 2>/dev/null
+  but: Verifier la valeur PERSISTANTE (appliquee au redemarrage)
+  lecture: 'Valeur retenue au demarrage = derniere affectation (fichiers tries par nom, /etc/sysctl.conf
+    en dernier) : attendu « vm.mmap_min_addr = 65536 » ; aucune ligne = non persistant.'
+controles:
+- controle: vm.mmap_min_addr = 65536
+  bon: 65536 en memoire et au demarrage
+  mauvais: autre valeur, ou valeur non persistante
+  gravite: moyenne
+  risque: Interdire aux programmes d'utiliser les premieres pages de la memoire limite l'exploitation
+    des dereferencements de pointeur nul dans le noyau.
+  action: Ecrire « vm.mmap_min_addr = 65536 » dans /etc/sysctl.conf (lu en dernier) puis appliquer avec
+    sysctl --system.
+  playbook: infra.sysctl
+  parametres:
+    cle: vm.mmap_min_addr
+    valeur: '65536'
+  evaluation:
+  - commande: 0
+    lecteur: valeur
+    comparateur: egal
+    attendu: '65536'
+  - commande: 1
+    lecteur: affectations
+    comparateur: toutes_egales
+    champ: vm.mmap_min_addr
+    attendu: '65536'
+    precedence: sysctl
+pieges:
+- 'Le fichier lu en dernier l''emporte (ordre alphabetique dans /etc/sysctl.d/) : verifier qu''aucun autre
+  fichier ne remet une autre valeur.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R8 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

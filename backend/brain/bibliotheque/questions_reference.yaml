@@ -1,0 +1,173 @@
+# Jeu de questions de reference pour mesurer la RECUPERATION des fiches.
+#
+# Chaque question est formulee comme un administrateur la poserait. `attendues`
+# liste les fiches acceptables (une seule suffit). `theme` = le theme de la
+# taxonomie que l'aiguillage d'intention doit reconnaitre.
+#
+# Mesure : python -m brain.bibliotheque.evaluation
+# Ne pas « ajuster » une question pour faire passer la mesure : corriger la
+# recherche. Ajouter une question a chaque erreur constatee en usage reel.
+systeme: ubuntu:22.04
+services: [openssh]
+
+questions:
+  # --- acces (SSH) -----------------------------------------------------------
+  - {theme: ssh, question: "Est-ce que root peut se connecter en SSH ?",
+     attendues: [cac-sshd-disable-root-login, ssh-durcissement]}
+  - {theme: ssh, question: "les mots de passe vides sont-ils refusés par ssh ?",
+     attendues: [cac-sshd-disable-empty-passwords]}
+  - {theme: ssh, question: "combien de tentatives de connexion ssh sont autorisées ?",
+     attendues: [cac-sshd-set-max-auth-tries]}
+  - {theme: ssh, question: "les sessions ssh inactives sont-elles coupées ?",
+     attendues: [cac-sshd-set-idle-timeout, cac-sshd-set-keepalive]}
+  - {theme: ssh, question: "y a-t-il une bannière d'avertissement ssh ?",
+     attendues: [cac-sshd-enable-warning-banner-net]}
+  - {theme: ssh, question: "les tunnels et redirections ssh sont-ils désactivés ?",
+     attendues: [cac-sshd-disable-forwarding]}
+  - {theme: ssh, question: "quel est le niveau de journalisation du serveur ssh ?",
+     attendues: [cac-sshd-set-loglevel-info]}
+  - {theme: ssh, question: "le délai pour s'authentifier en ssh est-il court ?",
+     attendues: [cac-sshd-set-login-grace-time]}
+
+  # --- reseau ------------------------------------------------------------------
+  - {theme: parametres-reseau, question: "le routage IP est-il désactivé ?",
+     attendues: [cac-sysctl-net-ipv4-ip-forward, cac-sysctl-net-ipv6-conf-all-forwarding]}
+  - {theme: parametres-reseau, question: "la machine accepte-t-elle les redirections ICMP ?",
+     attendues: [cac-sysctl-net-ipv4-conf-all-accept-redirects,
+                 cac-sysctl-net-ipv4-conf-default-accept-redirects,
+                 cac-sysctl-net-ipv6-conf-all-accept-redirects,
+                 cac-sysctl-net-ipv6-conf-default-accept-redirects]}
+  - {theme: parametres-reseau, question: "y a-t-il une protection contre l'inondation SYN ?",
+     attendues: [cac-sysctl-net-ipv4-tcp-syncookies]}
+  - {theme: parametres-reseau, question: "le filtrage du chemin inverse rp_filter est-il actif ?",
+     attendues: [cac-sysctl-net-ipv4-conf-default-rp-filter,
+                 cac-sysctl-net-ipv4-conf-all-rp-filter]}
+  - {theme: parametres-reseau, question: "les paquets martiens sont-ils journalisés ?",
+     attendues: [cac-sysctl-net-ipv4-conf-all-log-martians,
+                 cac-sysctl-net-ipv4-conf-default-log-martians]}
+  - {theme: parametres-reseau, question: "le serveur envoie-t-il des redirections ICMP ?",
+     attendues: [cac-sysctl-net-ipv4-conf-all-send-redirects,
+                 cac-sysctl-net-ipv4-conf-default-send-redirects]}
+  - {theme: parametres-reseau, question: "le routage par la source est-il refusé ?",
+     attendues: [cac-sysctl-net-ipv4-conf-all-accept-source-route,
+                 cac-sysctl-net-ipv4-conf-default-accept-source-route,
+                 cac-sysctl-net-ipv6-conf-all-accept-source-route,
+                 cac-sysctl-net-ipv6-conf-default-accept-source-route]}
+  - {theme: parametres-reseau, question: "l'autoconfiguration IPv6 est-elle désactivée ?",
+     attendues: [cac-sysctl-net-ipv6-conf-all-autoconf, cac-sysctl-net-ipv6-conf-default-autoconf,
+                 cac-sysctl-net-ipv6-conf-all-accept-ra, cac-sysctl-net-ipv6-conf-default-accept-ra]}
+  # Venues du jeu de controle (echecs du 17/09/2026) : « routeur », chemin pointe.
+  - {theme: parametres-reseau, question: "La machine fait-elle office de routeur ?",
+     attendues: [cac-sysctl-net-ipv4-ip-forward, cac-sysctl-net-ipv6-conf-all-forwarding]}
+  - {theme: planification, question: "Le répertoire /etc/cron.d est-il protégé ?",
+     attendues: [cac-file-permissions-cron-d, cac-file-owner-cron-d, cac-file-groupowner-cron-d]}
+  # Regression provoquee par l'ajout de « routeur » (venue du controle).
+  - {theme: parametres-reseau, question: "Les annonces de routeur IPv6 sont-elles acceptées ?",
+     attendues: [cac-sysctl-net-ipv6-conf-all-accept-ra, cac-sysctl-net-ipv6-conf-default-accept-ra,
+                 cac-sysctl-net-ipv6-conf-all-accept-ra-defrtr,
+                 cac-sysctl-net-ipv6-conf-default-accept-ra-defrtr]}
+  - {theme: exposition-reseau, question: "quels ports sont ouverts sur le serveur ?",
+     attendues: [ports-pare-feu]}
+  - {theme: pare-feu, question: "le pare-feu ufw est-il actif ?",
+     attendues: [cac-service-ufw-enabled, ports-pare-feu, cac-package-ufw-installed,
+                 cac-check-ufw-active]}
+
+  # --- noyau -------------------------------------------------------------------
+  - {theme: parametres-noyau, question: "l'ASLR est-il activé ?",
+     attendues: [cac-sysctl-kernel-randomize-va-space]}
+  - {theme: parametres-noyau, question: "ptrace est-il restreint ?",
+     attendues: [cac-sysctl-kernel-yama-ptrace-scope]}
+  - {theme: parametres-noyau, question: "les utilisateurs peuvent-ils lire dmesg ?",
+     attendues: [cac-sysctl-kernel-dmesg-restrict]}
+  - {theme: modules-noyau, question: "les clés USB sont-elles bloquées ?",
+     attendues: [cac-kernel-module-usb-storage-disabled]}
+  - {theme: modules-noyau, question: "le module cramfs est-il désactivé ?",
+     attendues: [cac-kernel-module-cramfs-disabled]}
+  - {theme: modules-noyau, question: "le protocole dccp est-il désactivé ?",
+     attendues: [cac-kernel-module-dccp-disabled]}
+  - {theme: compilation-noyau, question: "le noyau est-il compilé avec la protection de pile ?",
+     attendues: [cac-kernel-config-stackprotector-strong, cac-kernel-config-stackprotector]}
+  - {theme: compilation-noyau, question: "les modules du noyau doivent-ils être signés ?",
+     attendues: [cac-kernel-config-module-sig-force, cac-kernel-config-module-sig]}
+
+  # --- fichiers ----------------------------------------------------------------
+  - {theme: comptes, question: "quels sont les droits du fichier /etc/shadow ?",
+     attendues: [cac-file-permissions-etc-shadow]}
+  - {theme: comptes, question: "qui est propriétaire de /etc/passwd ?",
+     attendues: [cac-file-owner-etc-passwd]}
+  - {theme: sudo, question: "les permissions de /etc/sudoers sont-elles correctes ?",
+     attendues: [cac-file-permissions-etc-sudoers]}
+  - {theme: planification, question: "droits sur la crontab",
+     attendues: [cac-file-permissions-crontab]}
+  - {theme: comptes, question: "quel est le groupe propriétaire de /etc/gshadow ?",
+     attendues: [cac-file-groupowner-etc-gshadow]}
+  - {theme: montage, question: "/tmp est-il monté en noexec ?",
+     attendues: [cac-mount-option-tmp-noexec]}
+  - {theme: montage, question: "quelles sont les options de montage de /dev/shm ?",
+     attendues: [cac-mount-option-dev-shm-nodev, cac-mount-option-dev-shm-noexec,
+                 cac-mount-option-dev-shm-nosuid]}
+  - {theme: montage, question: "/var/tmp est-il monté avec nosuid ?",
+     attendues: [cac-mount-option-var-tmp-nosuid]}
+
+  # --- services et paquets ------------------------------------------------------
+  - {theme: services-inutiles, question: "telnet est-il installé ?",
+     attendues: [cac-package-telnet-removed, cac-package-inetutils-telnet-removed,
+                 cac-package-telnet-server-removed]}
+  - {theme: services-inutiles, question: "un serveur ftp est-il installé ?",
+     attendues: [cac-package-vsftpd-removed, cac-service-vsftpd-disabled,
+                 cac-package-ftp-removed, cac-package-tnftp-removed]}
+  - {theme: services-inutiles, question: "avahi tourne-t-il sur la machine ?",
+     attendues: [cac-service-avahi-daemon-disabled, cac-package-avahi-removed]}
+  - {theme: services-inutiles, question: "le service d'impression cups est-il désactivé ?",
+     attendues: [cac-service-cups-disabled, cac-package-cups-removed]}
+  - {theme: audit, question: "auditd est-il actif ?",
+     attendues: [cac-service-auditd-enabled]}
+  - {theme: integrite, question: "aide est-il installé pour contrôler l'intégrité des fichiers ?",
+     attendues: [cac-package-aide-installed]}
+  - {theme: synchronisation-heure, question: "la synchronisation de l'heure est-elle configurée ?",
+     attendues: [cac-package-chrony-installed, cac-service-timesyncd-enabled,
+                 cac-package-timesyncd-installed,
+                 cac-service-timesyncd-configured, cac-chronyd-configure-pool-and-server,
+                 cac-ntp-single-service-active]}
+  # rsyslog n'est exige que sur Debian 12 / Ubuntu 24.04 (pas par CIS Ubuntu 22.04).
+  - {theme: journalisation, systeme: "debian:12", question: "rsyslog est-il en marche ?",
+     attendues: [cac-service-rsyslog-enabled, cac-package-rsyslog-installed]}
+  - {theme: services-inutiles, question: "le bluetooth est-il désactivé ?",
+     attendues: [cac-service-bluetooth-disabled]}
+  - {theme: services-inutiles, question: "snmp est-il installé ?",
+     attendues: [cac-package-net-snmp-removed, cac-service-snmpd-disabled]}
+  - {theme: controle-acces, question: "apparmor est-il installé et actif ?",
+     attendues: [cac-package-apparmor-installed, cac-apparmor-configured]}
+  - {theme: services-inutiles, question: "l'interface graphique est-elle installée sur le serveur ?",
+     attendues: [cac-package-xorg-x11-server-common-removed, cac-package-gdm-removed]}
+
+  # --- systeme (demarrage) --------------------------------------------------------
+  - {theme: audit, question: "l'audit est-il activé dès le démarrage ?",
+     attendues: [cac-grub2-audit-argument, cac-grub2-audit-backlog-limit-argument]}
+  - {theme: demarrage, question: "la mitigation spectre est-elle activée au démarrage ?",
+     attendues: [cac-grub2-spectre-v2-argument]}
+
+  # --- fiches manuelles (web, tls, dns, journaux) ---------------------------------
+  - {theme: tls, question: "le certificat https est-il expiré ?",
+     attendues: [tls-configuration]}
+  - {theme: web, question: "manque-t-il des en-têtes de sécurité sur le site ?",
+     attendues: [entetes-http]}
+  - {theme: messagerie, question: "SPF et DMARC sont-ils configurés ?",
+     attendues: [dns-messagerie]}
+  - {theme: journalisation, question: "y a-t-il des tentatives de force brute dans les logs ?",
+     attendues: [journaux-authentification]}
+  # Deplacees du jeu de controle le 18/09/2026 : regressions causees par les
+  # nouvelles fiches (pwquality « mots de passe », partition /dev/shm).
+  - {theme: comptes, question: "Qui peut lire le fichier des mots de passe chiffrés ?",
+     attendues: [cac-file-permissions-etc-shadow, cac-file-owner-etc-shadow,
+                 cac-file-groupowner-etc-shadow]}
+  - {theme: montage, question: "Peut-on exécuter des programmes depuis /dev/shm ?",
+     attendues: [cac-mount-option-dev-shm-noexec]}
+  # Deplacee du controle le 18/09/2026 : battue par la fiche « groupe dedie
+  # de sudo » (mot « dedie »).
+  - {theme: sudo, question: "sudo garde-t-il un journal dédié de ses commandes ?",
+     attendues: [cac-sudo-custom-logfile]}
+  # Deplacee du controle le 18/09/2026 : battue par la fiche wifi
+  # (« interfaces reseau »).
+  - {theme: parametres-reseau, question: "Le transfert de paquets entre interfaces réseau est-il coupé ?",
+     attendues: [cac-sysctl-net-ipv4-ip-forward, cac-sysctl-net-ipv6-conf-all-forwarding]}

@@ -1,0 +1,16 @@
+# Installation LOCALE de MAEL (chantier L2).
+#
+# Six paquets. C'est tout ce qu'il faut pour auditer une machine hors ligne
+# avec son propre modele Ollama. La liste du serveur (requirements.txt) en
+# compte dix-huit : psycopg2, celery, redis, gunicorn, whitenoise, DRF, JWT,
+# CORS, django-filter, dj-database-url n'entrent PAS chez l'utilisateur --
+# rien ne les importe en profil local (config/settings.py).
+#
+# Equivalent a « pip install . » : pyproject.toml porte les memes bornes.
+Django>=6.0,<7
+httpx>=0.28,<1
+PyYAML>=6,<7
+python-decouple>=3.8
+pydantic>=2.10,<3
+python-dateutil>=2.9
+sqlglot==30.19.0

@@ -1,0 +1,47 @@
+id: langage-c
+schema: 1
+nom: C
+resume: Langage compilé bas niveau à gestion mémoire entièrement manuelle ; sans filet, les erreurs mémoire y sont la première cause de vulnérabilités exploitables.
+famille: langage
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - c
+  - langage c
+  - débordement
+  - tampon
+  - buffer overflow
+  - mémoire
+  - pointeur
+  - chaîne de format
+  - use-after-free
+  - entier
+caracteristiques:
+  paradigmes:
+    - impératif
+    - procédural
+  typage: statique, faible (nombreuses conversions implicites)
+  execution: compilé en code machine natif
+  memoire: manuelle (malloc/free), sans ramasse-miettes
+securite:
+  - titre: Débordement de tampon (strcpy, gets)
+    risque: Les fonctions sans borne comme strcpy ou gets écrivent au-delà du tampon et permettent l'exécution de code arbitraire.
+    conseil: Utiliser des fonctions bornées (snprintf, strlcpy quand elle existe) et toujours vérifier les tailles avant copie.
+    gravite: critique
+  - titre: Chaînes de format
+    risque: printf(entree_utilisateur) laisse un attaquant lire la pile ou écrire en mémoire via %n.
+    conseil: Toujours passer un format constant, par exemple printf("%s", entree).
+    gravite: elevee
+  - titre: Use-after-free
+    risque: Réutiliser un pointeur après free permet à un attaquant de détourner la mémoire réallouée.
+    conseil: Mettre le pointeur à NULL après free et ne jamais le réutiliser.
+    gravite: elevee
+  - titre: Débordement d'entiers
+    risque: Un calcul qui déborde (taille d'allocation, index) produit des tampons trop petits et des corruptions mémoire.
+    conseil: Vérifier les débordements avant tout calcul de taille, avec size_t et des bornes explicites.
+    gravite: moyenne
+sources:
+  - titre: SEI CERT C Coding Standard
+    url: https://wiki.sei.cmu.edu/confluence/display/c/SEI+CERT+C+Coding+Standard

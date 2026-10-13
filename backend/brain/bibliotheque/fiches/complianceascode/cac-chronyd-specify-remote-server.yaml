@@ -1,0 +1,60 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-chronyd-specify-remote-server
+titre: 'chrony : un serveur de temps distant est defini'
+domaine: services
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: synchronisation-heure
+  type_controle: detection
+  niveaux:
+    cis: null
+    anssi: renforce
+source:
+  origine: complianceascode
+  regle: chronyd_specify_remote_server
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/ntp/chronyd_specify_remote_server
+mots_cles:
+- chrony
+- heure
+- ntp
+- serveur de temps
+resume: 'chrony : un serveur de temps distant est defini. (regle chronyd_specify_remote_server, ComplianceAsCode
+  0.1.82).'
+observer:
+- commande: dpkg -s chrony >/dev/null 2>&1 || echo 'SENTINELLE:SANS_OBJET'; grep -hEs '^(server|pool)[[:space:]]'
+    /etc/chrony/chrony.conf /etc/chrony/sources.d/*.sources /etc/chrony/conf.d/*.conf
+  but: Lire les sources de temps (fichier principal, sourcedir, confdir)
+  lecture: Une ligne = conforme ; aucune = ecart.
+controles:
+- controle: au moins une source distante
+  bon: une ligne server/pool
+  mauvais: aucune source
+  gravite: moyenne
+  risque: 'Sans serveur de temps configure, chrony ne synchronise rien : l''horloge derive, les journaux
+    ne concordent plus entre machines et l''analyse d''un incident devient impossible.'
+  action: Ajouter « server SERVEUR iburst » dans /etc/chrony/sources.d/.
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: presente
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R71 (niveau renforce)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

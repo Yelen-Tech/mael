@@ -1,0 +1,77 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-sysctl-kernel-dmesg-restrict
+titre: Parametre noyau kernel.dmesg_restrict = 1
+domaine: noyau
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: parametres-noyau
+  type_controle: parametre-noyau
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: sysctl_kernel_dmesg_restrict
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/permissions/restrictions/sysctl_kernel_dmesg_restrict
+mots_cles:
+- dmesg
+- journal
+- kernel
+- kernel.dmesg_restrict
+- noyau
+- parametre
+- restrict
+- sysctl
+resume: Le parametre noyau kernel.dmesg_restrict doit valoir 1, en memoire et de facon persistante. (regle
+  sysctl_kernel_dmesg_restrict, ComplianceAsCode 0.1.82).
+observer:
+- commande: sysctl -n kernel.dmesg_restrict
+  but: Lire la valeur ACTIVE de kernel.dmesg_restrict
+  lecture: 'Attendu : 1.'
+- commande: grep -Rs '^[[:space:]]*kernel\.dmesg_restrict[[:space:]]*=' /etc/sysctl.conf /etc/sysctl.d/
+    /run/sysctl.d/ /usr/local/lib/sysctl.d/ /usr/lib/sysctl.d/ 2>/dev/null
+  but: Verifier la valeur PERSISTANTE (appliquee au redemarrage)
+  lecture: 'Valeur retenue au demarrage = derniere affectation (fichiers tries par nom, /etc/sysctl.conf
+    en dernier) : attendu « kernel.dmesg_restrict = 1 » ; aucune ligne = non persistant.'
+controles:
+- controle: kernel.dmesg_restrict = 1
+  bon: 1 en memoire et au demarrage
+  mauvais: autre valeur, ou valeur non persistante
+  gravite: faible
+  risque: 'Les messages du noyau revelent des adresses et des details internes utiles pour l''exploiter
+    : ils doivent etre reserves aux administrateurs.'
+  action: Ecrire « kernel.dmesg_restrict = 1 » dans /etc/sysctl.conf (lu en dernier) puis appliquer avec
+    sysctl --system.
+  playbook: infra.sysctl
+  parametres:
+    cle: kernel.dmesg_restrict
+    valeur: '1'
+  evaluation:
+  - commande: 0
+    lecteur: valeur
+    comparateur: egal
+    attendu: '1'
+  - commande: 1
+    lecteur: affectations
+    comparateur: toutes_egales
+    champ: kernel.dmesg_restrict
+    attendu: '1'
+    precedence: sysctl
+pieges:
+- 'Le fichier lu en dernier l''emporte (ordre alphabetique dans /etc/sysctl.d/) : verifier qu''aucun autre
+  fichier ne remet une autre valeur.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R9 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

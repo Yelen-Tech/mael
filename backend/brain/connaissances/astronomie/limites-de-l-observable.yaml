@@ -1,0 +1,42 @@
+id: limites-de-l-observable
+schema: 1
+nom: "Limites de l'observable et échelles de distance"
+resume: "L'univers observable, âgé d'environ 13,8 milliards d'années, a un rayon comobile d'environ 46,5 milliards d'années-lumière ; les distances cosmiques se mesurent en UA, années-lumière et parsecs."
+famille: astronomie
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - univers observable
+  - horizon cosmologique
+  - unité astronomique
+  - année-lumière
+  - parsec
+  - parallaxe
+  - constante de hubble
+  - expansion de l'univers
+caracteristiques:
+  unites_de_distance: "l'UA vaut exactement 149 597 870 700 mètres (définition UAI de 2012) ; l'année-lumière vaut environ 9,46 mille milliards de kilomètres ; le parsec, distance d'une parallaxe d'une seconde d'arc, vaut environ 3,26 années-lumière, soit 206 265 UA"
+  univers_observable: "l'âge de l'univers est estimé à environ 13,8 milliards d'années ; l'expansion porte le rayon comobile de l'univers observable à environ 46,5 milliards d'années-lumière"
+  horizon_cosmologique: "la vitesse finie de la lumière borne ce que nous pouvons observer : l'horizon des particules ; au-delà, aucune lumière n'a encore eu le temps de nous parvenir, et l'univers peut s'étendre bien plus loin"
+  echelles_reperees: "Proxima du Centaure, étoile la plus proche, est à environ 4,25 années-lumière ; la Voie lactée mesure de l'ordre de 100 000 années-lumière ; la galaxie d'Andromède est à environ 2,5 millions d'années-lumière"
+  lien_informatique: "l'échelle cosmique fixe des bornes physiques à toute communication : même à la vitesse de la lumière, aucune interaction en temps réel n'est possible au-delà de quelques secondes-lumière"
+securite:
+  - titre: Bornes physiques de la latence
+    risque: "Des exigences de temps réel qui ignorent la distance lumière (environ 300 000 kilomètres par seconde) aboutissent à des architectures impossibles, par exemple pour le pilotage de sondes lointaines."
+    conseil: "Chiffrer la latence minimale théorique de tout lien longue distance et concevoir les systèmes distribués en conséquence."
+    gravite: info
+  - titre: Amalgame entre distance vue et distance actuelle
+    risque: "La lumière d'une galaxie lointaine montre son passé ; confondre distance parcourue par la lumière et distance comobile fausse les ordres de grandeur et donc les modèles qui s'y appuient."
+    conseil: "Préciser dans toute donnée cosmologique la convention de distance utilisée (distance lumineuse, comobile, diamètre angulaire)."
+    gravite: info
+  - titre: Constantes cosmologiques figées dans le code
+    risque: "Les valeurs mesurées (constante de Hubble, densités cosmiques) évoluent avec les relevés ; des constantes codées en dur vieillissent mal dans les simulateurs ou logiciels pédagogiques."
+    conseil: "Externaliser les constantes physiques en configuration versionnée et citer la source et la date de mesure."
+    gravite: moyenne
+sources:
+  - titre: "UAI — mesure en astronomie (unité astronomique)"
+    url: https://www.iau.org/public/themes/measuring/
+  - titre: "Wikipédia — Univers observable"
+    url: https://fr.wikipedia.org/wiki/Univers_observable

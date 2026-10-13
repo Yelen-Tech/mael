@@ -1,0 +1,72 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-all-apparmor-profiles-enforced
+titre: 'AppArmor : tous les profils en mode enforce'
+domaine: systeme
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: controle-acces
+  type_controle: detection
+  niveaux:
+    cis: 2
+    anssi: renforce
+source:
+  origine: complianceascode
+  regle: all_apparmor_profiles_enforced
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/apparmor/all_apparmor_profiles_enforced
+mots_cles:
+- apparmor
+- complain
+- enforce
+- profils
+resume: 'AppArmor : tous les profils en mode enforce. (regle all_apparmor_profiles_enforced, ComplianceAsCode
+  0.1.82).'
+observer:
+- commande: aa-status 2>/dev/null | awk 'NR==1{ok=1} (/profiles are in complain mode/ || /processes are
+    unconfined but have a profile defined/) && $1+0 > 0 {print} END{if(!ok) print "SENTINELLE:ILLISIBLE"}'
+  but: Compter les profils en mode complain et les processus non confines
+  lecture: Chaque ligne est un element en defaut ; aucune ligne = conforme.
+controles:
+- controle: 0 profil complain, 0 processus non confine
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: 'Un profil AppArmor en mode « complain » journalise sans rien bloquer : le programme qu''il
+    devait confiner, s''il est compromis, agit librement. Tous les profils doivent etre en mode « enforce
+    ».'
+  action: 'aa-enforce /etc/apparmor.d/* (tester d''abord : un profil trop strict bloque le service).'
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 1.3.1.4 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 1.3.1.4 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 1.3.1.4 (niveau 2)
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R45 (niveau renforce)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

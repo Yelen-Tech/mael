@@ -1,0 +1,43 @@
+id: mecanique-classique
+schema: 1
+nom: Mécanique classique
+resume: Mécanique newtonienne des solides et des fluides ; elle gouverne la cinématique des robots, des drones et des actionneurs dont dépend la couche physique des systèmes cyber-physiques.
+famille: physique
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - mécanique classique
+  - newton
+  - cinématique
+  - dynamique
+  - vibrations
+  - robotique
+  - drone
+  - système cyber-physique
+  - actionneur
+  - centrifugeuse
+caracteristiques:
+  notions_fondamentales: "lois du mouvement de Newton, conservation de l'énergie et de la quantité de mouvement, gravitation universelle"
+  ordres_de_grandeur: "accélération de pesanteur terrestre environ 9,81 m/s² ; vitesses de rotation des disques durs de 5 400 à 15 000 tours/min"
+  domaines: "mécanique du solide, mécanique des fluides, vibrations et acoustique, balistique"
+  lien_informatique: "systèmes cyber-physiques (robots, drones, automates industriels), servo-mécanique des disques durs, capteurs inertiels (accéléromètres, gyroscopes)"
+securite:
+  - titre: Sabotage cinétique via les systèmes de contrôle
+    risque: "Corrompre des consignes de vitesse ou de couple dans un automate industriel peut détruire mécaniquement un équipement, comme l'a montré Stuxnet sur des centrifugeuses."
+    conseil: "Séparer supervision et contrôle, plafonner les consignes au niveau matériel et surveiller les dérives capteurs."
+    gravite: critique
+  - titre: Capteurs inertiels trompés
+    risque: "Une excitation acoustique à la fréquence de résonance d'un gyroscope ou accéléromètre MEMS peut fausser ses mesures et déstabiliser un drone ou un robot."
+    conseil: "Filtrer les fréquences de résonance connues et croiser les mesures de plusieurs capteurs indépendants."
+    gravite: moyenne
+  - titre: Vibrations comme canal auxiliaire
+    risque: "Les vibrations d'un écran, d'un haut-parleur ou d'un ventilateur peuvent fuiter des informations (son, touches frappées) mesurables à distance."
+    conseil: "Isoler mécaniquement les équipements sensibles et limiter les surfaces vibrantes dans les zones à accès contrôlé."
+    gravite: moyenne
+sources:
+  - titre: "NIST — Engineering Laboratory"
+    url: https://www.nist.gov/el
+  - titre: "Encyclopædia Britannica — Classical mechanics"
+    url: https://www.britannica.com/science/mechanics

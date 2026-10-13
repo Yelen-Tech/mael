@@ -1,0 +1,70 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-grub2-l1tf-argument
+titre: Argument de demarrage l1tf=full,force
+domaine: systeme
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: demarrage
+  type_controle: argument-demarrage
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: grub2_l1tf_argument
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/bootloader-grub2/grub2_l1tf_argument
+mots_cles:
+- argument
+- demarrage
+- grub
+- l1tf
+- noyau
+resume: Le noyau doit demarrer avec l1tf=full,force. (regle grub2_l1tf_argument, ComplianceAsCode 0.1.82).
+observer:
+- commande: cat /proc/cmdline
+  but: Lire les arguments du demarrage EN COURS
+  lecture: 'Attendu : l1tf=full,force.'
+- commande: grep -E '^GRUB_CMDLINE_LINUX' /etc/default/grub
+  but: Verifier la configuration persistante de GRUB
+  lecture: l1tf=full,force doit figurer dans GRUB_CMDLINE_LINUX.
+controles:
+- controle: argument l1tf=full,force
+  bon: l1tf=full,force dans /proc/cmdline et /etc/default/grub
+  mauvais: argument absent ou valeur plus faible
+  gravite: elevee
+  risque: 'La faille L1TF des processeurs Intel permet de lire toute memoire presente dans le cache L1,
+    y compris celle d''autres machines virtuelles ou du noyau : l1tf=full,force active toutes les protections.'
+  action: Ajouter l1tf=full,force a GRUB_CMDLINE_LINUX dans /etc/default/grub, regenerer la configuration
+    (update-grub) et redemarrer.
+  evaluation:
+  - commande: 0
+    lecteur: cmdline
+    champ: l1tf
+    comparateur: egal
+    attendu: full,force
+  - commande: 1
+    lecteur: grub
+    champ: l1tf
+    comparateur: egal
+    attendu: full,force
+  sans_playbook: 'full,force desactive l''hyperthreading sans retour possible a chaud : decision de performance
+    a prendre avec l''exploitant'
+pieges:
+- 'l1tf=full,force coupe l''hyperthreading et interdit de le reactiver sans redemarrer : mesurer l''impact
+  avant ; surtout utile sur un hyperviseur.'
+- 'Le changement ne prend effet qu''apres redemarrage : planifier la fenetre de maintenance.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R8 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

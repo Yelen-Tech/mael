@@ -1,0 +1,59 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-accounts-users-home-files-permissions
+titre: Fichiers des repertoires personnels en 0750 au plus (hors fichiers caches)
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: sessions
+  type_controle: detection
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: accounts_users_home_files_permissions
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/accounts/accounts-session/accounts_users_home_files_permissions
+mots_cles:
+- droits
+- fichiers
+- home
+- utilisateurs
+resume: Fichiers des repertoires personnels en 0750 au plus (hors fichiers caches). (regle accounts_users_home_files_permissions,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: find /home -mindepth 2 -xdev ! -path '*/.*' -perm /0027 -printf '%m %p\n' 2>/dev/null
+  but: Chercher les fichiers trop ouverts sous /home
+  lecture: Chaque ligne est un element en defaut ; aucune ligne = conforme.
+controles:
+- controle: pas d'ecriture groupe ni d'acces pour les autres
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: Des droits excessifs sur les fichiers des repertoires personnels permettent a des utilisateurs
+    tiers de les lire ou de les modifier.
+  action: chmod 0750 /home/UTILISATEUR/FICHIER (ou g-w,o-rwx).
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R50 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

@@ -1,0 +1,73 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-ensure-root-access-controlled
+titre: Le compte root est protege (mot de passe defini ou compte verrouille)
+domaine: fichiers
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: comptes
+  type_controle: detection
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: ensure_root_access_controlled
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/accounts/accounts-restrictions/root_logins/ensure_root_access_controlled
+mots_cles:
+- acces
+- mot de passe
+- root
+- shadow
+- verrouille
+resume: Le compte root est protege (mot de passe defini ou compte verrouille). (regle ensure_root_access_controlled,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: 'awk -F: ''$1 == "root" && $2 !~ /^[$!*]/ {print $1": ni mot de passe ni verrouillage"}''
+    /etc/shadow || echo ''SENTINELLE:ILLISIBLE'''
+  but: Verifier que root a un mot de passe (empreinte $...) ou est verrouille (! ou *)
+  lecture: Chaque ligne est un element en defaut ; aucune ligne = conforme.
+controles:
+- controle: root avec un mot de passe defini ou verrouille
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: 'Un compte root sans mot de passe et non verrouille peut etre utilise sans aucune authentification
+    : quiconque y accede prend le controle complet du systeme.'
+  action: Definir un mot de passe robuste pour root (passwd root) ou le verrouiller (passwd -l root) si
+    l'administration passe par sudo.
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- 'Pour CIS Ubuntu 22.04, la source (ComplianceAsCode) exige un mot de passe DEFINI : un root verrouille
+  y reste a qualifier avec l''exploitant. CIS Ubuntu 24.04 et Debian 12 acceptent un root verrouille.'
+- Le champ du mot de passe n'est jamais affiche (empreinte).
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 5.4.2.4 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 5.4.2.4 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 5.4.2.4 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

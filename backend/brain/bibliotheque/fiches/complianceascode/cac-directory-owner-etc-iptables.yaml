@@ -1,0 +1,68 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-directory-owner-etc-iptables
+titre: 'Proprietaire de /etc/iptables/ : root'
+domaine: reseau
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: pare-feu
+  type_controle: proprietaire-fichier
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: directory_owner_etc_iptables
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/network/network-iptables/directory_owner_etc_iptables
+mots_cles:
+- chown
+- fichier
+- fichiers
+- iptables
+- proprietaire
+resume: 'Proprietaire de /etc/iptables/ : root : proprietaire root. (regle directory_owner_etc_iptables,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: dpkg -s iptables >/dev/null 2>&1 || echo 'SENTINELLE:SANS_OBJET'; stat -c '%a %U %G %n' /etc/iptables/
+    2>/dev/null
+  but: Lire droits, proprietaire et groupe (proprietaire)
+  lecture: '2e colonne = proprietaire : attendu root. Aucune ligne = fichier absent.'
+controles:
+- controle: proprietaire = root
+  bon: proprietaire root
+  mauvais: toute autre valeur
+  gravite: moyenne
+  risque: 'Avoir root comme proprietaire de /etc/iptables est important car ce repertoire contient la
+    configuration iptables. Le proteger est essentiel a la securite : root en garde le controle exclusif.'
+  action: chown root sur les fichiers concernes.
+  playbook: infra.fichier-proprietaire
+  parametres:
+    chemin: /etc/iptables/
+    proprietaire: root
+  evaluation:
+  - commande: 0
+    lecteur: stat
+    champ: proprietaire
+    comparateur: dans
+    attendu:
+    - '0'
+    - root
+pieges:
+- 'Regle limitee par la source a : package[iptables]. Hors de ce cas, la commande repond « sans objet
+  » (aucun ecart).'
+- 'Sans sudo, certains fichiers (ex. /etc/shadow) ne sont pas lisibles par stat/find : relancer avec les
+  droits root.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R50 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

@@ -1,0 +1,63 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-sudo-add-noexec
+titre: 'sudo : Defaults noexec'
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: sudo
+  type_controle: option-sudo
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: sudo_add_noexec
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/software/sudo/sudo_add_noexec
+mots_cles:
+- defaults
+- elevation
+- noexec
+- privileges
+- sudo
+- sudoers
+resume: La configuration de sudo doit contenir « Defaults noexec ». (regle sudo_add_noexec, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: grep -Rhs '^[[:space:]]*Defaults' /etc/sudoers /etc/sudoers.d/
+  but: Lire les options globales de sudo
+  lecture: 'Attendu : une ligne contenant noexec ; « !noexec » = desactive.'
+controles:
+- controle: Defaults noexec
+  bon: Defaults noexec
+  mauvais: option absente ou desactivee
+  gravite: elevee
+  risque: Une commande autorisee par sudo qui peut lancer d'autres programmes (editeur, pager...) ouvre
+    un shell root. noexec l'en empeche.
+  action: Ajouter « Defaults noexec » avec visudo -f /etc/sudoers.d/sentinelle (jamais d'edition directe).
+  evaluation:
+  - commande: 0
+    lecteur: sudo_defaults
+    comparateur: option
+    champ: noexec
+  sans_playbook: 'noexec global empeche toute commande lancee par sudo d''executer un sous-programme :
+    a tester commande par commande'
+pieges:
+- 'Defaults noexec pour tous casse les commandes qui lancent d''autres programmes (apt, dpkg, systemctl
+  edit, editeurs...) : le preferer par commande (NOEXEC:) apres essai.'
+- '/etc/sudoers n''est lisible que par root : lancer la lecture avec sudo.'
+- 'Une erreur de syntaxe dans sudoers bloque sudo : toujours passer par visudo.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R39 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

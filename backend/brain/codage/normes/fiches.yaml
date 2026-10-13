@@ -1,0 +1,375 @@
+# Fiches de normes de l'atelier de code (pilier 2 du doc 15).
+#
+# Chaque fiche dit POURQUOI une regle existe et CE QUE la norme exige, en
+# quelques phrases. Le remede (remedes.py) dit la forme juste en une ligne ;
+# le gabarit la montre en entier ; la fiche donne la raison. Les trois se
+# completent sans se repeter.
+#
+# Les textes sont REDIGES PAR NOUS, en francais, a partir des normes citees :
+# aucune phrase n'est recopiee. On cite la source pour l'attribution et pour
+# que l'utilisateur puisse verifier :
+#   OWASP Cheat Sheet Series (CC BY-SA 4.0), OWASP Top 10 2021 ;
+#   WCAG 2.2 (W3C, licence documentaire) ; CWE (MITRE, usage libre) ;
+#   MDN Web Docs (CC BY-SA 2.5) ; HTML Living Standard (WHATWG, CC BY 4.0).
+#
+#   id     : identifiant stable ;
+#   ref    : la reference precise (critere WCAG, CWE, categorie OWASP) ;
+#   regles : les regles des juges MAEL que la fiche explique (toute regle
+#            bloquante doit avoir sa fiche : verifie par les tests) ;
+#   mots   : ce qui, dans une demande, appelle la fiche AVANT d'ecrire ;
+#   texte  : 350 caracteres au plus (budget d'une machine de 8 Go).
+
+fiches:
+  # ------------------------------------------------- structure HTML
+  - id: html-document
+    source: HTML Living Standard (WHATWG) ; MDN
+    ref: "HTML — document, WCAG 3.1.1, 2.4.2"
+    regles: [doctype, charset, title, lang, html-illisible]
+    mots: [page, site, html, accueil, vitrine, landing]
+    texte: >-
+      Sans <!DOCTYPE html> le navigateur passe en mode de compatibilite et le
+      rendu change. charset utf-8 doit etre declare dans les 1024 premiers
+      octets. lang sur <html> fixe la langue lue par les lecteurs d'ecran
+      (WCAG 3.1.1). Chaque page a un <title> unique qui dit ou l'on est
+      (WCAG 2.4.2).
+  - id: html-telephone
+    source: MDN (viewport) ; WCAG 2.2
+    ref: "WCAG 1.4.4, 1.4.10"
+    regles: [viewport, zoom-bloque, debordement-mobile]
+    mots: [telephone, mobile, responsive, adaptatif, smartphone]
+    texte: >-
+      Le viewport width=device-width rend la page lisible sur telephone.
+      Interdire le zoom (user-scalable=no, maximum-scale) empeche un
+      malvoyant d'agrandir le texte a 200 % (WCAG 1.4.4). A 320 px de large,
+      rien ne doit obliger a defiler horizontalement (WCAG 1.4.10) : largeurs
+      fluides, images a max-width 100 %.
+  - id: html-structure
+    source: WCAG 2.2 ; HTML Living Standard
+    ref: "WCAG 1.3.1, 2.4.1, 2.4.6"
+    regles: [main, titres-sautes, h1, balise-non-fermee, fermeture-orpheline, id-duplique, structure-liste]
+    mots: [structure, titre, section, article, blog, documentation]
+    texte: >-
+      La structure doit etre lisible par une machine : un seul <main>, des
+      titres h1 puis h2 puis h3 sans sauter de niveau, des listes en
+      <ul>/<li>. Un id est unique dans la page : un doublon casse les
+      <label for>, l'ARIA et les scripts. Une balise mal fermee change
+      l'arbre que lit le lecteur d'ecran (WCAG 1.3.1).
+  - id: html-ressources
+    source: MDN ; OWASP
+    ref: "lien casse ; OWASP A08"
+    regles: [fichier-absent, import-absent, ancre-absente, ressource-externe, contenu-mixte]
+    mots: [image, script, style, cdn, police]
+    texte: >-
+      Chaque fichier reference (image, script, feuille de style) doit
+      exister au chemin indique, sinon la page casse en silence. Une page en
+      https ne charge rien en http (contenu mixte bloque par le navigateur).
+      Les ressources tierces exposent le visiteur et la page doit rester
+      utilisable sans elles.
+
+  # ------------------------------------------------- accessibilite
+  - id: wcag-texte-alternatif
+    source: WCAG 2.2 ; WAI Images Tutorial
+    ref: "WCAG 1.1.1 (A)"
+    regles: [img-alt]
+    mots: [image, photo, galerie, logo, illustration, portfolio]
+    texte: >-
+      Toute image porteuse de sens a un alt qui dit ce qu'elle apporte, pas
+      ce qu'elle est (« Logo de la mairie », pas « image.png »). Une image
+      decorative a alt="" pour etre ignoree. Une image-lien decrit la
+      destination. Sans alt, le lecteur d'ecran lit le nom du fichier.
+  - id: wcag-formulaires
+    source: WCAG 2.2 ; WAI Forms Tutorial
+    ref: "WCAG 1.3.1, 3.3.2, 4.1.2, 1.3.5"
+    regles: [champ-sans-label, autocomplete]
+    mots: [formulaire, form, champ, contact, inscription, connexion, saisie]
+    texte: >-
+      Chaque champ a une etiquette visible reliee par <label for="id">. Le
+      placeholder n'est pas une etiquette : il disparait a la saisie. Les
+      erreurs sont dites en texte, pres du champ, pas par la couleur seule.
+      autocomplete (email, name, current-password) aide a remplir (WCAG
+      1.3.5).
+  - id: wcag-nom-accessible
+    source: WCAG 2.2 ; WAI-ARIA Authoring Practices
+    ref: "WCAG 4.1.2, 2.4.4, 2.1.1"
+    regles: [nom-accessible, button-type, href-javascript, clic-sans-clavier, evenement-en-ligne]
+    mots: [bouton, lien, menu, icone, navigation, modal, onglet]
+    texte: >-
+      Un bouton ou un lien a un nom lisible (texte visible ou aria-label) :
+      une icone seule est muette pour un lecteur d'ecran. Une action est un
+      <button>, une destination un <a href>. Un <div onclick> n'est ni
+      atteignable au clavier ni annonce (WCAG 2.1.1). Les gestionnaires vont
+      dans le script, pas dans les attributs.
+  - id: wcag-contraste
+    source: WCAG 2.2 ; WAI Understanding 1.4.3
+    ref: "WCAG 1.4.3 (AA), 1.4.11"
+    regles: [contraste]
+    mots: [couleur, theme, design, charte, sombre, clair, palette]
+    texte: >-
+      Le texte normal exige un contraste d'au moins 4.5:1 avec son fond, le
+      grand texte (24 px, ou 19 px gras) 3:1, comme les bordures de champs et
+      les icones utiles (1.4.11). Le gris clair sur blanc echoue presque
+      toujours. L'information n'est jamais portee par la couleur seule
+      (1.4.1).
+  - id: wcag-focus-cibles
+    source: WCAG 2.2
+    ref: "WCAG 2.4.7, 2.4.11, 2.5.8"
+    regles: [focus-invisible, cible-trop-petite]
+    mots: [clavier, focus, bouton, mobile, tactile]
+    texte: >-
+      L'element qui a le focus clavier doit se voir : ne jamais retirer
+      outline sans le remplacer (:focus-visible). Il ne doit pas etre cache
+      par un bandeau fixe (2.4.11). Une cible cliquable fait au moins 24 x 24
+      px ou a assez d'espace autour (2.5.8, nouveau en WCAG 2.2).
+  - id: wcag-aria
+    source: WAI-ARIA 1.2 ; W3C « Using ARIA »
+    ref: "WCAG 4.1.2"
+    regles: [aria-invalide]
+    mots: [aria, role, composant, widget]
+    texte: >-
+      Premiere regle d'ARIA : ne pas s'en servir si un element natif existe
+      (<button>, <nav>, <dialog>). Un ARIA faux est pire que pas d'ARIA : un
+      role sans les attributs requis, ou aria-hidden sur un element qui prend
+      le focus, rend la page trompeuse pour le lecteur d'ecran.
+
+  # ------------------------------------------------- securite navigateur
+  - id: owasp-xss-dom
+    source: OWASP DOM based XSS Prevention Cheat Sheet ; MDN
+    ref: "OWASP A03 — CWE-79"
+    regles: [innerhtml, xss-dom]
+    mots: [affichage, recherche, commentaire, message, dynamique, javascript]
+    texte: >-
+      Une donnee venue de l'utilisateur (champ, URL, location.hash, reponse
+      d'API) ne doit jamais etre ecrite comme du HTML : innerHTML,
+      outerHTML, insertAdjacentHTML, document.write executent le code
+      qu'elle contient. On ecrit du texte (textContent) ; si du HTML est
+      vraiment voulu, on l'assainit (DOMPurify).
+  - id: owasp-js-dangereux
+    source: OWASP ; MDN (eval)
+    ref: "CWE-95"
+    regles: [js-dangereux, injection-code]
+    mots: [calcul, formule, script, dynamique]
+    texte: >-
+      eval, new Function, setTimeout avec une chaine, exec/eval en Python :
+      la chaine devient du code. Si elle contient une donnee externe,
+      l'attaquant execute ce qu'il veut (CWE-95). On analyse la donnee
+      (JSON.parse, json.loads, ast.literal_eval) au lieu de l'executer.
+  - id: owasp-liens-tiers
+    source: OWASP HTML5 Security Cheat Sheet ; MDN (SRI)
+    ref: "CWE-1022 ; OWASP A08"
+    regles: [blank-noopener, sri]
+    mots: [lien, externe, cdn, bibliotheque]
+    texte: >-
+      target="_blank" vers un autre site : rel="noopener noreferrer" empeche
+      la page ouverte de rediriger la notre (tabnabbing). Un script charge
+      depuis un CDN porte integrity (empreinte SRI) et crossorigin : si le
+      CDN est compromis, le navigateur refuse le fichier modifie.
+  - id: owasp-postmessage
+    source: OWASP HTML5 Security Cheat Sheet
+    ref: "CWE-346"
+    regles: [message-sans-origine, postmessage-etoile]
+    mots: [iframe, fenetre, widget, integration, postmessage]
+    texte: >-
+      Un ecouteur "message" verifie event.origin avant de lire event.data :
+      n'importe quel site peut envoyer un message a notre fenetre. Et
+      postMessage nomme l'origine cible exacte au lieu de "*", sinon la
+      donnee part chez qui a remplace le contenu de la fenetre.
+
+  # ------------------------------------------------- securite serveur
+  - id: owasp-injection-sql
+    source: OWASP SQL Injection Prevention Cheat Sheet
+    ref: "OWASP A03 — CWE-89"
+    regles: [injection-sql]
+    mots: [base, donnees, sql, requete, recherche, utilisateur, produit, sqlite, mysql, postgres]
+    texte: >-
+      Defense numero 1 : les requetes parametrees. La valeur part a part
+      (?, %s, :nom) et n'est jamais collee dans le texte SQL (f-string,
+      concatenation, format). Les noms de tables ou de colonnes ne se
+      parametrent pas : on les choisit dans une liste fermee. Un ORM utilise
+      normalement est deja parametre.
+  - id: owasp-injection-commande
+    source: OWASP OS Command Injection Defense Cheat Sheet
+    ref: "OWASP A03 — CWE-78"
+    regles: [injection-commande, py-dangereux]
+    mots: [commande, systeme, shell, fichier, conversion, ping]
+    texte: >-
+      Eviter d'appeler le systeme quand une bibliotheque fait le travail.
+      Sinon : liste d'arguments sans shell (subprocess.run([...]), jamais
+      shell=True ni os.system avec une donnee externe), et valeur verifiee
+      contre une liste blanche. Un « -- » avant l'argument empeche qu'il
+      soit lu comme une option.
+  - id: owasp-chemins
+    source: OWASP ; CWE-22
+    ref: "OWASP A01 — CWE-22, CWE-98"
+    regles: [traversee-chemin, inclusion-fichier]
+    mots: [fichier, telechargement, upload, envoi, document, piece]
+    texte: >-
+      Un nom de fichier venu de l'utilisateur peut contenir ../ et sortir du
+      dossier prevu. On resout le chemin puis on verifie qu'il reste dans le
+      dossier autorise, ou on n'accepte qu'un identifiant. Un fichier envoye
+      est renomme, son type et sa taille sont verifies, et il n'est jamais
+      execute ni inclus.
+  - id: owasp-xss-serveur
+    source: OWASP Cross Site Scripting Prevention Cheat Sheet
+    ref: "OWASP A03 — CWE-79"
+    regles: [xss-serveur]
+    mots: [template, gabarit, rendu, affichage, profil, commentaire]
+    texte: >-
+      Le serveur echappe toute donnee inseree dans le HTML selon le contexte
+      (texte, attribut, URL, script). Les moteurs de gabarits (Jinja2,
+      templates Django, JSX) echappent par defaut : |safe, mark_safe,
+      Markup ou dangerouslySetInnerHTML desactivent cette protection et ne
+      s'emploient jamais sur une donnee externe.
+  - id: owasp-ssrf-redirection
+    source: OWASP SSRF Prevention Cheat Sheet ; Unvalidated Redirects
+    ref: "OWASP A10 — CWE-918 ; CWE-601"
+    regles: [ssrf, redirection-ouverte]
+    mots: [url, lien, webhook, apercu, redirection, retour, next]
+    texte: >-
+      Une URL fournie par l'utilisateur et appelee par le serveur peut viser
+      le reseau interne (127.0.0.1, 169.254.169.254) : liste blanche de
+      domaines, schemas http(s) seulement. Une redirection vers ?next= ne
+      suit que des chemins internes ou des domaines connus, sinon elle sert
+      au hameconnage.
+  - id: owasp-deserialisation-xxe
+    source: OWASP Deserialization Cheat Sheet ; XXE Prevention Cheat Sheet
+    ref: "OWASP A08 — CWE-502 ; CWE-611"
+    regles: [deserialisation, xxe]
+    mots: [import, xml, pickle, yaml, fichier, sauvegarde]
+    texte: >-
+      pickle, yaml.load, ObjectInputStream, unserialize peuvent executer du
+      code en lisant une donnee piegee : formats de donnees seulement (JSON,
+      yaml.safe_load). Un analyseur XML desactive les DTD et entites
+      externes, sinon un fichier XML lit les fichiers du serveur (XXE).
+  - id: owasp-secrets
+    source: OWASP Secrets Management Cheat Sheet
+    ref: "OWASP A07 — CWE-798"
+    regles: [secret-en-dur]
+    mots: [cle, api, mot, passe, token, jeton, configuration, secret]
+    texte: >-
+      Aucun secret dans le code (cle d'API, mot de passe, SECRET_KEY) : le
+      depot finit toujours par etre partage. On lit les variables
+      d'environnement ou un coffre, on fournit un .env.example sans valeur,
+      et un secret deja publie est considere comme perdu : on le change.
+  - id: owasp-mots-de-passe
+    source: OWASP Password Storage Cheat Sheet ; Cryptographic Storage
+    ref: "OWASP A02 — CWE-916, CWE-327, CWE-338"
+    regles: [hash-faible, hasard-faible, chiffrement-faible]
+    mots: [connexion, login, mot, passe, inscription, compte, authentification, chiffrement]
+    texte: >-
+      Un mot de passe ne se stocke jamais en clair ni en MD5/SHA-1 : on
+      utilise argon2id, scrypt ou bcrypt (sale, lent). Un jeton ou un code se
+      tire avec un hasard cryptographique (secrets, crypto.randomUUID), pas
+      random/Math.random. Chiffrement : AES-GCM, jamais ECB ni DES.
+  - id: owasp-sessions-csrf
+    source: OWASP Session Management ; CSRF Prevention Cheat Sheet
+    ref: "OWASP A01 — CWE-352, CWE-614, CWE-1004"
+    regles: [csrf-desactive, cookie-faible, mdp-en-get]
+    mots: [connexion, session, cookie, formulaire, paiement, compte]
+    texte: >-
+      Un formulaire qui modifie quelque chose (POST) porte un jeton CSRF ;
+      ne pas desactiver la protection du framework. Le cookie de session est
+      HttpOnly, Secure et SameSite=Lax. Un mot de passe part toujours en
+      POST : en GET il finit dans l'historique et les journaux du serveur.
+  - id: owasp-configuration
+    source: OWASP Top 10 A05 ; Django deployment checklist
+    ref: "OWASP A05 — CWE-489, CWE-942"
+    regles: [debug-actif, hotes-ouverts, cors-ouvert]
+    mots: [deploiement, production, serveur, configuration, api, cors]
+    texte: >-
+      En production : DEBUG coupe (sinon les erreurs montrent le code et les
+      reglages), ALLOWED_HOSTS limite aux vrais domaines, CORS limite aux
+      origines connues (jamais « * » avec des cookies). Les reglages viennent
+      de l'environnement, pas du code.
+
+  # ------------------------------------------------- fidelite
+  - id: fidelite-demande
+    source: ISO/IEC 25010 (qualite du logiciel)
+    ref: "ISO/IEC 25010 — adequation fonctionnelle : completude"
+    regles: [contenu-perdu, demande-non-tenue, critere-non-tenu]
+    mots: [corriger, modifier, ajouter, reprendre]
+    texte: >-
+      Un logiciel conforme aux normes mais qui ne fait pas ce qui etait
+      demande est faux. Tout ce que la demande nomme (formulaire, menu,
+      galerie) doit etre present. Une correction change seulement ce qui
+      est fautif : elle ne supprime jamais une partie demandee pour faire
+      disparaitre un defaut.
+
+  # ------------------------------------------------- code juste
+  - id: code-syntaxe
+    source: ECMAScript ; Python Language Reference ; CSS
+    ref: "syntaxe"
+    regles: [js-syntaxe, py-syntaxe, css-accolade, syntaxe-equilibre, code-inacheve, js-erreur-execution, console-erreur, selecteur-mort]
+    mots: [code, script, programme]
+    texte: >-
+      Un fichier doit etre complet et s'executer : chaque { ( [ et chaque
+      chaine fermes, aucun « ... » laisse a la place du code. Un script qui
+      touche la page attend qu'elle existe (defer, ou DOMContentLoaded) et
+      verifie qu'un element trouve n'est pas null avant de s'en servir.
+  - id: contrat-api
+    source: OpenAPI Specification ; MDN (Fetch API)
+    ref: "contrat client-serveur (OpenAPI)"
+    regles: [contrat-api]
+    mots: [api, fetch, route, routes, catalogue, charger, serveur]
+    texte: >-
+      Une page et son serveur ne se parlent que par le chemin et la forme
+      des donnees. Un fetch vers un chemin qu'aucune route ne sert rend une
+      erreur 404 et laisse la page vide, sans message. Le chemin s'ecrit une
+      fois dans le plan et se reprend a l'identique des deux cotes.
+  - id: contenu-livrable
+    source: WCAG 2.2 ; ISO 9241-110
+    ref: "WCAG 2.4.6, 4.1.2"
+    regles: [texte-provisoire, bouton-sans-effet]
+    mots: [contenu, provisoire, lorem, bouton, action, livrable]
+    texte: >-
+      Une page livree ne garde aucun texte provisoire (« Pied de page »,
+      « Lorem ipsum », 00 00 00 00). Un bouton promet une action : sans
+      script qui le fait agir, il trompe. Ecrire le vrai contenu, ou
+      retirer l'element.
+  - id: sql-schema-integrite
+    source: SQL:2016 (ISO/IEC 9075) ; modele relationnel (Codd)
+    ref: "ISO/IEC 9075-2"
+    regles: [sql-syntaxe, sql-sans-cle, sql-cle-etrangere, sql-insert-colonnes,
+             sql-execution]
+    mots: [sql, schema, table, cle, primaire, etrangere, base, donnees]
+    texte: >-
+      Chaque table a une cle primaire. Une cle etrangere vise une table et
+      une colonne qui existent deja. Un INSERT donne autant de valeurs que de
+      colonnes. Le schema s'ecrit dans le dialecte de SA base.
+  - id: sql-contrat-code
+    source: Flyway / golang-migrate ; contrat code-schema
+    ref: "migrations versionnees"
+    regles: [sql-table-inconnue, sql-colonne-inconnue, sql-migration-ordre]
+    mots: [requete, migration, colonne, table, contrat, schema]
+    texte: >-
+      Le code ne vise que les tables et colonnes du schema. Le schema
+      change par migrations numerotees (001, 002...), rejouees dans l'ordre :
+      jamais une colonne ajoutee a la main dans le code seul.
+  - id: owasp-nosql
+    source: OWASP WSTG-INPV-05.6 ; documentation Redis
+    ref: "WSTG-INPV-05.6"
+    regles: [nosql-injection, nosql-where, redis-keys]
+    mots: [mongodb, nosql, redis, injection, operateur, filtre]
+    texte: >-
+      Un filtre MongoDB ne recoit jamais l'objet de l'utilisateur tel quel :
+      {"$ne": null} contournerait le mot de passe. Pas de $where avec une
+      donnee recue. Sur Redis, SCAN par lots, jamais KEYS *.
+  - id: orm-modele-schema
+    source: SQLAlchemy, Django, Prisma, Sequelize (documentation)
+    ref: "mapping objet-relationnel"
+    regles: [orm-table-absente, orm-colonne-absente, orm-champ-inconnu]
+    mots: [orm, modele, sqlalchemy, django, prisma, sequelize, champ]
+    texte: >-
+      Un modele d'ORM decrit une table qui existe : meme nom de table, memes
+      colonnes. Une requete de l'ORM ne vise que des champs declares dans le
+      modele. Le schema change par migration, puis le modele suit.
+  - id: autres-bases
+    source: Prisma ; Apache Cassandra (CQL) ; Neo4j (Cypher)
+    ref: "documentation officielle"
+    regles: [prisma-sans-id, prisma-relation, prisma-datasource, cql-sans-cle,
+             cql-allow-filtering, cypher-injection, cypher-sans-etiquette]
+    mots: [prisma, cassandra, cql, neo4j, cypher, graphe, partition]
+    texte: >-
+      Prisma : chaque model a un @id, une relation vise un model declare.
+      Cassandra : une PRIMARY KEY dont la partition sert la requete, pas
+      d'ALLOW FILTERING. Neo4j : des parametres $nom, jamais une donnee
+      collee ; un MATCH avec une etiquette.

@@ -1,0 +1,44 @@
+id: histoire-de-l-informatique
+schema: 1
+nom: Histoire de l'informatique
+resume: "Des machines à calculer du XIXe siècle à l'ordinateur personnel et au Web, chaque génération technologique a légué des systèmes encore en production, dont l'obsolescence est un enjeu majeur de cybersécurité."
+famille: histoire-geographie
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - histoire informatique
+  - turing
+  - eniac
+  - transistor
+  - ordinateur
+  - web
+  - legacy
+  - dette technique
+  - arpanet
+  - ordinateur personnel
+caracteristiques:
+  precurseurs: "XIXe siècle : métier Jacquard à cartes perforées, machine analytique de Babbage et premiers algorithmes d'Ada Lovelace."
+  fondements_theoriques: "1936 : Alan Turing formalise le calcul avec la machine de Turing ; 1945 : von Neumann décrit l'architecture à programme enregistré."
+  premieres_machines: "1945 : ENIAC, calculateur électronique à lampes ; 1947 : invention du transistor aux laboratoires Bell ; fin des années 1950 : circuits intégrés."
+  generalisation: "1964 : IBM System/360, famille d'ordinateurs compatibles ; 1981 : IBM PC ; 1989-1991 : Tim Berners-Lee conçoit le Web au CERN."
+  jalons_securite: "1971 : ver Creeper sur ARPANET ; 1988 : ver Morris, première grande crise de sécurité Internet ; les mots de passe remontent au système CTSS du MIT (1961)."
+securite:
+  - titre: Systèmes legacy non maintenus
+    risque: Des systèmes anciens (COBOL, vieux Unix, Windows hors support) restent critiques mais ne reçoivent plus de correctifs de sécurité.
+    conseil: Inventorier les systèmes patrimoniaux, les isoler du réseau et planifier leur remplacement ou leur mise à niveau.
+    gravite: elevee
+  - titre: Dette technique accumulée
+    risque: Les empilements historiques de technologies créent des dépendances obscures que les audits de sécurité oublient.
+    conseil: Cartographier régulièrement la pile technique complète, y compris les composants hérités et leurs versions.
+    gravite: moyenne
+  - titre: Réflexes hérités d'une ère pré-sécurité
+    risque: De nombreux protocoles et pratiques (telnet, FTP, permissions laxistes) datent d'une époque de réseaux de confiance et persistent par habitude.
+    conseil: Remplacer systématiquement les protocoles en clair par leurs équivalents chiffrés et revoir les configurations héritées.
+    gravite: elevee
+sources:
+  - titre: Computer History Museum — Timeline of Computer History
+    url: https://www.computerhistory.org/timeline/
+  - titre: Encyclopaedia Britannica — Computer
+    url: https://www.britannica.com/technology/computer

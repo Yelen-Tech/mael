@@ -1,0 +1,59 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-ensure-logrotate-activated
+titre: logrotate tourne periodiquement (rotation quotidienne)
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: journalisation
+  type_controle: detection
+  niveaux:
+    cis: null
+    anssi: renforce
+source:
+  origine: complianceascode
+  regle: ensure_logrotate_activated
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/logging/log_rotation/ensure_logrotate_activated
+mots_cles:
+- daily
+- journaux
+- logrotate
+- rotation
+resume: logrotate tourne periodiquement (rotation quotidienne). (regle ensure_logrotate_activated, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: grep -Es '^[[:space:]]*daily' /etc/logrotate.conf
+  but: Lire la frequence de rotation par defaut
+  lecture: Une ligne = conforme ; aucune = ecart.
+controles:
+- controle: rotation daily dans logrotate.conf
+  bon: une ligne « daily »
+  mauvais: autre frequence
+  gravite: moyenne
+  risque: 'Des journaux qui ne tournent pas grossissent jusqu''a remplir la partition de /var/log : les
+    nouveaux evenements, souvent ceux d''une attaque en cours, ne sont plus enregistres.'
+  action: Ecrire « daily » dans /etc/logrotate.conf (et verifier logrotate.timer ou cron.daily).
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: presente
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R71 (niveau renforce)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

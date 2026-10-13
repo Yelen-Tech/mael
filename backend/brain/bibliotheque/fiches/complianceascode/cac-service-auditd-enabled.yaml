@@ -1,0 +1,75 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-service-auditd-enabled
+titre: Service auditd active et demarre
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: audit
+  type_controle: service-actif
+  niveaux:
+    cis: 2
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: service_auditd_enabled
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/auditing/service_auditd_enabled
+mots_cles:
+- audit
+- auditd
+- demarrage
+- journalisation
+- service
+- services
+- systemd
+resume: Le service auditd doit etre active et demarre. (regle service_auditd_enabled, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: systemctl is-enabled auditd.service 2>/dev/null; systemctl is-active auditd.service 2>/dev/null
+  but: Lire l'etat de demarrage et d'execution de auditd
+  lecture: 'Attendu : « enabled » puis « active ».'
+controles:
+- controle: service auditd enabled/active
+  bon: enabled et active
+  mauvais: disabled ou inactive
+  gravite: moyenne
+  risque: 'Sans auditd actif, les evenements de securite generes par le noyau ne sont pas enregistres
+    : impossible de reconstituer un incident ni d''imputer une action a un utilisateur.'
+  action: systemctl enable --now auditd.service
+  playbook: infra.service-activer
+  parametres:
+    service: auditd
+  evaluation:
+  - commande: 0
+    lecteur: systemctl
+    comparateur: actif
+pieges:
+- 'Un service peut etre demarre par une socket systemd : verifier aussi « systemctl list-sockets ».'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 6.3.1.2 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 6.2.1.2 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 6.2.1.2 (niveau 2)
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R33 (niveau intermediaire)
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R73 (niveau renforce)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

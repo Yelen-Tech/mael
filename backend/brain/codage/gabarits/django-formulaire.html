@@ -1,0 +1,9 @@
+<form method="post" action="{% url 'contact' %}">
+  {% csrf_token %}
+  <label for="id_nom">Nom</label>
+  <input id="id_nom" name="nom" type="text" value="{{ form.nom.value|default:'' }}" required>
+  <label for="id_message">Message</label>
+  <textarea id="id_message" name="message" required>{{ form.message.value|default:'' }}</textarea>
+  {% for erreur in form.non_field_errors %}<p role="alert">{{ erreur }}</p>{% endfor %}
+  <button type="submit">Envoyer</button>
+</form>

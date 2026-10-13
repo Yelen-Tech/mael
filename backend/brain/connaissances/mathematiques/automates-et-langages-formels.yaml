@@ -1,0 +1,41 @@
+id: automates-et-langages-formels
+schema: 1
+nom: Automates et langages formels
+resume: Hiérarchie des modèles de calcul (automates finis, piles, machines de Turing) et des langages associés ; elle fonde les expressions régulières, les compilateurs et établit les limites de la calculabilité.
+famille: mathematiques
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - automates
+  - langages formels
+  - expressions régulières
+  - grammaire
+  - machine de turing
+  - calculabilité
+  - problème de l'arrêt
+  - hiérarchie de chomsky
+  - indécidabilité
+caracteristiques:
+  notions_fondamentales: "Automates finis et langages rationnels (expressions régulières) ; automates à pile et langages algébriques ; machines de Turing et langages récursivement énumérables ; hiérarchie de Chomsky."
+  liens_informatiques: "Expressions régulières dans les règles de détection et les pare-feux applicatifs ; analyse lexicale et syntaxique des compilateurs ; calculabilité et problème de l'arrêt indécidable ; vérification de modèles."
+  ordres_de_grandeur: "La reconnaissance par automate fini est linéaire en la taille de l'entrée ; certaines expressions régulières mal écrites provoquent un retour sur trace exponentiel (ReDoS)."
+securite:
+  - titre: Déni de service par expression régulière (ReDoS)
+    risque: Une expression régulière à retours sur trace exponentiels bloque un service avec une entrée courte et spécialement conçue.
+    conseil: Éviter les quantificateurs imbriqués ambigus, tester les motifs avec des outils d'analyse et limiter le temps d'évaluation.
+    gravite: elevee
+  - titre: Analyseurs d'entrées incohérents
+    risque: Deux analyseurs (pare-feu et application) qui interprètent différemment la même grammaire permettent des contournements par ambiguïté.
+    conseil: Valider les entrées contre une grammaire stricte et rejeter toute forme ambiguë plutôt que de la réparer.
+    gravite: moyenne
+  - titre: Croire à l'antivirus parfait
+    risque: L'indécidabilité du problème de l'arrêt entraîne qu'aucun analyseur ne peut décider en général si un programme est malveillant.
+    conseil: Combiner signatures, heuristiques et défense en profondeur plutôt que de compter sur une détection parfaite.
+    gravite: info
+sources:
+  - titre: Wikipédia — Hiérarchie de Chomsky
+    url: https://fr.wikipedia.org/wiki/Hi%C3%A9rarchie_de_Chomsky
+  - titre: Wikipédia — Problème de l'arrêt
+    url: https://fr.wikipedia.org/wiki/Probl%C3%A8me_de_l%27arr%C3%AAt

@@ -1,0 +1,39 @@
+id: algebre-lineaire
+schema: 1
+nom: Algèbre linéaire
+resume: Étude des espaces vectoriels, des matrices et des applications linéaires ; elle sous-tend le calcul scientifique, l'apprentissage automatique et certaines primitives cryptographiques à base de réseaux euclidiens.
+famille: mathematiques
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - algèbre linéaire
+  - matrice
+  - vecteur
+  - déterminant
+  - valeur propre
+  - système linéaire
+  - réseaux euclidiens
+  - apprentissage automatique
+  - décomposition
+caracteristiques:
+  notions_fondamentales: "Espaces vectoriels, bases et dimensions ; matrices, produits matriciels et inversibilité ; déterminants, valeurs propres et vecteurs propres ; décompositions (LU, QR, valeurs singulières)."
+  liens_informatiques: "Moteur du calcul numérique et de l'apprentissage automatique ; réseaux euclidiens à la base de la cryptographie post-quantique ; codes correcteurs d'erreurs et traitement du signal."
+  ordres_de_grandeur: "La résolution directe d'un système linéaire de taille n coûte de l'ordre de n^3 opérations ; les problèmes sur réseaux (SVP, CVP) restent conjecturés difficiles même pour un ordinateur quantique."
+securite:
+  - titre: Modèles de détection issus de l'apprentissage automatique
+    risque: Les détecteurs d'anomalies fondés sur des méthodes linéaires peuvent être trompés par de petites perturbations adverses des entrées.
+    conseil: Ne pas traiter un score de modèle comme une preuve ; croiser avec des règles déterministes et surveiller la dérive des données.
+    gravite: moyenne
+  - titre: Instabilité numérique
+    risque: Des matrices mal conditionnées amplifient les erreurs d'arrondi et faussent des calculs de scores ou de simulations utilisés en décision de sécurité.
+    conseil: Vérifier le conditionnement, utiliser des décompositions stables et tester la sensibilité aux données d'entrée.
+    gravite: info
+  - titre: Cryptographie sur réseaux mal paramétrée
+    risque: Des paramètres de réseau trop faibles (dimension, module, bruit) rendent des schémas post-quantiques attaquables par réduction de réseau.
+    conseil: S'en tenir aux paramètres standardisés des algorithmes retenus par le NIST plutôt qu'à des choix maison.
+    gravite: elevee
+sources:
+  - titre: Wikipédia — Algèbre linéaire
+    url: https://fr.wikipedia.org/wiki/Alg%C3%A8bre_lin%C3%A9aire

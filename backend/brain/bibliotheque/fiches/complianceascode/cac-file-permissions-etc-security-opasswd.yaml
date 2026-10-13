@@ -1,0 +1,76 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-file-permissions-etc-security-opasswd
+titre: Droits de /etc/security/opasswd (0600 au plus)
+domaine: fichiers
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: comptes
+  type_controle: droits-fichier
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: file_permissions_etc_security_opasswd
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/permissions/files/permissions_important_account_files/file_permissions_etc_security_opasswd
+mots_cles:
+- chmod
+- comptes
+- droits
+- fichier
+- fichiers
+- opasswd
+- permissions
+- security
+- utilisateurs
+resume: 'Droits de /etc/security/opasswd : 0600 ou plus strict (aucun droit en plus). (regle file_permissions_etc_security_opasswd,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: stat -c '%a %U %G %n' /etc/security/opasswd 2>/dev/null
+  but: Lire droits, proprietaire et groupe (droits)
+  lecture: '1re colonne = droits en octal : aucun bit ne doit depasser 0600. Aucune ligne = fichier absent.'
+controles:
+- controle: droits <= 0600
+  bon: 0600 ou plus strict (aucun droit en plus)
+  mauvais: toute autre valeur
+  gravite: moyenne
+  risque: /etc/security/opasswd (et sa sauvegarde opasswd.old) garde les empreintes des anciens mots de
+    passe pour en interdire la reutilisation. Lisibles, elles revelent les habitudes des utilisateurs
+    (un ancien mot de passe ressemble souvent au nouveau) ; modifiables, elles annulent la politique d'historique.
+  action: chmod 0600 sur les fichiers concernes (u-x,go-wx selon le cas).
+  playbook: infra.fichier-droits
+  parametres:
+    chemin: /etc/security/opasswd
+    mode: '0600'
+  evaluation:
+  - commande: 0
+    lecteur: stat
+    champ: droits
+    comparateur: droits_au_plus
+    attendu: '0600'
+pieges:
+- 'Sans sudo, certains fichiers (ex. /etc/shadow) ne sont pas lisibles par stat/find : relancer avec les
+  droits root.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 7.1.10 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 7.1.10 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 7.1.10 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

@@ -1,0 +1,68 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-file-ownership-sshd-private-key
+titre: 'Proprietaire des fichiers *_key de /etc/ssh/ : root'
+domaine: acces
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: ssh
+  type_controle: proprietaire-fichier
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: file_ownership_sshd_private_key
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/ssh/file_ownership_sshd_private_key
+mots_cles:
+- chown
+- fichier
+- fichiers
+- proprietaire
+resume: 'Proprietaire des fichiers *_key de /etc/ssh/ : root : proprietaire root. (regle file_ownership_sshd_private_key,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: find /etc/ssh/ -maxdepth 1 -type f -regextype posix-extended -regex '^.*_key$' -printf '%m
+    %u %g %p\n' 2>/dev/null
+  but: Lire droits, proprietaire et groupe (proprietaire)
+  lecture: '2e colonne = proprietaire : attendu root. Aucune ligne = fichier absent.'
+controles:
+- controle: proprietaire = root
+  bon: proprietaire root
+  mauvais: toute autre valeur
+  gravite: moyenne
+  risque: Une personne qui obtient la cle privee d'hote SSH peut se faire passer pour le serveur (attaque
+    de l'intercepteur) et recueillir les identifiants des utilisateurs.
+  action: chown root sur les fichiers concernes.
+  playbook: infra.fichiers-motif
+  parametres:
+    dossier: /etc/ssh/
+    regex: ^.*_key$
+    nature: proprietaire
+    valeur: root
+    recursif: non
+  evaluation:
+  - commande: 0
+    lecteur: stat
+    champ: proprietaire
+    comparateur: dans
+    attendu:
+    - '0'
+    - root
+pieges:
+- 'Sans sudo, certains fichiers (ex. /etc/shadow) ne sont pas lisibles par stat/find : relancer avec les
+  droits root.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R50 (niveau intermediaire)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

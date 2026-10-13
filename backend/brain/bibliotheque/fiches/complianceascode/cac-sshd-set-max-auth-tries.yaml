@@ -1,0 +1,84 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-sshd-set-max-auth-tries
+titre: 'SSH : nombre maximal de tentatives d''authentification (MaxAuthTries 4)'
+domaine: acces
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+  services:
+  - openssh
+taxonomie:
+  theme: ssh
+  type_controle: configuration
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: sshd_set_max_auth_tries
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/ssh/ssh_server/sshd_set_max_auth_tries
+mots_cles:
+- auth
+- authentification
+- essais
+- force brute
+- limite
+- maxauthtries
+- ssh
+- sshd
+- tentatives
+- tries
+resume: La directive sshd MaxAuthTries doit valoir « 4 » (regle sshd_set_max_auth_tries, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: sudo sshd -T 2>/dev/null | grep -i '^maxauthtries '
+  but: Lire la valeur EFFECTIVE de MaxAuthTries
+  lecture: 'Attendu : « maxauthtries N » avec 1 <= N <= 4. Une valeur plus stricte est conforme.'
+- commande: grep -Ris '^[[:space:]]*MaxAuthTries[[:space:]]' /etc/ssh/sshd_config /etc/ssh/sshd_config.d/
+    2>/dev/null
+  but: Trouver ou MaxAuthTries est defini dans les fichiers
+  lecture: Chaque ligne donne le fichier et la valeur ecrite ; aucune ligne = valeur par defaut.
+controles:
+- controle: MaxAuthTries <= 4
+  bon: MaxAuthTries entre 1 et 4
+  mauvais: 0, absent avec un defaut plus eleve, ou superieur a 4
+  gravite: moyenne
+  risque: Un nombre bas de tentatives par connexion freine la force brute sur les mots de passe.
+  action: Definir « MaxAuthTries 4 » dans /etc/ssh/sshd_config (ou un fichier de /etc/ssh/sshd_config.d/),
+    controler avec sshd -t, puis recharger SSH en gardant une session ouverte.
+  playbook: infra.ssh-directive
+  parametres:
+    directive: MaxAuthTries
+    valeur: '4'
+  evaluation:
+  - comparateur: max
+    attendu: '4'
+    commande: 0
+    lecteur: sshd_t
+    champ: maxauthtries
+pieges:
+- sshd -T exige les droits root ; sans sudo, la commande ne renvoie rien.
+- 'Plusieurs fichiers peuvent definir la directive (Include /etc/ssh/sshd_config.d/*.conf) : la PREMIERE
+  occurrence gagne ; sshd -T donne la valeur effective.'
+- 'Regle Sentinelle : la source exige exactement 4 ; une valeur plus stricte (entre 1 et 4) est acceptee.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 5.1.16 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 5.1.16 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 5.1.16 (niveau 1)
+verifie_le: '2026-09-17'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

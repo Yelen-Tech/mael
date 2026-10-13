@@ -1,0 +1,44 @@
+id: relativite
+schema: 1
+nom: "Relativité (GPS et horodatage)"
+resume: Les corrections relativistes (dilatation du temps) sont indispensables au GPS, dont les horloges atomiques dériveraient d'environ 38 microsecondes par jour sans elles ; ce temps précis sert de référence aux systèmes informatiques.
+famille: physique
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - relativité
+  - relativité restreinte
+  - relativité générale
+  - dilatation du temps
+  - gps
+  - gnss
+  - horloge atomique
+  - horodatage
+  - ntp
+  - synchronisation
+  - usurpation gps
+caracteristiques:
+  notions_fondamentales: "relativité restreinte (dilatation liée à la vitesse), relativité générale (dilatation liée à la gravité), référentiels"
+  ordres_de_grandeur: "les horloges des satellites GPS gagneraient environ 38 microsecondes par jour sans corrections (+45 µs par effet gravitationnel, -7 µs par effet de vitesse), soit une erreur de position d'environ 10 km par jour"
+  systemes: "GPS et autres GNSS (Galileo, GLONASS, BeiDou), horloges atomiques au césium, échelles de temps UTC et TAI"
+  lien_informatique: "synchronisation des serveurs via NTP/PTP à partir du temps GNSS, horodatage des journaux, ordre des transactions financières, authentification Kerberos"
+securite:
+  - titre: Usurpation et brouillage GPS
+    risque: "Un signal GNSS usurpé ou brouillé dérègle l'horloge des serveurs qui s'y synchronisent, faussant journaux, certificats et horodatages légaux."
+    conseil: "Utiliser plusieurs sources de temps indépendantes (GNSS multi-constellations, horloge locale disciplinée) et surveiller les sauts de temps."
+    gravite: elevee
+  - titre: Dérive d'horloge et cohérence des journaux
+    risque: "Sans synchronisation fiable, les horodatages divergent entre machines, rendant la corrélation d'événements et la reconstruction d'incidents impossible."
+    conseil: "Déployer NTP authentifié (NTS) ou PTP sécurisé et surveiller l'écart maximal toléré entre les serveurs."
+    gravite: moyenne
+  - titre: Dépendance unique au GNSS
+    risque: "Une infrastructure critique (télécoms, finance, énergie) reposant sur une seule source GNSS perd toute référence de temps en cas de panne ou d'attaque régionale."
+    conseil: "Prévoir des horloges de secours autonomes (masers, oscillateurs disciplinés) et des procédures de repli documentées."
+    gravite: moyenne
+sources:
+  - titre: "NIST — Time and Frequency from A to Z"
+    url: https://www.nist.gov/pml/time-and-frequency-division/popular-links/time-frequency-z
+  - titre: "Encyclopædia Britannica — Relativity"
+    url: https://www.britannica.com/science/relativity

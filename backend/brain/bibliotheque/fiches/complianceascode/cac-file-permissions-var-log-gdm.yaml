@@ -1,0 +1,75 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-file-permissions-var-log-gdm
+titre: Droits de tous les fichiers de /var/log/gdm/ (0660 au plus)
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: journalisation
+  type_controle: droits-fichier
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: file_permissions_var_log_gdm
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/permissions/files/permissions_var_log_dir/file_permissions_var_log_gdm
+mots_cles:
+- chmod
+- droits
+- fichier
+- fichiers
+- permissions
+- tous
+resume: 'Droits de tous les fichiers de /var/log/gdm/ : 0660 ou plus strict (aucun droit en plus). (regle
+  file_permissions_var_log_gdm, ComplianceAsCode 0.1.82).'
+observer:
+- commande: find /var/log/gdm/ -type f -regextype posix-extended -regex '.*' -printf '%m %u %g %p\n' 2>/dev/null
+  but: Lire droits, proprietaire et groupe (droits)
+  lecture: '1re colonne = droits en octal : aucun bit ne doit depasser 0660. Aucune ligne = fichier absent.'
+controles:
+- controle: droits <= 0660
+  bon: 0660 ou plus strict (aucun droit en plus)
+  mauvais: toute autre valeur
+  gravite: moyenne
+  risque: 'Les journaux du gestionnaire de connexion graphique (GDM) tracent les sessions ouvertes sur
+    la machine : a reserver au personnel autorise.'
+  action: chmod 0660 sur les fichiers concernes (u-x,go-wx selon le cas).
+  playbook: infra.fichiers-motif
+  parametres:
+    dossier: /var/log/gdm/
+    regex: .*
+    nature: droits
+    valeur: '0660'
+    recursif: oui
+  evaluation:
+  - commande: 0
+    lecteur: stat
+    champ: droits
+    comparateur: droits_au_plus
+    attendu: '0660'
+pieges:
+- 'Sans sudo, certains fichiers (ex. /etc/shadow) ne sont pas lisibles par stat/find : relancer avec les
+  droits root.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 6.2.2.1 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 6.1.4.1 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 6.1.4.1 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

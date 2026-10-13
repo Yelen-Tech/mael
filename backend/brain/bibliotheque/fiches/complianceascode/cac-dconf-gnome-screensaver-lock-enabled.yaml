@@ -1,0 +1,81 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-dconf-gnome-screensaver-lock-enabled
+titre: 'GNOME : ecran verrouille a la mise en veille (lock-enabled=true)'
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: sessions
+  type_controle: configuration
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: dconf_gnome_screensaver_lock_enabled
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/software/gnome/gnome_screen_locking/dconf_gnome_screensaver_lock_enabled
+mots_cles:
+- ecran
+- enabled
+- gnome
+- lock
+- lock-enabled
+- verrouillage
+resume: 'GNOME : ecran verrouille a la mise en veille (lock-enabled=true). (regle dconf_gnome_screensaver_lock_enabled,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: dpkg -s gdm3 >/dev/null 2>&1 || echo 'SENTINELLE:SANS_OBJET'; grep -EsR '^[[:space:]]*(export[[:space:]]+|readonly[[:space:]]+)?lock-enabled[[:space:]]*='
+    /etc/dconf/db/
+  but: Lire lock-enabled dans /etc/dconf/db/
+  lecture: Valeur de lock-enabled ; aucune ligne = non defini.
+controles:
+- controle: lock-enabled=true
+  bon: lock-enabled=true
+  mauvais: autre valeur, ou non defini
+  gravite: moyenne
+  risque: 'Le verrouillage doit suivre la mise en veille presque immediatement (5 s au plus) : sinon,
+    n''importe qui peut reprendre la session pendant ce delai.'
+  action: Ecrire lock-enabled=true (section [org/gnome/desktop/screensaver]), verrouiller, puis dconf
+    update.
+  playbook: null
+  sans_playbook: 'fichier a sections ou repertoire (dconf, sssd) : correction manuelle'
+  evaluation:
+  - commande: 0
+    lecteur: affectations
+    comparateur: toutes_egales
+    champ: lock-enabled
+    attendu: 'true'
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 1.7.4 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 1.7.5 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 1.7.4 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 1.7.5 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 1.7.4 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 1.7.5 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

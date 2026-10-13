@@ -1,0 +1,73 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-dconf-gnome-disable-user-list
+titre: 'GNOME : liste des utilisateurs masquee a la connexion (disable-user-list=true)'
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: sessions
+  type_controle: configuration
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: dconf_gnome_disable_user_list
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/software/gnome/gnome_login_screen/dconf_gnome_disable_user_list
+mots_cles:
+- connexion
+- disable
+- disable-user-list
+- gnome
+- list
+- liste
+- user
+- utilisateurs
+resume: 'GNOME : liste des utilisateurs masquee a la connexion (disable-user-list=true). (regle dconf_gnome_disable_user_list,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: dpkg -s gdm3 >/dev/null 2>&1 || echo 'SENTINELLE:SANS_OBJET'; grep -EsR '^[[:space:]]*(export[[:space:]]+|readonly[[:space:]]+)?disable-user-list[[:space:]]*='
+    /etc/dconf/db/ /etc/gdm3/greeter.dconf-defaults
+  but: Lire disable-user-list dans /etc/dconf/db/, /etc/gdm3/greeter.dconf-defaults
+  lecture: Valeur de disable-user-list ; aucune ligne = non defini.
+controles:
+- controle: disable-user-list=true
+  bon: disable-user-list=true
+  mauvais: autre valeur, ou non defini
+  gravite: moyenne
+  risque: 'Laisser la liste des utilisateurs active est un risque de securite : toute personne ayant un
+    acces physique peut enumerer rapidement les comptes connus sans se connecter.'
+  action: Ecrire disable-user-list=true (section [org/gnome/login-screen]), verrouiller, puis dconf update.
+  playbook: null
+  sans_playbook: 'fichier a sections ou repertoire (dconf, sssd) : correction manuelle'
+  evaluation:
+  - commande: 0
+    lecteur: affectations
+    comparateur: toutes_egales
+    champ: disable-user-list
+    attendu: 'true'
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 1.7.3 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 1.7.3 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 1.7.3 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

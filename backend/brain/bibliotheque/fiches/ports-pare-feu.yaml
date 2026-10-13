@@ -1,0 +1,64 @@
+id: ports-pare-feu
+titre: "Ports en ecoute et pare-feu"
+domaine: reseau
+schema: 2
+version: 1
+etat: verifie
+verifie_le: 2026-09-16
+teste_sur: []            # a remplir par les tests en conteneur (etape 2.5)
+applicable:
+  os: [linux]
+taxonomie:
+  theme: exposition-reseau
+  type_controle: observation
+  niveaux: {cis: null, anssi: null}   # fiche manuelle hors referentiel
+source:
+  origine: manuel
+mots_cles: [port, ports, ecoute, pare-feu, firewall, ufw, iptables, expose, surface, ss, netstat, 0.0.0.0]
+resume: >
+  On liste les services qui ecoutent, on distingue ceux ouverts a tout Internet
+  (0.0.0.0 / ::) de ceux limites a la machine (127.0.0.1). Un service de donnees
+  expose a tout Internet est un risque majeur. On lit l'etat, on ne touche pas au
+  pare-feu sans validation.
+
+observer:
+  - commande: "ss -tulnp"
+    but: "Lister les ports TCP/UDP en ecoute et le processus associe"
+    lecture: "Colonne Local Address : 0.0.0.0 ou :: = expose a tout ; 127.0.0.1 ou ::1 = local seulement. Le port et le programme suivent."
+    variantes:
+      alpine: "netstat -tulnp"
+  - commande: "ss -tlnp | awk 'NR>1 {print $4}' | sed 's/.*://' | sort -un"
+    but: "Voir uniquement la liste des ports TCP en ecoute"
+    lecture: "Une liste de numeros de port. Recouper avec les services attendus."
+  - commande: "sudo ufw status verbose 2>/dev/null || sudo iptables -S 2>/dev/null"
+    but: "Lire les regles du pare-feu (ufw si present, sinon iptables)"
+    lecture: "Regles autorisant/refusant des ports. 'Status: inactive' = aucun filtrage."
+    variantes:
+      rhel: "sudo firewall-cmd --list-all 2>/dev/null || sudo nft list ruleset 2>/dev/null"
+
+controles:
+  - controle: "Base de donnees exposee (5432 PostgreSQL, 3306 MySQL, 27017 Mongo, 6379 Redis) sur 0.0.0.0"
+    bon: "ecoute sur 127.0.0.1 uniquement"
+    mauvais: "ecoute sur 0.0.0.0 / ::"
+    gravite: critique
+    risque: "N'importe qui sur Internet peut tenter de se connecter a la base et lire ou detruire les donnees."
+    action: "Restreindre l'ecoute a l'interface locale (bind 127.0.0.1) ou fermer le port au pare-feu."
+    playbook: null
+    sans_playbook: "ouverture de ports = choix d'exploitation : correction manuelle"
+  - controle: "Pare-feu inactif"
+    bon: "actif avec une politique par defaut restrictive"
+    mauvais: "inactif / aucune regle"
+    gravite: moyenne
+    risque: "Tout port ouvert par une appli est directement joignable."
+    action: "Activer un pare-feu (ufw) avec deny par defaut, ouvrir seulement l'utile."
+    playbook: null
+    sans_playbook: "ouverture de ports = choix d'exploitation : correction manuelle"
+
+pieges:
+  - "ss -tulnp montre le processus seulement en root (sinon la colonne programme est vide) : prefixer par sudo si besoin."
+  - "Un port ouvert n'est pas forcement une faille : c'est le couple (service expose + interface 0.0.0.0 + absence de filtrage amont) qui compte."
+  - "En cloud, un pare-feu amont (security group) peut deja filtrer : verifier avant de conclure a une exposition."
+
+referentiels:
+  - {nom: ANSSI, document: "Recommandations de configuration d'un systeme GNU/Linux (BP-028)"}
+  - {nom: CIS, document: "CIS Benchmarks Linux (Ubuntu, Debian, RHEL) - configuration du pare-feu"}

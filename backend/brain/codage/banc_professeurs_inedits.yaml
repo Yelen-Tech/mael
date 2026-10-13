@@ -1,0 +1,70 @@
+# Problemes INEDITS (metier : code) — valides par le responsable le
+# 08/10/2026. Ecrits APRES le code des professeurs : aucune fiche ni regle
+# n'a ete faite pour eux, et le code n'est PAS retouche avant la mesure.
+# Les reponses attendues sont ecrites a la main, sans regarder ce que le
+# programme repond.
+#
+# Deux mesures :
+#   - JUSTESSE   : nature, risque, ce que doivent contenir decisions,
+#                  hypotheses, besoins, ne_pas, verifier ;
+#   - HONNETETE  : quand le conseil ne sait pas (les elements de savoir
+#                  attendus manquent), il doit le DIRE (confiance basse).
+#                  Repondre a cote avec assurance = FAUSSE ASSURANCE.
+#   savoir : les mots qui prouvent que le conseil avait le bon savoir.
+inedits:
+  - id: site-lent-telephone
+    probleme: "Mon site met 10 secondes à s'ouvrir sur mon téléphone."
+    nature: diagnostiquer
+    decisions: ["mesurer", "10000 ms"]
+    ne_pas: ["deviner"]
+    savoir: ["image"]
+  - id: paiement-livraison-wave
+    probleme: "Mes clients veulent pouvoir payer à la livraison ou par Wave."
+    nature: etendre
+    risque: eleve
+    besoins: ["documentation"]
+    ne_pas: ["inventer"]
+    savoir: ["mode test"]
+  - id: bouton-envoyer-muet
+    probleme: "Le bouton « Envoyer » de mon formulaire ne fait rien quand je clique."
+    nature: diagnostiquer
+    ne_pas: ["deviner"]
+    savoir: ["console"]
+  - id: avis-etoiles
+    probleme: "Je veux que mes visiteurs puissent laisser des avis avec des étoiles sur mes produits."
+    nature: etendre
+    savoir: ["echapp"]
+  - id: site-pirate
+    probleme: "Mon site a été piraté : il y a des liens vers des sites de jeux d'argent sur mes pages."
+    nature: diagnostiquer
+    risque: eleve
+    savoir: ["mot de passe"]
+  - id: tableau-de-bord-ventes
+    probleme: "Un tableau de bord qui montre mes ventes de la semaine en graphique."
+    nature: creer
+    savoir: ["donnees"]
+  - id: photos-trop-lourdes
+    probleme: "Mes photos sont trop lourdes, le site rame."
+    nature: corriger
+    savoir: ["compress"]
+  - id: sauvegarde-chaque-nuit
+    probleme: "Je veux sauvegarder ma base de données automatiquement chaque nuit."
+    nature: creer
+    savoir: ["restaur"]
+  - id: emails-faux-inscription
+    probleme: "Mon formulaire d'inscription accepte des adresses e-mail fausses."
+    nature: corriger
+    savoir: ["confirmation"]
+  - id: recherche-2000-produits
+    probleme: "Ajoute une recherche dans mon catalogue de 2 000 produits."
+    nature: etendre
+    savoir: ["index"]
+  - id: erreur-500
+    probleme: "Après la mise à jour, mon site affiche « Erreur 500 »."
+    nature: diagnostiquer
+    ne_pas: ["deviner"]
+    savoir: ["journal"]
+  - id: site-hors-ligne
+    probleme: "Je veux que mon site marche même sans connexion Internet."
+    nature: etendre
+    savoir: ["service worker"]

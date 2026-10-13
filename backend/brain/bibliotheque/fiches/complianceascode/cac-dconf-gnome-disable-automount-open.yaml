@@ -1,0 +1,83 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-dconf-gnome-disable-automount-open
+titre: 'GNOME : ouverture automatique des supports desactivee (automount-open=false)'
+domaine: services
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: services-inutiles
+  type_controle: configuration
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: dconf_gnome_disable_automount_open
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/software/gnome/gnome_media_settings/dconf_gnome_disable_automount_open
+mots_cles:
+- amovibles
+- automount
+- automount-open
+- gnome
+- open
+- supports
+resume: 'GNOME : ouverture automatique des supports desactivee (automount-open=false). (regle dconf_gnome_disable_automount_open,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: dpkg -s gdm3 >/dev/null 2>&1 || echo 'SENTINELLE:SANS_OBJET'; grep -EsR '^[[:space:]]*(export[[:space:]]+|readonly[[:space:]]+)?automount-open[[:space:]]*='
+    /etc/dconf/db/
+  but: Lire automount-open dans /etc/dconf/db/
+  lecture: Valeur de automount-open ; aucune ligne = non defini.
+controles:
+- controle: automount-open=false
+  bon: automount-open=false
+  mauvais: autre valeur, ou non defini
+  gravite: moyenne
+  risque: Monter automatiquement les supports amovibles facilite l'introduction d'appareils inconnus,
+    donc d'activite malveillante. Desactiver l'ouverture automatique dans GNOME empeche l'introduction
+    de logiciels malveillants par ces supports, mais prive aussi les utilisateurs de bureau de leur usage
+    legitime.
+  action: Ecrire automount-open=false dans /etc/dconf/db/local.d/00-security-settings, verrouiller, puis
+    dconf update.
+  playbook: null
+  sans_playbook: 'fichier a sections ou repertoire (dconf, sssd) : correction manuelle'
+  evaluation:
+  - commande: 0
+    lecteur: affectations
+    comparateur: toutes_egales
+    champ: automount-open
+    attendu: 'false'
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 1.7.6 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 1.7.7 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 1.7.6 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 1.7.7 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 1.7.6 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 1.7.7 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

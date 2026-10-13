@@ -1,0 +1,66 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-service-chronyd-disabled
+titre: Service chrony desactive et arrete (si chronyd n'est pas l'outil retenu)
+domaine: services
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: synchronisation-heure
+  type_controle: service-inactif
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: service_chronyd_disabled
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/ntp/service_chronyd_disabled
+mots_cles:
+- chrony
+- demarrage
+- service
+- services
+- systemd
+resume: Le service chrony doit etre desactive et arrete. (regle service_chronyd_disabled, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: systemctl is-enabled chrony.service 2>/dev/null; systemctl is-active chrony.service 2>/dev/null
+  but: Lire l'etat de demarrage et d'execution de chrony
+  lecture: 'Attendu : « disabled » ou « masked » (ou service absent) puis « inactive ».'
+controles:
+- controle: service chrony disabled/inactive
+  bon: disabled ou masked, inactive (ou absent)
+  mauvais: enabled ou active
+  gravite: moyenne
+  risque: 'Si un autre service de synchronisation est retenu, celui-ci doit etre desactive : deux services
+    actifs se contredisent.'
+  action: systemctl disable --now chrony.service (ou mask) apres verification du besoin.
+  playbook: infra.service-desactiver
+  parametres:
+    service: chrony
+  evaluation: []
+pieges:
+- 'Regle conditionnelle : ne s''applique que si chronyd n''est pas l''outil retenu (var_timesync_service).
+  Demander ou constater l''outil en place avant de conclure ; le code ne juge pas cette regle seul.'
+- 'Un service peut etre demarre par une socket systemd : verifier aussi « systemctl list-sockets ».'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 2.3.1.1 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 2.3.1.1 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 2.3.1.1 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

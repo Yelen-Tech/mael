@@ -1,0 +1,68 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-file-groupownership-sshd-pub-key
+titre: 'Groupe des fichiers *.pub de /etc/ssh/ : root'
+domaine: acces
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: ssh
+  type_controle: groupe-fichier
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: file_groupownership_sshd_pub_key
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/ssh/file_groupownership_sshd_pub_key
+mots_cles:
+- chgrp
+- fichier
+- fichiers
+- groupe
+resume: 'Groupe des fichiers *.pub de /etc/ssh/ : root : groupe root. (regle file_groupownership_sshd_pub_key,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: find /etc/ssh/ -maxdepth 1 -type f -regextype posix-extended -regex '^.*\.pub$' -printf '%m
+    %u %g %p\n' 2>/dev/null
+  but: Lire droits, proprietaire et groupe (groupe)
+  lecture: '3e colonne = groupe : attendu root. Aucune ligne = fichier absent.'
+controles:
+- controle: groupe = root
+  bon: groupe root
+  mauvais: toute autre valeur
+  gravite: moyenne
+  risque: Si un compte non autorise peut modifier une cle publique d'hote SSH, il peut la remplacer et
+    compromettre l'authentification du serveur aupres des clients.
+  action: chgrp root sur les fichiers concernes.
+  playbook: infra.fichiers-motif
+  parametres:
+    dossier: /etc/ssh/
+    regex: ^.*\.pub$
+    nature: groupe
+    valeur: root
+    recursif: non
+  evaluation:
+  - commande: 0
+    lecteur: stat
+    champ: groupe
+    comparateur: dans
+    attendu:
+    - '0'
+    - root
+pieges:
+- 'Sans sudo, certains fichiers (ex. /etc/shadow) ne sont pas lisibles par stat/find : relancer avec les
+  droits root.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R50 (niveau intermediaire)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

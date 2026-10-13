@@ -1,0 +1,21 @@
+id: infra.fichier-groupe
+titre: "Fichier : groupe"
+description: >
+  Applique chgrp GROUPE sur un fichier ou repertoire precis. Garde la valeur
+  precedente pour le retour arriere.
+risque: faible
+parametres:
+  - {nom: chemin, type: string, requis: true, motif: '^/[A-Za-z0-9._/+-]+$'}
+  - {nom: groupe, type: string, requis: true, motif: '^[a-z_][a-z0-9_-]*$'}
+racine_requise: true
+reversible: true
+simulation: true
+idempotent: true
+redemarrage: false
+indisponibilite: "0 s"
+source:
+  origine: complianceascode
+  version: 0.1.82
+  gabarit: shared/templates/file_groupowner/bash.template
+  ecarts: "chemins explicites seulement (pas de recherche find), valeur precedente gardee"
+references: [ANSSI-BP-028, CIS Benchmarks]

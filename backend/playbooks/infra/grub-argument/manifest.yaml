@@ -1,0 +1,20 @@
+id: infra.grub-argument
+titre: "Demarrage : ajouter ou retirer un argument du noyau"
+description: >
+  Modifie GRUB_CMDLINE_LINUX dans /etc/default/grub (retire toute occurrence du nom de l'argument, puis l'ajoute avec la valeur voulue) et regenere la configuration (update-grub). Effet au redemarrage.
+risque: moyen
+parametres:
+  - {nom: argument, type: string, requis: true, motif: '^[A-Za-z0-9_.,=:-]+( [A-Za-z0-9_.,=:-]+)*$'}
+  - {nom: action, type: string, requis: true, motif: '^(ajouter|retirer)$'}
+racine_requise: true
+reversible: true
+simulation: true
+idempotent: true
+redemarrage: true
+indisponibilite: "redemarrage necessaire"
+source:
+  origine: complianceascode
+  version: 0.1.82
+  gabarit: shared/templates/grub2_bootloader_argument/bash.template (grub2_bootloader_argument_remediation)
+  ecarts: "sauvegarde de /etc/default/grub et retour arriere"
+references: [ANSSI-BP-028, CIS Benchmarks]

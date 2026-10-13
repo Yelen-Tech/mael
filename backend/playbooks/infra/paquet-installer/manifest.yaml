@@ -1,0 +1,19 @@
+id: infra.paquet-installer
+titre: "Paquet : installer un paquet"
+description: >
+  Installe le paquet depuis les depots configures.
+risque: faible
+parametres:
+  - {nom: paquet, type: string, requis: true, motif: '^[a-z0-9][a-z0-9+.-]*( [a-z0-9][a-z0-9+.-]*)*$'}
+racine_requise: true
+reversible: true
+simulation: true
+idempotent: true
+redemarrage: false
+indisponibilite: "0 s"
+source:
+  origine: complianceascode
+  version: 0.1.82
+  gabarit: shared/templates/package_installed/bash.template
+  ecarts: "etat precedent garde pour le retour arriere"
+references: [ANSSI-BP-028, CIS Benchmarks]

@@ -1,0 +1,22 @@
+id: infra.fichier-droits
+titre: "Fichier : droits au plus MODE (jamais relaches)"
+description: >
+  Retire les droits en trop d'un fichier ou repertoire precis (droits
+  actuels ET MODE : aucun droit n'est ajoute). Garde la valeur precedente
+  pour le retour arriere.
+risque: faible
+parametres:
+  - {nom: chemin, type: string, requis: true, motif: '^/[A-Za-z0-9._/+-]+$'}
+  - {nom: mode, type: string, requis: true, motif: '^[0-7]{3,4}$'}
+racine_requise: true
+reversible: true
+simulation: true
+idempotent: true
+redemarrage: false
+indisponibilite: "0 s"
+source:
+  origine: complianceascode
+  version: 0.1.82
+  gabarit: shared/templates/file_permissions/bash.template
+  ecarts: "chemins explicites seulement (pas de recherche find), valeur precedente gardee"
+references: [ANSSI-BP-028, CIS Benchmarks]

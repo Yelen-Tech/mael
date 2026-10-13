@@ -1,0 +1,62 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-aide-periodic-cron-checking
+titre: AIDE execute periodiquement (cron)
+domaine: systeme
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - ubuntu==22.04
+taxonomie:
+  theme: integrite
+  type_controle: detection
+  niveaux:
+    cis: 1
+    anssi: eleve
+source:
+  origine: complianceascode
+  regle: aide_periodic_cron_checking
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/software/integrity/software-integrity/aide/aide_periodic_cron_checking
+mots_cles:
+- aide
+- controle
+- cron
+- planification
+resume: AIDE execute periodiquement (cron). (regle aide_periodic_cron_checking, ComplianceAsCode 0.1.82).
+observer:
+- commande: dpkg -s aide >/dev/null 2>&1 || echo 'SENTINELLE:SANS_OBJET'; grep -Rls 'aide' /etc/crontab
+    /etc/cron.d/ /etc/cron.daily/ /etc/cron.weekly/
+  but: Chercher une tache planifiee AIDE
+  lecture: Une ligne = conforme ; aucune = ecart.
+controles:
+- controle: tache AIDE au moins hebdomadaire
+  bon: un fichier cron
+  mauvais: aucune tache
+  gravite: moyenne
+  risque: 'AIDE ne se lance pas seul : sans execution reguliere, une modification non autorisee des fichiers
+    systeme n''est jamais signalee.'
+  action: Ajouter « 05 4 * * * root /usr/bin/aide --check » dans /etc/crontab (ou garder /etc/cron.daily/aide).
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: presente
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 6.1.2 (niveau 1)
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R76 (niveau eleve)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

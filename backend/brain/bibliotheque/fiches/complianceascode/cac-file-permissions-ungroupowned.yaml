@@ -1,0 +1,73 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-file-permissions-ungroupowned
+titre: Aucun fichier sans groupe proprietaire valide
+domaine: fichiers
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: fichiers-systeme
+  type_controle: detection
+  niveaux:
+    cis: 1
+    anssi: minimal
+source:
+  origine: complianceascode
+  regle: file_permissions_ungroupowned
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/permissions/files/file_permissions_ungroupowned
+mots_cles:
+- fichiers
+- groupe
+- nogroup
+- orphelin
+resume: Aucun fichier sans groupe proprietaire valide. (regle file_permissions_ungroupowned, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: find / -xdev -nogroup 2>/dev/null
+  but: Chercher les fichiers dont le groupe n'existe pas
+  lecture: Chaque ligne est un element en defaut ; aucune ligne = conforme.
+controles:
+- controle: aucun fichier sans groupe
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: 'Un fichier sans proprietaire ou sans groupe valide n''est pas une faille en soi, mais signale
+    une anomalie : intrusion, logiciel mal installe ou mal retire, compte supprime sans ses fichiers.
+    Un futur compte qui recevrait le meme identifiant en deviendrait proprietaire : il faut en trouver
+    la cause et les rattacher.'
+  action: chgrp GROUPE FICHIER, ou supprimer (enqueter sur l'origine).
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- '-xdev limite la recherche a la partition racine : relancer pour chaque partition locale (findmnt).'
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 7.1.12 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 7.1.12 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 7.1.12 (niveau 1)
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R53 (niveau minimal)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

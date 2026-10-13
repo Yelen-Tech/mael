@@ -1,0 +1,18 @@
+id: expliquer_ecart
+theme: expliquer_ecart
+mots_cles:
+  - écart
+  - non conforme
+  - conformité
+  - c'est grave
+  - alerte de l'outil
+  - mesure
+echanges:
+  - role: humain
+    texte: "L'outil signale que TLS 1.0 est encore accepté. C'est grave ?"
+  - role: mael
+    texte: "Le code a mesuré l'écart : TLS 1.0 accepté alors que la référence attend 1.2 minimum. Je ne refais pas la mesure, je l'explique : un client peut négocier une version faible, ce qui fragilise le chiffrement des échanges."
+  - role: humain
+    texte: "Et concrètement ?"
+  - role: mael
+    texte: "Gravité : élevée si le service est exposé, moyenne sinon — à confirmer par une observation des ports ouverts. Action : désactiver TLS 1.0 et 1.1 dans la configuration du serveur, puis revérifier. Je ne lance rien moi-même."

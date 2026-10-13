@@ -1,0 +1,44 @@
+{
+ "systeme": "ubuntu:26.04",
+ "date": "2026-09-22T16:16:18.999318+00:00",
+ "playbooks": [
+  {
+   "playbook": "infra.service-activer",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer",
+     "code": 0,
+     "note": "Synchronizing state of apparmor.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.\nExecuting: "
+    },
+    {
+     "etape": "verifier",
+     "code": 1,
+     "note": "Non conforme : apparmor enabled / inactive."
+    },
+    {
+     "etape": "revenir",
+     "code": 0,
+     "note": ""
+    }
+   ],
+   "ecarts": [],
+   "ok": false,
+   "vm": null,
+   "cadre": "systemd refuse de demarrer cette unite sur cette machine (ConditionResult=no) : Condition: start condition unmet at Tue 2026-09-22 18:16:16 CEST; 1s ago Sep 22 18:14:17 TBV22 systemd[1]: apparmor.service - Load AppArmor profiles skipped, unmet condition check "
+  }
+ ],
+ "juges": 0,
+ "reussis": 0,
+ "a_tester_en_vm": 0,
+ "hors_cadre": 1
+}

@@ -1,0 +1,63 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-rsyslog-remote-tls
+titre: L'envoi distant rsyslog est chiffre (TLS, pilote gtls)
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: journalisation
+  type_controle: detection
+  niveaux:
+    cis: null
+    anssi: renforce
+source:
+  origine: complianceascode
+  regle: rsyslog_remote_tls
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/logging/rsyslog_sending_messages/rsyslog_remote_tls
+mots_cles:
+- chiffrement
+- gtls
+- omfwd
+- rsyslog
+- tls
+resume: L'envoi distant rsyslog est chiffre (TLS, pilote gtls). (regle rsyslog_remote_tls, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: grep -Eis 'omfwd.*streamdriver="?gtls' /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+  but: Chercher une action omfwd utilisant TLS
+  lecture: Une ligne = conforme ; aucune = ecart.
+controles:
+- controle: omfwd avec StreamDriver gtls
+  bon: une ligne
+  mauvais: envoi en clair, ou pas d'envoi
+  gravite: moyenne
+  risque: Sans chiffrement ni authentification, les journaux envoyes au serveur distant peuvent etre lus,
+    modifies ou detournes vers un faux serveur.
+  action: action(type="omfwd" protocol="tcp" Target="serveur" port="6514" StreamDriver="gtls" StreamDriverMode="1"
+    StreamDriverAuthMode="x509/name")
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: presente
+pieges:
+- 'Une action ecrite sur plusieurs lignes echappe a cette lecture ligne a ligne : relire le fichier en
+  cas d''ecart.'
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R71 (niveau renforce)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

@@ -1,0 +1,65 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-directory-permissions-etc-selinux
+titre: Droits de /etc/selinux/ (0755 au plus)
+domaine: systeme
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: controle-acces
+  type_controle: droits-fichier
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: directory_permissions_etc_selinux
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/selinux/directory_permissions_etc_selinux
+mots_cles:
+- chmod
+- droits
+- fichier
+- fichiers
+- permissions
+- selinux
+resume: 'Droits de /etc/selinux/ : 0755 ou plus strict (aucun droit en plus). (regle directory_permissions_etc_selinux,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: stat -c '%a %U %G %n' /etc/selinux/ 2>/dev/null
+  but: Lire droits, proprietaire et groupe (droits)
+  lecture: '1re colonne = droits en octal : aucun bit ne doit depasser 0755. Aucune ligne = fichier absent.'
+controles:
+- controle: droits <= 0755
+  bon: 0755 ou plus strict (aucun droit en plus)
+  mauvais: toute autre valeur
+  gravite: moyenne
+  risque: '/etc/selinux et /etc/sestatus.conf portent la politique SELinux : qui peut les modifier peut
+    la desactiver ou l''affaiblir. Ils doivent appartenir a root et n''etre modifiables que par lui (sur
+    Debian/Ubuntu, sans objet si SELinux n''est pas installe).'
+  action: chmod 0755 sur les fichiers concernes (u-x,go-wx selon le cas).
+  playbook: infra.fichier-droits
+  parametres:
+    chemin: /etc/selinux/
+    mode: '0755'
+  evaluation:
+  - commande: 0
+    lecteur: stat
+    champ: droits
+    comparateur: droits_au_plus
+    attendu: '0755'
+pieges:
+- 'Sans sudo, certains fichiers (ex. /etc/shadow) ne sont pas lisibles par stat/find : relancer avec les
+  droits root.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R50 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

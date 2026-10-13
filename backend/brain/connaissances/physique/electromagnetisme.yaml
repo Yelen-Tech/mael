@@ -1,0 +1,43 @@
+id: electromagnetisme
+schema: 1
+nom: Électromagnétisme
+resume: Théorie des champs électriques et magnétiques unifiée par Maxwell ; elle fonde la radio, les câbles réseau et la compatibilité électromagnétique, et conditionne les attaques par émission dirigée.
+famille: physique
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - électromagnétisme
+  - maxwell
+  - champ électrique
+  - champ magnétique
+  - compatibilité électromagnétique
+  - cem
+  - impulsion électromagnétique
+  - emp
+  - cage de faraday
+  - blindage
+caracteristiques:
+  notions_fondamentales: "équations de Maxwell, ondes électromagnétiques, induction, couplage capacitif et inductif"
+  ordres_de_grandeur: "vitesse de propagation dans le vide environ 3×10^8 m/s ; fréquences radio utiles de quelques kHz à plusieurs centaines de GHz"
+  domaines: "électrostatique, magnétostatique, propagation, compatibilité électromagnétique (CEM)"
+  lien_informatique: "liaisons cuivre et radio, bus et cartes mères, perturbations et écoute électromagnétique, impulsions EMP/IEMI"
+securite:
+  - titre: Perturbation électromagnétique intentionnelle (IEMI)
+    risque: "Une impulsion électromagnétique de forte puissance peut planter, corrompre ou détruire des équipements électroniques à distance sans contact physique."
+    conseil: "Blinder les salles sensibles (cage de Faraday), protéger les entrées par filtres et parafoudres, et segmenter les câblages exposés."
+    gravite: elevee
+  - titre: Couplage et diaphonie entre câbles
+    risque: "Le couplage inductif ou capacitif entre câbles provoque des erreurs de transmission et peut laisser un signal sensible se réinjecter sur une ligne moins protégée."
+    conseil: "Séparer les chemins de câbles des réseaux de niveaux de sensibilité différents et utiliser paires torsadées et câbles blindés."
+    gravite: moyenne
+  - titre: Effacement magnétique des supports
+    risque: "Un champ magnétique intense peut altérer les données de supports magnétiques (bandes, disques durs) mais reste sans effet fiable sur les mémoires flash."
+    conseil: "Choisir la méthode de destruction selon la technologie du support : démagnétisation pour le magnétique, effacement cryptographique ou destruction pour le flash."
+    gravite: moyenne
+sources:
+  - titre: "Encyclopædia Britannica — Electromagnetism"
+    url: https://www.britannica.com/science/electromagnetism
+  - titre: "NIST — Physics"
+    url: https://www.nist.gov/topics/physics

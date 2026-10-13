@@ -1,0 +1,63 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-service-rsyslog-enabled
+titre: Service rsyslog active et demarre
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==24.04
+taxonomie:
+  theme: journalisation
+  type_controle: service-actif
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: service_rsyslog_enabled
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/logging/service_rsyslog_enabled
+mots_cles:
+- demarrage
+- rsyslog
+- service
+- services
+- systemd
+resume: Le service rsyslog doit etre active et demarre. (regle service_rsyslog_enabled, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: systemctl is-enabled rsyslog.service 2>/dev/null; systemctl is-active rsyslog.service 2>/dev/null
+  but: Lire l'etat de demarrage et d'execution de rsyslog
+  lecture: 'Attendu : « enabled » puis « active ».'
+controles:
+- controle: service rsyslog enabled/active
+  bon: enabled et active
+  mauvais: disabled ou inactive
+  gravite: moyenne
+  risque: 'rsyslog recoit et range les journaux du systeme et des services : sans lui (ou un equivalent
+    actif), les evenements de securite ne sont pas enregistres.'
+  action: systemctl enable --now rsyslog.service
+  playbook: infra.service-activer
+  parametres:
+    service: rsyslog
+  evaluation:
+  - commande: 0
+    lecteur: systemctl
+    comparateur: actif
+pieges:
+- 'Un service peut etre demarre par une socket systemd : verifier aussi « systemctl list-sockets ».'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 6.1.3.2 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 6.1.3.2 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

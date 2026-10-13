@@ -1,0 +1,68 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-no-shelllogin-for-systemaccounts
+titre: Les comptes systeme n'ont pas de shell de connexion
+domaine: fichiers
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: comptes
+  type_controle: detection
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: no_shelllogin_for_systemaccounts
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/accounts/accounts-restrictions/root_logins/no_shelllogin_for_systemaccounts
+mots_cles:
+- comptes systeme
+- nologin
+- passwd
+- shell
+resume: Les comptes systeme n'ont pas de shell de connexion. (regle no_shelllogin_for_systemaccounts,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: 'awk -F: ''NR==FNR{s[$1]=1; next} ($3 < 1000 && $1 != "root" && ($7 in s)) {print $1":"$7}''
+    /etc/shells /etc/passwd'
+  but: Lister les comptes systeme (UID < 1000) dotes d'un shell valide
+  lecture: Chaque ligne est un element en defaut ; aucune ligne = conforme.
+controles:
+- controle: aucun compte systeme avec un shell de /etc/shells
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: 'Un compte systeme dote d''un shell de connexion est une porte d''entree de plus : un attaquant
+    qui prend le controle d''un service peut ouvrir une session interactive sous son identite.'
+  action: usermod -s /usr/sbin/nologin COMPTE pour chaque compte liste.
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 5.4.2.7 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 5.4.2.7 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 5.4.2.7 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

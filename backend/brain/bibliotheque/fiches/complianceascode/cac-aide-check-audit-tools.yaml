@@ -1,0 +1,71 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-aide-check-audit-tools
+titre: AIDE surveille les outils d'audit (auditctl, auditd, ausearch...)
+domaine: systeme
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: integrite
+  type_controle: detection
+  niveaux:
+    cis: 2
+    anssi: null
+source:
+  origine: complianceascode
+  regle: aide_check_audit_tools
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/software/integrity/software-integrity/aide/aide_check_audit_tools
+mots_cles:
+- aide
+- audit
+- integrite
+- outils
+resume: AIDE surveille les outils d'audit (auditctl, auditd, ausearch...). (regle aide_check_audit_tools,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: dpkg -s aide >/dev/null 2>&1 || echo 'SENTINELLE:SANS_OBJET'; cat /etc/aide/aide.conf /etc/aide/aide.conf.d/*
+    2>/dev/null | awk '{c[$1] = 1} END{n = split("/usr/sbin/auditctl /usr/sbin/auditd /usr/sbin/ausearch
+    /usr/sbin/aureport /usr/sbin/autrace /usr/sbin/augenrules", t, " "); for (i = 1; i <= n; i++) if (!(t[i]
+    in c)) print t[i]" non surveille"}'
+  but: Chercher les outils d'audit dans la configuration d'AIDE
+  lecture: Chaque ligne est un element en defaut ; aucune ligne = conforme.
+controles:
+- controle: les 6 outils d'audit surveilles
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: 'Un intrus qui remplace auditctl, ausearch ou auditd peut effacer ou falsifier les traces d''audit
+    : leur integrite doit etre surveillee.'
+  action: Ajouter les lignes /usr/sbin/auditctl p+i+n+u+g+s+b+acl+xattrs+sha512 (idem pour auditd, ausearch,
+    aureport, autrace, augenrules) a /etc/aide/aide.conf.
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 6.1.3 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 6.3.3 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 6.3.3 (niveau 2)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

@@ -1,0 +1,87 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-accounts-tmout
+titre: Deconnexion des sessions inactives (TMOUT au plus 900 s, en lecture seule)
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: sessions
+  type_controle: configuration
+  niveaux:
+    cis: 1
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: accounts_tmout
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/accounts/accounts-session/accounts_tmout
+mots_cles:
+- deconnexion
+- inactivite
+- session
+- shell
+- tmout
+resume: Deconnexion des sessions inactives (TMOUT au plus 900 s, en lecture seule). (regle accounts_tmout,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: grep -Es '^[[:space:]]*(export[[:space:]]+|readonly[[:space:]]+)?TMOUT[[:space:]]*=' /etc/bash.bashrc
+    /etc/profile /etc/profile.d/*.sh
+  but: Lire TMOUT dans /etc/bash.bashrc, /etc/profile, /etc/profile.d/*.sh
+  lecture: Valeur de TMOUT ; aucune ligne = non defini.
+- commande: grep -Es '(readonly|declare[[:space:]]+-r)[[:space:]]+TMOUT' /etc/bash.bashrc /etc/profile
+    /etc/profile.d/*.sh
+  but: Verifier que TMOUT est en lecture seule
+  lecture: Une ligne « readonly TMOUT » (ou declare -r) ; aucune = l'utilisateur peut l'annuler.
+controles:
+- controle: TMOUT entre 1 et 900, readonly
+  bon: TMOUT=900 (ou moins), readonly TMOUT, export TMOUT
+  mauvais: autre valeur, ou non defini
+  gravite: moyenne
+  risque: Fermer rapidement une session inactive reduit la fenetre d'opportunite pour qu'une personne
+    non autorisee prenne le controle d'une session de gestion laissee sans surveillance sur la console.
+  action: 'Creer /etc/profile.d/tmout.sh : « TMOUT=900 », « readonly TMOUT », « export TMOUT ».'
+  playbook: infra.cle-valeur
+  parametres:
+    fichier: /etc/profile.d/mael-tmout.sh
+    cle: TMOUT
+    valeur: '900'
+    format: readonly
+  evaluation:
+  - commande: 0
+    lecteur: affectations
+    comparateur: entre
+    champ: TMOUT
+    attendu:
+    - 1
+    - '900'
+  - commande: 1
+    lecteur: lignes
+    comparateur: presente
+pieges:
+- 'TMOUT=0 desactive la deconnexion automatique : non conforme.'
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 5.4.3.2 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 5.4.3.2 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 5.4.3.2 (niveau 1)
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R32 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

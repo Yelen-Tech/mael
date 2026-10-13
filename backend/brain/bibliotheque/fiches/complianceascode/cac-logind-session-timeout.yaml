@@ -1,0 +1,71 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-logind-session-timeout
+titre: logind ferme les sessions inactives (StopIdleSessionSec au plus 600 s)
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: sessions
+  type_controle: configuration
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: logind_session_timeout
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/accounts/accounts-physical/logind_session_timeout
+mots_cles:
+- deconnexion
+- inactivite
+- logind
+- session
+- stopidlesessionsec
+resume: logind ferme les sessions inactives (StopIdleSessionSec au plus 600 s). (regle logind_session_timeout,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: grep -EsR '^[[:space:]]*(export[[:space:]]+|readonly[[:space:]]+)?StopIdleSessionSec[[:space:]]*='
+    /etc/systemd/logind.conf /etc/systemd/logind.conf.d/
+  but: Lire StopIdleSessionSec dans /etc/systemd/logind.conf, /etc/systemd/logind.conf.d/
+  lecture: Valeur de StopIdleSessionSec ; aucune ligne = non defini.
+controles:
+- controle: StopIdleSessionSec entre 1 et 600
+  bon: StopIdleSessionSec=600
+  mauvais: autre valeur, ou non defini
+  gravite: moyenne
+  risque: Fermer automatiquement une session inactive reduit le temps pendant lequel une personne non
+    autorisee peut reprendre une session laissee ouverte, sur la console comme a distance.
+  action: Ecrire « StopIdleSessionSec=600 » dans la section [Login] de /etc/systemd/logind.conf, puis
+    redemarrer systemd-logind.
+  playbook: infra.cle-valeur
+  parametres:
+    fichier: /etc/systemd/logind.conf
+    cle: StopIdleSessionSec
+    valeur: '600'
+    format: egal
+  evaluation:
+  - commande: 0
+    lecteur: affectations
+    comparateur: entre
+    champ: StopIdleSessionSec
+    attendu:
+    - 1
+    - '600'
+pieges:
+- 'StopIdleSessionSec exige systemd 252 ou plus (Debian 12, Ubuntu 24.04) : sur Ubuntu 22.04 (systemd
+  249) l''option est ignoree, la lire dans le fichier ne prouve rien ; y utiliser TMOUT (fiche dediee).'
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R32 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

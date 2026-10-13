@@ -1,0 +1,80 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-audit-rules-privileged-commands-rmmod
+titre: Audit de l'execution de rmmod
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: audit
+  type_controle: regle-audit
+  niveaux:
+    cis: null
+    anssi: renforce
+source:
+  origine: complianceascode
+  regle: audit_rules_privileged_commands_rmmod
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/auditing/auditd_configure_rules/audit_privileged_commands/audit_rules_privileged_commands_rmmod
+mots_cles:
+- audit
+- auditctl
+- auditd
+- dechargement
+- journalisation
+- module
+- noyau
+- rmmod
+- tracabilite
+resume: Audit de l'execution de rmmod. (regle audit_rules_privileged_commands_rmmod, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: auditctl -l
+  but: Lire les regles d'audit CHARGEES dans le noyau
+  lecture: Une ligne par regle (-w chemin -p wa, ou -a always,exit -F arch=b64 -S appel...). « No rules
+    » = aucune regle.
+- commande: grep -hs '^-' /etc/audit/rules.d/*.rules
+  but: Lire les regles PERSISTANTES (rechargees au demarrage)
+  lecture: Memes regles qu'auditctl -l ; absentes ici = perdues au redemarrage.
+controles:
+- controle: -w /sbin/rmmod -p x
+  bon: toutes les regles chargees et persistantes
+  mauvais: regle absente (ou absente au redemarrage)
+  gravite: moyenne
+  risque: Les commandes privilegiees peuvent etre detournees, volontairement ou non, par des utilisateurs
+    autorises ou par un attaquant qui a pris le controle d'un compte, et sont la cible des elevations
+    de privileges. Tracer leur execution permet de detecter ces abus.
+  action: Ajouter la regle dans un fichier de /etc/audit/rules.d/ (ex. 50-sentinelle.rules), puis « augenrules
+    --load ». Si la configuration est immuable (-e 2), redemarrer.
+  playbook: infra.audit-regles
+  parametres:
+    regles: -a always,exit -F path=/sbin/rmmod -F perm=x -F auid>=1000 -F auid!=unset -k mael
+  evaluation:
+  - lecteur: audit
+    comparateur: execution
+    champ: /sbin/rmmod
+    attendu: x
+    commande: 0
+  - lecteur: audit
+    comparateur: execution
+    champ: /sbin/rmmod
+    attendu: x
+    commande: 1
+pieges:
+- auditctl -l et /etc/audit/rules.d exigent les droits root (sudo).
+- 'Une regle chargee a la main (auditctl -w) disparait au redemarrage : elle doit aussi etre dans /etc/audit/rules.d/
+  (puis augenrules --load).'
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R73 (niveau renforce)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

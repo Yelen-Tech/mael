@@ -1,0 +1,77 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-accounts-minimum-age-login-defs
+titre: 'Mots de passe : duree de vie minimale (PASS_MIN_DAYS au moins 1)'
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: authentification
+  type_controle: configuration
+  niveaux:
+    cis: 2
+    anssi: null
+source:
+  origine: complianceascode
+  regle: accounts_minimum_age_login_defs
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/accounts/accounts-restrictions/password_expiration/accounts_minimum_age_login_defs
+mots_cles:
+- days
+- duree de vie
+- expiration
+- login.defs
+- mots de passe
+- pass
+- pass_min_days
+resume: 'Mots de passe : duree de vie minimale (PASS_MIN_DAYS au moins 1). (regle accounts_minimum_age_login_defs,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: grep -Es '^[[:space:]]*PASS_MIN_DAYS[[:space:]]' /etc/login.defs
+  but: Lire PASS_MIN_DAYS dans /etc/login.defs
+  lecture: Valeur de PASS_MIN_DAYS ; aucune ligne = non defini.
+controles:
+- controle: PASS_MIN_DAYS au moins 1
+  bon: PASS_MIN_DAYS 1 ou plus
+  mauvais: autre valeur, ou non defini
+  gravite: moyenne
+  risque: Sans duree de vie minimale, un utilisateur peut changer son mot de passe plusieurs fois de suite
+    pour vider l'historique et revenir aussitot a son ancien mot de passe, ce qui annule la politique
+    de non-reutilisation.
+  action: Ecrire « PASS_MIN_DAYS 1 » dans /etc/login.defs.
+  playbook: infra.cle-valeur
+  parametres:
+    fichier: /etc/login.defs
+    cle: PASS_MIN_DAYS
+    valeur: '1'
+    format: espace
+  evaluation:
+  - commande: 0
+    lecteur: affectations
+    comparateur: au_moins
+    champ: PASS_MIN_DAYS
+    attendu: '1'
+    sep: espace
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 5.4.1.2 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 5.4.1.2 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 5.4.1.2 (niveau 2)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

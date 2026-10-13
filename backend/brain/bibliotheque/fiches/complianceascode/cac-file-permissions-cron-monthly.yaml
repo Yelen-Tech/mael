@@ -1,0 +1,76 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-file-permissions-cron-monthly
+titre: Droits de /etc/cron.monthly/ (0700 au plus)
+domaine: services
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: planification
+  type_controle: droits-fichier
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: file_permissions_cron_monthly
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/cron_and_at/file_permissions_cron_monthly
+mots_cles:
+- chmod
+- cron
+- droits
+- fichier
+- fichiers
+- monthly
+- permissions
+- planification
+- taches
+resume: 'Droits de /etc/cron.monthly/ : 0700 ou plus strict (aucun droit en plus). (regle file_permissions_cron_monthly,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: stat -c '%a %U %G %n' /etc/cron.monthly/ 2>/dev/null
+  but: Lire droits, proprietaire et groupe (droits)
+  lecture: '1re colonne = droits en octal : aucun bit ne doit depasser 0700. Aucune ligne = fichier absent.'
+controles:
+- controle: droits <= 0700
+  bon: 0700 ou plus strict (aucun droit en plus)
+  mauvais: toute autre valeur
+  gravite: moyenne
+  risque: Les taches de /etc/crontab et des repertoires cron s'executent en root. Qui peut y ecrire execute
+    ce qu'il veut en root ; qui peut les lire decouvre les scripts de maintenance et leurs failles. Ils
+    doivent appartenir a root et lui etre reserves.
+  action: chmod 0700 sur les fichiers concernes (u-x,go-wx selon le cas).
+  playbook: infra.fichier-droits
+  parametres:
+    chemin: /etc/cron.monthly/
+    mode: '0700'
+  evaluation:
+  - commande: 0
+    lecteur: stat
+    champ: droits
+    comparateur: droits_au_plus
+    attendu: '0700'
+pieges:
+- 'Sans sudo, certains fichiers (ex. /etc/shadow) ne sont pas lisibles par stat/find : relancer avec les
+  droits root.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 2.4.1.6 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 2.4.1.6 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 2.4.1.6 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

@@ -1,0 +1,74 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-kernel-module-freevxfs-disabled
+titre: Module noyau freevxfs desactive
+domaine: noyau
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: modules-noyau
+  type_controle: module-desactive
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: kernel_module_freevxfs_disabled
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/permissions/mounting/kernel_module_freevxfs_disabled
+mots_cles:
+- freevxfs
+- module
+- modules
+- noyau
+resume: Le module noyau freevxfs ne doit pas pouvoir etre charge. (regle kernel_module_freevxfs_disabled,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: grep -Rs 'freevxfs' /etc/modprobe.d/ /lib/modprobe.d/ 2>/dev/null
+  but: Voir si freevxfs est interdit de chargement
+  lecture: 'Attendu : « install freevxfs /bin/false » (ou /bin/true) et « blacklist freevxfs ».'
+- commande: lsmod | grep -w 'freevxfs'
+  but: Voir si freevxfs est charge en ce moment
+  lecture: Aucune ligne = non charge.
+controles:
+- controle: module freevxfs non chargeable
+  bon: install freevxfs /bin/false + blacklist, non charge
+  mauvais: aucune interdiction, ou module charge
+  gravite: faible
+  risque: Chaque systeme de fichiers pris en charge est du code du noyau qu'un support piege (cle USB,
+    image disque) peut atteindre. Retirer ceux dont on n'a pas besoin reduit la surface d'attaque locale.
+  action: Ajouter « install freevxfs /bin/false » et « blacklist freevxfs » dans /etc/modprobe.d/freevxfs.conf,
+    puis decharger le module.
+  playbook: infra.module-interdit
+  parametres:
+    module: freevxfs
+  evaluation:
+  - commande: 0
+    lecteur: modprobe
+    comparateur: interdit
+    champ: freevxfs
+  - commande: 1
+    lecteur: aucune_ligne
+    comparateur: vide
+pieges:
+- Verifier qu'aucun materiel ou usage (ex. stockage USB) n'a besoin du module avant de l'interdire.
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 1.1.1.2 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 1.1.1.2 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 1.1.1.2 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

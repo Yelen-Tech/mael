@@ -1,0 +1,73 @@
+# Lexique du choix des gabarits par le SENS (savoir.py).
+#
+# Meme methode que la recherche des 733 fiches d'audit
+# (brain/bibliotheque/recherche.py) : intention detectee, synonymes, puis
+# pertinence BM25. Tout est en minuscules et sans accents.
+#
+#   piles    : la technologie demandee. FILTRE STRICT pour le code serveur :
+#              une demande « en PHP » ne recoit jamais un gabarit Flask.
+#   themes   : le besoin. Chaque theme detecte donne un bonus aux gabarits
+#              qui le portent, et le choix cherche a couvrir des themes
+#              DIFFERENTS (un site + un formulaire, pas deux formulaires).
+#   synonymes: la langue de l'utilisateur -> les mots des gabarits.
+
+piles:
+  django: [django]
+  flask: [flask]
+  fastapi: [fastapi, pydantic]
+  python: [python, py]
+  node: [express, node, nodejs, "node.js", expressjs]
+  react: [react, reactjs, jsx, "next.js", nextjs, usestate, useeffect]
+  php: [php, laravel, symfony, wordpress, pdo]
+  java: [java, spring, "spring boot", springboot, jdbc, jakarta, kotlin]
+
+# Pile de chaque famille de gabarit : quelles demandes elle sert.
+# Les gabarits du navigateur (html, css, js) servent toutes les piles.
+compatibles:
+  django: [django, python]
+  flask: [flask, python]
+  fastapi: [fastapi, python]
+  python: [python, django, flask, fastapi]
+  node: [node]
+  react: [react]
+  php: [php]
+  java: [java]
+
+themes:
+  page: [site, "site web", "page web", vitrine, accueil, landing, "page d'accueil", portfolio]
+  navigation: [menu, navigation, "barre de navigation", burger, hamburger, entete, "en-tete", header]
+  produit: [produit, produits, boutique, "e-commerce", ecommerce, panier, catalogue, article, prix]
+  galerie: [galerie, photos, images, realisations, creations, album]
+  pied: [pied, "pied de page", footer, "mentions legales", reseaux sociaux]
+  formulaire: [formulaire, contact, "nous contacter", devis, reservation, saisie, champ, champs]
+  connexion: [connexion, connecter, "se connecter", login, identifier, identification, authentification, authentifier, session, "mot de passe"]
+  inscription: [inscription, inscrire, "s'inscrire", "creer un compte", "creation de compte", signup, enregistrement]
+  style: [css, style, styles, design, theme, couleurs, "mode sombre", police, joli, beau]
+  adaptatif: [responsive, mobile, telephone, smartphone, tablette, adaptatif, adapte, grille]
+  affichage: [afficher, affichage, liste, resultats, recherche, tableau, dynamique]
+  api: [api, rest, fetch, ajax, endpoint, json, appeler, charger, chargement, requete http]
+  validation: [valider, validation, verifier, controler, erreur de saisie]
+  fenetres: [iframe, postmessage, widget, paiement, integrer, integration]
+  sql: [sql, "base de donnees", bdd, sqlite, postgres, postgresql, mysql, mariadb, requete, orm, enregistrer en base]
+  fichier: [televersement, televerser, upload, uploader, "envoyer un fichier", "envoi de fichier", "piece jointe", "photo de profil", telecharger, download, document]
+  configuration: [configuration, config, settings, reglages, environnement, variables, secret, secrets, "cle api", production, deploiement, deployer]
+  durcissement: [securiser, durcir, "en-tetes", headers, helmet, protection, "securite du serveur"]
+  html-brut: [html, markdown, editeur, "texte riche", wysiwyg]
+  xml: [xml, xxe, "fichier xml", parser]
+  motdepasse: ["mot de passe", jeton, token, bcrypt, hacher, hash, reinitialisation]
+
+synonymes:
+  "se connecter": [connexion, login]
+  "s'inscrire": [inscription]
+  # « photos » seul = des images a montrer (galerie). L'ENVOI vient de
+  # « envoyer », « upload », « photo de profil » : c'est lui qui porte le sens.
+  "photo": [image]
+  "photos": [images]
+  "envoyer": [televersement, upload]
+  "bdd": [sql, base, donnees]
+  "base de donnees": [sql, base, donnees]
+  "boutique": [produit, catalogue]
+  "telephone": [responsive, mobile]
+  "mobile": [responsive]
+  "joli": [design, style]
+  "securise": [securite]

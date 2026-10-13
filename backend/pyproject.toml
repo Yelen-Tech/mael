@@ -1,0 +1,115 @@
+# MAEL — l'outil local. « pip install . » puis « mael » : rien d'autre.
+#
+# Ce fichier decrit l'installation LOCALE (chantier L2 du plan du 1er
+# octobre). Le serveur, lui, garde requirements.txt : ses dependances
+# (DRF, celery, redis, psycopg2, gunicorn, whitenoise) ne sont PAS
+# installees chez l'utilisateur, et rien ne les importe en profil local
+# (voir config/settings.py).
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mael"
+version = "0.1.0"
+description = "Audit et cybersecurite en terminal, chez vous, avec votre propre modele local."
+# readme : le README public est a la racine du depot, hors de ce dossier
+# (setuptools refuse un fichier exterieur au projet).
+requires-python = ">=3.12"          # exige par Django 6
+license = "Apache-2.0"              # decision du responsable, 12/10/2026
+                                    # (LICENSE et NOTICE a la racine du depot)
+authors = [{ name = "Yelen Tech" }]
+keywords = ["audit", "cybersecurite", "ollama", "cis", "anssi", "hors-ligne"]
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: System Administrators",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+]
+
+# Le strict necessaire pour que le terminal tourne hors ligne. Chaque ligne
+# ajoutee ici est une minute d'installation de plus, et une panne possible
+# chez quelqu'un dont on ne verra jamais la machine.
+dependencies = [
+    "Django>=6.0,<7",        # configuration, commandes ; aucune base n'est ouverte
+    "httpx>=0.28,<1",        # parler a Ollama
+    "PyYAML>=6,<7",          # fiches et playbooks
+    "python-decouple>=3.8",  # lecture des reglages d'environnement
+    "pydantic>=2.10,<3",     # sorties structurees du modele
+    "python-dateutil>=2.9",
+    "sqlglot==30.19.0",      # lire le SQL de 30 dialectes (juge des bases, MIT)
+]
+
+[project.urls]
+"Code source" = "https://github.com/yelen-tech/mael"
+
+[project.scripts]
+mael = "mael.cli:principal"
+
+[tool.setuptools.packages.find]
+where = ["."]
+# Les playbooks sont des dossiers de donnees, sans __init__.py : ce sont des
+# paquets d'espace de noms (PEP 420). Sans cette ligne, ils ne partiraient
+# pas dans l'installation et MAEL ne saurait plus corriger.
+namespaces = true
+include = ["mael*", "brain*", "core*", "config*", "playbooks*"]
+exclude = ["*.tests*", "banc*", "modules*", "billing*", "assets*", "intel*",
+           "reports*", "venv*"]
+
+# Les fiches, les playbooks, les prompts et les connaissances sont des
+# DONNEES : sans elles MAEL demarre et ne sait rien. Elles voyagent avec le
+# code.
+[tool.setuptools.package-data]
+"*" = ["*.yaml", "*.yml", "*.json", "*.sh", "*.md", "*.txt", "*.lock",
+       "NOTICE", "LICENSE*",
+       # gabarits verifies de l'atelier de code (brain/codage/gabarits)
+       "*.html", "*.css", "*.js",
+       # analyseur JavaScript + acorn embarque (licence MIT)
+       "*.cjs", "VERSION",
+       # gabarits des familles React, PHP, Java
+       "*.jsx", "*.php", "*.java",
+       # configurations embarquees des outils externes (couche 5)
+       "*.mjs"]
+
+# ------------------------------------------------------------------ tests
+# Les tests du brain vivent dans brain/tests_*.py : des fonctions nues,
+# ecrites pour pytest (leurs docstrings documentent « python -m pytest
+# brain/tests_X.py -q »). Sans cette section, pytest ne collecte rien
+# (son motif par defaut est test_*.py) et unittest ne voit que des
+# modules sans TestCase. testpaths evite de ramasser build/lib (restes
+# de « pip install . »).
+[tool.pytest.ini_options]
+python_files = ["tests_*.py", "test_*.py"]
+testpaths = ["brain"]
+
+# ------------------------------------------------------------------ lint
+# ruff : la porte d'entree qualite, exigee en CI (etape « Lint »).
+# Regles retenues : E, F, W (pycodestyle/pyflakes) et I (tri des imports).
+[tool.ruff]
+target-version = "py312"
+# venv et build ne sont pas du code a nous ; brain/codage/gabarits contient
+# des GABARITS de code pour le modele (des donnees du paquet, cf.
+# package-data) : ils sont volontairement incomplets (F821) et ne se lintent
+# pas.
+extend-exclude = ["venv", "build", "mael.egg-info", "brain/codage/gabarits"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = [
+    # « l » pour ligne/lieu est partout dans le code (296 occurrences) ;
+    # le renommage est un chantier a part, pas un prealable au lint.
+    "E741",
+    # la longueur de ligne restera a la charge du formateur le jour ou on
+    # en impose un ; l'exiger ici bloquerait la CI sur 153 commentaires.
+    "E501",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# les tests inserent le dossier courant dans sys.path avant d'importer
+# brain : ils doivent pouvoir tourner seuls, sans installation.
+"brain/tests_*.py" = ["E402"]
+# tableaux de regles volontairement compacts (une regle par ligne, a
+# colons multiples) : la densite y est un choix de lecture.
+"brain/codage/juges_php_java.py" = ["E702"]
+"brain/codage/contamination_php_java.py" = ["E702"]
+"modules/authguard/scenarios.py" = ["E702"]

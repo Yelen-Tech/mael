@@ -1,0 +1,44 @@
+id: semi-conducteurs
+schema: 1
+nom: "Semi-conducteurs (transistors et gravure)"
+resume: Les circuits intégrés en silicium reposent sur des transistors gravés à l'échelle nanométrique ; la miniaturisation et la complexité de la chaîne de fabrication ouvrent la voie aux chevaux de Troie matériels et aux canaux auxiliaires.
+famille: physique
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - semi-conducteur
+  - transistor
+  - cmos
+  - silicium
+  - gravure
+  - lithographie
+  - nanomètre
+  - loi de moore
+  - circuit intégré
+  - cheval de troie matériel
+  - rowhammer
+caracteristiques:
+  notions_fondamentales: "jonction PN, effet de champ, transistor MOS, logique CMOS, lithographie ultraviolette"
+  ordres_de_grandeur: "les nœuds de gravure actuels portent des noms de quelques nanomètres (3 nm, 5 nm) ; ces étiquettes sont commerciales depuis environ le nœud 20 nm et ne mesurent plus directement une dimension physique ; un processeur récent contient des dizaines de milliards de transistors"
+  loi_de_moore: "observation de Gordon Moore (1965) selon laquelle la densité de transistors double environ tous les deux ans, ralentie par les limites physiques et économiques"
+  lien_informatique: "fonde tout le matériel informatique ; la fonderie externalisée et les unités de mémoire DRAM denses exposent à la chaîne d'approvisionnement et aux fautes physiques exploitables"
+securite:
+  - titre: Chevaux de Troie matériels
+    risque: "Une modification malveillante insérée à la conception ou en fonderie (quelques transistors suffisent) peut ouvrir une porte dérobée indétectable par logiciel."
+    conseil: "Diversifier les sources d'approvisionnement, exiger des audits de conception et privilégier les composants certifiés pour les usages critiques."
+    gravite: elevee
+  - titre: Rowhammer et fautes induites
+    risque: "Activer de manière répétée certaines lignes d'une mémoire DRAM provoque des inversions de bits sur les lignes voisines, exploitables pour élever ses privilèges."
+    conseil: "Activer le rafraîchissement ciblé (TRR) et le code correcteur (ECC) et tenir les micrologiciels à jour."
+    gravite: elevee
+  - titre: Canaux auxiliaires électriques
+    risque: "Consommation et fuites électromagnétiques d'une puce révèlent les opérations internes, permettant l'extraction de clés cryptographiques par analyse de puissance."
+    conseil: "Exiger des implémentations résistantes aux canaux auxiliaires (masquage, équilibrage) pour les composants de sécurité."
+    gravite: moyenne
+sources:
+  - titre: "NIST — Semiconductors"
+    url: https://www.nist.gov/semiconductors
+  - titre: "Encyclopædia Britannica — Semiconductor"
+    url: https://www.britannica.com/science/semiconductor

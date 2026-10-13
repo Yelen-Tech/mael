@@ -1,0 +1,17 @@
+# Savoir-faire du specialiste CSS : les preferences du lecteur.
+specialiste: css
+fiches:
+  - id: preferences-du-lecteur
+    titre: respecter les preferences du lecteur (taille, mouvement, theme)
+    gabarit: base.css
+    mots: [style, css, sombre, theme, animation, mouvement, accessible, base, taille]
+    comment:
+      - "html { font-size: 100%; } et des tailles en rem : la taille choisie par le lecteur est respectee"
+      - "@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }"
+      - "un theme sombre par @media (prefers-color-scheme: dark), avec des couleurs REMESUREES (4,5:1)"
+    pourquoi: "WCAG 2.2 : 1.4.4 (agrandir le texte), 2.3.3 (animations declenchees), 1.4.3 (le contraste vaut aussi en theme sombre)."
+    source: "MDN, prefers-reduced-motion — https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    juges: [contraste, zoom-bloque]

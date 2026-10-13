@@ -1,0 +1,72 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-file-owner-systemmap
+titre: 'Proprietaire des fichiers motif ^.*System\.map.*$ de /boot/ : root'
+domaine: fichiers
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: fichiers-systeme
+  type_controle: proprietaire-fichier
+  niveaux:
+    cis: null
+    anssi: renforce
+source:
+  origine: complianceascode
+  regle: file_owner_systemmap
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/permissions/files/file_owner_systemmap
+mots_cles:
+- boot
+- chown
+- fichier
+- fichiers
+- motif
+- proprietaire
+- system
+resume: 'Proprietaire des fichiers motif ^.*System\.map.*$ de /boot/ : root : proprietaire root. (regle
+  file_owner_systemmap, ComplianceAsCode 0.1.82).'
+observer:
+- commande: find /boot/ -maxdepth 1 -type f -regextype posix-extended -regex '^.*System\.map.*$' -printf
+    '%m %u %g %p\n' 2>/dev/null
+  but: Lire droits, proprietaire et groupe (proprietaire)
+  lecture: '2e colonne = proprietaire : attendu root. Aucune ligne = fichier absent.'
+controles:
+- controle: proprietaire = root
+  bon: proprietaire root
+  mauvais: toute autre valeur
+  gravite: faible
+  risque: Les fichiers System.map servent surtout au debogage et au profilage du noyau. Un acces non limite
+    peut reveler des informations utiles aux attaquants et aux logiciels malveillants, menant a des exploitations
+    plus elaborees.
+  action: chown root sur les fichiers concernes.
+  playbook: infra.fichiers-motif
+  parametres:
+    dossier: /boot/
+    regex: ^.*System\.map.*$
+    nature: proprietaire
+    valeur: root
+    recursif: non
+  evaluation:
+  - commande: 0
+    lecteur: stat
+    champ: proprietaire
+    comparateur: dans
+    attendu:
+    - '0'
+    - root
+pieges:
+- 'Sans sudo, certains fichiers (ex. /etc/shadow) ne sont pas lisibles par stat/find : relancer avec les
+  droits root.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R29 (niveau renforce)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

@@ -1,0 +1,24 @@
+# Banc d'essai MAEL — Ubuntu 24.04 LTS (noble)
+# Empreinte figee par resoudre_empreintes.py (jamais :latest implicite).
+FROM ubuntu:24.04@sha256:008173c23f95b170204355c12626cb5a965d779a7e1283b09e9cffbb1bf33ca3
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Jeu representatif d'un serveur : SSH, journaux, audit, privileges,
+# planification, pare-feu. systemd est installe mais ne tourne PAS en
+# conteneur (PID 1 = sleep) : les controles systemctl/noyau sont marques
+# « a tester en VM » par le banc, pas juges faux.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        openssh-server openssh-client \
+        rsyslog auditd \
+        sudo cron \
+        ufw nftables \
+        openssl ca-certificates \
+        apparmor apparmor-utils \
+        procps findutils gawk iproute2 \
+    && rm -rf /var/lib/apt/lists/* \
+    # sshd -T exige /run/sshd, cree par systemd sur une vraie machine
+    # (banc reel 19/09/2026 : 24 fiches SSH restaient indeterminees).
+    && mkdir -p /run/sshd
+
+CMD ["sleep", "infinity"]

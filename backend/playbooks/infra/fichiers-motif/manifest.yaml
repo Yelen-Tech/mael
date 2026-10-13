@@ -1,0 +1,26 @@
+id: infra.fichiers-motif
+titre: "Fichiers trouves par motif : droits, proprietaire ou groupe"
+description: >
+  Applique chmod / chown / chgrp aux fichiers d'un dossier dont le chemin correspond a l'expression reguliere (find -regex, comme la source), hors fichiers exclus par la source (find ! -name). Droits : seuls les bits en trop sont retires, aucun n'est ajoute (jamais relaches). L'etat de chaque fichier est garde pour le retour arriere.
+risque: faible
+parametres:
+  - {nom: dossier, type: string, requis: true, motif: '^/[A-Za-z0-9._/+-]*$'}
+  - {nom: regex, type: string, requis: true, motif: '^[][A-Za-z0-9._/^$*+?|(){}~\\-]+$'}
+  - {nom: nature, type: string, requis: true, motif: '^(droits|proprietaire|groupe)$'}
+  - {nom: valeur, type: string, requis: true, motif: '^([0-7]{3,4}|[a-z_][a-z0-9_-]*)$'}
+  - {nom: recursif, type: string, requis: true, motif: '^(oui|non)$'}
+  - {nom: exclure, type: string, requis: false, defaut: '', motif: '^([][A-Za-z0-9._*?-]+(,[][A-Za-z0-9._*?-]+)*)?$'}
+# revenir.sh retrouve l'etat par ces trois parametres (cle de l'etat).
+parametres_revenir: [dossier, regex, nature]
+racine_requise: true
+reversible: true
+simulation: true
+idempotent: true
+redemarrage: false
+indisponibilite: "0 s"
+source:
+  origine: complianceascode
+  version: 0.1.82
+  gabarit: shared/templates/file_permissions|file_owner|file_groupowner/bash.template
+  ecarts: "etat par fichier garde (stat) et restaure"
+references: [ANSSI-BP-028, CIS Benchmarks]

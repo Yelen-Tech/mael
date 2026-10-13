@@ -1,0 +1,63 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-sudo-add-ignore-dot
+titre: 'sudo : Defaults ignore_dot'
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: sudo
+  type_controle: option-sudo
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: sudo_add_ignore_dot
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/software/sudo/sudo_add_ignore_dot
+mots_cles:
+- defaults
+- elevation
+- ignore
+- ignore_dot
+- privileges
+- sudo
+- sudoers
+resume: La configuration de sudo doit contenir « Defaults ignore_dot ». (regle sudo_add_ignore_dot, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: grep -Rhs '^[[:space:]]*Defaults' /etc/sudoers /etc/sudoers.d/
+  but: Lire les options globales de sudo
+  lecture: 'Attendu : une ligne contenant ignore_dot ; « !ignore_dot » = desactive.'
+controles:
+- controle: Defaults ignore_dot
+  bon: Defaults ignore_dot
+  mauvais: option absente ou desactivee
+  gravite: moyenne
+  risque: Ignorer « . » dans le PATH empeche sudo d'executer un programme du repertoire courant qui porterait
+    le nom d'une commande, depose par un attaquant.
+  action: Ajouter « Defaults ignore_dot » avec visudo -f /etc/sudoers.d/sentinelle (jamais d'edition directe).
+  playbook: infra.sudo-defaults
+  parametres:
+    option: ignore_dot
+  evaluation:
+  - commande: 0
+    lecteur: sudo_defaults
+    comparateur: option
+    champ: ignore_dot
+pieges:
+- '/etc/sudoers n''est lisible que par root : lancer la lecture avec sudo.'
+- 'Une erreur de syntaxe dans sudoers bloque sudo : toujours passer par visudo.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R39 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

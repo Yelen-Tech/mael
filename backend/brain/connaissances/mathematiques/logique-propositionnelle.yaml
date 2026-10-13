@@ -1,0 +1,39 @@
+id: logique-propositionnelle
+schema: 1
+nom: Logique propositionnelle
+resume: Branche de la logique formelle manipulant des propositions reliées par des connecteurs booléens ; elle fonde l'algèbre de Boole, les circuits numériques, les preuves de programmes et les conditions de sécurité.
+famille: mathematiques
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - logique propositionnelle
+  - algèbre de boole
+  - connecteurs logiques
+  - tautologie
+  - satisfiabilité
+  - sat
+  - déduction
+  - table de vérité
+  - forme normale
+caracteristiques:
+  notions_fondamentales: "Propositions atomiques et connecteurs (et, ou, non, implication, équivalence) ; tables de vérité ; tautologies et contradictions ; formes normales conjonctives et disjonctives."
+  liens_informatiques: "Algèbre de Boole et conception des circuits logiques ; préconditions et invariants dans les programmes ; solveurs SAT pour la vérification formelle ; modélisation de règles de contrôle d'accès."
+  ordres_de_grandeur: "Le problème de satisfiabilité SAT est NP-complet ; des solveurs modernes traitent pourtant des instances industrielles à des millions de variables."
+securite:
+  - titre: Conditions de sécurité mal formées
+    risque: Une condition d'autorisation écrite avec des priorités de connecteurs mal comprises (et/ou/négation) peut autoriser ce qu'elle devait interdire.
+    conseil: Parenthéser explicitement, écrire des tables de vérité pour les règles critiques et tester les cas limites.
+    gravite: elevee
+  - titre: Lois de De Morgan ignorées lors d'une négation
+    risque: Inverser une condition composée sans appliquer les lois de De Morgan change silencieusement la logique d'un filtre ou d'une liste de contrôle d'accès.
+    conseil: Systématiser la transformation non(A et B) en (non A) ou (non B) et relire les conditions négatives.
+    gravite: moyenne
+  - titre: Implication confondue avec l'équivalence
+    risque: Traiter « si compromis alors alerte » comme une équivalence fait croire qu'absence d'alerte signifie absence de compromission.
+    conseil: Distinguer conditions nécessaires et suffisantes dans les règles de détection et les raisonnements d'audit.
+    gravite: moyenne
+sources:
+  - titre: Stanford Encyclopedia of Philosophy — Propositional Logic
+    url: https://plato.stanford.edu/entries/logic-propositional/

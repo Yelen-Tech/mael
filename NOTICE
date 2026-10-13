@@ -1,0 +1,43 @@
+MAEL
+Copyright 2026 Yelen Tech
+
+Ce produit est distribue sous la licence Apache, version 2.0 (fichier
+LICENSE). Il contient des elements de tiers, chacun sous sa propre licence,
+reproduite a cote du code concerne :
+
+1. ComplianceAsCode (https://github.com/ComplianceAsCode/content)
+   Licence BSD-3-Clause — Copyright (c) 2012-2017, Red Hat, Inc.
+   - Les fiches backend/brain/bibliotheque/fiches/complianceascode/cac-*.yaml
+     sont derivees des regles de ComplianceAsCode (version indiquee dans
+     source.version de chaque fiche). Texte de la licence :
+     backend/brain/bibliotheque/fiches/complianceascode/NOTICE
+   - Les playbooks backend/playbooks/infra/* reprennent la logique des
+     gabarits de remediation de ComplianceAsCode (shared/templates).
+   Les commandes de lecture, titres et mots-cles en francais, traductions
+   et evaluations sont ajoutes par MAEL.
+
+2. acorn 8.14.0 (https://github.com/acornjs/acorn) — licence MIT
+   backend/brain/codage/vendor/acorn/ (fichier livre sans modification)
+
+3. acorn-jsx 5.3.2 (https://github.com/acornjs/acorn-jsx) — licence MIT
+   backend/brain/codage/vendor/acorn-jsx/ (fichiers livres sans modification)
+
+4. axe-core 4.10.2 (https://github.com/dequelabs/axe-core) — licence MPL-2.0
+   backend/brain/codage/vendor/axe-core/ (fichier livre sans modification)
+
+Les referentiels CIS et ANSSI sont CITES (numeros de regle) ; aucun de leurs
+documents n'est reproduit.
+
+Telecharges a la demande par `mael installer` (NON inclus dans ce depot) :
+   - llama.cpp b11122 (https://github.com/ggml-org/llama.cpp) — licence MIT ;
+   - MAEL-Coder = Qwen3-Coder-30B-A3B-Instruct (Alibaba Qwen,
+     https://huggingface.co/Qwen/Qwen3-Coder-30B-A3B-Instruct) — licence
+     Apache-2.0 ; version compressee Q4_K_M publiee par unsloth
+     (https://huggingface.co/unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF),
+     utilisee sans modification. Sa carte (MAEL-Coder.md) est posee a cote.
+Images de conteneur tirees a la demande (non incluses) : gitleaks (MIT),
+Trivy (Apache-2.0), ClamAV (GPL-2.0), nuclei, httpx, naabu, subfinder (MIT),
+testssl.sh (GPL-2.0).
+
+Les dependances Python installees par pip (Django, sqlglot, httpx, PyYAML...)
+gardent leurs propres licences ; elles ne sont pas redistribuees ici.

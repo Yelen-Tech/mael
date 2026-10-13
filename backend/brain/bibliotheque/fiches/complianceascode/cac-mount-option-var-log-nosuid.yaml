@@ -1,0 +1,79 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-mount-option-var-log-nosuid
+titre: Option nosuid sur /var/log
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: journalisation
+  type_controle: option-montage
+  niveaux:
+    cis: 1
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: mount_option_var_log_nosuid
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/permissions/partitions/mount_option_var_log_nosuid
+mots_cles:
+- montage
+- nosuid
+- option
+- partition
+resume: /var/log doit etre monte avec l'option nosuid. (regle mount_option_var_log_nosuid, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: findmnt -kn /var/log
+  but: Lire les options de montage ACTIVES de /var/log
+  lecture: La colonne des options doit contenir nosuid. Aucune ligne = pas de montage separe.
+- commande: grep -E '[[:space:]]/var/log[[:space:]]' /etc/fstab
+  but: Verifier la configuration PERSISTANTE
+  lecture: La 4e colonne doit contenir nosuid.
+controles:
+- controle: /var/log monte avec nosuid
+  bon: nosuid present (actif et dans /etc/fstab)
+  mauvais: nosuid absent
+  gravite: moyenne
+  risque: 'Les programmes SUID/SGID doivent rester sous controle : l''option nosuid empeche d''en utiliser
+    depuis la partition des journaux.'
+  action: Ajouter nosuid aux options de /var/log dans /etc/fstab puis remonter (mount -o remount /var/log).
+  playbook: infra.montage-option
+  parametres:
+    point: /var/log
+    option: nosuid
+  evaluation:
+  - commande: 0
+    lecteur: findmnt
+    comparateur: option_presente
+    attendu: nosuid
+  - commande: 1
+    lecteur: fstab
+    comparateur: option_presente
+    attendu: nosuid
+pieges:
+- 'Si /var/log n''est pas une partition separee, cette regle ne peut pas s''appliquer telle quelle : voir
+  la regle de partition dediee.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 1.1.2.6.3 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 1.1.2.6.3 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 1.1.2.6.3 (niveau 1)
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R28 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

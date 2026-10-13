@@ -1,0 +1,82 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-dconf-gnome-disable-autorun
+titre: 'GNOME : execution automatique des supports interdite (autorun-never=true)'
+domaine: services
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: services-inutiles
+  type_controle: configuration
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: dconf_gnome_disable_autorun
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/software/gnome/gnome_media_settings/dconf_gnome_disable_autorun
+mots_cles:
+- autorun
+- autorun-never
+- gnome
+- never
+- supports
+- usb
+resume: 'GNOME : execution automatique des supports interdite (autorun-never=true). (regle dconf_gnome_disable_autorun,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: dpkg -s gdm3 >/dev/null 2>&1 || echo 'SENTINELLE:SANS_OBJET'; grep -EsR '^[[:space:]]*(export[[:space:]]+|readonly[[:space:]]+)?autorun-never[[:space:]]*='
+    /etc/dconf/db/
+  but: Lire autorun-never dans /etc/dconf/db/
+  lecture: Valeur de autorun-never ; aucune ligne = non defini.
+controles:
+- controle: autorun-never=true
+  bon: autorun-never=true
+  mauvais: autre valeur, ou non defini
+  gravite: faible
+  risque: Un support amovible qui lance automatiquement un programme a son branchement est un moyen classique
+    d'introduire un logiciel malveillant. Interdire l'execution automatique dans GNOME supprime ce vecteur,
+    au prix d'un peu de confort pour les utilisateurs de bureau.
+  action: Ecrire autorun-never=true dans /etc/dconf/db/local.d/00-security-settings, verrouiller, puis
+    dconf update.
+  playbook: null
+  sans_playbook: 'fichier a sections ou repertoire (dconf, sssd) : correction manuelle'
+  evaluation:
+  - commande: 0
+    lecteur: affectations
+    comparateur: toutes_egales
+    champ: autorun-never
+    attendu: 'true'
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 1.7.8 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 1.7.9 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 1.7.8 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 1.7.9 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 1.7.8 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 1.7.9 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

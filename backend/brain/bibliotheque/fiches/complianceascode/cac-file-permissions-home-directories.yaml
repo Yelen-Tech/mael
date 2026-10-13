@@ -1,0 +1,70 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-file-permissions-home-directories
+titre: Repertoires personnels en 0750 au plus
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: sessions
+  type_controle: droits-fichier
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: file_permissions_home_directories
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/accounts/accounts-session/file_permissions_home_directories
+mots_cles:
+- droits
+- home
+- permissions
+- repertoire personnel
+- repertoires personnels
+resume: Repertoires personnels en 0750 au plus. (regle file_permissions_home_directories, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: 'awk -F: ''($3 >= 1000 && $7 !~ /(nologin|false)$/) {print $6}'' /etc/passwd | xargs -r stat
+    -c ''%a %U %G %n'' 2>/dev/null'
+  but: Lire les droits des repertoires personnels
+  lecture: '1re colonne = droits : au plus 0750.'
+controles:
+- controle: droits <= 0750
+  bon: 0750 ou plus strict
+  mauvais: droits plus larges
+  gravite: moyenne
+  risque: Des droits excessifs sur les repertoires personnels peuvent permettre a d'autres utilisateurs
+    un acces non autorise aux fichiers.
+  action: chmod 0750 /home/COMPTE
+  playbook: null
+  sans_playbook: 'droits calcules (PATH, repertoires personnels) : correction au cas par cas'
+  evaluation:
+  - commande: 0
+    lecteur: stat
+    champ: droits
+    comparateur: droits_au_plus
+    attendu: '0750'
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 7.2.9 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 7.2.9 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 7.2.9 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

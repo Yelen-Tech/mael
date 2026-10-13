@@ -1,0 +1,80 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-file-groupowner-var-log-cloud-init
+titre: 'Groupe des fichiers motif .*cloud-init\.log.* de /var/log/ : adm ou root'
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: journalisation
+  type_controle: groupe-fichier
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: file_groupowner_var_log_cloud_init
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/permissions/files/permissions_var_log_dir/file_groupowner_var_log_cloud_init
+mots_cles:
+- chgrp
+- cloud
+- fichier
+- fichiers
+- groupe
+- init
+- motif
+resume: 'Groupe des fichiers motif .*cloud-init\.log.* de /var/log/ : adm ou root : groupe adm ou root.
+  (regle file_groupowner_var_log_cloud_init, ComplianceAsCode 0.1.82).'
+observer:
+- commande: find /var/log/ -maxdepth 1 -type f -regextype posix-extended -regex '.*cloud-init\.log.*'
+    -printf '%m %u %g %p\n' 2>/dev/null
+  but: Lire droits, proprietaire et groupe (groupe)
+  lecture: '3e colonne = groupe : attendu adm ou root. Aucune ligne = fichier absent.'
+controles:
+- controle: groupe = adm ou root
+  bon: groupe adm ou root
+  mauvais: toute autre valeur
+  gravite: moyenne
+  risque: 'Les journaux de cloud-init detaillent l''initialisation de la machine (reseau, comptes, scripts
+    de demarrage fournis par le nuage) : des informations utiles a un attaquant, a reserver au personnel
+    autorise.'
+  action: chgrp adm ou root sur les fichiers concernes.
+  playbook: infra.fichiers-motif
+  parametres:
+    dossier: /var/log/
+    regex: .*cloud-init\.log.*
+    nature: groupe
+    valeur: adm
+    recursif: non
+  evaluation:
+  - commande: 0
+    lecteur: stat
+    champ: groupe
+    comparateur: dans
+    attendu:
+    - adm
+    - root
+pieges:
+- 'Sans sudo, certains fichiers (ex. /etc/shadow) ne sont pas lisibles par stat/find : relancer avec les
+  droits root.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 6.2.2.1 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 6.1.4.1 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 6.1.4.1 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

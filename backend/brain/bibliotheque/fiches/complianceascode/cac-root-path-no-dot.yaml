@@ -1,0 +1,69 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-root-path-no-dot
+titre: 'PATH : aucune entree relative, vide ou « .. »'
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: sessions
+  type_controle: detection
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: root_path_no_dot
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/accounts/accounts-session/root_paths/root_path_no_dot
+mots_cles:
+- chemin
+- path
+- relatif
+- root
+resume: 'PATH : aucune entree relative, vide ou « .. ». (regle root_path_no_dot, ComplianceAsCode 0.1.82).'
+observer:
+- commande: 'echo "$PATH" | awk -F: ''{for (i = 1; i <= NF; i++) if ($i == "" || $i !~ /^\// || $i ~ /\.\./)
+    print "entree invalide : ["$i"]"}'''
+  but: Controler les entrees du PATH
+  lecture: Chaque ligne est un element en defaut ; aucune ligne = conforme.
+controles:
+- controle: entrees absolues uniquement
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: 'Une entree vide, relative (« . ») ou contenant « .. » dans le PATH de root lui fait chercher
+    les commandes dans le repertoire courant : root peut executer sans le savoir un programme depose par
+    un autre utilisateur.'
+  action: 'Corriger PATH dans /root/.profile (et /etc/environment) : chemins absolus, sans vide ni point.'
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- 'C''est le PATH du shell d''audit : lancer l''audit en tant que root (sudo -i) pour lire celui de root.'
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 5.4.2.5 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 5.4.2.5 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 5.4.2.5 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

@@ -1,0 +1,46 @@
+id: institutions-internationales
+schema: 1
+nom: Institutions internationales
+resume: "ONU (1945), UIT (1865), ISO (1947), IETF (1986) et ICANN (1998) structurent la coopération et la normalisation mondiales ; leurs standards encadrent directement les protocoles et la cybersécurité."
+famille: histoire-geographie
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - institutions internationales
+  - onu
+  - uit
+  - iso
+  - ietf
+  - rfc
+  - icann
+  - normalisation
+  - standards
+  - gouvernance internet
+caracteristiques:
+  onu: "Fondée en 1945, 193 États membres ; agence spécialisée des télécommunications : l'UIT."
+  uit: "Union internationale des télécommunications, créée en 1865 à Paris : attribution des fréquences radio, indicatifs téléphoniques internationaux et normes de la famille ITU-T (ex. X.509 pour les certificats)."
+  iso: "Organisation internationale de normalisation, fondée en 1947 ; publie notamment la série ISO/IEC 27000 sur la sécurité de l'information et ISO 3166 pour les codes pays."
+  ietf: "Internet Engineering Task Force, créée en 1986 : communauté ouverte qui publie les standards d'Internet sous forme de RFC (TCP/IP, TLS, HTTP, DNS)."
+  icann: "Créée en 1998 : coordonne l'attribution mondiale des noms de domaine et des adresses IP via les registres régionaux."
+securite:
+  - titre: Confondre standards et bonnes pratiques
+    risque: Une norme (ISO 27001, RFC) décrit un cadre, pas une implémentation ; une certification ou une lecture superficielle ne garantit pas la sécurité réelle.
+    conseil: Lire les textes de référence et vérifier concrètement les configurations, au-delà des certificats affichés.
+    gravite: moyenne
+  - titre: Standards obsolètes non suivis
+    risque: Les RFC sont révisées et des protocoles sont dépréciés (TLS 1.0/1.1 retirés par la RFC 8996) ; s'appuyer sur des versions périmées crée des vulnérabilités.
+    conseil: Suivre les mises à jour des RFC et des référentiels (NIST, ANSSI) et retirer les versions dépréciées.
+    gravite: moyenne
+  - titre: Faux documents de référence
+    risque: Des sites imitent les organismes de normalisation pour diffuser des documents falsifiés ou des pièges à phishing.
+    conseil: Ne télécharger normes et RFC que depuis les sites officiels (iso.org, ietf.org, itu.int) et vérifier les domaines.
+    gravite: info
+sources:
+  - titre: Nations unies — site officiel
+    url: https://www.un.org/fr/
+  - titre: IETF — RFC et standards
+    url: https://www.ietf.org/standards/rfcs/
+  - titre: ISO — site officiel
+    url: https://www.iso.org/home.html

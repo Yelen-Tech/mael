@@ -1,0 +1,204 @@
+# Banc des PROFESSEURS — metier : CODE (le plus simple, d'abord).
+#
+# Consigne du responsable (08/10/2026) : tester la FIABILITE des
+# professeurs et du juge sur des problemes, SANS le modele. Chaque probleme
+# a sa BONNE REPONSE ecrite a la main, independamment de ce que les
+# professeurs repondent aujourd'hui : un ecart est une faiblesse a montrer,
+# pas un test a ajuster.
+#
+#   realite      : les faits attendus (nb_pages, langages, base, tests,
+#                  interactif, langue, contradiction, vague) ;
+#   connaissance : ce que l'avis doit contenir / ne doit PAS contenir ;
+#   calcul       : le nombre de fichiers prevus [min, max] ; regrouper ;
+#   humain       : ce que l'avis doit contenir / ne doit pas contenir ;
+#   plan         : des plans rendus a accepter ou refuser.
+problemes:
+  - id: boulangerie-3-pages
+    demande: "un site pour une boulangerie avec trois pages : un accueil, une galerie de photos de nos pains, et une page de contact avec un formulaire"
+    realite: {nb_pages: 3, langages: [html], base: false, tests: false, interactif: false, langue: fr, contradiction: false, vague: false}
+    connaissance: {contient: ["feuille de style commune"], ne_contient_pas: ["app.py", "express", "requirements"]}
+    calcul: {fichiers: [4, 5]}
+    humain: {contient: ["clients du quartier", "clavier"], ne_contient_pas: ["devise"]}
+
+  - id: fautes-restaurant
+    demande: "un site pour mon restorant avec 2 pages, un accueil et une page de reservation avec un formulere, et une gallerie de nos plats"
+    realite: {nb_pages: 2, langages: [html], base: false, tests: false, interactif: false, langue: fr}
+    connaissance: {ne_contient_pas: ["app.py"]}
+    calcul: {fichiers: [3, 4]}
+    humain: {contient: ["clients du quartier"]}
+
+  - id: anglais-photographe
+    demande: "a portfolio website for a photographer with three pages: a home page, a photo gallery and a contact form"
+    realite: {nb_pages: 3, langages: [html], langue: en, base: false, tests: false}
+    calcul: {fichiers: [4, 5]}
+    humain: {contient: ["images d'abord"]}
+
+  - id: vague-coiffure
+    demande: "un site pour mon salon de coiffure"
+    realite: {nb_pages: null, langages: [html], vague: true, base: false, tests: false}
+    humain: {contient: ["VAGUE", "supposition"]}
+
+  - id: contradiction-association
+    demande: "un site d'une seule page avec trois pages pour une association de quartier, avec un formulaire d'inscription"
+    realite: {langages: [html], contradiction: true, interactif: false}
+    humain: {contient: ["membres"]}
+
+  - id: page-qui-calcule
+    demande: "une page qui calcule le prix d'une commande de pains : l'utilisateur choisit la quantite de chaque pain dans un formulaire et le total s'affiche en direct, plus une foire aux questions qui s'ouvre et se ferme au clic"
+    realite: {nb_pages: 1, langages: [html], interactif: true, base: false}
+    calcul: {fichiers: [3, 3]}
+
+  - id: api-flask-sqlite
+    demande: "une API web en Python avec Flask pour gerer les produits d'une boutique, stockes dans une base de donnees SQLite : lister les produits, voir un produit, ajouter un produit et le supprimer, avec des tests automatiques"
+    realite: {langages: [python], base: true, tests: true, interactif: false}
+    connaissance: {contient: ["app.py", "parametrees"], ne_contient_pas: ["feuille de style", "index.html", "express"]}
+    calcul: {fichiers: [2, 3]}
+    humain: {contient: ["developpeurs"], ne_contient_pas: ["devise", "clavier"]}
+
+  - id: formulaire-php-pdo
+    demande: "un formulaire de contact en PHP qui verifie les champs (nom, courriel, message), protege contre les failles et enregistre les messages dans une base de donnees avec PDO"
+    realite: {langages: [html, php], base: true, tests: false}
+    connaissance: {contient: ["contact.php"], ne_contient_pas: ["app.py", "flask"]}
+    calcul: {fichiers: [3, 4]}
+
+  - id: association-8-pages
+    demande: "le site complet d'une association culturelle avec huit pages : accueil, a propos, actualites, agenda des evenements, galerie de photos, adhesion avec un formulaire, faire un don, et contact ; un menu commun sur toutes les pages, adapte au telephone"
+    realite: {nb_pages: 8, langages: [html], base: false, tests: false}
+    connaissance: {ne_contient_pas: ["app.py"]}
+    calcul: {fichiers: [9, 10]}
+    humain: {contient: ["membres", "telephone"]}
+
+  - id: boutique-pagnes-complete
+    demande: "une petite boutique en ligne de pagnes et de bijoux : trois pages (accueil, catalogue, contact), un script qui charge le catalogue depuis une API, et l'API en Python Flask avec une base SQLite des produits, avec des tests"
+    realite: {nb_pages: 3, langages: [html, python], base: true, tests: true, interactif: true}
+    connaissance: {contient: ["route d'API"]}
+    calcul: {fichiers: [7, 8]}
+    humain: {contient: ["clients qui achetent", "devise"]}
+
+  - id: garage-quatre-pages
+    demande: "un site vitrine pour un garage automobile avec quatre pages"
+    realite: {nb_pages: 4, langages: [html], base: false}
+    calcul: {fichiers: [5, 6]}
+
+  - id: fastapi-commandes
+    demande: "une API REST en FastAPI pour enregistrer des commandes"
+    realite: {langages: [python], tests: false, interactif: false}
+    connaissance: {ne_contient_pas: ["feuille de style"]}
+    humain: {contient: ["developpeurs"]}
+
+  - id: react-taches
+    demande: "une application React qui affiche une liste de taches"
+    realite: {langages: [html], base: false}
+
+  - id: express-sqlite
+    demande: "un serveur Express avec une route qui lit une base SQLite"
+    realite: {langages: [node], base: true}
+    connaissance: {ne_contient_pas: ["app.py", "feuille de style"]}
+
+  - id: java-spring
+    demande: "un programme Java avec Spring qui expose une API de clients"
+    realite: {langages: [java]}
+    connaissance: {ne_contient_pas: ["app.py"]}
+
+  - id: connexion-inscription-php
+    demande: "une page de connexion et une page d'inscription en PHP avec mot de passe"
+    realite: {nb_pages: 2, langages: [html, php], interactif: false}
+
+  - id: inscription-club
+    demande: "un formulaire d'inscription pour un club de foot"
+    realite: {langages: [html], interactif: false}
+
+  - id: bijoux-fcfa
+    demande: "une boutique en ligne de bijoux, les prix en FCFA"
+    realite: {langages: [html]}
+    humain: {contient: ["clients qui achetent"], ne_contient_pas: ["devise n'est pas dite"]}
+
+  - id: api-anglais
+    demande: "a REST API in Python with automated tests"
+    realite: {langages: [python], langue: en, tests: true}
+
+  - id: mairie-12-pages
+    demande: "un site de 12 pages pour une mairie"
+    realite: {nb_pages: 12, langages: [html]}
+    calcul: {fichiers: [13, 14], regrouper: true}
+
+plan:
+  - {id: api-en-pages, demande: "une API en Python avec Flask et des tests", fichiers: [index.html, style.css], accepte: false}
+  - {id: api-sans-tests, demande: "une API en Python avec Flask et des tests", fichiers: [app.py], accepte: false}
+  - {id: api-juste, demande: "une API en Python avec Flask et des tests", fichiers: [app.py, tests/test_app.py], accepte: true}
+  - {id: php-en-python, demande: "un formulaire de contact en PHP", fichiers: [index.html, app.py], accepte: false}
+  - {id: php-juste, demande: "un formulaire de contact en PHP", fichiers: [index.html, contact.php], accepte: true}
+  - {id: site-juste, demande: "un site avec trois pages", fichiers: [index.html, a.html, b.html, style.css], accepte: true}
+  - {id: api-avec-une-page-en-trop, demande: "une API en Python avec Flask et des tests", fichiers: [app.py, tests/test_app.py, index.html], accepte: false}
+  - {id: site-avec-une-api-en-trop, demande: "un site avec trois pages", fichiers: [index.html, a.html, b.html, style.css, app.py], accepte: false}
+
+# ------------------------------------------------------------------------
+# Les 12 VRAIS PROBLEMES valides par le responsable le 08/10/2026 : la
+# DELIBERATION ENTRE PROFESSEURS (deliberation.py, sans modele) doit rendre
+# ce qu'un bon conseil etablit (tableau valide). Champs verifies : nature,
+# risque, confiance (pas), et ce que doivent contenir decisions, hypotheses,
+# besoins (a demander), ne_pas, verifier. Le juge du conseil doit accepter.
+reels:
+  - id: site-mal-affiche-telephone
+    probleme: "Mon site de restaurant s'affiche mal sur téléphone : le texte déborde et il faut zoomer."
+    nature: corriger
+    risque: faible
+    decisions: ["existants"]
+    hypotheses: ["viewport", "largeurs fixes"]
+    ne_pas: ["tout refaire"]
+  - id: paiement-orange-moov
+    probleme: "Ma boutique doit accepter Orange Money et Moov Money."
+    nature: etendre
+    risque: eleve
+    decisions: ["mode test"]
+    besoins: ["documentation", "cles"]
+    ne_pas: ["inventer"]
+  - id: spam-formulaire-php
+    probleme: "Mon formulaire de contact PHP reçoit des centaines de spams par jour."
+    nature: corriger
+    risque: moyen
+    decisions: ["champ piege", "limiter"]
+  - id: email-a-chaque-reservation
+    probleme: "Je veux un formulaire qui m'envoie un e-mail à chaque réservation."
+    nature: creer
+    decisions: ["serveur"]
+    besoins: ["smtp"]
+  - id: stock-pagnes-alerte
+    probleme: "Une petite application pour gérer le stock de ma boutique de pagnes : entrées, sorties, alerte quand il en reste moins de 5."
+    nature: creer
+    decisions: ["transaction"]
+    verifier: ["4, 5 et 6"]
+  - id: api-flask-lente
+    probleme: "Mon API Flask répond en 4 secondes, c'est trop lent."
+    nature: diagnostiquer
+    decisions: ["mesurer", "4000 ms"]
+    hypotheses: ["n+1", "index"]
+    ne_pas: ["deviner"]
+  - id: proteger-api
+    probleme: "Protège mon API : seuls les utilisateurs connectés peuvent ajouter ou supprimer."
+    nature: etendre
+    risque: eleve
+    decisions: ["401", "403", "hache"]
+  - id: version-anglaise
+    probleme: "Mon site est en français, je veux aussi une version anglaise."
+    nature: traduire
+    decisions: ["lang", "relue", "double"]
+  - id: meteo-ouagadougou
+    probleme: "Je veux une page qui affiche la météo de Ouagadougou en direct."
+    nature: creer
+    besoins: ["hors ligne", "cles"]
+    ne_pas: ["inventer"]
+  - id: site-comme-jumia
+    probleme: "Fais-moi un site comme Jumia."
+    decisions: ["premiere etape"]
+    besoins: ["premiere etape"]
+    confiance_pas: haute
+  - id: erreur-null
+    probleme: "Mon script JavaScript ne marche pas : « Cannot read properties of null »."
+    nature: diagnostiquer
+    hypotheses: ["absent", "defer"]
+  - id: sqlite-vers-postgresql
+    probleme: "Passe ma base SQLite à PostgreSQL sans perdre les données."
+    nature: migrer
+    risque: eleve
+    decisions: ["sauvegarder", "compter"]

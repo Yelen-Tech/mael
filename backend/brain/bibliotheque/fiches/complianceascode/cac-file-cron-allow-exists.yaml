@@ -1,0 +1,81 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-file-cron-allow-exists
+titre: Fichier /etc/cron.allow present (droits 0640 au plus, proprietaire root)
+domaine: services
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: planification
+  type_controle: existence-fichier
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: file_cron_allow_exists
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/cron_and_at/restrict_at_cron_users/file_cron_allow_exists
+mots_cles:
+- allow
+- cron
+- fichier
+- planification
+- present
+- taches
+resume: /etc/cron.allow doit etre present (droits 0640 au plus, proprietaire root). (regle file_cron_allow_exists,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: stat -c '%a %U %G %n' /etc/cron.allow 2>/dev/null
+  but: Voir si /etc/cron.allow existe (droits, proprietaire)
+  lecture: Une ligne = present ; aucune = absent.
+controles:
+- controle: /etc/cron.allow present
+  bon: present (droits 0640 au plus, proprietaire root)
+  mauvais: absent
+  gravite: moyenne
+  risque: 'Une liste des comptes autorises (cron.allow, at.allow) est plus sure qu''une liste d''interdits
+    : un compte oublie n''obtient rien. Planifier une tache permet de relancer du code a intervalles reguliers,
+    y compris pour garder un acces apres une intrusion.'
+  action: Creer /etc/cron.allow (droits 0640 au plus, proprietaire root) (touch, chmod, chown).
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: presente
+  - commande: 0
+    lecteur: stat
+    champ: droits
+    comparateur: droits_au_plus
+    attendu: '0640'
+  - commande: 0
+    lecteur: stat
+    champ: proprietaire
+    comparateur: dans
+    attendu:
+    - '0'
+    - root
+  sans_playbook: 'un cron.allow cree vide reserve crontab a root : lister d''abord les comptes qui en
+    ont besoin'
+pieges:
+- 'Avant de creer /etc/cron.allow, y inscrire les comptes qui ont une crontab (ls /var/spool/cron/crontabs)
+  : sinon leurs taches planifiees ne sont plus acceptees.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 2.4.1.8 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 2.4.1.8 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 2.4.1.2 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

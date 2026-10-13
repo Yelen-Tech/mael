@@ -1,0 +1,78 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-sudo-require-reauthentication
+titre: 'sudo : Defaults timestamp_timeout <= 15'
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: sudo
+  type_controle: option-sudo
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: sudo_require_reauthentication
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/software/sudo/sudo_require_reauthentication
+mots_cles:
+- defaults
+- elevation
+- privileges
+- sudo
+- sudoers
+- timeout
+- timestamp
+- timestamp_timeout
+resume: La configuration de sudo doit contenir « Defaults timestamp_timeout <= 15 ». (regle sudo_require_reauthentication,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: grep -Rhs '^[[:space:]]*Defaults' /etc/sudoers /etc/sudoers.d/
+  but: Lire les options globales de sudo
+  lecture: 'Attendu : une ligne contenant timestamp_timeout=15 ; « !timestamp_timeout » = desactive.'
+controles:
+- controle: Defaults timestamp_timeout <= 15
+  bon: Defaults timestamp_timeout <= 15
+  mauvais: option absente ou desactivee
+  gravite: moyenne
+  risque: Sans nouvelle authentification (NOPASSWD, !authenticate, delai trop long), quiconque prend le
+    controle d'une session ouverte devient root sans connaitre le mot de passe.
+  action: Ajouter « Defaults timestamp_timeout <= 15 » avec visudo -f /etc/sudoers.d/sentinelle (jamais
+    d'edition directe).
+  playbook: infra.sudo-defaults
+  parametres:
+    option: timestamp_timeout
+    valeur: '15'
+  evaluation:
+  - commande: 0
+    lecteur: sudo_defaults
+    comparateur: au_plus
+    champ: timestamp_timeout
+    attendu: '15'
+    defaut: '15'
+pieges:
+- '/etc/sudoers n''est lisible que par root : lancer la lecture avec sudo.'
+- 'Une erreur de syntaxe dans sudoers bloque sudo : toujours passer par visudo.'
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 5.2.6 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 5.2.6 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 5.2.6 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

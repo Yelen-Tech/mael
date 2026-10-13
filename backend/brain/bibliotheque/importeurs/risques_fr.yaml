@@ -1,0 +1,2407 @@
+# Risques traduits en francais, par regle ComplianceAsCode (relecture).
+#
+# Seul le TEXTE EXPLICATIF du risque est traduit ici : valeurs attendues,
+# gravites et numeros CIS/ANSSI viennent toujours de la source. Traduction
+# fidele au sens de la source (rationale), resserree ; les erreurs de la
+# source sont corrigees et signalees en commentaire.
+# Une regle ne peut figurer qu'une fois (sinon l'importeur refuse).
+# Priorite : lexique_sshd.yaml > ce fichier > texte anglais d'origine.
+
+risques:
+
+  # ================================================================== SSH
+  - regles: [file_groupowner_sshd_drop_in_config, file_owner_sshd_drop_in_config,
+             file_permissions_sshd_drop_in_config, file_groupowner_sshd_config,
+             file_owner_sshd_config, file_permissions_sshd_config]
+    risque: >-
+      Les fichiers de configuration de SSH activent ou desactivent ses
+      fonctions : un compte non autorise qui peut les modifier (ou les lire,
+      pour y reperer une faiblesse) peut ouvrir un acces ou affaiblir le
+      service. Ils doivent appartenir a root et n'etre modifiables que par lui.
+  - regles: [file_groupownership_sshd_pub_key, file_ownership_sshd_pub_key,
+             file_permissions_sshd_pub_key]
+    risque: >-
+      Si un compte non autorise peut modifier une cle publique d'hote SSH,
+      il peut la remplacer et compromettre l'authentification du serveur
+      aupres des clients.
+  - regles: [file_ownership_sshd_private_key, file_permissions_sshd_private_key]
+    risque: >-
+      Une personne qui obtient la cle privee d'hote SSH peut se faire passer
+      pour le serveur (attaque de l'intercepteur) et recueillir les
+      identifiants des utilisateurs.
+  - regles: [sshd_limit_user_access]
+    risque: >-
+      Designer explicitement les comptes ou groupes autorises a se connecter
+      en SSH reduit le risque d'acces non autorise : un compte de service
+      ou un compte oublie ne peut pas servir de porte d'entree.
+  - regles: [sshd_use_strong_ciphers]
+    risque: >-
+      Les chiffrements en mode CBC du protocole SSH presentent des faiblesses
+      connues permettant de retrouver une partie du texte en clair. Les modes
+      compteur (CTR), GCM et chacha20-poly1305 n'ont pas ces faiblesses et
+      sont les seuls a autoriser.
+  - regles: [sshd_use_strong_kex]
+    risque: >-
+      L'echange de cles etablit les cles de session qui protegent toute la
+      connexion. Un algorithme faible (ex. diffie-hellman-group1-sha1,
+      group14-sha1) permet a un attaquant dote de moyens de calcul de casser
+      la session ou de forcer un algorithme plus faible lors de la
+      negociation.
+  # Source : phrase tronquee dans la rationale d'origine ; risque complete.
+  - regles: [sshd_use_strong_macs]
+    risque: >-
+      Les algorithmes d'integrite (MAC) MD5 et a 96 bits sont faibles et
+      facilitent les attaques par retrogradation. Un attaquant en position
+      d'intercepteur qui casse l'algorithme peut dechiffrer le tunnel SSH et
+      capturer identifiants et donnees.
+
+  # ======================================================== authentification
+  - regles: [account_disable_post_pw_expiration]
+    risque: >-
+      Un compte inactif peut etre exploite sans que personne ne le remarque :
+      son titulaire ne se connecte plus et ne verra pas un acces frauduleux.
+      Desactiver les comptes inactifs retire aux attaquants des comptes
+      oublies dont les identifiants ont pu fuiter.
+  - regles: [accounts_maximum_age_login_defs]
+    risque: >-
+      Tout mot de passe finit par pouvoir etre casse ou divulgue. Sans duree
+      de vie maximale, un mot de passe compromis reste valable indefiniment.
+      A l'inverse, une duree trop courte pousse les utilisateurs a noter leur
+      mot de passe.
+  - regles: [accounts_minimum_age_login_defs]
+    risque: >-
+      Sans duree de vie minimale, un utilisateur peut changer son mot de passe
+      plusieurs fois de suite pour vider l'historique et revenir aussitot a
+      son ancien mot de passe, ce qui annule la politique de non-reutilisation.
+  - regles: [accounts_password_pam_dcredit]
+    risque: >-
+      Un mot de passe complexe resiste plus longtemps aux attaques par
+      devinette et par force brute. Exiger au moins un chiffre agrandit
+      l'espace des combinaisons a tester.
+  - regles: [accounts_password_pam_dictcheck]
+    risque: >-
+      Les mots de passe formes de mots du dictionnaire sont les premiers
+      testes par les attaques par devinette : ils sont trouves en quelques
+      secondes.
+  - regles: [accounts_password_pam_difok]
+    risque: >-
+      Exiger un nombre minimal de caracteres differents a chaque changement
+      evite qu'un nouveau mot de passe ressemble a l'ancien (qui a pu etre
+      compromis). Un mot de passe change sur une machine deja compromise
+      reste toutefois compromis.
+  - regles: [accounts_password_pam_enforce_root]
+    risque: >-
+      Sans enforce_for_root, root peut choisir un mot de passe qui ne respecte
+      pas la politique de complexite : le compte le plus puissant du systeme
+      aurait alors le mot de passe le plus faible.
+  - regles: [accounts_password_pam_ucredit]
+    risque: >-
+      Un mot de passe complexe resiste plus longtemps aux attaques par
+      devinette et par force brute. Exiger au moins une majuscule agrandit
+      l'espace des combinaisons a tester.
+  - regles: [accounts_password_pam_lcredit]
+    risque: >-
+      Un mot de passe complexe resiste plus longtemps aux attaques par
+      devinette et par force brute. Exiger au moins une minuscule agrandit
+      l'espace des combinaisons a tester.
+  - regles: [accounts_password_pam_maxrepeat]
+    risque: >-
+      Les mots de passe qui repetent le meme caractere (aaaa, 1111) sont
+      parmi les premiers testes par les attaques par devinette.
+  - regles: [accounts_password_pam_maxsequence]
+    risque: >-
+      Les suites de caracteres (abcd, 1234) sont parmi les premiers motifs
+      testes par les attaques par devinette : les limiter oblige a des mots
+      de passe moins previsibles.
+  - regles: [accounts_password_pam_minclass]
+    risque: >-
+      Un mot de passe complexe resiste plus longtemps aux attaques par
+      devinette et par force brute. Exiger plusieurs categories de
+      caracteres (minuscules, majuscules, chiffres, speciaux) agrandit
+      l'espace des combinaisons a tester.
+  - regles: [accounts_password_pam_minlen]
+    risque: >-
+      Plus un mot de passe est court, moins il y a de combinaisons a tester
+      pour le trouver. Chaque caractere en plus multiplie le temps et les
+      moyens necessaires pour le casser.
+  - regles: [accounts_password_pam_ocredit]
+    risque: >-
+      Un mot de passe complexe resiste plus longtemps aux attaques par
+      devinette et par force brute. Exiger au moins un caractere special
+      agrandit l'espace des combinaisons a tester.
+  - regles: [accounts_password_pam_pwhistory_enabled]
+    risque: >-
+      Sans historique des mots de passe (pam_pwhistory), un utilisateur peut
+      reprendre un ancien mot de passe, eventuellement deja compromis.
+  - regles: [accounts_password_pam_pwhistory_enforce_root]
+    risque: >-
+      Sans enforce_for_root, root echappe a l'historique : il peut reprendre
+      un ancien mot de passe deja compromis.
+  - regles: [accounts_password_pam_pwhistory_use_authtok]
+    risque: >-
+      Avec use_authtok, pam_pwhistory controle le mot de passe deja saisi et
+      valide par les modules precedents (pwquality) : aucun module ne peut
+      accepter un mot de passe que la politique a refuse, et l'utilisateur ne
+      le ressaisit pas.
+  - regles: [accounts_password_pam_pwquality_enabled, package_pam_pwquality_installed]
+    risque: >-
+      Sans pam_pwquality, aucune regle de complexite n'est appliquee au
+      changement de mot de passe : les mots de passe faibles sont acceptes
+      et cassables rapidement.
+  - regles: [accounts_password_pam_retry]
+    risque: >-
+      Limiter le nombre de nouvelles saisies par session oblige certains
+      logiciels (comme SSH) a se reconnecter, ce qui ralentit et rend plus
+      visibles les attaques par devinette. Ce n'est pas le verrouillage de
+      compte, assure par pam_faillock.
+  # Source : la rationale n'est que le titre de la regle ; risque redige.
+  - regles: [accounts_password_pam_unix_authtok]
+    risque: >-
+      Avec use_authtok, pam_unix enregistre le mot de passe deja valide par
+      pam_pwquality et pam_pwhistory au lieu d'en redemander un : sans cette
+      option, la politique de complexite et d'historique peut etre
+      contournee.
+  - regles: [accounts_password_pam_unix_enabled]
+    risque: >-
+      pam_unix verifie le mot de passe des comptes locaux : sans lui dans la
+      pile d'authentification, l'acces n'est plus conditionne a une
+      authentification correcte de l'utilisateur.
+  - regles: [accounts_password_pam_unix_no_remember]
+    risque: >-
+      L'option remember de pam_unix conserve les anciens mots de passe dans
+      /etc/security/opasswd avec une gestion moins robuste que pam_pwhistory.
+      L'historique doit etre gere par pam_pwhistory, qui applique aussi la
+      politique a root.
+  - regles: [accounts_password_set_max_life_existing, accounts_password_set_max_life_root]
+    risque: >-
+      Tout mot de passe finit par pouvoir etre casse ou divulgue : sans duree
+      de vie maximale sur les comptes existants, un mot de passe compromis
+      reste valable indefiniment. Modifier login.defs ne change pas les
+      comptes deja crees.
+  - regles: [accounts_password_set_min_life_existing]
+    risque: >-
+      Sans duree de vie minimale sur les comptes existants, un utilisateur
+      peut enchainer les changements pour vider l'historique et reprendre son
+      ancien mot de passe.
+  - regles: [accounts_password_warn_age_login_defs]
+    risque: >-
+      Prevenir l'utilisateur avant l'expiration lui laisse le temps de
+      choisir un bon mot de passe, au lieu d'un choix precipite (et faible)
+      au moment du blocage.
+  - regles: [accounts_passwords_pam_faillock_deny_root, accounts_passwords_pam_faillock_deny,
+             accounts_passwords_pam_faillock_interval, accounts_passwords_pam_faillock_unlock_time]
+    risque: >-
+      Limiter le nombre d'echecs de connexion en verrouillant le compte
+      reduit le risque d'acces non autorise par devinette du mot de passe
+      (force brute).
+  - regles: [accounts_passwords_pam_faillock_enabled]
+    risque: >-
+      Sans pam_faillock, aucun verrouillage n'intervient apres des echecs
+      successifs : un attaquant peut tenter des mots de passe sans limite
+      (force brute).
+  - regles: [accounts_passwords_pam_faillock_root_unlock_time]
+    risque: >-
+      Verrouiller aussi root apres des echecs successifs reduit le risque
+      qu'un attaquant devine son mot de passe par force brute.
+  - regles: [accounts_set_post_pw_existing]
+    risque: >-
+      Un compte inactif est une menace : son titulaire ne se connecte plus et
+      ne remarque ni les tentatives echouees ni les acces anormaux.
+  - regles: [enable_pam_namespace]
+    risque: >-
+      pam_namespace donne a chaque session ses propres repertoires (ex. /tmp
+      prive par utilisateur) : un utilisateur ne peut plus pieger les
+      fichiers temporaires d'un autre ni y lire ses donnees.
+  - regles: [ensure_pam_wheel_group_empty, use_pam_wheel_group_for_su]
+    risque: >-
+      su permet d'executer des commandes sous l'identite d'un autre compte,
+      le plus souvent root. En reserver l'usage a un groupe dedie (vide par
+      defaut) empeche un compte quelconque de tenter de devenir root.
+  - regles: [ldap_client_start_tls, sssd_ldap_start_tls]
+    risque: >-
+      Sans chiffrement, les echanges LDAP (dont les identifiants) circulent
+      en clair et peuvent etre lus ou modifies sans detection. Utiliser
+      start_tls plutot que LDAP sur SSL.
+  - regles: [ldap_client_tls_cacertpath]
+    risque: >-
+      Sans autorite de certification definie, le client LDAP ne peut pas
+      verifier le certificat du serveur : un faux serveur peut se faire
+      passer pour l'annuaire.
+  - regles: [no_empty_passwords_unix]
+    risque: >-
+      Avec l'option nullok, un compte au mot de passe vide permet a n'importe
+      qui de se connecter et d'agir avec les droits de ce compte.
+  - regles: [no_nis_in_nsswitch]
+    risque: >-
+      NIS transmet les informations de comptes (dont les empreintes de mots
+      de passe) sans protection : il ne doit pas etre utilise.
+  - regles: [package_pam_modules_installed, package_pam_runtime_installed]
+    risque: >-
+      Ce paquet fournit les modules et la configuration PAM dont dependent
+      les autres controles d'authentification : sans lui, ils ne peuvent pas
+      s'appliquer.
+  - regles: [set_password_hashing_algorithm_logindefs, set_password_hashing_algorithm_systemauth]
+    risque: >-
+      Les mots de passe doivent etre stockes sous forme d'empreinte par un
+      algorithme robuste : un algorithme faible ne protege guere mieux que le
+      texte en clair si /etc/shadow fuite. yescrypt ou SHA-512 rendent le
+      cassage beaucoup plus couteux.
+  # Source : la rationale parle de cartes a puce, hors sujet ; risque redige.
+  - regles: [sssd_enable_pam_services]
+    risque: >-
+      Sans le service pam de SSSD, les comptes de l'annuaire ne s'authentifient
+      pas par SSSD : la politique centrale (verrouillage, expiration) ne
+      s'applique pas de facon coherente.
+  - regles: [sssd_ldap_configure_tls_reqcert]
+    risque: >-
+      Si le certificat du serveur LDAP n'est pas exige, un faux serveur peut
+      usurper l'annuaire et compromettre les sessions d'authentification.
+
+  # =================================================================== audit
+  - regles: [audit_rules_dac_modification_chmod, audit_rules_dac_modification_chown,
+             audit_rules_dac_modification_fchmod, audit_rules_dac_modification_fchmodat,
+             audit_rules_dac_modification_fchmodat2, audit_rules_dac_modification_fchown,
+             audit_rules_dac_modification_fchownat, audit_rules_dac_modification_fremovexattr,
+             audit_rules_dac_modification_fsetxattr, audit_rules_dac_modification_lchown,
+             audit_rules_dac_modification_lremovexattr, audit_rules_dac_modification_lsetxattr,
+             audit_rules_dac_modification_removexattr, audit_rules_dac_modification_setxattr,
+             audit_rules_dac_modification_umount2]
+    risque: >-
+      Un changement de droits ou de proprietaire peut signaler un utilisateur
+      qui tente d'acceder a des informations qui lui sont interdites.
+      Tracer ces modifications aide a reperer les abus, qu'ils viennent de
+      comptes autorises ou non.
+  - regles: [audit_rules_execution_chacl, audit_rules_execution_setfacl,
+             audit_rules_privileged_commands_kmod]
+    risque: >-
+      Sans trace de ces commandes sensibles, il est difficile de reconstituer
+      un incident, de relier les evenements entre eux et d'en identifier le
+      responsable.
+  - regles: [audit_rules_execution_chcon, audit_rules_privileged_commands_insmod,
+             audit_rules_privileged_commands_modprobe, audit_rules_privileged_commands_rmmod,
+             audit_rules_privileged_commands_sudo, audit_rules_privileged_commands_usermod]
+    risque: >-
+      Les commandes privilegiees peuvent etre detournees, volontairement ou
+      non, par des utilisateurs autorises ou par un attaquant qui a pris le
+      controle d'un compte, et sont la cible des elevations de privileges.
+      Tracer leur execution permet de detecter ces abus.
+  - regles: [audit_rules_file_deletion_events_rename, audit_rules_file_deletion_events_renameat,
+             audit_rules_file_deletion_events_renameat2, audit_rules_file_deletion_events_rmdir,
+             audit_rules_file_deletion_events_unlink, audit_rules_file_deletion_events_unlinkat]
+    risque: >-
+      Tracer les suppressions et renommages de fichiers aide au diagnostic et
+      revele les processus malveillants qui effacent des journaux pour
+      masquer leur presence.
+  - regles: [audit_rules_immutable]
+    risque: >-
+      Rendre la configuration d'audit immuable empeche qu'elle soit modifiee
+      par erreur ou par un attaquant pendant le fonctionnement. Contrepartie :
+      tout changement legitime des regles exige un redemarrage.
+  - regles: [audit_rules_kernel_module_loading_delete, audit_rules_kernel_module_loading_finit,
+             audit_rules_kernel_module_loading_init]
+    risque: >-
+      Charger ou retirer un module noyau permet de modifier le comportement
+      du noyau, voire d'y introduire du code malveillant. Chaque chargement
+      et retrait de module doit laisser une trace.
+  - regles: [audit_rules_login_events_faillock, audit_rules_login_events_lastlog,
+             audit_rules_session_events_btmp, audit_rules_session_events_utmp,
+             audit_rules_session_events_wtmp, audit_rules_session_events]
+    risque: >-
+      Ces fichiers enregistrent connexions et echecs de connexion : une
+      modification manuelle peut signaler un attaquant qui efface les traces
+      de son intrusion.
+  - regles: [audit_rules_mac_modification_etc_apparmor_d, audit_rules_mac_modification_etc_apparmor,
+             audit_rules_mac_modification]
+    risque: >-
+      La politique de controle d'acces obligatoire (AppArmor) ne doit changer
+      que par action de l'administrateur : toute modification doit etre
+      tracee.
+  - regles: [audit_rules_media_export]
+    risque: >-
+      Copier des donnees sur un support externe peut provoquer une fuite
+      d'informations (donnees personnelles, propriete intellectuelle).
+      Tracer chaque montage de systeme de fichiers aide a detecter ces
+      sorties de donnees.
+  - regles: [audit_rules_networkconfig_modification]
+    risque: >-
+      L'environnement reseau (nom d'hote, /etc/hosts, /etc/issue...) ne doit
+      changer que par action de l'administrateur : toute modification doit
+      etre tracee.
+  - regles: [audit_rules_suid_auid_privilege_function]
+    risque: >-
+      Tracer les commandes executees avec des privileges temporaires (sudo,
+      su) permet de les rapprocher du journal de sudo et de verifier
+      qu'aucune commande non autorisee n'a ete lancee ; c'est l'un des moyens
+      de detecter l'abus de privileges, y compris par une menace interne.
+  - regles: [audit_rules_sysadmin_actions]
+    risque: >-
+      Les actions des administrateurs doivent etre tracees pour savoir ce qui
+      a ete fait sur le systeme et par qui. Toute modification de la
+      configuration de sudo doit donc laisser une trace.
+  - regles: [audit_rules_time_adjtimex, audit_rules_time_clock_settime,
+             audit_rules_time_settimeofday, audit_rules_time_watch_localtime]
+    risque: >-
+      Changer l'heure du systeme permet de brouiller la chronologie des
+      journaux pour masquer une activite malveillante, et perturbe les
+      services qui dependent d'une heure exacte. Tout changement d'heure doit
+      etre trace.
+  - regles: [audit_rules_unsuccessful_file_modification_creat,
+             audit_rules_unsuccessful_file_modification_ftruncate,
+             audit_rules_unsuccessful_file_modification_open,
+             audit_rules_unsuccessful_file_modification_openat,
+             audit_rules_unsuccessful_file_modification_truncate]
+    risque: >-
+      Les tentatives d'acces refusees a des fichiers peuvent reveler une
+      activite malveillante : les tracer fournit des preuves en cas de
+      compromission.
+  - regles: [audit_rules_usergroup_modification_group, audit_rules_usergroup_modification_gshadow,
+             audit_rules_usergroup_modification_opasswd, audit_rules_usergroup_modification_passwd,
+             audit_rules_usergroup_modification_shadow]
+    risque: >-
+      Surveiller les fichiers de comptes et de groupes signale toute creation
+      ou modification : un compte, un groupe ou un changement inattendu doit
+      etre verifie (ajout d'un compte cache par un attaquant).
+  - regles: [audit_rules_usergroup_modification_nsswitch_conf]
+    risque: >-
+      nsswitch.conf decide ou le systeme cherche comptes, groupes et noms :
+      le modifier peut rediriger l'authentification. Tout changement
+      inattendu doit etre verifie.
+  - regles: [audit_rules_usergroup_modification_pam_conf, audit_rules_usergroup_modification_pamd]
+    risque: >-
+      La configuration PAM definit comment les applications authentifient
+      les utilisateurs : la modifier peut ouvrir une porte derobee. Tout
+      changement inattendu doit etre verifie.
+  # Source : rationale generique (maintenance a distance) ; resserree.
+  - regles: [audit_sudo_log_events]
+    risque: >-
+      Le journal de sudo retrace les actions d'administration : s'il peut
+      etre modifie sans trace, un attaquant peut effacer ce qu'il a fait avec
+      des droits root.
+  - regles: [auditd_data_disk_error_action, auditd_data_disk_full_action]
+    risque: >-
+      Reagir a une erreur ou a un remplissage du disque d'audit (arret ou
+      mode maintenance) evite de perdre des traces d'audit sans le savoir.
+  - regles: [auditd_data_retention_action_mail_acct]
+    risque: >-
+      Les messages envoyes a root parviennent en general aux administrateurs,
+      qui peuvent reagir aux alertes d'auditd.
+  - regles: [auditd_data_retention_admin_space_left_action]
+    risque: >-
+      Les administrateurs doivent savoir quand l'audit ne peut plus
+      enregistrer. Une partition dediee de taille suffisante evite d'arriver
+      a ce seuil critique.
+  - regles: [auditd_data_retention_max_log_file_action]
+    risque: >-
+      La rotation automatique (rotate) efface les journaux les plus anciens ;
+      keep_logs conserve toutes les traces, pour les systemes qui ne doivent
+      jamais en perdre (l'espace disque doit alors etre surveille).
+  - regles: [auditd_data_retention_max_log_file]
+    risque: >-
+      L'espace total des journaux d'audit doit suffire a conserver les traces
+      sur la duree exigee : il depend de la taille maximale d'un fichier et
+      du nombre de fichiers conserves.
+  - regles: [auditd_data_retention_space_left_action]
+    risque: >-
+      Prevenir les administrateurs avant que le disque d'audit soit plein
+      leur laisse le temps d'agir avant toute interruption.
+  - regles: [directory_permissions_var_log_audit, file_permissions_var_log_audit]
+    risque: >-
+      Si des utilisateurs peuvent ecrire dans les journaux d'audit, les traces
+      peuvent etre modifiees ou detruites.
+  - regles: [file_groupownership_audit_configuration, file_ownership_audit_configuration,
+             file_permissions_etc_audit_auditd, file_permissions_etc_audit_rules,
+             file_permissions_etc_audit_rulesd]
+    risque: >-
+      Si des personnes non autorisees peuvent modifier la configuration de
+      l'audit, elles peuvent desactiver la trace d'evenements critiques ou
+      noyer les journaux pour degrader le systeme et gener les enquetes.
+  - regles: [file_ownership_var_log_audit_stig]
+    risque: >-
+      Les journaux d'audit revelent la configuration et l'activite du systeme
+      : leur divulgation renseigne un attaquant.
+  - regles: [grub2_audit_argument]
+    risque: >-
+      Sans l'argument audit=1, les processus lances avant auditd au demarrage
+      ne sont pas auditables : une activite malveillante precoce echapperait
+      a la trace.
+  - regles: [grub2_audit_backlog_limit_argument]
+    risque: >-
+      Avant le demarrage d'auditd, les evenements d'audit attendent dans une
+      file : si elle deborde au demarrage, des evenements sont perdus.
+      audit_backlog_limit en fixe la taille.
+  - regles: [mount_option_var_log_audit_nodev]
+    risque: >-
+      Les fichiers de peripherique n'ont leur place que dans /dev : l'option
+      nodev empeche d'en creer ailleurs pour contourner les droits d'acces au
+      materiel.
+  - regles: [mount_option_var_log_audit_noexec]
+    risque: >-
+      Executer un programme depuis /var/log/audit n'est jamais necessaire :
+      l'option noexec retire a un attaquant un emplacement ou deposer et
+      lancer du code.
+  - regles: [mount_option_var_log_audit_nosuid]
+    risque: >-
+      Les programmes SUID/SGID doivent rester sous controle : l'option nosuid
+      empeche d'en utiliser depuis la partition des journaux d'audit.
+  - regles: [package_audit-audispd-plugins_installed]
+    risque: >-
+      Des traces conservees a un seul endroit peuvent etre effacees ou
+      modifiees : les greffons d'audispd permettent de les envoyer vers un
+      serveur distant.
+  - regles: [package_audit_installed, service_auditd_enabled]
+    risque: >-
+      Sans auditd actif, les evenements de securite generes par le noyau ne
+      sont pas enregistres : impossible de reconstituer un incident ni
+      d'imputer une action a un utilisateur.
+  - regles: [partition_for_var_log_audit]
+    risque: >-
+      Une partition dediee a /var/log/audit separe les traces des autres
+      fichiers : un disque rempli par ailleurs ne peut pas bloquer l'audit.
+
+  # ================================================================= comptes
+  - regles: [account_unique_id]
+    risque: >-
+      Deux comptes qui partagent un UID sont un seul et meme utilisateur pour
+      le systeme : ils ont les memes droits sur les memes fichiers, et les
+      journaux ne permettent plus de savoir lequel a agi.
+  - regles: [account_unique_name]
+    risque: >-
+      Un nom de compte en double rend les journaux et les droits ambigus :
+      on ne peut plus imputer une action a une personne.
+  - regles: [accounts_no_uid_except_zero]
+    risque: >-
+      Tout compte d'UID 0 a les pleins pouvoirs de root. Un second compte
+      d'UID 0 est un acces privilegie de plus a deviner, souvent signe d'une
+      porte derobee. Plusieurs administrateurs doivent passer par sudo, qui
+      trace qui fait quoi.
+  - regles: [accounts_password_all_shadowed]
+    risque: >-
+      /etc/passwd est lisible par tous les utilisateurs : une empreinte de
+      mot de passe qui s'y trouve peut etre copiee et cassee hors ligne. Les
+      empreintes doivent rester dans /etc/shadow, reserve a root.
+  - regles: [accounts_password_last_change_is_in_past]
+    risque: >-
+      Une date de dernier changement dans le futur fausse le calcul de
+      l'expiration : le mot de passe echappe a la duree de vie maximale.
+  - regles: [accounts_root_gid_zero]
+    risque: >-
+      Les fichiers crees par root heritent de son groupe principal. Si ce
+      n'est pas le groupe 0, ils peuvent devenir accessibles par megarde aux
+      membres d'un autre groupe.
+  - regles: [ensure_root_access_controlled]
+    risque: >-
+      Un compte root sans mot de passe et non verrouille peut etre utilise
+      sans aucune authentification : quiconque y accede prend le controle
+      complet du systeme.
+  - regles: [ensure_shadow_group_empty]
+    risque: >-
+      Les membres du groupe shadow peuvent lire /etc/shadow. Un attaquant
+      qui obtient cette lecture casse les empreintes de mots de passe hors
+      ligne et y trouve les dates d'expiration utiles pour viser d'autres
+      comptes.
+  - regles: [file_groupowner_etc_passwd, file_owner_etc_passwd,
+             file_groupowner_backup_etc_passwd, file_owner_backup_etc_passwd,
+             file_permissions_backup_etc_passwd]
+    risque: >-
+      /etc/passwd (et sa copie /etc/passwd-) decrit tous les comptes du
+      systeme. Qui peut le modifier peut se creer un compte ou changer celui
+      de root : il doit appartenir a root et n'etre modifiable que par lui.
+  - regles: [file_permissions_etc_passwd]
+    risque: >-
+      Si /etc/passwd est modifiable par son groupe ou par tous, n'importe
+      quel utilisateur peut ajouter un compte ou se donner l'UID 0. Ce
+      fichier liste les comptes : sa protection est essentielle.
+  - regles: [file_groupowner_etc_group, file_owner_etc_group,
+             file_permissions_etc_group, file_groupowner_backup_etc_group,
+             file_owner_backup_etc_group, file_permissions_backup_etc_group]
+    risque: >-
+      /etc/group (et sa copie /etc/group-) definit l'appartenance aux
+      groupes. Qui peut le modifier peut s'ajouter a un groupe privilegie
+      (sudo, adm, shadow) : il doit appartenir a root et n'etre modifiable
+      que par lui.
+  - regles: [file_groupowner_etc_shadow, file_owner_etc_shadow,
+             file_permissions_etc_shadow, file_groupowner_backup_etc_shadow,
+             file_owner_backup_etc_shadow, file_permissions_backup_etc_shadow]
+    risque: >-
+      /etc/shadow (et sa copie /etc/shadow-) contient les empreintes des
+      mots de passe. Lisible par un autre compte, il permet de les casser
+      hors ligne ; modifiable, il permet de changer le mot de passe de root.
+      Il doit appartenir a root, au groupe shadow, en 0640 au plus.
+  - regles: [file_groupowner_etc_gshadow, file_owner_etc_gshadow, file_groupowner_backup_etc_gshadow,
+             file_permissions_etc_gshadow, file_owner_backup_etc_gshadow,
+             file_permissions_backup_etc_gshadow]
+    risque: >-
+      /etc/gshadow (et sa copie /etc/gshadow-) contient les empreintes des
+      mots de passe de groupe et la liste de leurs administrateurs. Lisible
+      par un autre compte, il permet de les casser hors ligne ; modifiable,
+      il permet d'entrer dans n'importe quel groupe.
+  - regles: [file_groupowner_etc_security_opasswd, file_owner_etc_security_opasswd,
+             file_permissions_etc_security_opasswd,
+             file_groupowner_etc_security_opasswd_old,
+             file_owner_etc_security_opasswd_old,
+             file_permissions_etc_security_opasswd_old]
+    risque: >-
+      /etc/security/opasswd (et sa sauvegarde opasswd.old) garde les
+      empreintes des anciens mots de passe pour en interdire la reutilisation.
+      Lisibles, elles revelent les habitudes des utilisateurs (un ancien mot
+      de passe ressemble souvent au nouveau) ; modifiables, elles annulent la
+      politique d'historique.
+  - regles: [gid_passwd_group_same]
+    risque: >-
+      Un compte rattache a un GID qui n'existe pas dans /etc/group recevra
+      les droits du groupe cree plus tard avec ce GID, y compris sur des
+      fichiers qui ne lui etaient pas destines.
+  - regles: [group_unique_id]
+    risque: >-
+      Deux groupes qui partagent un GID sont un seul et meme groupe pour le
+      systeme : leurs membres ont les memes droits sur les memes fichiers,
+      sans que cela se voie dans /etc/group.
+  - regles: [group_unique_name]
+    risque: >-
+      Un nom de groupe en double rend les droits ambigus : on ne sait plus
+      quel groupe s'applique ni qui en est membre.
+  - regles: [groups_no_zero_gid_except_root]
+    risque: >-
+      Les fichiers du groupe root (GID 0) sont souvent lisibles par ce
+      groupe. Un autre groupe d'GID 0 donne a ses membres ces memes acces
+      sans que cela se voie.
+  - regles: [no_direct_root_logins]
+    risque: >-
+      Une connexion directe en root ne dit pas qui s'est connecte. En
+      interdisant root sur les consoles, chaque administrateur se connecte
+      d'abord avec son propre compte puis eleve ses droits (su, sudo) :
+      l'action est imputable.
+  - regles: [no_empty_passwords_etc_shadow]
+    risque: >-
+      Un compte au mot de passe vide s'ouvre sans rien taper : n'importe qui
+      peut s'y connecter et agir avec ses droits.
+  - regles: [no_invalid_shell_accounts_unlocked]
+    risque: >-
+      Les comptes non interactifs (services, comptes systeme) ne doivent
+      jamais servir a se connecter. Les verrouiller empeche leur usage
+      detourne meme si un mot de passe leur a ete attribue.
+  - regles: [no_nologin_in_shells]
+    risque: >-
+      /etc/shells dit quels shells sont de vrais shells de connexion ;
+      chsh, ftp et d'autres programmes s'y fient pour restreindre un compte.
+      Y declarer nologin fait passer des comptes bloques pour des comptes
+      interactifs.
+  - regles: [no_shelllogin_for_systemaccounts]
+    risque: >-
+      Un compte systeme dote d'un shell de connexion est une porte d'entree
+      de plus : un attaquant qui prend le controle d'un service peut ouvrir
+      une session interactive sous son identite.
+
+  # ======================================================= compilation-noyau
+  - regles: [kernel_config_acpi_custom_method]
+    risque: >-
+      Cette option permet a root d'ecrire n'importe ou dans la memoire du
+      noyau via ACPI, et donc de contourner les protections du noyau
+      (verrouillage, modules signes).
+  - regles: [kernel_config_arm64_sw_ttbr0_pan]
+    risque: >-
+      PAN (Privileged Access Never) est l'equivalent ARM de SMAP sur x86 :
+      le noyau ne peut pas acceder aux donnees des programmes sans l'avoir
+      demande explicitement, ce qui bloque une famille d'exploitations.
+  - regles: [kernel_config_binfmt_misc]
+    risque: >-
+      binfmt_misc permet d'enregistrer des interpreteurs pour des formats de
+      binaires arbitraires : le desactiver reduit la surface d'attaque.
+  - regles: [kernel_config_bug_on_data_corruption]
+    risque: >-
+      Arreter le noyau (BUG) des qu'une corruption de ses structures est
+      detectee evite qu'il continue a tourner dans un etat qu'un attaquant
+      peut exploiter.
+  - regles: [kernel_config_bug]
+    risque: >-
+      Sans cette option, le noyau ne signale plus certaines erreurs graves :
+      elles passent inapercues au lieu d'etre detectees.
+  - regles: [kernel_config_compat_brk]
+    risque: >-
+      La compatibilite brk() desactive la randomisation du tas (ASLR) : les
+      adresses deviennent previsibles pour un attaquant.
+  - regles: [kernel_config_compat_vdso]
+    risque: >-
+      La compatibilite VDSO place le vDSO a une adresse fixe : elle desactive
+      l'ASLR sur cette zone et degrade les performances.
+  - regles: [kernel_config_debug_credentials]
+    risque: >-
+      Ajoute des verifications de coherence sur les structures d'identite
+      des processus (credentials), cible classique d'une elevation de
+      privileges.
+  - regles: [kernel_config_debug_fs]
+    risque: >-
+      debugfs expose l'etat interne du noyau et de ses pilotes : a
+      desactiver quand il ne sert pas, pour reduire la surface d'attaque.
+  # Source : cite « CVE-2017-1661 », numero invalide ; omis.
+  - regles: [kernel_config_debug_list]
+    risque: >-
+      Verifie la coherence des listes chainees du noyau a chaque
+      manipulation : une liste corrompue (par une situation de concurrence,
+      par exemple) est detectee au lieu d'etre exploitee.
+  - regles: [kernel_config_debug_notifiers]
+    risque: >-
+      Verifie, avant de l'appeler, qu'une fonction de rappel (notifier)
+      appartient au noyau ou a un module encore charge : un pointeur
+      detourne est detecte.
+  - regles: [kernel_config_debug_sg]
+    risque: >-
+      Verifie les tables scatter-gather des pilotes : un pilote qui les
+      initialise mal est detecte avant de corrompre la memoire.
+  - regles: [kernel_config_debug_wx]
+    risque: >-
+      Signale au demarrage les zones memoire du noyau a la fois modifiables
+      et executables. Elles ne sont pas une faille en soi, mais facilitent
+      l'exploitation des autres bogues du noyau.
+  - regles: [kernel_config_default_mmap_min_addr]
+    risque: >-
+      Interdire aux programmes d'utiliser les premieres pages de la memoire
+      limite l'exploitation des dereferencements de pointeur nul dans le
+      noyau.
+  - regles: [kernel_config_devkmem]
+    risque: >-
+      /dev/kmem donne acces a la memoire du noyau depuis l'espace
+      utilisateur ; tres rarement utile (debogage), il permet a root de
+      modifier le noyau en cours d'execution.
+  - regles: [kernel_config_fortify_source]
+    risque: >-
+      Ajoute des controles de taille aux fonctions de copie de memoire et de
+      chaines du noyau : certains debordements sont bloques a la compilation
+      ou a l'execution.
+  - regles: [kernel_config_gcc_plugin_latent_entropy]
+    risque: >-
+      Produit de l'entropie des le demarrage, utile sur les machines dont
+      les sources d'aleas sont faibles : des cles generees tot restent
+      imprevisibles.
+  - regles: [kernel_config_gcc_plugin_randstruct]
+    risque: >-
+      Rend aleatoire l'organisation des structures du noyau a la
+      compilation : un attaquant ne sait plus ou se trouvent les donnees
+      sensibles.
+  - regles: [kernel_config_gcc_plugin_stackleak]
+    risque: >-
+      Efface la pile du noyau au retour de chaque appel systeme : bloque la
+      plupart des attaques par variable de pile non initialisee.
+  - regles: [kernel_config_gcc_plugin_structleak_byref_all]
+    risque: >-
+      Initialise toute structure passee par reference sur la pile : supprime
+      les fuites d'informations et exploitations par variable non
+      initialisee.
+  - regles: [kernel_config_gcc_plugin_structleak]
+    risque: >-
+      Initialise les structures destinees a l'espace utilisateur : evite
+      qu'elles transportent des restes de memoire du noyau.
+  - regles: [kernel_config_hardened_usercopy, kernel_config_hardened_usercopy_fallback]
+    risque: >-
+      Verifie les limites des copies entre noyau et espace utilisateur :
+      bloque des familles entieres de debordements de tas et de fuites de
+      memoire du noyau. Le mode de repli (fallback) ne fait qu'avertir au
+      lieu de bloquer : il doit etre desactive.
+  - regles: [kernel_config_hibernation]
+    risque: >-
+      L'hibernation ecrit la memoire sur disque puis la recharge : qui
+      modifie l'image sur disque peut remplacer le noyau en cours
+      d'execution.
+  - regles: [kernel_config_ia32_emulation]
+    risque: >-
+      La compatibilite 32 bits ajoute une seconde interface d'appels
+      systeme, source reguliere de failles : la desactiver reduit la
+      surface d'attaque.
+  # Source : « execution d'un nouveau noyau apres redemarrage », inexact :
+  # kexec charge un noyau SANS redemarrer par le micrologiciel.
+  - regles: [kernel_config_kexec]
+    risque: >-
+      kexec permet de charger et lancer un autre noyau sans passer par le
+      micrologiciel ni par la chaine de demarrage verifiee : root peut ainsi
+      remplacer le noyau en cours.
+  - regles: [kernel_config_legacy_ptys]
+    risque: >-
+      L'ancien systeme de pseudo-terminaux (/dev/pty*) a des problemes de
+      securite connus (terminaux partages, droits mal controles) : seul
+      devpts doit etre utilise.
+  - regles: [kernel_config_legacy_vsyscall_emulate]
+    risque: >-
+      En mode emulation, la zone vsyscall reste lisible a une adresse fixe
+      au contenu connu, exploitable dans certaines attaques rares.
+  - regles: [kernel_config_legacy_vsyscall_none]
+    risque: >-
+      Supprimer la zone vsyscall (adresse fixe) elimine tout contournement
+      de l'ASLR qui s'appuierait sur elle.
+  - regles: [kernel_config_legacy_vsyscall_xonly]
+    risque: >-
+      Meme en execution seule, la zone vsyscall reste a une adresse fixe :
+      la desactiver retire un point d'appui pour contourner l'ASLR.
+  - regles: [kernel_config_modify_ldt_syscall]
+    risque: >-
+      L'appel systeme modify_ldt ne sert qu'a de vieux programmes 16 bits
+      ou a des emulateurs : du code inutile retire, c'est une surface
+      d'attaque en moins.
+  - regles: [kernel_config_module_sig]
+    risque: >-
+      Les modules charges dans le noyau doivent etre signes : un module
+      malveillant (rootkit) non signe est reconnu.
+  - regles: [kernel_config_module_sig_all]
+    risque: >-
+      Signe automatiquement tous les modules a l'installation : aucun module
+      legitime ne reste sans signature.
+  - regles: [kernel_config_module_sig_force]
+    risque: >-
+      Refuse de charger un module non signe ou signe par une cle inconnue :
+      sans cette option, la signature n'est que verifiee et signalee.
+  - regles: [kernel_config_module_sig_hash, kernel_config_module_sig_sha512]
+    risque: >-
+      Une fonction de hachage forte (SHA-512) est necessaire pour qu'on ne
+      puisse pas fabriquer un module portant une fausse signature valide.
+  - regles: [kernel_config_module_sig_key]
+    risque: >-
+      Une cle et un certificat sont necessaires pour signer les modules
+      compiles avec le noyau.
+  - regles: [kernel_config_page_poisoning]
+    risque: >-
+      Remplir la memoire liberee d'un motif connu reduit les fuites
+      d'informations a partir de donnees liberees.
+  - regles: [kernel_config_page_poisoning_no_sanity, kernel_config_page_poisoning_zero]
+    risque: >-
+      Reduit le cout en performance de l'empoisonnement des pages liberees,
+      pour qu'il puisse rester actif en production.
+  - regles: [kernel_config_page_table_isolation]
+    risque: >-
+      Separe les tables de pages du noyau et des programmes : c'est la
+      contre-mesure a l'attaque Meltdown, qui permet de lire la memoire du
+      noyau.
+  - regles: [kernel_config_panic_on_oops]
+    risque: >-
+      Apres un oops, le noyau est dans un etat incertain : s'arreter evite
+      qu'il continue a tourner en corrompant des donnees ou au profit d'un
+      attaquant.
+  # Source : risque copie de kernel_config_retpoline (« Spectre v2 »),
+  # sans rapport ; reecrit d'apres la description de la regle.
+  - regles: [kernel_config_panic_timeout]
+    risque: >-
+      Fixe le delai avant redemarrage apres une panique du noyau (0 = jamais,
+      la machine reste arretee pour analyse) : un redemarrage automatique
+      peut masquer une attaque qui fait paniquer le noyau.
+  - regles: [kernel_config_proc_kcore]
+    risque: >-
+      /proc/kcore expose la memoire du noyau sous forme de fichier : il aide
+      un attaquant a y trouver des cibles.
+  - regles: [kernel_config_randomize_base]
+    risque: >-
+      Charger le noyau a une adresse aleatoire (KASLR) complique les
+      exploitations qui ont besoin de connaitre l'emplacement du code du
+      noyau.
+  - regles: [kernel_config_randomize_memory]
+    risque: >-
+      Rend aleatoire l'emplacement des zones memoire du noyau : les
+      exploitations qui comptent sur des adresses previsibles deviennent peu
+      fiables.
+  - regles: [kernel_config_refcount_full]
+    risque: >-
+      Protege les compteurs de references contre les debordements, qui
+      menent a des utilisations apres liberation (use-after-free)
+      exploitables.
+  - regles: [kernel_config_retpoline]
+    risque: >-
+      Les retpolines sont la protection du noyau contre Spectre variante 2
+      (injection dans la prediction des branchements indirects).
+  - regles: [kernel_config_sched_stack_end_check]
+    risque: >-
+      Verifie a chaque changement de tache que la pile n'a pas deborde : la
+      corruption est detectee tout de suite, pas plus tard sous forme de
+      plantage ou de donnees alterees.
+  - regles: [kernel_config_seccomp]
+    risque: >-
+      seccomp permet de restreindre les appels systeme qu'un programme peut
+      faire : un programme compromis ne peut plus atteindre le reste du
+      systeme.
+  - regles: [kernel_config_seccomp_filter]
+    risque: >-
+      Les filtres BPF de seccomp decrivent finement les appels systeme
+      permis ; ils sont utilises par les navigateurs, systemd et les
+      conteneurs pour isoler les programmes.
+  - regles: [kernel_config_security_dmesg_restrict]
+    risque: >-
+      Empeche les utilisateurs non privilegies de lire les messages du
+      noyau (dmesg), qui revelent des adresses du noyau utiles a une
+      exploitation.
+  - regles: [kernel_config_security_writable_hooks]
+    risque: >-
+      Si les points d'accroche des modules de securite (LSM) restent
+      modifiables apres le demarrage, un attaquant qui les manipule
+      contourne AppArmor, SELinux et Yama d'un coup.
+  - regles: [kernel_config_security_yama]
+    risque: >-
+      Sans Yama, un programme compromis peut espionner (ptrace) tous les
+      autres processus du meme utilisateur et leur voler des secrets.
+  - regles: [kernel_config_security]
+    risque: >-
+      Active le socle des modules de securite du noyau (LSM), indispensable
+      a AppArmor, SELinux et Yama.
+  - regles: [kernel_config_slab_freelist_hardened]
+    risque: >-
+      Beaucoup d'attaques du tas du noyau visent les metadonnees de
+      l'allocateur : cette option les protege au prix d'un leger cout en
+      performance.
+  - regles: [kernel_config_slab_freelist_random]
+    risque: >-
+      Rend aleatoire l'ordre d'allocation des objets du noyau : un
+      debordement de tas ne sait plus quel objet il ecrase.
+  - regles: [kernel_config_slab_merge_default]
+    risque: >-
+      Ne pas fusionner les caches d'allocation de tailles voisines isole
+      les objets : un debordement dans un cache sans valeur ne peut plus
+      ecraser les objets sensibles d'un autre.
+  - regles: [kernel_config_slub_debug]
+    risque: >-
+      Permet de verifier les structures de l'allocateur memoire du noyau et
+      de remettre a zero la memoire liberee.
+  - regles: [kernel_config_stackprotector]
+    risque: >-
+      Place un temoin sur la pile de chaque fonction : un debordement de
+      pile est detecte et le noyau s'arrete avant que l'attaquant en prenne
+      le controle.
+  - regles: [kernel_config_stackprotector_strong]
+    risque: >-
+      Etend la protection de pile a beaucoup plus de fonctions exposees que
+      la version de base, pour un cout en performance modere.
+  - regles: [kernel_config_strict_kernel_rwx, kernel_config_strict_module_rwx]
+    risque: >-
+      Le code du noyau et des modules n'est pas modifiable, et leurs donnees
+      ne sont pas executables : un attaquant ne peut ni reecrire le code ni
+      executer du code depose dans les donnees.
+  - regles: [kernel_config_syn_cookies]
+    risque: >-
+      Les SYN cookies permettent de continuer a accepter des connexions TCP
+      pendant une inondation de SYN (deni de service).
+  - regles: [kernel_config_vmap_stack]
+    risque: >-
+      Entoure la pile du noyau de pages de garde : un debordement est
+      detecte immediatement au lieu de corrompre silencieusement la memoire
+      voisine.
+  - regles: [kernel_config_x86_vsyscall_emulation]
+    risque: >-
+      La table vsyscall n'est plus necessaire aux programmes actuels et
+      fournit des fragments de code a adresse fixe utiles aux attaques par
+      ROP.
+  - regles: [kernel_config_unmap_kernel_at_el0]
+    risque: >-
+      Retire le noyau de l'espace d'adressage quand un programme s'execute
+      (equivalent arm64 de l'isolation des tables de pages) : c'est la
+      contre-mesure a l'attaque Meltdown.
+
+  # ========================================================== journalisation
+  - regles: [ensure_logrotate_activated, timer_logrotate_enabled]
+    risque: >-
+      Des journaux qui ne tournent pas grossissent jusqu'a remplir la
+      partition de /var/log : les nouveaux evenements, souvent ceux d'une
+      attaque en cours, ne sont plus enregistres.
+  - regles: [package_logrotate_installed]
+    risque: >-
+      logrotate fait tourner, compresse et purge les journaux : sans lui,
+      ils finissent par remplir le disque et les nouveaux evenements sont
+      perdus.
+  - regles: [file_groupowner_var_log_auth, file_owner_var_log_auth,
+             file_permissions_var_log_auth, file_groupowner_var_log_secure,
+             file_owner_var_log_secure, file_permissions_var_log_secure]
+    risque: >-
+      Le journal d'authentification (/var/log/auth.log, /var/log/secure sur
+      RHEL) trace les connexions et les elevations de droits ; il contient
+      parfois un mot de passe tape par erreur a la place de l'identifiant.
+      Seul le personnel autorise doit pouvoir le lire, et personne ne doit
+      pouvoir le modifier pour effacer ses traces.
+  - regles: [file_groupowner_var_log_cloud_init, file_owner_var_log_cloud_init,
+             file_permissions_var_log_cloud-init]
+    risque: >-
+      Les journaux de cloud-init detaillent l'initialisation de la machine
+      (reseau, comptes, scripts de demarrage fournis par le nuage) : des
+      informations utiles a un attaquant, a reserver au personnel autorise.
+  - regles: [file_groupowner_var_log_journal, file_owner_var_log_journal]
+    risque: >-
+      Les fichiers *.journal de systemd-journald contiennent l'ensemble des
+      journaux du systeme. S'ils changent de proprietaire ou de groupe, un
+      compte non autorise peut les lire ou les alterer pour effacer ses
+      traces.
+  - regles: [file_groupowner_var_log_lastlog, file_owner_var_log_lastlog,
+             file_permissions_var_log_lastlog, file_groupowner_var_log_wbtmp,
+             file_owner_var_log_wbtmp, file_permissions_var_log_wbtmp]
+    risque: >-
+      lastlog, wtmp et btmp gardent l'historique des connexions reussies et
+      des echecs. Modifiables par un compte non autorise, ils permettent
+      d'effacer la trace d'une intrusion ; lisibles, ils revelent qui se
+      connecte et quand.
+  - regles: [file_groupowner_var_log_localmessages, file_owner_var_log_localmessages,
+             file_permissions_var_log_localmessages]
+    risque: >-
+      localmessages recoit les messages de certains scripts de demarrage,
+      dont le client DHCP : a reserver au personnel autorise.
+  - regles: [file_groupowner_var_log_waagent, file_owner_var_log_waagent,
+             file_permissions_var_log_waagent]
+    risque: >-
+      Le journal de l'agent Azure (waagent) trace les operations de la
+      plateforme sur la machine (comptes, extensions) : a reserver au
+      personnel autorise.
+  - regles: [file_groupownerships_var_log_apt, file_ownerships_var_log_apt,
+             file_permissions_var_log_apt]
+    risque: >-
+      Les journaux d'APT listent les paquets installes et leurs versions :
+      un attaquant y lit les logiciels vulnerables presents. Personne ne
+      doit pouvoir les modifier pour masquer l'installation d'un outil.
+  - regles: [file_groupownerships_var_log_gdm, file_ownerships_var_log_gdm,
+             file_permissions_var_log_gdm, file_groupownerships_var_log_gdm3,
+             file_ownerships_var_log_gdm3, file_permissions_var_log_gdm3]
+    risque: >-
+      Les journaux du gestionnaire de connexion graphique (GDM) tracent les
+      sessions ouvertes sur la machine : a reserver au personnel autorise.
+  - regles: [file_groupownerships_var_log_landscape, file_ownerships_var_log_landscape]
+    risque: >-
+      Les journaux du client Landscape (administration a distance
+      d'Ubuntu) decrivent les operations commandees a distance : a reserver
+      au personnel autorise.
+  - regles: [file_groupownerships_var_log_sssd, file_ownerships_var_log_sssd,
+             file_permissions_var_log_sssd]
+    risque: >-
+      Les journaux de debogage de SSSD detaillent les authentifications
+      aupres de l'annuaire (LDAP, Active Directory) : a reserver au
+      personnel autorise.
+  - regles: [file_permissions_var_log_syslog]
+    risque: >-
+      /var/log/syslog rassemble les messages du systeme et des services,
+      avec parfois des donnees sensibles : lisible par tous, il renseigne un
+      attaquant ; modifiable, il permet d'effacer des traces.
+  # Source : risque generique (messages d'erreur) sans rapport avec les
+  # droits des journaux ; reecrit d'apres la regle.
+  - regles: [permissions_local_var_log]
+    risque: >-
+      Les journaux contiennent des informations exploitables (erreurs
+      detaillees, identifiants tapes par erreur, adresses, noms de
+      comptes) : ils ne doivent etre lisibles que par root et le groupe
+      d'administration, jamais par tous.
+  - regles: [logging_services_active]
+    risque: >-
+      Sans service de journalisation actif, rien n'est enregistre :
+      impossible de detecter une attaque ni de la reconstituer ensuite.
+  - regles: [mount_option_var_log_nodev]
+    risque: >-
+      Les fichiers de peripherique n'ont leur place que dans /dev : l'option
+      nodev empeche d'en creer sur la partition des journaux pour contourner
+      les droits d'acces au materiel.
+  - regles: [mount_option_var_log_noexec]
+    risque: >-
+      Executer un programme depuis /var/log n'est jamais necessaire :
+      l'option noexec retire a un attaquant un emplacement ou deposer et
+      lancer du code.
+  - regles: [mount_option_var_log_nosuid]
+    risque: >-
+      Les programmes SUID/SGID doivent rester sous controle : l'option nosuid
+      empeche d'en utiliser depuis la partition des journaux.
+  - regles: [partition_for_var_log]
+    risque: >-
+      Une partition dediee a /var/log separe les journaux du reste de /var :
+      des journaux qui debordent ne remplissent pas le disque du systeme, et
+      un disque plein ailleurs n'empeche pas la journalisation.
+  - regles: [package_rsyslog_installed, service_rsyslog_enabled]
+    risque: >-
+      rsyslog recoit et range les journaux du systeme et des services : sans
+      lui (ou un equivalent actif), les evenements de securite ne sont pas
+      enregistres.
+  - regles: [package_rsyslog-gnutls_installed]
+    risque: >-
+      Ce paquet apporte TLS a rsyslog : sans lui, les journaux envoyes a un
+      serveur distant circulent en clair et peuvent etre lus ou falsifies en
+      chemin.
+  - regles: [package_systemd-journal-remote_installed,
+             service_systemd-journal-upload_enabled]
+    risque: >-
+      Des journaux gardes uniquement sur la machine peuvent etre effaces par
+      un attaquant devenu root. Les envoyer a un serveur distant
+      (systemd-journal-upload) preserve les traces meme si la machine est
+      compromise, et permet de correler les evenements de plusieurs
+      machines.
+  - regles: [service_systemd-journald_enabled]
+    risque: >-
+      journald collecte les journaux du noyau, du demarrage et des services :
+      sans lui, la cause d'une panne ou d'un incident ne peut pas etre
+      retrouvee.
+  - regles: [rsyslog_filecreatemode]
+    risque: >-
+      Les droits des fichiers de journaux crees par rsyslog doivent etre
+      restreints des leur creation (0640 au plus) : sinon ils sont lisibles
+      par tous jusqu'a la prochaine correction.
+  - regles: [rsyslog_nolisten]
+    risque: >-
+      Un rsyslog qui ecoute sur le reseau accepte des messages de n'importe
+      qui : un attaquant peut noyer les journaux sous de faux evenements ou
+      exploiter une faille du service. Seul le serveur central de journaux
+      doit ecouter.
+  - regles: [rsyslog_remote_loghost]
+    risque: >-
+      Envoyer les journaux a un serveur central garde une copie hors
+      d'atteinte si la machine est compromise et que ses journaux locaux ne
+      sont plus fiables ; cela donne aussi une vue d'ensemble du parc.
+  - regles: [rsyslog_remote_tls]
+    risque: >-
+      Sans chiffrement ni authentification, les journaux envoyes au serveur
+      distant peuvent etre lus, modifies ou detournes vers un faux serveur.
+  - regles: [rsyslog_remote_tls_cacert]
+    risque: >-
+      Sans certificat d'autorite, rsyslog ne peut pas verifier l'identite du
+      serveur de journaux ; avec le pilote TLS actif, le service refuse meme
+      de demarrer.
+  - regles: [socket_systemd-journal-remote_disabled]
+    risque: >-
+      systemd-journal-remote fait de la machine un serveur qui recoit les
+      journaux d'autres machines : hors du serveur central, c'est un service
+      reseau expose sans raison.
+  - regles: [systemd_journal_upload_server_tls, systemd_journal_upload_url]
+    risque: >-
+      Des journaux gardes a un seul endroit peuvent etre effaces ou modifies
+      par accident ou par un attaquant. systemd-journal-upload doit
+      connaitre le serveur distant (URL) et s'y connecter en TLS (cle,
+      certificat, autorite).
+
+  # ======================================================= services-inutiles
+  # Premiers jets : qwen2.5:7b (atelier), relus et corriges par l'architecte.
+  - regles: [dconf_gnome_disable_automount_open]
+    risque: >-
+      Monter automatiquement les supports amovibles facilite l'introduction
+      d'appareils inconnus, donc d'activite malveillante. Desactiver
+      l'ouverture automatique dans GNOME empeche l'introduction de logiciels
+      malveillants par ces supports, mais prive aussi les utilisateurs de
+      bureau de leur usage legitime.
+  - regles: [dconf_gnome_disable_automount]
+    risque: >-
+      Desactiver le montage automatique dans GNOME empeche l'introduction de
+      logiciels malveillants par des supports amovibles, mais prive aussi
+      les utilisateurs de bureau de leur usage legitime.
+  - regles: [dconf_gnome_disable_autorun]
+    risque: >-
+      Un support amovible qui lance automatiquement un programme a son
+      branchement est un moyen classique d'introduire un logiciel
+      malveillant. Interdire l'execution automatique dans GNOME supprime ce
+      vecteur, au prix d'un peu de confort pour les utilisateurs de bureau.
+  - regles: [gnome_gdm_disable_xdmcp]
+    risque: >-
+      XDMCP fournit un acces distant non chiffre via le gestionnaire
+      d'affichage Gnome (GDM), sans confidentialite ni integrite pour les
+      mots de passe ni la session distante. Un utilisateur privilegie qui se
+      connecte par XDMCP expose son mot de passe : les evenements X et les
+      frappes clavier transitent en clair sur le reseau.
+  - regles: [no_rsh_trust_files]
+    risque: >-
+      /etc/hosts.equiv et les fichiers .rhosts declarent des machines et des
+      comptes de confiance : combines aux services R (rsh, rlogin), ils
+      ouvrent une session sans aucune authentification.
+  - regles: [package_autofs_removed]
+    risque: >-
+      Avec le montage automatique active, toute personne ayant un acces
+      physique peut brancher une cle USB ou un disque et en utiliser le
+      contenu, meme sans avoir les droits de le monter elle-meme.
+  - regles: [package_avahi_removed]
+    risque: >-
+      La decouverte automatique des services reseau n'est normalement pas
+      requise pour le fonctionnement du systeme. Retirer ce paquet est
+      recommande pour reduire la surface d'attaque potentielle.
+  - regles: [package_bind_removed]
+    risque: >-
+      S'il n'est pas necessaire de fournir un logiciel de serveur DNS, le
+      retirer constitue une protection contre son activation.
+  - regles: [package_cups_removed]
+    risque: >-
+      Si le systeme n'a pas besoin d'imprimer ni d'accepter des travaux
+      d'impression venant d'autres systemes, retirer CUPS est recommande
+      pour reduire la surface d'attaque potentielle.
+  - regles: [package_dhcp_removed, package_kea_removed]
+    risque: >-
+      Retirer le serveur DHCP garantit qu'il ne peut pas etre reactive
+      facilement ou par accident et perturber le fonctionnement du reseau.
+  - regles: [package_dnsmasq_removed, service_dnsmasq_disabled]
+    risque: >-
+      Sauf si le systeme est designe comme serveur de cache DNS, de
+      transfert DNS et/ou de DHCP, retirer le paquet est recommande pour
+      reduire la surface d'attaque potentielle.
+  - regles: [package_dovecot_removed]
+    risque: >-
+      S'il n'est pas necessaire de fournir le logiciel Dovecot, le retirer
+      constitue une protection contre son activation.
+  - regles: [package_ftp_removed]
+    risque: >-
+      FTP ne protege ni la confidentialite des donnees ni les identifiants
+      d'authentification ; utiliser SFTP si un transfert de fichiers est
+      requis. Sauf besoin d'un serveur FTP (par exemple pour des
+      telechargements anonymes), retirer le paquet reduit la surface
+      d'attaque potentielle.
+  - regles: [package_gdm_removed]
+    risque: >-
+      Ne pas installer les paquets de services inutiles diminue la surface
+      d'attaque du systeme. Un environnement graphique est inutile pour
+      certains types de systemes, dont un hyperviseur de virtualisation.
+  - regles: [package_inetutils-telnet_removed, package_telnet_removed]
+    risque: >-
+      Le protocole telnet n'est pas chiffre : identifiants et session
+      circulent en clair et peuvent etre interceptes. SSH fournit une
+      session chiffree et une authentification plus sure.
+  - regles: [package_net-snmp_removed]
+    risque: >-
+      S'il n'est pas necessaire d'executer un logiciel de serveur SNMP,
+      retirer le paquet constitue une protection contre son activation.
+  - regles: [package_nfs-kernel-server_removed]
+    risque: >-
+      Si le systeme n'exporte pas de partages NFS, retirer le serveur NFS
+      reduit la surface d'attaque exposee au reseau.
+  - regles: [package_nginx_removed]
+    risque: >-
+      S'il n'est pas necessaire de fournir un logiciel de serveur web, le
+      retirer constitue une protection contre son activation.
+  - regles: [package_nis_removed]
+    risque: >-
+      NIS est l'ancien service SUN de gestion centralisee des comptes, de
+      plus en plus remplace par LDAP. NIS ne supporte pas efficacement les
+      contraintes de securite, les ACL, etc., et ne doit pas etre utilise.
+  - regles: [package_openldap-clients_removed]
+    risque: >-
+      Si le systeme n'a pas besoin de servir de client LDAP, retirer ce
+      logiciel est recommande pour reduire la surface d'attaque potentielle.
+  - regles: [package_openldap-servers_removed]
+    risque: >-
+      Ne pas installer les paquets inutiles diminue la surface d'attaque du
+      systeme. Indispensable sur un serveur LDAP, ce logiciel n'est pas
+      necessaire sur un poste de bureau ou une station de travail typique.
+  - regles: [package_prelink_removed]
+    risque: >-
+      L'utilisation du paquet prelink nuit au fonctionnement d'AIDE car il
+      modifie les binaires. La preliaison peut aussi aggraver les degats
+      d'une faille dans une bibliotheque courante comme libc.
+  - regles: [package_rpcbind_removed, service_rpcbind_disabled]
+    risque: >-
+      Si le systeme n'utilise pas de services bases sur rpc, desactiver
+      rpcbind est recommande pour reduire la surface d'attaque.
+  - regles: [package_rsh_removed]
+    risque: >-
+      Les clients rsh, rcp et rlogin sont anciens, pleins de failles et
+      remplaces par SSH. Meme sans serveur, les retirer evite qu'un
+      utilisateur les emploie par erreur et envoie ses identifiants en
+      clair.
+  - regles: [package_rsh-server_removed]
+    risque: >-
+      rsh-server fournit un acces distant non chiffre, sans confidentialite
+      ni integrite pour les mots de passe ni la session distante, avec une
+      authentification tres faible : un utilisateur privilegie qui s'y
+      connecte expose son mot de passe. Le paquet rsh-server fournit
+      plusieurs services reseau obsoletes et non surs ; le retirer diminue
+      le risque de leur activation accidentelle ou intentionnelle.
+  - regles: [package_samba_removed]
+    risque: >-
+      S'il n'est pas necessaire de fournir le logiciel Samba, le retirer
+      constitue une protection contre son activation.
+  - regles: [package_sendmail_removed]
+    risque: >-
+      sendmail n'a pas ete concu avec la securite pour priorite et se laisse
+      mal confiner (SELinux, AppArmor) : lui preferer Postfix.
+  - regles: [package_squid_removed]
+    risque: >-
+      S'il n'est pas necessaire de fournir un logiciel de serveur
+      mandataire, le retirer constitue une protection contre son activation.
+  - regles: [package_talk_removed]
+    risque: >-
+      Le logiciel talk presente un risque de securite car ses protocoles de
+      communication ne sont pas chiffres. Retirer le paquet talk diminue le
+      risque d'activation accidentelle ou intentionnelle du programme client
+      talk.
+  - regles: [package_talk-server_removed]
+    risque: >-
+      Le logiciel talk presente un risque de securite car ses protocoles de
+      communication ne sont pas chiffres. Retirer le paquet talk-server
+      diminue le risque d'activation accidentelle ou intentionnelle des
+      services talk.
+  - regles: [package_telnet-server_removed]
+    risque: >-
+      Fournir ou installer par defaut des fonctionnalites superflues est
+      nefaste : ces capacites inutiles, souvent negligees, restent non sures
+      et offrent des vecteurs d'attaque supplementaires. Le service telnet
+      fournit un acces distant non chiffre, sans confidentialite ni
+      integrite pour les mots de passe ni la session distante ; un
+      utilisateur privilegie qui s'y connecte expose son mot de passe.
+      Retirer le paquet telnet-server diminue le risque d'activation
+      accidentelle ou intentionnelle du service telnet.
+  - regles: [package_tftp_removed]
+    risque: >-
+      Retirer TFTP est recommande, sauf besoin specifique (par exemple un
+      serveur d'amorcage). Dans ce cas, configurer les services avec
+      beaucoup de prudence.
+  - regles: [package_tnftp_removed]
+    risque: >-
+      Sauf besoin d'utiliser le protocole standard de transfert de fichiers
+      d'Internet (par exemple pour des telechargements anonymes), retirer le
+      paquet est recommande pour reduire la surface d'attaque potentielle.
+  - regles: [package_vsftpd_removed]
+    risque: >-
+      Retirer le paquet vsftpd diminue le risque de son activation
+      accidentelle.
+  - regles: [package_xinetd_removed]
+    risque: >-
+      Retirer le paquet xinetd diminue le risque d'activation accidentelle
+      ou intentionnelle du service xinetd.
+  - regles: [package_xorg-x11-server-common_removed]
+    risque: >-
+      Ne pas installer les paquets de services inutiles diminue la surface
+      d'attaque du systeme. Le systeme X windows a un long historique de
+      failles de securite et ne doit pas etre installe sans approbation et
+      justification documentee.
+  - regles: [package_ypbind_removed]
+    risque: >-
+      NIS est intrinsequement peu sur : vulnerable aux denis de service et
+      aux debordements de tampon, avec une authentification faible des
+      requetes sur les tables NIS. Il est generalement remplace par LDAP :
+      retirer le client ypbind est recommande.
+  - regles: [package_ypserv_removed]
+    risque: >-
+      NIS fournit une authentification non chiffree, sans confidentialite ni
+      integrite pour les mots de passe ni la session distante. Retirer le
+      paquet ypserv diminue le risque d'activation accidentelle ou
+      intentionnelle des services NIS ou NIS+.
+  - regles: [service_apport_disabled]
+    risque: >-
+      Le service Apport modifie la configuration fs.suid_dumpable du noyau
+      en cours d'execution, ce qui empeche les autres durcissements d'etre
+      persistants. Le desactiver evite ce comportement.
+  - regles: [service_autofs_disabled]
+    risque: >-
+      Desactiver le monteur automatique permet a l'administrateur de
+      controler statiquement le montage des systemes de fichiers via
+      /etc/fstab. De plus, le montage automatique facilite l'introduction
+      d'appareils inconnus, donc d'activite malveillante.
+  - regles: [service_avahi-daemon_disabled]
+    risque: >-
+      Le service avahi-daemon garde un port reseau ouvert, donc expose aux
+      attaques reseau. Sa fonctionnalite est pratique mais ne convient que
+      si le reseau local est de confiance.
+  - regles: [service_bluetooth_disabled]
+    risque: >-
+      Desactiver le service bluetooth empeche le systeme de tenter des
+      connexions vers des appareils Bluetooth, ce qui comporte un risque de
+      securite. Ce choix peut neanmoins varier selon l'utilite de la
+      connexion Bluetooth et sa portee limitee.
+  - regles: [service_cups_disabled]
+    risque: >-
+      CUPS ecoute sur le reseau pour l'impression : sur une machine qui
+      n'imprime pas, c'est un service expose sans raison. Couper les
+      services inutiles reduit la surface d'attaque.
+  - regles: [service_dovecot_disabled]
+    risque: >-
+      Un serveur IMAP ou POP3 offre une voie d'attaque reseau ; le
+      desactiver s'il n'est pas necessaire.
+  - regles: [service_named_disabled]
+    risque: >-
+      Tout service reseau comporte un risque de compromission du aux failles
+      d'implementation et doit etre desactive si possible.
+  - regles: [service_nfs_disabled]
+    risque: >-
+      Desactiver les services inutiles diminue la surface d'attaque du
+      systeme.
+  - regles: [service_nginx_disabled]
+    risque: >-
+      Un logiciel de serveur web offre une voie d'attaque reseau ; le
+      desactiver s'il n'est pas necessaire.
+  - regles: [service_slapd_disabled]
+    risque: >-
+      Si le systeme n'a pas besoin de servir de serveur LDAP, desactiver ce
+      logiciel est recommande pour reduire la surface d'attaque potentielle.
+  - regles: [service_snmpd_disabled]
+    risque: >-
+      Un logiciel SNMP offre une voie d'attaque reseau ; le desactiver s'il
+      n'est pas necessaire.
+  - regles: [service_squid_disabled]
+    risque: >-
+      Un logiciel de serveur mandataire offre une voie d'attaque reseau ; le
+      retirer s'il n'est pas necessaire.
+  - regles: [service_vsftpd_disabled]
+    risque: >-
+      Un logiciel de serveur FTP offre une voie d'attaque reseau ; le
+      desactiver s'il n'est pas necessaire. De plus, le protocole FTP n'est
+      pas chiffre et risque d'exposer des informations sensibles.
+  - regles: [service_xinetd_disabled]
+    risque: >-
+      xinetd fournit un service d'ecoute dedie pour certains programmes, qui
+      n'est plus necessaire pour les services reseau courants. Le desactiver
+      garantit que ces services peu courants ne tournent pas et empeche
+      aussi les attaques contre xinetd lui-meme.
+  - regles: [service_ypserv_disabled]
+    risque: >-
+      ypserv est le serveur NIS, dont l'authentification n'est pas chiffree.
+      Le desactiver garantit que la machine ne sert pas de serveur NIS ou
+      NIS+ ; a garder seulement s'il est utilise.
+
+  # ======================================================= parametres-reseau
+  - regles: [sysctl_net_core_bpf_jit_harden]
+    risque: >-
+      Durcit le compilateur a la volee de BPF : les adresses du noyau dans
+      les programmes BPF sont rendues aleatoires et ne sont plus exposees
+      dans /proc/kallsyms, ce qui complique l'exploitation du noyau (JIT
+      spraying).
+  - regles: [sysctl_net_ipv4_conf_all_accept_local]
+    risque: >-
+      Refuser les paquets venus de l'exterieur avec une adresse source
+      locale (127.0.0.0/8) empeche un attaquant de se faire passer pour la
+      machine elle-meme aupres de ses propres services.
+  - regles: [sysctl_net_ipv4_conf_all_accept_redirects,
+             sysctl_net_ipv4_conf_default_accept_redirects,
+             sysctl_net_ipv6_conf_all_accept_redirects,
+             sysctl_net_ipv6_conf_default_accept_redirects]
+    risque: >-
+      Les redirections ICMP modifient la table de routage de la machine sans
+      aucune authentification : un attaquant du reseau local peut detourner
+      le trafic par sa machine (homme du milieu). Elles n'ont presque aucun
+      usage legitime.
+  - regles: [sysctl_net_ipv4_conf_all_accept_source_route,
+             sysctl_net_ipv4_conf_default_accept_source_route,
+             sysctl_net_ipv6_conf_all_accept_source_route,
+             sysctl_net_ipv6_conf_default_accept_source_route]
+    risque: >-
+      Le routage par la source laisse l'emetteur choisir le chemin de ses
+      paquets, ce qui permet de contourner les protections du reseau
+      (pare-feu, filtrage). Il n'a presque aucun usage legitime.
+  # Valeur attendue corrigee (1) : voir CORRECTIONS_VARIABLES.
+  - regles: [sysctl_net_ipv4_conf_all_arp_filter]
+    risque: >-
+      Sans filtrage ARP par interface, le noyau peut repondre sur une
+      interface avec l'adresse d'une autre : la machine revele des reseaux
+      qu'elle relie et facilite l'usurpation ARP.
+  - regles: [sysctl_net_ipv4_conf_all_arp_ignore]
+    risque: >-
+      Ne repondre aux requetes ARP que pour une adresse de l'interface qui
+      les recoit, et du meme sous-reseau, evite de devoiler les autres
+      adresses de la machine et les confusions entre interfaces. A etudier
+      selon l'usage de la machine.
+  - regles: [sysctl_net_ipv4_conf_all_drop_gratuitous_arp]
+    risque: >-
+      Les annonces ARP spontanees (gratuitous ARP) sont l'outil classique de
+      l'empoisonnement ARP : les ignorer empeche un attaquant du reseau local
+      de s'inserer entre la machine et sa passerelle.
+  - regles: [sysctl_net_ipv4_conf_all_log_martians,
+             sysctl_net_ipv4_conf_default_log_martians]
+    risque: >-
+      Les paquets aux adresses impossibles (« martiens »), usurpees ou
+      routees par la source signalent souvent une activite malveillante :
+      les journaliser permet de la detecter.
+  - regles: [sysctl_net_ipv4_conf_all_route_localnet]
+    risque: >-
+      Router les adresses de bouclage (127.0.0.0/8) peut exposer au reseau
+      des services qui n'ecoutent que sur localhost en se croyant proteges.
+  - regles: [sysctl_net_ipv4_conf_all_rp_filter,
+             sysctl_net_ipv4_conf_default_rp_filter]
+    risque: >-
+      Le filtrage par chemin inverse rejette les paquets dont l'adresse
+      source n'aurait pas pu arriver par cette interface : il bloque une
+      grande partie des adresses usurpees. A eviter seulement sur les
+      routeurs de reseaux complexes.
+  - regles: [sysctl_net_ipv4_conf_all_secure_redirects,
+             sysctl_net_ipv4_conf_default_secure_redirects]
+    risque: >-
+      Meme les redirections ICMP dites « sures » (venant de la passerelle
+      par defaut) modifient la table de routage : elles n'ont presque aucun
+      usage legitime et doivent etre refusees.
+  - regles: [sysctl_net_ipv4_conf_all_send_redirects,
+             sysctl_net_ipv4_conf_default_send_redirects]
+    risque: >-
+      Envoyer des redirections ICMP est le role d'un routeur ; sur une
+      autre machine, ces messages revelent une partie de la topologie du
+      reseau.
+  - regles: [sysctl_net_ipv4_conf_all_shared_media,
+             sysctl_net_ipv4_conf_default_shared_media]
+    risque: >-
+      shared_media l'emporte sur secure_redirects : active, il reautorise
+      les redirections ICMP. Il doit donc etre desactive lui aussi.
+  - regles: [sysctl_net_ipv4_icmp_echo_ignore_broadcasts]
+    risque: >-
+      Repondre aux ping envoyes en diffusion facilite la cartographie du
+      reseau et sert aux attaques par amplification (smurf) : les ignorer
+      rend la machine plus discrete.
+  - regles: [sysctl_net_ipv4_icmp_ignore_bogus_error_responses]
+    risque: >-
+      Ignorer les reponses d'erreur ICMP non conformes evite qu'un
+      attaquant remplisse les journaux de messages inutiles pour noyer les
+      evenements importants.
+  - regles: [sysctl_net_ipv4_ip_forward]
+    risque: >-
+      Une machine qui transmet les paquets d'un reseau a l'autre joue le
+      role de routeur : un attaquant peut s'en servir pour passer d'un
+      reseau a un autre en contournant le cloisonnement. A reserver aux
+      routeurs.
+  - regles: [sysctl_net_ipv6_conf_all_forwarding]
+    risque: >-
+      Transmettre les paquets IPv6 d'une interface a l'autre fait de la
+      machine un routeur : un attaquant peut s'en servir pour contourner le
+      cloisonnement des reseaux. A reserver aux routeurs.
+  - regles: [sysctl_net_ipv4_tcp_rfc1337]
+    risque: >-
+      Protege les connexions en attente de fermeture (TIME_WAIT) contre les
+      paquets RST forges (RFC 1337) : sans cela, un attaquant peut fermer
+      prematurement des connexions ou en melanger les donnees.
+  - regles: [sysctl_net_ipv4_tcp_syncookies]
+    risque: >-
+      Une inondation de SYN remplit la table des connexions en attente et
+      bloque le service (deni de service). Les SYN cookies permettent de
+      continuer a accepter les connexions legitimes pendant l'attaque.
+  - regles: [sysctl_net_ipv6_conf_all_accept_ra, sysctl_net_ipv6_conf_default_accept_ra,
+             sysctl_net_ipv6_conf_all_accept_ra_defrtr,
+             sysctl_net_ipv6_conf_default_accept_ra_defrtr,
+             sysctl_net_ipv6_conf_all_accept_ra_pinfo,
+             sysctl_net_ipv6_conf_default_accept_ra_pinfo,
+             sysctl_net_ipv6_conf_all_accept_ra_rtr_pref,
+             sysctl_net_ipv6_conf_default_accept_ra_rtr_pref,
+             sysctl_net_ipv6_conf_all_autoconf, sysctl_net_ipv6_conf_default_autoconf]
+    risque: >-
+      Une annonce de routeur IPv6 forgee suffit a imposer une fausse
+      passerelle, un faux prefixe ou une adresse a la machine : un attaquant
+      du reseau local detourne ainsi le trafic (homme du milieu). Sur un
+      serveur a configuration statique, ces annonces doivent etre ignorees.
+  - regles: [sysctl_net_ipv6_conf_all_max_addresses,
+             sysctl_net_ipv6_conf_default_max_addresses]
+    risque: >-
+      Limiter le nombre d'adresses IPv6 globales par interface aux adresses
+      configurees empeche l'ajout d'adresses non prevues, par exemple via
+      des annonces de routeur forgees.
+  - regles: [sysctl_net_ipv6_conf_all_router_solicitations,
+             sysctl_net_ipv6_conf_default_router_solicitations]
+    risque: >-
+      Ne pas solliciter les routeurs evite que la machine se signale sur le
+      reseau et attende une configuration qu'un attaquant pourrait fournir.
+
+  # ======================================================== parametres-noyau
+  - regles: [directory_groupowner_etc_sysctld, directory_owner_etc_sysctld,
+             directory_permissions_etc_sysctld]
+    risque: >-
+      /etc/sysctl.d contient les reglages du noyau appliques a chaque
+      demarrage. Qui peut y ecrire peut desactiver les protections du noyau
+      (ASLR, filtrage reseau...) : le repertoire doit appartenir a root et
+      n'etre modifiable que par lui.
+  - regles: [disable_users_coredumps]
+    risque: >-
+      Un vidage memoire (core dump) est une image de la memoire d'un
+      programme au moment de son arret : il peut contenir mots de passe,
+      cles et donnees sensibles, et ne sert qu'au debogage.
+  - regles: [sysctl_fs_protected_fifos]
+    risque: >-
+      Interdit d'ouvrir une FIFO appartenant a un autre utilisateur dans un
+      repertoire partage (comme /tmp) : un programme ne peut plus etre piege
+      a ecrire dans une FIFO preparee par un attaquant.
+  - regles: [sysctl_fs_protected_regular]
+    risque: >-
+      Interdit d'ouvrir un fichier ordinaire appartenant a un autre
+      utilisateur dans un repertoire partage (comme /tmp) : un programme qui
+      croit creer son fichier n'ecrit pas dans un fichier prepare par un
+      attaquant.
+  - regles: [sysctl_fs_protected_hardlinks]
+    risque: >-
+      Empeche de creer un lien physique vers un fichier dont on n'est pas
+      proprietaire : bloque une famille d'attaques ou un programme
+      privilegie est amene a modifier un fichier sensible.
+  - regles: [sysctl_fs_protected_symlinks]
+    risque: >-
+      Dans un repertoire partage (comme /tmp), un lien symbolique n'est
+      suivi que si son proprietaire est celui qui le suit ou celui du
+      repertoire : un programme privilegie ne peut plus etre detourne vers
+      un fichier sensible.
+  - regles: [sysctl_fs_suid_dumpable]
+    risque: >-
+      Le vidage memoire d'un programme setuid peut contenir des donnees
+      privilegiees (empreintes de mots de passe, cles) : l'interdire evite
+      qu'un utilisateur les recupere.
+  - regles: [sysctl_kernel_dmesg_restrict]
+    risque: >-
+      Les messages du noyau revelent des adresses et des details internes
+      utiles pour l'exploiter : ils doivent etre reserves aux
+      administrateurs.
+  - regles: [sysctl_kernel_kptr_restrict]
+    risque: >-
+      Les adresses du noyau affichees dans /proc permettent a un attaquant
+      de viser precisement ses structures sensibles : les masquer rend
+      l'exploitation d'une faille du noyau bien plus difficile.
+  - regles: [sysctl_kernel_panic_on_oops]
+    risque: >-
+      Un attaquant qui tente d'exploiter le noyau provoque souvent des
+      erreurs (oops) : arreter le systeme a la premiere l'empeche de
+      poursuivre ses essais.
+  - regles: [sysctl_kernel_perf_cpu_time_max_percent,
+             sysctl_kernel_perf_event_max_sample_rate]
+    risque: >-
+      Limiter le temps processeur et la frequence d'echantillonnage de
+      l'outil de mesure perf evite qu'il soit detourne pour degrader la
+      disponibilite de la machine.
+  - regles: [sysctl_kernel_perf_event_paranoid]
+    risque: >-
+      Le profilage du noyau (perf) revele son fonctionnement interne : il
+      doit etre reserve aux administrateurs.
+  - regles: [sysctl_kernel_pid_max]
+    risque: >-
+      Fixe le nombre maximal d'identifiants de processus, comme le
+      recommande l'ANSSI. Trop bas, il bloque la creation de processus sur
+      une machine tres chargee : a ajuster selon l'usage.
+  - regles: [sysctl_kernel_randomize_va_space]
+    risque: >-
+      La randomisation de l'espace d'adressage (ASLR) empeche un attaquant
+      de prevoir ou se trouvent son code injecte et le code existant qu'il
+      voudrait reutiliser (ROP).
+  - regles: [sysctl_kernel_sysrq]
+    risque: >-
+      La touche SysRq envoie des commandes directement au noyau : afficher
+      des informations sensibles, redemarrer ou arreter la machine. Qui a
+      acces a la console peut ainsi contourner le systeme.
+  - regles: [sysctl_kernel_unprivileged_bpf_disabled]
+    risque: >-
+      L'appel systeme bpf() ouvert a tous les utilisateurs expose l'etat du
+      noyau et a servi a de nombreuses elevations de privileges : il doit
+      etre reserve aux administrateurs.
+  - regles: [sysctl_kernel_yama_ptrace_scope]
+    risque: >-
+      Sans restriction de ptrace, un programme compromis peut espionner les
+      autres processus du meme utilisateur (session SSH, navigateur) et leur
+      voler des secrets, sans aucune action de sa part.
+  - regles: [sysctl_vm_mmap_min_addr]
+    risque: >-
+      Interdire aux programmes d'utiliser les premieres pages de la memoire
+      limite l'exploitation des dereferencements de pointeur nul dans le
+      noyau.
+
+  # ==================== fichiers-systeme
+  # Premiers jets : qwen2.5:7b (atelier), relus et corriges par l'architecte.
+  - regles: [dir_perms_world_writable_root_owned]
+    risque: >-
+      Laisser un compte utilisateur posseder un repertoire modifiable par
+      tous est indesirable : le proprietaire peut alors supprimer ou
+      remplacer les fichiers que d'autres utilisateurs y deposent.
+  - regles: [dir_perms_world_writable_sticky_bits]
+    risque: >-
+      Sans bit sticky, un repertoire modifiable par tous (comme /tmp) laisse
+      n'importe quel utilisateur supprimer ou remplacer les fichiers des
+      autres. Seuls les repertoires temporaires prevus pour cela doivent
+      etre modifiables par tous, et toujours avec le bit sticky.
+  - regles: [dir_system_commands_group_root_owned, dir_system_commands_root_owned]
+    risque: >-
+      Les repertoires des commandes systeme (/usr/bin, /usr/sbin...) doivent
+      appartenir a root : un autre compte pourrait y remplacer une commande
+      par un programme piege, execute ensuite par les administrateurs et les
+      services.
+  - regles: [directory_groupowner_etc_ipsecd]
+    risque: >-
+      /etc/ipsec.d contient la configuration IPsec (Libreswan, strongSwan),
+      certificats et cles compris : il doit appartenir a root pour que
+      personne d'autre ne puisse la lire ou la modifier.
+  - regles: [directory_owner_etc_ipsecd]
+    risque: >-
+      /etc/ipsec.d contient la configuration IPsec (Libreswan, strongSwan),
+      certificats et cles compris : il doit appartenir a root pour que
+      personne d'autre ne puisse la lire ou la modifier.
+  - regles: [directory_permissions_etc_ipsecd]
+    risque: >-
+      /etc/ipsec.d contient la configuration IPsec (Libreswan, strongSwan),
+      certificats et cles compris : il doit rester reserve a root (0700 au
+      plus).
+  - regles: [file_groupowner_etc_crypttab]
+    risque: >-
+      /etc/crypttab decrit les disques chiffres et l'emplacement de leurs
+      cles : qui peut le modifier peut empecher leur ouverture ou pointer
+      vers une cle qu'il controle. Il doit appartenir a root.
+  - regles: [file_groupowner_etc_ipsec_conf]
+    risque: >-
+      /etc/ipsec.conf definit les tunnels IPsec : qui peut le modifier peut
+      desactiver le chiffrement ou detourner les connexions. Il doit
+      appartenir a root.
+  - regles: [file_groupowner_etc_ipsec_secrets]
+    risque: >-
+      /etc/ipsec.secrets contient les secrets des tunnels IPsec (cles
+      partagees, cles privees) : il doit appartenir a root.
+  - regles: [file_groupowner_etc_issue_net, file_groupowner_etc_issue, file_groupowner_etc_motd]
+    risque: >-
+      Les bannieres (/etc/issue, /etc/issue.net, /etc/motd) affichent
+      l'avertissement legal avant ou apres la connexion. Si un autre compte
+      peut les modifier, il peut retirer l'avertissement ou afficher un
+      message trompeur (fausse consigne, hameconnage).
+  - regles: [file_groupowner_etc_shells, file_owner_etc_shells, file_permissions_etc_shells]
+    risque: >-
+      Le fichier /etc/shells contient la liste des chemins complets des
+      shells du systeme. Beaucoup de programmes systeme l'utilisent : il
+      doit etre protege.
+  - regles: [file_groupowner_systemmap, file_owner_systemmap, file_permissions_systemmap]
+    risque: >-
+      Les fichiers System.map servent surtout au debogage et au profilage du
+      noyau. Un acces non limite peut reveler des informations utiles aux
+      attaquants et aux logiciels malveillants, menant a des exploitations
+      plus elaborees.
+  - regles: [file_groupownership_system_commands_dirs]
+    risque: >-
+      Un executable systeme rattache a un groupe d'utilisateurs ordinaire
+      peut etre modifie par les membres de ce groupe : ils pourraient pieger
+      une commande executee ensuite avec des privileges eleves.
+  - regles: [file_owner_etc_crypttab]
+    risque: >-
+      /etc/crypttab decrit les disques chiffres et l'emplacement de leurs
+      cles : qui peut le modifier peut empecher leur ouverture ou pointer
+      vers une cle qu'il controle. Il doit appartenir a root.
+  - regles: [file_owner_etc_ipsec_conf]
+    risque: >-
+      /etc/ipsec.conf definit les tunnels IPsec : qui peut le modifier peut
+      desactiver le chiffrement ou detourner les connexions. Il doit
+      appartenir a root.
+  - regles: [file_owner_etc_ipsec_secrets]
+    risque: >-
+      /etc/ipsec.secrets contient les secrets des tunnels IPsec (cles
+      partagees, cles privees) : il doit appartenir a root.
+  - regles: [file_owner_etc_issue_net, file_owner_etc_issue, file_owner_etc_motd]
+    risque: >-
+      Les bannieres (/etc/issue, /etc/issue.net, /etc/motd) affichent
+      l'avertissement legal avant ou apres la connexion. Si un autre compte
+      peut les modifier, il peut retirer l'avertissement ou afficher un
+      message trompeur (fausse consigne, hameconnage).
+  - regles: [file_ownership_binary_dirs]
+    risque: >-
+      Les executables systeme sont executes par des utilisateurs privilegies
+      et des services systeme : des droits restrictifs sont necessaires pour
+      que leur execution ne puisse pas etre detournee.
+  - regles: [file_permissions_binary_dirs]
+    risque: >-
+      Les executables systeme sont executes par des utilisateurs privilegies
+      et des services systeme : des droits restrictifs sont necessaires pour
+      que leur execution ne puisse pas etre detournee.
+  - regles: [file_permissions_etc_crypttab]
+    risque: >-
+      /etc/crypttab decrit les disques chiffres et l'emplacement de leurs
+      cles : il doit rester reserve a root (0600 au plus).
+  - regles: [file_permissions_etc_ipsec_conf]
+    risque: >-
+      /etc/ipsec.conf definit les tunnels IPsec : qui peut le modifier peut
+      desactiver le chiffrement ou detourner les connexions. Seul root doit
+      pouvoir y ecrire.
+  - regles: [file_permissions_etc_ipsec_secrets]
+    risque: >-
+      /etc/ipsec.secrets contient les secrets des tunnels IPsec (cles
+      partagees, cles privees). La source tolere 0644 ; s'il est plus strict
+      (0600, installation par defaut de strongSwan sur Debian/Ubuntu), le
+      garder ainsi.
+  - regles: [file_permissions_etc_issue_net, file_permissions_etc_issue, file_permissions_etc_motd]
+    risque: >-
+      Les bannieres (/etc/issue, /etc/issue.net, /etc/motd) affichent
+      l'avertissement legal avant ou apres la connexion. Si un autre compte
+      peut les modifier, il peut retirer l'avertissement ou afficher un
+      message trompeur (fausse consigne, hameconnage).
+  - regles: [file_permissions_unauthorized_sgid]
+    risque: >-
+      Un executable SGID s'execute avec les privileges du proprietaire du
+      fichier. Des fichiers SGID d'origine incertaine peuvent permettre a
+      des utilisateurs non privilegies d'elever leurs privileges. Leur
+      presence doit etre strictement controlee sur le systeme.
+  - regles: [file_permissions_unauthorized_suid]
+    risque: >-
+      Un executable SUID s'execute avec les privileges du proprietaire du
+      fichier. Des fichiers SUID d'origine incertaine peuvent permettre a
+      des utilisateurs non privilegies d'elever leurs privileges. Leur
+      presence doit etre strictement controlee sur le systeme.
+  - regles: [file_permissions_unauthorized_world_writable]
+    risque: >-
+      Les donnees d'un fichier modifiable par tous peuvent etre modifiees
+      par n'importe quel utilisateur. Dans presque tous les cas, une
+      combinaison de droits utilisateur et de groupe suffit a l'acces
+      legitime, sans le risque des fichiers modifiables par tous.
+  - regles: [file_permissions_ungroupowned, no_files_unowned_by_user]
+    risque: >-
+      Un fichier sans proprietaire ou sans groupe valide n'est pas une
+      faille en soi, mais signale une anomalie : intrusion, logiciel mal
+      installe ou mal retire, compte supprime sans ses fichiers. Un futur
+      compte qui recevrait le meme identifiant en deviendrait proprietaire :
+      il faut en trouver la cause et les rattacher.
+
+  # ==================== sessions
+  # Premiers jets : qwen2.5:7b (atelier), relus et corriges par l'architecte.
+  - regles: [accounts_polyinstantiated_tmp]
+    risque: >-
+      Un /tmp commun a tous les utilisateurs permet des attaques entre
+      comptes (fichier piege, lien symbolique, lecture de fichiers
+      temporaires). La polyinstanciation donne a chaque utilisateur son
+      propre /tmp prive.
+  - regles: [accounts_polyinstantiated_var_tmp]
+    risque: >-
+      Un /var/tmp commun a tous les utilisateurs permet des attaques entre
+      comptes (fichier piege, lien symbolique, lecture de fichiers
+      temporaires). La polyinstanciation donne a chaque utilisateur son
+      propre /var/tmp prive.
+  - regles: [accounts_root_path_dirs_no_write]
+    risque: >-
+      Si un repertoire du PATH de root est modifiable par d'autres comptes,
+      ils peuvent y deposer un programme portant le nom d'une commande
+      courante : root l'executera a sa place.
+  - regles: [accounts_tmout]
+    risque: >-
+      Fermer rapidement une session inactive reduit la fenetre d'opportunite
+      pour qu'une personne non autorisee prenne le controle d'une session de
+      gestion laissee sans surveillance sur la console.
+  - regles: [accounts_umask_etc_bashrc, accounts_umask_etc_profile, accounts_umask_root]
+    risque: >-
+      Le umask determine les droits appliques aux fichiers a leur creation.
+      Un umask mal configure peut donner a des fichiers des droits
+      excessifs, lisibles ou inscriptibles par des utilisateurs non
+      autorises.
+  - regles: [accounts_umask_etc_login_defs]
+    risque: >-
+      Le umask determine les droits appliques aux fichiers a leur creation.
+      Un umask mal configure peut donner a des fichiers des droits
+      excessifs, lisibles et inscriptibles par des utilisateurs non
+      autorises.
+  - regles: [accounts_user_dot_group_ownership]
+    risque: >-
+      Les fichiers d'initialisation des utilisateurs interactifs configurent
+      l'environnement de shell a la connexion. Une modification malveillante
+      de ces fichiers peut compromettre les comptes a la connexion.
+  - regles: [accounts_user_dot_user_ownership, file_permission_user_init_files]
+    risque: >-
+      Les fichiers d'initialisation configurent l'environnement de shell a
+      la connexion. Une modification malveillante de ces fichiers peut
+      compromettre les comptes a la connexion.
+  - regles: [accounts_user_interactive_home_directory_exists]
+    risque: >-
+      Si le repertoire personnel declare d'un utilisateur interactif
+      n'existe pas, l'utilisateur peut se retrouver avec / comme repertoire
+      courant a la connexion. Cela peut causer un deni de service
+      (impossibilite d'acceder aux fichiers de configuration) et lui donner
+      la vision de fichiers systeme normalement inaccessibles.
+  - regles: [accounts_users_home_files_groupownership]
+    risque: >-
+      Si les fichiers d'un utilisateur interactif appartiennent a un groupe
+      dont il n'est pas membre, des utilisateurs tiers peuvent y acceder.
+  - regles: [accounts_users_home_files_ownership]
+    risque: >-
+      Si les fichiers des repertoires personnels n'appartiennent pas a leurs
+      utilisateurs, des utilisateurs non autorises peuvent y acceder ; c'est
+      aussi un signe possible de compromission.
+  - regles: [accounts_users_home_files_permissions]
+    risque: >-
+      Des droits excessifs sur les fichiers des repertoires personnels
+      permettent a des utilisateurs tiers de les lire ou de les modifier.
+  - regles: [dconf_gnome_banner_enabled]
+    risque: >-
+      La banniere affichee avant la connexion rappelle que l'acces est
+      reserve et surveille : elle dissuade, et appuie d'eventuelles
+      poursuites contre un intrus.
+  - regles: [dconf_gnome_disable_user_list]
+    risque: >-
+      Laisser la liste des utilisateurs active est un risque de securite :
+      toute personne ayant un acces physique peut enumerer rapidement les
+      comptes connus sans se connecter.
+  - regles: [dconf_gnome_login_banner_text]
+    risque: >-
+      Un message d'avertissement a la connexion rappelle la politique
+      d'usage et facilite d'eventuelles poursuites contre un intrus.
+  - regles: [dconf_gnome_screensaver_idle_delay]
+    risque: >-
+      Un poste laisse ouvert pendant une absence peut etre utilise par
+      n'importe qui. Mettre la session en veille apres une courte inactivite
+      (15 minutes au plus) prepare son verrouillage automatique.
+  - regles: [dconf_gnome_screensaver_lock_delay, dconf_gnome_screensaver_lock_enabled]
+    risque: >-
+      Le verrouillage doit suivre la mise en veille presque immediatement (5
+      s au plus) : sinon, n'importe qui peut reprendre la session pendant ce
+      delai.
+  - regles: [file_groupownership_home_directories]
+    risque: >-
+      Si le repertoire personnel d'un utilisateur n'a pas son groupe
+      principal, les membres d'un autre groupe peuvent acceder a ses
+      fichiers, et ceux qui devraient y acceder peuvent en etre prives.
+  - regles: [file_ownership_home_directories]
+    risque: >-
+      Si un utilisateur ne possede pas son repertoire personnel, des
+      utilisateurs non autorises peuvent lire ou modifier ses fichiers, et
+      l'utilisateur peut lui-meme perdre l'acces a ses propres fichiers.
+  - regles: [file_permission_user_bash_history]
+    risque: >-
+      Des droits incorrects permettent a des utilisateurs malveillants de
+      retrouver l'historique de commandes des autres utilisateurs.
+  - regles: [file_permissions_home_directories]
+    risque: >-
+      Des droits excessifs sur les repertoires personnels peuvent permettre
+      a d'autres utilisateurs un acces non autorise aux fichiers.
+  - regles: [logind_session_timeout]
+    risque: >-
+      Fermer automatiquement une session inactive reduit le temps pendant
+      lequel une personne non autorisee peut reprendre une session laissee
+      ouverte, sur la console comme a distance.
+  - regles: [no_dirs_unowned_by_root]
+    risque: >-
+      Des repertoires du PATH de root qui ne lui appartiennent pas
+      permettent a des utilisateurs non privilegies de manipuler son
+      environnement d'execution, jusqu'a une elevation de privileges ou
+      l'execution de code malveillant.
+  - regles: [no_forward_files]
+    risque: >-
+      Le fichier .forward peut transferer par inadvertance des donnees
+      sensibles hors de l'organisation ; il peut aussi servir a executer des
+      commandes a des fins inattendues.
+  - regles: [no_netrc_files]
+    risque: >-
+      Des mots de passe non chiffres pour des serveurs FTP distants peuvent
+      etre stockes dans les fichiers .netrc.
+  - regles: [root_path_all_dirs]
+    risque: >-
+      Des entrees du PATH de root qui ne sont pas des repertoires provoquent
+      des comportements inattendus, comme l'execution de scripts depuis des
+      emplacements non prevus. Toutes les entrees du PATH de root doivent
+      etre des repertoires pour lui garantir un environnement sur.
+  - regles: [root_path_no_dot]
+    risque: >-
+      Une entree vide, relative (« . ») ou contenant « .. » dans le PATH de
+      root lui fait chercher les commandes dans le repertoire courant : root
+      peut executer sans le savoir un programme depose par un autre
+      utilisateur.
+
+  # ==================== pare-feu
+  # Premiers jets : qwen2.5:7b (atelier), relus et corriges par l'architecte.
+  - regles: [check_ufw_active]
+    risque: >-
+      Un ufw installe mais inactif ne filtre rien : la machine est exposee
+      au reseau alors que l'on croit disposer d'un pare-feu.
+  - regles: [directory_groupowner_etc_iptables]
+    risque: >-
+      Le groupe root en proprietaire de /etc/iptables est important car ce
+      repertoire contient la configuration iptables. Le proteger est
+      essentiel a la securite : a root revient le controle exclusif de la
+      configuration iptables.
+  - regles: [directory_groupowner_etc_nftables]
+    risque: >-
+      Le groupe root en proprietaire de /etc/nftables est important car ce
+      repertoire contient la configuration nftables. Le proteger est
+      essentiel a la securite : a root revient le controle exclusif de la
+      configuration nftables.
+  - regles: [directory_owner_etc_iptables]
+    risque: >-
+      Avoir root comme proprietaire de /etc/iptables est important car ce
+      repertoire contient la configuration iptables. Le proteger est
+      essentiel a la securite : root en garde le controle exclusif.
+  - regles: [directory_owner_etc_nftables]
+    risque: >-
+      Avoir root comme proprietaire de /etc/nftables est important car ce
+      repertoire contient la configuration nftables. Le proteger est
+      essentiel a la securite : root en garde le controle exclusif.
+  - regles: [directory_permissions_etc_iptables]
+    risque: >-
+      Des droits corrects sur /etc/iptables sont importants car ce
+      repertoire contient la configuration iptables. Le proteger est
+      essentiel a la securite : restreindre les droits garantit le controle
+      exclusif de la configuration iptables.
+  - regles: [directory_permissions_etc_nftables]
+    risque: >-
+      Des droits corrects sur /etc/nftables sont importants car ce
+      repertoire contient la configuration nftables. Le proteger est
+      essentiel a la securite : restreindre les droits garantit le controle
+      exclusif de la configuration nftables.
+  - regles: [firewall_single_service_active]
+    risque: >-
+      Deux pare-feu actifs en meme temps se contredisent : le filtrage
+      devient imprevisible et des ports peuvent rester ouverts sans qu'on le
+      voie. Aucun pare-feu actif laisse la machine exposee au reseau.
+  - regles: [ip6tables_rules_for_open_ports, iptables_rules_for_open_ports, ufw_rules_for_open_ports]
+    risque: >-
+      Chaque port en ecoute doit etre explicitement autorise ou refuse par
+      le pare-feu. Un port sans regle depend de la seule politique par
+      defaut : un service peut etre bloque par erreur, ou expose sans qu'on
+      l'ait decide.
+  - regles: [nftables_ensure_default_deny_policy]
+    risque: >-
+      Avec une politique par defaut qui accepte, tout ce qui n'est pas
+      explicitement refuse passe, y compris un service ouvert par erreur.
+      Refuser par defaut et n'autoriser que le necessaire est bien plus sur.
+  - regles: [nftables_rules_permanent]
+    risque: >-
+      Les regles nftables chargees a chaud disparaissent au redemarrage :
+      sans /etc/nftables.conf, la machine redemarre sans pare-feu.
+  - regles: [package_iptables_installed]
+    risque: >-
+      iptables est l'outil de filtrage des paquets du noyau : sans lui (ou
+      un autre pare-feu), aucun filtrage reseau n'est possible sur la
+      machine.
+  - regles: [package_iptables-persistent_installed]
+    risque: >-
+      Sans iptables-persistent, les regles iptables ne sont pas rechargees
+      au demarrage : la machine redemarre sans pare-feu.
+  - regles: [package_iptables-persistent_removed]
+    risque: >-
+      iptables-persistent recharge ses propres regles au demarrage : avec
+      ufw, les deux jeux de regles se contredisent et le filtrage devient
+      imprevisible.
+  - regles: [package_nftables_installed]
+    risque: >-
+      nftables est le filtrage de paquets moderne du noyau Linux : sans lui
+      (ou un autre pare-feu), la machine n'est pas protegee des menaces
+      venues du reseau.
+  - regles: [package_ufw_installed]
+    risque: >-
+      ufw pilote simplement le filtrage des paquets du noyau : sans lui (ou
+      un autre pare-feu), aucun filtrage reseau n'est possible sur la
+      machine.
+  - regles: [package_ufw_removed]
+    risque: >-
+      Si un autre pare-feu est retenu, garder ufw installe risque de le voir
+      reactive et de melanger deux jeux de regles contradictoires.
+  - regles: [service_nftables_disabled]
+    risque: >-
+      Si un autre pare-feu est retenu (ufw, iptables), le service nftables
+      doit etre desactive : deux jeux de regles actifs se contredisent.
+  - regles: [service_nftables_enabled]
+    risque: >-
+      Le service nftables charge au demarrage les regles de
+      /etc/nftables.conf : s'il est desactive, la machine redemarre sans
+      pare-feu.
+  - regles: [service_ufw_enabled]
+    risque: >-
+      Le service ufw doit etre active et demarre pour que ufw protege le
+      systeme.
+  - regles: [set_ip6tables_default_rule]
+    risque: >-
+      Dans ip6tables, la politique par defaut n'est appliquee qu'apres
+      examen de toutes les regles de la table. La mettre a DROP est la bonne
+      conception d'un pare-feu : tout paquet non explicitement permis ne
+      doit pas etre accepte.
+  - regles: [set_iptables_default_rule]
+    risque: >-
+      Dans iptables, la politique par defaut n'est appliquee qu'apres examen
+      de toutes les regles de la table. La mettre a DROP est la bonne
+      conception d'un pare-feu : tout paquet non explicitement permis ne
+      doit pas etre accepte.
+  - regles: [set_ipv6_loopback_traffic, set_loopback_traffic, set_nftables_loopback_traffic, set_ufw_loopback_traffic]
+    risque: >-
+      Le trafic de boucle locale est genere entre processus de la machine et
+      est essentiel a son fonctionnement. La boucle locale est le seul
+      endroit ou ce trafic doit apparaitre : les autres interfaces doivent
+      l'ignorer, comme mesure anti-usurpation.
+  - regles: [set_nftables_base_chain]
+    risque: >-
+      Sans chaine de base accrochee a input, forward et output, les paquets
+      de ces chemins ne passent par aucune regle nftables et ne sont pas
+      filtres.
+  - regles: [set_nftables_table]
+    risque: >-
+      nftables n'a aucune table par defaut. Sans table construite, nftables
+      ne filtre pas le trafic reseau.
+  - regles: [set_ufw_default_rule]
+    risque: >-
+      Avec une politique par defaut qui accepte, tout ce qui n'est pas
+      explicitement refuse passe, y compris un service ouvert par erreur.
+      Refuser par defaut et n'autoriser que le necessaire est bien plus sur.
+
+  # ==================================================================== sudo
+  - regles: [directory_groupowner_etc_sudoersd, directory_owner_etc_sudoersd,
+             directory_permissions_etc_sudoersd, file_groupowner_etc_sudoers,
+             file_owner_etc_sudoers, file_permissions_etc_sudoers]
+    risque: >-
+      /etc/sudoers et /etc/sudoers.d decident qui peut devenir root. Qui peut
+      y ecrire s'accorde tous les droits ; qui peut les lire connait les
+      comptes a viser. Ils doivent appartenir a root et rester fermes aux
+      autres.
+  - regles: [file_permissions_sudo]
+    risque: >-
+      Restreindre l'execution de sudo a un groupe dedie reduit le nombre de
+      comptes capables de tenter une elevation de privileges, par exemple
+      en exploitant une faille de sudo lui-meme.
+  - regles: [sudo_dedicated_group]
+    risque: >-
+      Rattacher sudo a un groupe dedie limite son execution aux seuls
+      administrateurs : les autres comptes ne peuvent meme pas le lancer,
+      ni exploiter une faille de sudo.
+  - regles: [package_sudo_installed]
+    risque: >-
+      sudo donne a chaque administrateur les seuls droits root necessaires
+      et trace ce qu'il fait ; sans lui, on partage le mot de passe root et
+      on ne sait plus qui a agi.
+  - regles: [sudo_add_env_reset]
+    risque: >-
+      Sans remise a zero de l'environnement, des variables choisies par
+      l'utilisateur (LD_PRELOAD, PATH...) passent a la commande executee en
+      root et peuvent la detourner ou faire fuir des informations.
+  - regles: [sudo_add_ignore_dot]
+    risque: >-
+      Ignorer « . » dans le PATH empeche sudo d'executer un programme du
+      repertoire courant qui porterait le nom d'une commande, depose par un
+      attaquant.
+  - regles: [sudo_add_noexec]
+    risque: >-
+      Une commande autorisee par sudo qui peut lancer d'autres programmes
+      (editeur, pager...) ouvre un shell root. noexec l'en empeche.
+  - regles: [sudo_add_requiretty]
+    risque: >-
+      Exiger un terminal limite l'usage de sudo par un processus compromis
+      sans session interactive (service, tache planifiee piratee).
+  - regles: [sudo_add_umask]
+    risque: >-
+      Les fichiers crees par une commande lancee via sudo heritent du umask :
+      un umask permissif peut laisser des fichiers de root lisibles ou
+      modifiables par d'autres.
+  - regles: [sudo_add_use_pty]
+    risque: >-
+      Executer les commandes sudo dans un pseudo-terminal separe empeche un
+      programme malveillant lance par sudo de garder la main sur le terminal
+      de l'utilisateur une fois la commande terminee.
+  - regles: [sudo_custom_logfile]
+    risque: >-
+      Un journal dedie trace chaque commande passee par sudo, avec son
+      auteur : indispensable pour reconstituer ce qu'un administrateur (ou
+      un intrus) a fait en root.
+  - regles: [sudo_remove_no_authenticate, sudo_require_authentication,
+             sudo_require_reauthentication]
+    risque: >-
+      Sans nouvelle authentification (NOPASSWD, !authenticate, delai trop
+      long), quiconque prend le controle d'une session ouverte devient root
+      sans connaitre le mot de passe.
+  - regles: [sudoers_no_command_negation]
+    risque: >-
+      Autoriser « tout sauf une commande » (ALL, !/bin/sh) se contourne
+      facilement : il suffit de copier le programme interdit sous un autre
+      nom. Il faut lister ce qui est permis, pas ce qui est interdit.
+
+  # ========================================================== controle-acces
+  - regles: [all_apparmor_profiles_enforced]
+    risque: >-
+      Un profil AppArmor en mode « complain » journalise sans rien bloquer :
+      le programme qu'il devait confiner, s'il est compromis, agit librement.
+      Tous les profils doivent etre en mode « enforce ».
+  - regles: [all_apparmor_profiles_in_enforce_complain_mode]
+    risque: >-
+      Un processus qui a un profil AppArmor mais tourne sans confinement
+      (lance avant le chargement du profil, par exemple) echappe a toute
+      restriction : il faut le redemarrer sous son profil.
+  - regles: [apparmor_configured, package_apparmor_installed]
+    risque: >-
+      Sans controle d'acces obligatoire (AppArmor), seuls les droits
+      classiques des fichiers s'appliquent : un service compromis dispose de
+      tout ce que son compte peut faire, au lieu du strict necessaire prevu
+      par son profil.
+  - regles: [package_apparmor-utils_installed]
+    risque: >-
+      apparmor-utils fournit les outils (aa-status, aa-enforce...) pour
+      verifier et passer les profils en mode applique : sans eux, on ne peut
+      ni controler ni durcir la politique AppArmor.
+  - regles: [grub2_enable_apparmor]
+    risque: >-
+      AppArmor doit etre active des le demarrage du noyau : sinon des
+      processus lances avant son chargement tournent sans confinement.
+  - regles: [directory_groupowner_etc_selinux, directory_owner_etc_selinux,
+             directory_permissions_etc_selinux, file_groupowner_etc_sestatus_conf,
+             file_owner_etc_sestatus_conf, file_permissions_etc_sestatus_conf]
+    risque: >-
+      /etc/selinux et /etc/sestatus.conf portent la politique SELinux : qui
+      peut les modifier peut la desactiver ou l'affaiblir. Ils doivent
+      appartenir a root et n'etre modifiables que par lui (sur Debian/Ubuntu,
+      sans objet si SELinux n'est pas installe).
+  - regles: [package_setroubleshoot_removed, package_setroubleshoot-plugins_removed,
+             package_setroubleshoot-server_removed]
+    risque: >-
+      setroubleshoot est un service d'aide au diagnostic SELinux, inutile sur
+      un serveur : c'est du code en plus, donc une surface d'attaque en plus.
+
+  # =================================================== synchronisation-heure
+  - regles: [chronyd_configure_pool_and_server, chronyd_specify_remote_server]
+    risque: >-
+      Sans serveur de temps configure, chrony ne synchronise rien :
+      l'horloge derive, les journaux ne concordent plus entre machines et
+      l'analyse d'un incident devient impossible.
+  - regles: [chronyd_run_as_chrony_user]
+    risque: >-
+      chrony doit abandonner les droits root apres son demarrage : une
+      faille dans le service ne donne alors que les droits de son compte
+      dedie.
+  - regles: [file_groupowner_etc_chrony_keys, file_owner_etc_chrony_keys,
+             file_permissions_etc_chrony_keys]
+    risque: >-
+      Le fichier de cles de chrony authentifie les serveurs de temps : qui
+      le lit ou le modifie peut se faire passer pour un serveur et fausser
+      l'heure de la machine.
+  - regles: [ntp_single_service_active]
+    risque: >-
+      Deux services de synchronisation actifs se contredisent et rendent
+      l'heure instable ; aucun service laisse l'horloge deriver. Un seul
+      doit etre actif.
+  - regles: [package_chrony_installed, service_chronyd_enabled,
+             service_chronyd_or_ntpd_enabled]
+    risque: >-
+      Une heure exacte est indispensable a l'authentification (Kerberos,
+      certificats) et a la coherence des journaux entre machines : sans
+      elle, reconstituer un incident devient impossible.
+  - regles: [package_timesyncd_installed, service_timesyncd_enabled]
+    risque: >-
+      systemd-timesyncd synchronise l'horloge sur un serveur de temps : une
+      heure exacte est indispensable a l'authentification et a la coherence
+      des journaux entre machines.
+  - regles: [service_timesyncd_configured]
+    risque: >-
+      Sans serveur de temps choisi (NTP=), systemd-timesyncd depend des
+      serveurs par defaut, eventuellement injoignables ou non maitrises :
+      l'heure peut deriver ou etre fournie par une source non fiable.
+  - regles: [service_chronyd_disabled, service_timesyncd_disabled]
+    risque: >-
+      Si un autre service de synchronisation est retenu, celui-ci doit etre
+      desactive : deux services actifs se contredisent.
+
+  # ============================================================ modules-noyau
+  - regles: [kernel_module_cramfs_disabled, kernel_module_freevxfs_disabled,
+             kernel_module_hfs_disabled, kernel_module_hfsplus_disabled,
+             kernel_module_jffs2_disabled, kernel_module_squashfs_disabled,
+             kernel_module_udf_disabled]
+    risque: >-
+      Chaque systeme de fichiers pris en charge est du code du noyau qu'un
+      support piege (cle USB, image disque) peut atteindre. Retirer ceux
+      dont on n'a pas besoin reduit la surface d'attaque locale.
+  - regles: [kernel_module_overlayfs_disabled]
+    risque: >-
+      overlayfs a connu plusieurs failles d'elevation de privileges : sans
+      conteneurs, le desactiver retire cette surface d'attaque.
+  - regles: [kernel_module_dccp_disabled, kernel_module_rds_disabled,
+             kernel_module_sctp_disabled, kernel_module_tipc_disabled]
+    risque: >-
+      Ces protocoles reseau rarement utilises (DCCP, RDS, SCTP, TIPC) ont
+      connu des failles exploitables a distance ou localement : les
+      desactiver protege contre celles qui restent a decouvrir.
+  - regles: [kernel_module_usb-storage_disabled]
+    risque: >-
+      Une cle USB peut introduire un logiciel malveillant ou servir a
+      exfiltrer des donnees : sur un serveur, le stockage USB n'a en general
+      pas lieu d'etre.
+  - regles: [sysctl_kernel_modules_disabled]
+    risque: >-
+      Un module noyau malveillant (rootkit) prend le controle complet de la
+      machine. Interdire tout chargement de module une fois le demarrage
+      termine ferme cette porte.
+
+  # =============================================================== integrite
+  - regles: [package_aide_installed]
+    risque: >-
+      Sans outil de controle d'integrite, la modification d'un programme ou
+      d'un fichier de configuration par un intrus passe inapercue.
+  - regles: [aide_build_database]
+    risque: >-
+      AIDE compare le systeme a une base de reference prise quand il etait
+      sain : sans cette base, il ne peut rien detecter.
+  - regles: [aide_check_audit_tools]
+    risque: >-
+      Un intrus qui remplace auditctl, ausearch ou auditd peut effacer ou
+      falsifier les traces d'audit : leur integrite doit etre surveillee.
+  - regles: [aide_periodic_checking_systemd_timer, aide_periodic_cron_checking]
+    risque: >-
+      AIDE ne se lance pas seul : sans execution reguliere, une modification
+      non autorisee des fichiers systeme n'est jamais signalee.
+  - regles: [aide_scan_notification]
+    risque: >-
+      Un controle d'integrite dont personne ne lit le resultat ne sert a
+      rien : le rapport doit parvenir aux administrateurs.
+  - regles: [aide_verify_acls]
+    risque: >-
+      Les ACL peuvent accorder des droits au-dela des droits classiques d'un
+      fichier : un intrus peut s'ouvrir un acces par ce biais sans changer
+      son mode. AIDE doit aussi les verifier.
+  - regles: [aide_verify_ext_attributes]
+    risque: >-
+      Les attributs etendus portent des metadonnees de securite (capacites,
+      etiquettes) : les modifier peut donner des privileges a un programme
+      sans toucher a son contenu. AIDE doit aussi les verifier.
+  # ================================================================= paquets
+  - regles: [package_sssd_installed, service_sssd_enabled]
+    risque: >-
+      Quand l'authentification passe par un annuaire (IPA, AD, LDAP), sssd
+      permet de la chiffrer et de verifier le serveur : sans lui, des
+      identifiants peuvent circuler en clair ou etre envoyes a un faux
+      annuaire.
+  - regles: [security_patches_up_to_date]
+    risque: >-
+      Les failles corrigees sont publiques : chaque mise a jour de securite
+      non installee est une porte d'entree connue et souvent deja exploitee.
+  # ============================================================== messagerie
+  - regles: [has_nonlocal_mta]
+    risque: >-
+      Les serveurs de messagerie sont complexes et ont un long historique de
+      failles. Hors serveur de messagerie, aucun ne doit ecouter sur le
+      reseau : la remise locale suffit.
+  - regles: [postfix_network_listening_disabled]
+    risque: >-
+      Un postfix limite a la boucle locale accepte les messages de la machine
+      (rapports cron...) sans s'exposer aux attaques venues du reseau.
+  - regles: [postfix_client_configure_mail_alias]
+    risque: >-
+      De nombreux services alertent root par courriel (disque plein, echec
+      d'AIDE...) : sans redirection vers une adresse surveillee, ces alertes
+      ne sont jamais lues.
+  # ======================================================= exposition-reseau
+  - regles: [wireless_disable_interfaces]
+    risque: >-
+      Une interface sans fil ouvre des attaques impossibles sur un reseau
+      filaire : faux point d'acces, association malveillante, pont vers le
+      reseau interne. Sur un serveur, elle doit etre desactivee.
+
+  # =========================================================== planification
+  - regles: [file_cron_allow_exists, file_at_allow_exists, file_cron_deny_not_exist]
+    risque: >-
+      Une liste des comptes autorises (cron.allow, at.allow) est plus sure
+      qu'une liste d'interdits : un compte oublie n'obtient rien. Planifier
+      une tache permet de relancer du code a intervalles reguliers, y compris
+      pour garder un acces apres une intrusion.
+  - regles: [file_owner_cron_allow, file_owner_at_allow, file_groupowner_at_allow,
+             file_owner_at_deny, file_groupowner_at_deny]
+    risque: >-
+      Les listes d'acces a cron et at decident qui peut planifier des
+      taches : si un autre compte que root peut les modifier, il s'autorise
+      lui-meme (ou autorise un compte compromis).
+  - regles: [file_owner_crontab, file_groupowner_crontab, file_permissions_crontab,
+             file_owner_cron_d, file_groupowner_cron_d, file_permissions_cron_d,
+             file_owner_cron_hourly, file_groupowner_cron_hourly,
+             file_permissions_cron_hourly, file_owner_cron_daily,
+             file_groupowner_cron_daily, file_permissions_cron_daily,
+             file_owner_cron_weekly, file_groupowner_cron_weekly,
+             file_permissions_cron_weekly, file_owner_cron_monthly,
+             file_groupowner_cron_monthly, file_permissions_cron_monthly]
+    risque: >-
+      Les taches de /etc/crontab et des repertoires cron s'executent en root.
+      Qui peut y ecrire execute ce qu'il veut en root ; qui peut les lire
+      decouvre les scripts de maintenance et leurs failles. Ils doivent
+      appartenir a root et lui etre reserves.
+  - regles: [service_cron_enabled]
+    risque: >-
+      cron execute des taches de maintenance et de securite (rotation des
+      journaux, controles d'integrite, mises a jour) : arrete, elles ne se
+      font plus.
+
+  # ================================================================= montage
+  - regles: [mount_option_dev_shm_nodev, mount_option_home_nodev,
+             mount_option_tmp_nodev, mount_option_var_nodev,
+             mount_option_var_tmp_nodev, mount_option_nodev_nonroot_local_partitions]
+    risque: >-
+      Les fichiers de peripherique n'ont leur place que dans /dev : l'option
+      nodev empeche d'en creer ailleurs (dans /tmp, /home...) pour contourner
+      les droits d'acces au materiel ou a la memoire.
+  - regles: [mount_option_dev_shm_nosuid, mount_option_home_nosuid,
+             mount_option_tmp_nosuid, mount_option_var_nosuid,
+             mount_option_var_tmp_nosuid, mount_option_opt_nosuid,
+             mount_option_srv_nosuid, mount_option_boot_nosuid]
+    risque: >-
+      Un programme SUID ou SGID s'execute avec les droits de son
+      proprietaire, souvent root : l'option nosuid empeche qu'un tel
+      programme depose sur cette partition serve a elever ses privileges.
+  - regles: [mount_option_dev_shm_noexec, mount_option_tmp_noexec,
+             mount_option_var_tmp_noexec]
+    risque: >-
+      Tout le monde peut ecrire dans ce repertoire partage : l'option noexec
+      empeche d'y deposer puis d'y lancer un programme, geste classique apres
+      une intrusion.
+  - regles: [mount_option_home_noexec]
+    risque: >-
+      Les repertoires personnels contiennent des fichiers que les
+      utilisateurs deposent librement : l'option noexec empeche d'y lancer
+      des programmes non verifies.
+  - regles: [mount_option_var_noexec]
+    risque: >-
+      /var contient des donnees (journaux, courrier, caches), pas des
+      programmes : l'option noexec empeche d'y executer du code depose par un
+      service compromis.
+  - regles: [mount_option_boot_noexec]
+    risque: >-
+      /boot contient le noyau et le chargeur de demarrage : aucun programme
+      n'a a s'y executer une fois la machine demarree.
+  - regles: [partition_for_tmp, partition_for_var_tmp, partition_for_dev_shm]
+    risque: >-
+      Une partition dediee aux fichiers temporaires permet d'y appliquer
+      noexec, nosuid et nodev, et empeche qu'un utilisateur remplisse le
+      disque du systeme en y ecrivant.
+  - regles: [partition_for_home]
+    risque: >-
+      Une partition dediee a /home permet des options de montage plus
+      strictes et empeche les utilisateurs de remplir le disque utilise par
+      le systeme, les journaux et l'audit.
+  - regles: [partition_for_var]
+    risque: >-
+      /var grossit avec les journaux, caches et files d'attente : sur sa
+      propre partition, il ne peut pas remplir le disque du systeme, et
+      recoit des options de montage plus strictes.
+  - regles: [partition_for_boot]
+    risque: >-
+      Une partition dediee a /boot, qui contient le noyau et le chargeur de
+      demarrage, permet d'en restreindre l'acces et les options de montage.
+  - regles: [partition_for_opt, partition_for_srv, partition_for_usr]
+    risque: >-
+      Une partition dediee permet d'y appliquer des options de montage
+      restrictives (nosuid, lecture seule...) et d'en limiter la taille.
+
+  # =============================================================== demarrage
+  - regles: [file_owner_grub2_cfg, file_groupowner_grub2_cfg, file_permissions_grub2_cfg,
+             file_owner_user_cfg, file_groupowner_user_cfg, file_permissions_user_cfg]
+    risque: >-
+      grub.cfg et user.cfg decident quel noyau demarre et avec quels
+      arguments (mode mono-utilisateur, protections desactivees...). Qui peut
+      les modifier prend la main au prochain demarrage ; qui peut les lire y
+      trouve les faiblesses de la configuration. Ils doivent etre reserves a
+      root.
+  - regles: [grub2_password, grub2_uefi_password]
+    risque: >-
+      Sans mot de passe GRUB, une personne ayant acces a la console peut
+      modifier les arguments de demarrage (par exemple demarrer en mode
+      mono-utilisateur) et obtenir un shell root sans aucun mot de passe.
+  - regles: [grub2_enable_iommu_force]
+    risque: >-
+      L'IOMMU empeche un peripherique (carte reseau, Thunderbolt...) de lire
+      ou ecrire n'importe ou dans la memoire par acces direct (DMA).
+  - regles: [grub2_l1tf_argument]
+    risque: >-
+      La faille L1TF des processeurs Intel permet de lire toute memoire
+      presente dans le cache L1, y compris celle d'autres machines virtuelles
+      ou du noyau : l1tf=full,force active toutes les protections.
+  - regles: [grub2_mds_argument]
+    risque: >-
+      La faille MDS permet de lire des donnees dans les tampons internes du
+      processeur, y compris celles d'autres processus : mds=full,nosmt active
+      toutes les protections.
+  - regles: [grub2_mce_argument]
+    risque: >-
+      Laisser tourner la machine apres une erreur memoire non corrigee peut
+      aider une attaque de type Rowhammer a insister jusqu'a reussir : mce=0
+      arrete le systeme a la premiere.
+  - regles: [grub2_nosmap_argument_absent]
+    risque: >-
+      SMAP empeche le noyau d'acceder par erreur aux donnees des programmes :
+      le desactiver (nosmap) facilite l'exploitation de nombreuses failles du
+      noyau.
+  - regles: [grub2_nosmep_argument_absent]
+    risque: >-
+      SMEP empeche le noyau d'executer du code place en memoire utilisateur :
+      le desactiver (nosmep) rend bien plus simple l'exploitation d'une
+      faille du noyau.
+  - regles: [grub2_page_alloc_shuffle_argument]
+    risque: >-
+      Rendre aleatoire l'allocation des pages memoire rend moins previsible
+      l'emplacement des donnees du noyau, et complique certaines
+      exploitations.
+  - regles: [grub2_page_poison_argument, grub2_slub_debug_argument]
+    risque: >-
+      Remplir la memoire liberee d'un motif connu detecte et bloque les
+      utilisations apres liberation (use-after-free), pour un faible cout en
+      performance.
+  - regles: [grub2_pti_argument]
+    risque: >-
+      L'isolation des tables de pages du noyau (PTI) protege contre Meltdown
+      et renforce la randomisation des adresses du noyau (KASLR).
+  - regles: [grub2_rng_core_default_quality_argument]
+    risque: >-
+      Au demarrage, le noyau peut manquer d'aleas pour generer des cles.
+      Faire confiance au generateur materiel remplit plus vite la reserve
+      d'entropie.
+  - regles: [grub2_slab_nomerge_argument]
+    risque: >-
+      Ne pas fusionner les caches memoire de tailles voisines isole les
+      objets : un debordement dans un cache sans valeur ne peut plus ecraser
+      les objets sensibles d'un autre.
+  - regles: [grub2_spec_store_bypass_disable_argument]
+    risque: >-
+      La faille Speculative Store Bypass (Spectre v4) permet de lire, par
+      canal auxiliaire, de la memoire normalement inaccessible, par exemple
+      depuis un code isole (bac a sable).
+  - regles: [grub2_spectre_v2_argument]
+    risque: >-
+      La faille Spectre v2 permet a un attaquant de lire de la memoire a
+      laquelle il ne devrait pas avoir acces : spectre_v2=on force les
+      protections.
+  - regles: [prefer_64bit_os]
+    risque: >-
+      Un systeme 64 bits offre un espace d'adresses bien plus large a la
+      randomisation (ASLR) et toujours le bit de non-execution (NX) :
+      l'exploitation des failles memoire y est plus difficile.

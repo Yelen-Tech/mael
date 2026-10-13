@@ -1,0 +1,85 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-sshd-disable-forwarding
+titre: 'SSH : toutes les redirections desactivees (DisableForwarding yes)'
+domaine: acces
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+  services:
+  - openssh
+taxonomie:
+  theme: ssh
+  type_controle: configuration
+  niveaux:
+    cis: 2
+    anssi: null
+source:
+  origine: complianceascode
+  regle: sshd_disable_forwarding
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/ssh/ssh_server/sshd_disable_forwarding
+mots_cles:
+- disable
+- disableforwarding
+- forwarding
+- redirection
+- redirections
+- ssh
+- sshd
+- transfert
+- tunnel
+resume: La directive sshd DisableForwarding doit valoir « yes » (regle sshd_disable_forwarding, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: sudo sshd -T 2>/dev/null | grep -i '^disableforwarding '
+  but: Lire la valeur EFFECTIVE de DisableForwarding
+  lecture: 'Attendu : « disableforwarding yes ». Toute autre valeur est un ecart.'
+- commande: grep -Ris '^[[:space:]]*DisableForwarding[[:space:]]' /etc/ssh/sshd_config /etc/ssh/sshd_config.d/
+    2>/dev/null
+  but: Trouver ou DisableForwarding est defini dans les fichiers
+  lecture: Chaque ligne donne le fichier et la valeur ecrite ; aucune ligne = valeur par defaut.
+controles:
+- controle: DisableForwarding = yes
+  bon: DisableForwarding yes
+  mauvais: toute autre valeur
+  gravite: moyenne
+  risque: Les redirections (ports, agent, X11) permettent de faire transiter des flux a travers le serveur
+    et de contourner le filtrage reseau ; a desactiver sauf besoin d'exploitation avere.
+  action: Definir « DisableForwarding yes » dans /etc/ssh/sshd_config (ou un fichier de /etc/ssh/sshd_config.d/),
+    controler avec sshd -t, puis recharger SSH en gardant une session ouverte.
+  playbook: infra.ssh-directive
+  parametres:
+    directive: DisableForwarding
+    valeur: 'yes'
+  evaluation:
+  - comparateur: egal
+    attendu: 'yes'
+    commande: 0
+    lecteur: sshd_t
+    champ: disableforwarding
+pieges:
+- sshd -T exige les droits root ; sans sudo, la commande ne renvoie rien.
+- 'Plusieurs fichiers peuvent definir la directive (Include /etc/ssh/sshd_config.d/*.conf) : la PREMIERE
+  occurrence gagne ; sshd -T donne la valeur effective.'
+- 'Controle CIS de niveau 2 : desactiver les redirections casse les tunnels SSH d''administration. Valider
+  le besoin avec le client avant de corriger.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 5.1.8 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 5.1.8 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 5.1.8 (niveau 2)
+verifie_le: '2026-09-17'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

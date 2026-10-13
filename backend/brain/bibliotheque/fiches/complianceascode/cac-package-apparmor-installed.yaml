@@ -1,0 +1,71 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-package-apparmor-installed
+titre: Paquet apparmor installe
+domaine: systeme
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: controle-acces
+  type_controle: paquet-present
+  niveaux:
+    cis: 1
+    anssi: renforce
+source:
+  origine: complianceascode
+  regle: package_apparmor_installed
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/apparmor/package_apparmor_installed
+mots_cles:
+- apparmor
+- installe
+- logiciel
+- paquet
+- paquets
+resume: Le paquet apparmor doit etre installe. (regle package_apparmor_installed, ComplianceAsCode 0.1.82).
+observer:
+- commande: dpkg-query -W -f='${binary:Package} ${Status}\n' apparmor 2>/dev/null
+  but: Savoir si apparmor est installe
+  lecture: « install ok installed » = installe ; aucune ligne ou « deinstall » = absent.
+controles:
+- controle: paquet apparmor installe
+  bon: installe
+  mauvais: absent
+  gravite: moyenne
+  risque: 'Sans controle d''acces obligatoire (AppArmor), seuls les droits classiques des fichiers s''appliquent
+    : un service compromis dispose de tout ce que son compte peut faire, au lieu du strict necessaire
+    prevu par son profil.'
+  action: Installer apparmor avec le gestionnaire de paquets.
+  playbook: infra.paquet-installer
+  parametres:
+    paquet: apparmor
+  evaluation:
+  - commande: 0
+    lecteur: dpkg
+    comparateur: installe
+    attendu:
+    - apparmor
+pieges: []
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 1.3.1.1 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 1.3.1.1 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 1.3.1.1 (niveau 1)
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R45 (niveau renforce)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

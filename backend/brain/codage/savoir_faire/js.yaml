@@ -1,0 +1,62 @@
+# Savoir-faire du specialiste JavaScript : le COMMENT et le POURQUOI.
+specialiste: js
+contexte: navigateur
+fiches:
+  - id: script-qui-trouve-ses-elements
+    titre: un script qui ne plante pas sur une page sans ses elements
+    mots: [script, js, javascript, bouton, clic, menu, ouvrir, fermer, interactif]
+    comment:
+      - "chaque element se cherche par un id QUI EXISTE dans les pages (carte du projet), puis se verifie : const b = document.getElementById(\"bouton-menu\"); if (!b) return;"
+      - "le script est charge avec defer : le DOM est pret, pas besoin de DOMContentLoaded"
+      - "un seul script commun peut servir plusieurs pages : chaque bloc commence par sa verification"
+    pourquoi: "getElementById rend null sur une page qui n'a pas l'element ; null.addEventListener arrete TOUT le script (mission 06 du 08/10/2026 : foireaux-questions.js:47)."
+    source: "MDN, Document.getElementById — https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances:
+      - {nom: "les id des pages", type: fichier, pourquoi: "le script ne vise que des id presents dans les pages du plan"}
+    juges: [js-erreur-execution, selecteur-mort]
+
+  - id: ouvrir-fermer-accessible
+    titre: ouvrir et fermer (menu, foire aux questions)
+    mots: [menu, faq, questions, accordeon, ouvrir, fermer, deplier, afficher, masquer]
+    comment:
+      - "un <button type=\"button\" aria-expanded=\"false\" aria-controls=\"id-du-bloc\"> ; le bloc a l'attribut hidden"
+      - "au clic : inverser aria-expanded (\"true\"/\"false\") et l'attribut hidden du bloc vise"
+      - "pour une FAQ sans script : <details><summary>Question</summary>Reponse</details> suffit"
+    pourquoi: "WCAG 2.2 : 4.1.2 (l'etat ouvert/ferme est annonce aux lecteurs d'ecran), 2.1.1 (un <button> marche au clavier, un <div onclick> non)."
+    source: "WAI-ARIA APG, motif Accordion — https://www.w3.org/WAI/ARIA/apg/patterns/accordion/"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    juges: [clic-sans-clavier, evenement-en-ligne, nom-accessible]
+
+  - id: calcul-en-direct
+    titre: un total calcule en direct dans un formulaire
+    mots: [calcul, calcule, total, prix, quantite, commande, direct, somme]
+    comment:
+      - "les prix dans des attributs data-prix sur les champs (<input type=\"number\" min=\"0\" data-prix=\"1.20\">)"
+      - "ecouter l'evenement input sur le formulaire ; additionner Number(champ.value) * Number(champ.dataset.prix) ; ignorer les valeurs non numeriques"
+      - "afficher le total dans un <output> ou un element aria-live=\"polite\", formate avec Intl.NumberFormat('fr-FR', {style: 'currency', currency: 'EUR'})"
+      - "calculer en centimes entiers pour eviter 0.1 + 0.2 = 0.30000000000000004"
+    pourquoi: "aria-live annonce le nouveau total ; les nombres a virgule flottante (IEEE 754) faussent les sommes d'argent si on ne passe pas en entiers."
+    source: "MDN, Intl.NumberFormat — https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    juges: [js-erreur-execution]
+
+  - id: donnees-depuis-une-api
+    titre: charger des donnees depuis une API
+    mots: [api, charger, catalogue, donnees, fetch, liste, produits, json]
+    comment:
+      - "const r = await fetch(\"/api/produits\"); if (!r.ok) { afficher un message; return; } const donnees = await r.json();"
+      - "construire les elements avec createElement + textContent, jamais innerHTML avec des donnees recues"
+      - "l'adresse de l'API est CELLE du serveur du plan (meme chemin que la route Flask)"
+    pourquoi: "fetch ne rejette pas sur une erreur HTTP (404, 500) : il faut tester r.ok ; innerHTML avec des donnees externes ouvre une faille XSS (OWASP)."
+    source: "MDN, Using the Fetch API — https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances:
+      - {nom: "la route de l'API", type: fichier, pourquoi: "le script et le serveur doivent viser le meme chemin"}
+    juges: [innerhtml, xss-dom]

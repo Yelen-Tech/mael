@@ -1,0 +1,67 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-rsyslog-nolisten
+titre: rsyslog n'accepte pas de journaux distants (sauf serveur de journaux)
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==24.04
+taxonomie:
+  theme: journalisation
+  type_controle: detection
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: rsyslog_nolisten
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/logging/rsyslog_accepting_remote_messages/rsyslog_nolisten
+mots_cles:
+- '514'
+- imtcp
+- imudp
+- journaux distants
+- reception
+- rsyslog
+resume: rsyslog n'accepte pas de journaux distants (sauf serveur de journaux). (regle rsyslog_nolisten,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: grep -Es '^[[:space:]]*(\$ModLoad[[:space:]]+im(tcp|udp|relp)|\$(InputTCPServerRun|UDPServerRun|InputRELPServerRun)|module\(load="im(tcp|udp|relp)"|input\(type="im(tcp|udp|relp)")'
+    /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+  but: Chercher les modules de reception reseau de rsyslog
+  lecture: Chaque ligne est un element en defaut ; aucune ligne = conforme.
+controles:
+- controle: aucun module de reception reseau
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: 'Un rsyslog qui ecoute sur le reseau accepte des messages de n''importe qui : un attaquant peut
+    noyer les journaux sous de faux evenements ou exploiter une faille du service. Seul le serveur central
+    de journaux doit ecouter.'
+  action: Commenter ces lignes, sauf si la machine est le serveur central de journaux (a documenter).
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 6.1.3.7 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 6.1.3.7 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

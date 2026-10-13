@@ -1,0 +1,41 @@
+id: theorie-de-la-complexite
+schema: 1
+nom: Théorie de la complexité
+resume: Classification des problèmes selon les ressources nécessaires à leur résolution ; les classes P et NP structurent la sécurité moderne, car la cryptographie repose sur des problèmes faciles à vérifier mais difficiles à résoudre.
+famille: mathematiques
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - complexité
+  - classe p
+  - classe np
+  - np-complet
+  - réduction polynomiale
+  - fonctions à sens unique
+  - hachage
+  - p vs np
+  - asymptotique
+caracteristiques:
+  notions_fondamentales: "Complexité temporelle et spatiale, notation asymptotique ; classe P (résolution polynomiale) et classe NP (vérification polynomiale) ; réductions polynomiales et problèmes NP-complets ; question ouverte P = NP."
+  liens_informatiques: "Fonctions de hachage et fonctions à sens unique au cœur de la cryptographie ; preuve de travail et coût asymétrique entre calcul et vérification ; faisabilité pratique des analyses d'audit."
+  ordres_de_grandeur: "Casser une fonction de hachage idéale de n bits demande environ 2^n essais en préimage et 2^(n/2) en collision (attaque des anniversaires), d'où des empreintes d'au moins 256 bits."
+securite:
+  - titre: Sécurité fondée sur des hypothèses de complexité
+    risque: La cryptographie suppose que certains problèmes restent difficiles ; une avancée algorithmique (ou P = NP) invaliderait cette sécurité sans prévenir.
+    conseil: Privilégier l'agilité cryptographique pour remplacer les algorithmes sans refonte complète des systèmes.
+    gravite: elevee
+  - titre: Confondre difficulté moyenne et pire cas
+    risque: La NP-complétude concerne le pire cas ; des instances faciles d'un problème « difficile » ne protègent rien si elles sont utilisées comme clés.
+    conseil: S'appuyer sur des paramètres standardisés dont la difficulté moyenne est documentée, pas sur des constructions ad hoc.
+    gravite: moyenne
+  - titre: Algorithmes super-polynomiaux sous-estimés
+    risque: Un algorithme exponentiel peut sembler rapide sur les petits tests puis devenir inutilisable en production, créant des dénis de service algorithmiques.
+    conseil: Borner les entrées non fiables et analyser la complexité des traitements exposés au réseau.
+    gravite: moyenne
+sources:
+  - titre: Wikipédia — Problème P = NP
+    url: https://fr.wikipedia.org/wiki/Probl%C3%A8me_P_%3D_NP
+  - titre: Stanford Encyclopedia of Philosophy — Computational Complexity Theory
+    url: https://plato.stanford.edu/entries/computational-complexity/

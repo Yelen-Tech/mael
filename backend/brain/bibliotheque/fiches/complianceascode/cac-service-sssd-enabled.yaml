@@ -1,0 +1,63 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-service-sssd-enabled
+titre: Service sssd active et demarre
+domaine: paquets
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: paquets
+  type_controle: service-actif
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: service_sssd_enabled
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/sssd/service_sssd_enabled
+mots_cles:
+- demarrage
+- service
+- services
+- sssd
+- systemd
+resume: Le service sssd doit etre active et demarre. (regle service_sssd_enabled, ComplianceAsCode 0.1.82).
+observer:
+- commande: dpkg -s sssd-common >/dev/null 2>&1 || echo 'SENTINELLE:SANS_OBJET'; systemctl is-enabled
+    sssd.service 2>/dev/null; systemctl is-active sssd.service 2>/dev/null
+  but: Lire l'etat de demarrage et d'execution de sssd
+  lecture: 'Attendu : « enabled » puis « active ».'
+controles:
+- controle: service sssd enabled/active
+  bon: enabled et active
+  mauvais: disabled ou inactive
+  gravite: moyenne
+  risque: 'Quand l''authentification passe par un annuaire (IPA, AD, LDAP), sssd permet de la chiffrer
+    et de verifier le serveur : sans lui, des identifiants peuvent circuler en clair ou etre envoyes a
+    un faux annuaire.'
+  action: systemctl enable --now sssd.service
+  playbook: infra.service-activer
+  parametres:
+    service: sssd
+  evaluation:
+  - commande: 0
+    lecteur: systemctl
+    comparateur: actif
+pieges:
+- 'Regle limitee par la source a : system_with_kernel and package[sssd]. Hors de ce cas, la commande repond
+  « sans objet » (aucun ecart).'
+- 'Un service peut etre demarre par une socket systemd : verifier aussi « systemctl list-sockets ».'
+- 'Risque non documente par la source : a completer.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R67 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

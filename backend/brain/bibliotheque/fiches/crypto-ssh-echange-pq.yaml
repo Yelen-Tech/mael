@@ -1,0 +1,73 @@
+id: crypto-ssh-echange-pq
+titre: "SSH : echange de cles hybride post-quantique"
+domaine: tls
+schema: 2
+version: 1
+etat: verifie
+verifie_le: 2026-09-19
+relu_par: "assistant IA (Kimi), par delegation du responsable du projet"
+teste_sur: []            # a remplir par les tests en conteneur (etape 2.5)
+applicable:
+  os: [linux]
+  services: [openssh]
+taxonomie:
+  theme: cryptographie
+  type_controle: detection
+  niveaux: {cis: null, anssi: null}   # fiche manuelle hors referentiel
+source:
+  origine: manuel
+mots_cles: [ssh, post-quantique, quantique, mlkem, sntrup, kex, kexalgorithms,
+            echange de cles, hybride, harvest now decrypt later]
+resume: >
+  Un attaquant peut enregistrer le trafic chiffre aujourd'hui pour le
+  dechiffrer le jour ou un ordinateur quantique existe (« harvest now,
+  decrypt later »). La parade est un echange de cles HYBRIDE (classique +
+  post-quantique) : mlkem768x25519-sha256 ou sntrup761x25519. C'est une
+  RECOMMANDATION : elle ne devient un ecart que si l'OpenSSH installe sait
+  faire et ne le fait pas.
+
+observer:
+  - commande: "ssh -Q kex"
+    but: "Voir les echanges de cles que l'OpenSSH installe sait faire"
+    lecture: "Si mlkem768x25519-sha256 ou sntrup761x25519-sha512@openssh.com est absent de la liste, l'OpenSSH est trop ancien : la recommandation ne s'applique pas encore."
+  # Relecture 19/09/2026 (Claude) : sans root, sshd -T ne repond rien, ce
+  # qui passait pour « deja actif » -> marqueur ILLISIBLE ; nom
+  # sntrup761x25519-sha512 sans suffixe (OpenSSH >= 9.9) accepte.
+  - commande: 'if ssh -Q kex 2>/dev/null | grep -qE "^(mlkem768x25519-sha256|sntrup761x25519-sha512(@openssh\.com)?)$"; then sshd -T 2>/dev/null | awk ''$1=="kexalgorithms"{vu=1; n=split($2,c,","); for(i=1;i<=n;i++) if(c[i] ~ /^(mlkem768x25519-sha256|sntrup761x25519-sha512(@openssh\.com)?)$/) f=1} END{if(!vu) print "SENTINELLE:ILLISIBLE"; else if(!f) print "echange hybride post-quantique disponible mais non active"}''; else echo SENTINELLE:SANS_OBJET; fi'
+    but: "Signaler un echange hybride disponible mais non active"
+    lecture: "Une ligne = a activer ; SANS_OBJET = OpenSSH trop ancien (recommandation differee) ; ILLISIBLE = relancer avec sudo (sshd -T exige root) ; rien = deja actif."
+
+controles:
+  - controle: "Echange de cles hybride post-quantique active quand disponible"
+    bon: "mlkem768x25519-sha256 ou sntrup761x25519 dans les kexalgorithms effectifs"
+    mauvais: "disponible dans ssh -Q kex mais absent de sshd -T"
+    gravite: info
+    risque: "Sans echange hybride, le trafic SSH enregistre aujourd'hui sera
+      dechiffrable par un ordinateur quantique futur. Menace a long terme,
+      pas une faille immediate."
+    action: "Ajouter mlkem768x25519-sha256 en tete de KexAlgorithms (fichier
+      /etc/ssh/sshd_config.d/), puis recharger sshd. Verifier que les clients
+      recents acceptent ; garder curve25519-sha256 en repli."
+    playbook: null
+    sans_playbook: "recommandation conditionnee a la version d'OpenSSH et a la
+      compatibilite des clients : decision humaine"
+    evaluation:
+      - {commande: 1, lecteur: lignes, comparateur: vide}
+
+pieges:
+  - "Par systeme : Ubuntu 22.04 (OpenSSH 8.9) connait sntrup761x25519 sans
+    l'activer par defaut -> recommandation a appliquer ; Debian 12 (9.2) et
+    Ubuntu 24.04 (9.6) l'activent par defaut -> conforme sauf si
+    KexAlgorithms l'a retire ; mlkem768x25519-sha256 arrive avec OpenSSH 9.9
+    (defaut en 10.0). « Sans objet » seulement si aucun des deux n'existe
+    (OpenSSH < 8.5)."
+  - "C'est l'ECHANGE de cles qui est concerne, pas la signature : Ed25519
+    reste une bonne signature classique, meme non post-quantique (fiche
+    crypto-cles-hotes-ssh)."
+  - "Un echange hybride protege aussi contre la cryptanalyse classique de
+    l'un des deux composants : c'est le bon reflexe meme avant l'ere
+    quantique."
+
+referentiels:
+  - {nom: ANSSI, document: "Recommandations pour un usage securise d'(Open)SSH"}
+  - {nom: ANSSI, document: "Avis scientifique et technique : la migration vers la cryptographie post-quantique"}

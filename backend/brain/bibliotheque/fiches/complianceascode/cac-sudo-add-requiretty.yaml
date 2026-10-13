@@ -1,0 +1,63 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-sudo-add-requiretty
+titre: 'sudo : Defaults requiretty'
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: sudo
+  type_controle: option-sudo
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: sudo_add_requiretty
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/software/sudo/sudo_add_requiretty
+mots_cles:
+- defaults
+- elevation
+- privileges
+- requiretty
+- sudo
+- sudoers
+resume: La configuration de sudo doit contenir « Defaults requiretty ». (regle sudo_add_requiretty, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: grep -Rhs '^[[:space:]]*Defaults' /etc/sudoers /etc/sudoers.d/
+  but: Lire les options globales de sudo
+  lecture: 'Attendu : une ligne contenant requiretty ; « !requiretty » = desactive.'
+controles:
+- controle: Defaults requiretty
+  bon: Defaults requiretty
+  mauvais: option absente ou desactivee
+  gravite: moyenne
+  risque: Exiger un terminal limite l'usage de sudo par un processus compromis sans session interactive
+    (service, tache planifiee piratee).
+  action: Ajouter « Defaults requiretty » avec visudo -f /etc/sudoers.d/sentinelle (jamais d'edition directe).
+  evaluation:
+  - commande: 0
+    lecteur: sudo_defaults
+    comparateur: option
+    champ: requiretty
+  sans_playbook: 'requiretty bloque sudo sans terminal (scripts, cron, outils d''automatisation) : a decider
+    avec l''exploitant'
+pieges:
+- 'Defaults requiretty casse sudo dans les scripts, taches planifiees et outils d''automatisation (Ansible...)
+  : verifier ces usages avant de l''activer.'
+- '/etc/sudoers n''est lisible que par root : lancer la lecture avec sudo.'
+- 'Une erreur de syntaxe dans sudoers bloque sudo : toujours passer par visudo.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R39 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

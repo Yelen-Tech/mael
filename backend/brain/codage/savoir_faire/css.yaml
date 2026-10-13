@@ -1,0 +1,58 @@
+# Savoir-faire du specialiste CSS : le COMMENT et le POURQUOI.
+specialiste: css
+fiches:
+  - id: feuille-courte-et-commune
+    titre: une feuille de style commune, courte
+    mots: [style, css, feuille, design, couleurs, mise, page]
+    comment:
+      - "une seule feuille pour tout le site : d'abord les variables (:root { --texte: ...; }), puis body, titres, liens, menu, formulaires, puis les @media"
+      - "l'essentiel d'abord : 60 a 120 lignes suffisent a un site vitrine ; pas de regle pour un selecteur absent des pages"
+    pourquoi: "une feuille trop longue est coupee avant d'etre finie (mission 09 du 08/10/2026 : style.css jamais ecrit, 8 pages sans style) ; une regle sans element est du poids mort (juge selecteur-mort)."
+    source: "MDN, Organiser son CSS — https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Organizing"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances:
+      - {nom: "les pages qui chargent la feuille", type: fichier, pourquoi: "les selecteurs visent leurs classes et id (carte du projet)"}
+    juges: [selecteur-mort, css-accolade]
+
+  - id: contraste-mesure
+    titre: des couleurs lisibles
+    mots: [couleur, couleurs, contraste, theme, sombre, clair, lisible]
+    comment:
+      - "texte normal : contraste d'au moins 4,5:1 avec son fond ; grand texte (24 px, ou 18,66 px gras) : 3:1"
+      - "partir de couleurs deja mesurees (texte #1f2937 sur #ffffff = 14,7:1 ; liens #1d4ed8 sur #ffffff = 6,7:1)"
+      - "un lien dans un paragraphe se distingue autrement que par la couleur : text-decoration: underline"
+    pourquoi: "WCAG 2.2 : 1.4.3 (contraste minimum), 1.4.1 (la couleur seule ne porte pas l'information)."
+    source: "W3C, Understanding SC 1.4.3 — https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    juges: [contraste]
+
+  - id: cibles-et-focus
+    titre: des boutons faciles a toucher, un focus visible
+    mots: [bouton, boutons, lien, liens, menu, toucher, telephone, clavier, focus]
+    comment:
+      - "boutons, liens du menu et champs : au moins 24 x 24 px (min-height: 24px; min-width: 24px; ou un padding qui l'assure)"
+      - "jamais outline: none sans le remplacer : :focus-visible { outline: 3px solid #1d4ed8; outline-offset: 2px; }"
+    pourquoi: "WCAG 2.2 : 2.5.8 (taille de la cible, niveau AA, nouveau en 2.2), 2.4.7 (focus visible)."
+    source: "W3C, Understanding SC 2.5.8 — https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    juges: [cible-trop-petite, focus-invisible]
+
+  - id: adapte-au-telephone
+    titre: une mise en page adaptee au telephone
+    mots: [telephone, mobile, responsive, adapte, ecran, colonnes, grille]
+    comment:
+      - "mobile d'abord : une colonne par defaut, puis @media (min-width: 48em) pour les colonnes"
+      - "pas de largeur fixe en px sur les blocs : max-width + width: 100% ; img { max-width: 100%; height: auto; }"
+      - "display: grid ou flex avec gap ; jamais de defilement horizontal a 320 px de large"
+    pourquoi: "WCAG 2.2 : 1.4.10 (reflow a 320 px sans defilement horizontal), 1.4.4 (agrandir le texte a 200 %)."
+    source: "W3C, Understanding SC 1.4.10 — https://www.w3.org/WAI/WCAG22/Understanding/reflow"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances:
+      - {nom: "meta viewport dans chaque page", type: fichier, pourquoi: "sans elle, le telephone affiche la page de bureau reduite"}
+    juges: [debordement-mobile, zoom-bloque]

@@ -1,0 +1,66 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-service-nftables-enabled
+titre: Service nftables active et demarre (si nftables est l'outil retenu)
+domaine: reseau
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: pare-feu
+  type_controle: service-actif
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: service_nftables_enabled
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/network/network-nftables/service_nftables_enabled
+mots_cles:
+- demarrage
+- nftables
+- service
+- services
+- systemd
+resume: Le service nftables doit etre active et demarre. (regle service_nftables_enabled, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: systemctl is-enabled nftables.service 2>/dev/null; systemctl is-active nftables.service 2>/dev/null
+  but: Lire l'etat de demarrage et d'execution de nftables
+  lecture: 'Attendu : « enabled » puis « active ».'
+controles:
+- controle: service nftables enabled/active
+  bon: enabled et active
+  mauvais: disabled ou inactive
+  gravite: moyenne
+  risque: 'Le service nftables charge au demarrage les regles de /etc/nftables.conf : s''il est desactive,
+    la machine redemarre sans pare-feu.'
+  action: systemctl enable --now nftables.service
+  playbook: infra.service-activer
+  parametres:
+    service: nftables
+  evaluation: []
+pieges:
+- 'Regle conditionnelle : ne s''applique que si nftables est l''outil retenu (var_network_filtering_service).
+  Demander ou constater l''outil en place avant de conclure ; le code ne juge pas cette regle seul.'
+- 'Un service peut etre demarre par une socket systemd : verifier aussi « systemctl list-sockets ».'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 4.2.9 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 4.3.9 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 4.3.9 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

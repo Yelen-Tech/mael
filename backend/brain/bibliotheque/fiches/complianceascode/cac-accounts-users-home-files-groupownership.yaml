@@ -1,0 +1,63 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-accounts-users-home-files-groupownership
+titre: 'Fichiers des repertoires personnels : groupe dont l''utilisateur est membre'
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: sessions
+  type_controle: detection
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: accounts_users_home_files_groupownership
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/accounts/accounts-session/accounts_users_home_files_groupownership
+mots_cles:
+- fichiers
+- groupe
+- home
+- utilisateurs
+resume: 'Fichiers des repertoires personnels : groupe dont l''utilisateur est membre. (regle accounts_users_home_files_groupownership,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: 'find /home -mindepth 2 -xdev -printf ''%G %p\n'' 2>/dev/null | awk ''BEGIN{while ((getline
+    l < "/etc/passwd") > 0) {split(l, c, ":"); if (c[3] >= 1000) {u[c[6]] = c[1]; g[c[1]] = c[4]}} while
+    ((getline l < "/etc/group") > 0) {split(l, c, ":"); n = split(c[4], m, ","); for (i = 1; i <= n; i++)
+    mb[m[i]","c[3]] = 1}} {split($2, p, "/"); d = "/"p[2]"/"p[3]} (d in u) && $1 != g[u[d]] && !((u[d]","$1)
+    in mb) {print $2" : groupe "$1}'''
+  but: Chercher les fichiers dont le groupe n'est pas un groupe de l'utilisateur
+  lecture: Chaque ligne est un element en defaut ; aucune ligne = conforme.
+controles:
+- controle: groupe = groupe principal ou groupe dont l'utilisateur est membre
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: Si les fichiers d'un utilisateur interactif appartiennent a un groupe dont il n'est pas membre,
+    des utilisateurs tiers peuvent y acceder.
+  action: chgrp GROUPE /home/UTILISATEUR/FICHIER
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R50 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

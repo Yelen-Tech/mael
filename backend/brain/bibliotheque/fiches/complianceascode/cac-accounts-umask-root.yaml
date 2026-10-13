@@ -1,0 +1,77 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-accounts-umask-root
+titre: 'umask de root (/root/.bashrc, /root/.profile : 0027 ou plus strict)'
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: sessions
+  type_controle: configuration
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: accounts_umask_root
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/accounts/accounts-session/user_umask/accounts_umask_root
+mots_cles:
+- bashrc
+- droits
+- root
+- umask
+resume: 'umask de root (/root/.bashrc, /root/.profile : 0027 ou plus strict). (regle accounts_umask_root,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: head -c0 /root/.bashrc || echo 'SENTINELLE:ILLISIBLE'; grep -Es '^[[:space:]]*umask[[:space:]]'
+    /root/.bashrc /root/.profile
+  but: Lire umask dans /root/.bashrc, /root/.profile
+  lecture: Valeur de umask ; aucune ligne = non defini.
+controles:
+- controle: umask de root au moins aussi strict que 0027
+  bon: umask 0027
+  mauvais: autre valeur, ou non defini
+  gravite: moyenne
+  risque: Le umask determine les droits appliques aux fichiers a leur creation. Un umask mal configure
+    peut donner a des fichiers des droits excessifs, lisibles ou inscriptibles par des utilisateurs non
+    autorises.
+  action: Ecrire « umask 0027 » dans /root/.bashrc ou /root/.profile.
+  playbook: infra.cle-valeur
+  parametres:
+    fichier: /root/.bashrc
+    cle: umask
+    valeur: '0027'
+    format: espace
+  evaluation:
+  - commande: 0
+    lecteur: affectations
+    comparateur: umask
+    champ: umask
+    attendu: '0027'
+    sep: espace
+pieges:
+- '/root n''est lisible que par root : lancer la lecture avec sudo (sinon aucune ligne, a ne pas prendre
+  pour un ecart).'
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 5.4.2.6 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 5.4.2.6 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 5.4.2.6 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

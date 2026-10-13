@@ -1,0 +1,78 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-use-pam-wheel-group-for-su
+titre: 'PAM : pam_wheel.so dans /etc/pam.d/su (group=sugroup use_uid)'
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: authentification
+  type_controle: option-pam
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: use_pam_wheel_group_for_su
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/accounts/accounts-restrictions/root_logins/use_pam_wheel_group_for_su
+mots_cles:
+- authentification
+- group
+- groupes
+- pam
+- pam_wheel
+- sugroup
+- wheel
+resume: /etc/pam.d/su doit appeler pam_wheel.so avec group=sugroup use_uid. (regle use_pam_wheel_group_for_su,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: grep -Es '^[[:space:]]*auth[[:space:]].*pam_wheel\.so' /etc/pam.d/su
+  but: Lire la ligne pam_wheel.so de /etc/pam.d/su
+  lecture: 'Attendu : « auth pam_wheel.so group=sugroup use_uid » ; aucune ligne = module absent.'
+controles:
+- controle: auth pam_wheel.so group=sugroup use_uid
+  bon: auth pam_wheel.so group=sugroup use_uid
+  mauvais: module absent, ou option absente / plus faible
+  gravite: moyenne
+  risque: su permet d'executer des commandes sous l'identite d'un autre compte, le plus souvent root.
+    En reserver l'usage a un groupe dedie (vide par defaut) empeche un compte quelconque de tenter de
+    devenir root.
+  action: Ajouter ou completer la ligne auth ... pam_wheel.so dans /etc/pam.d/su (edition directe) en
+    gardant une session root ouverte.
+  playbook: null
+  sans_playbook: 'pile PAM : a modifier avec pam-auth-update et une session root ouverte (une erreur peut
+    bloquer toute connexion)'
+  evaluation:
+  - commande: 0
+    lecteur: pam
+    comparateur: arguments
+    champ: pam_wheel.so
+    attendu:
+    - nom: group
+      operation: egal
+      valeur: sugroup
+    - nom: use_uid
+pieges:
+- 'Une erreur dans /etc/pam.d peut bloquer toute connexion : garder une session root ouverte pendant la
+  modification.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 5.2.7 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 5.2.7 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 5.2.7 (niveau 1)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

@@ -1,0 +1,74 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-grub2-page-alloc-shuffle-argument
+titre: Argument de demarrage page_alloc.shuffle=1
+domaine: systeme
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: demarrage
+  type_controle: argument-demarrage
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: grub2_page_alloc_shuffle_argument
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/bootloader-grub2/grub2_page_alloc_shuffle_argument
+mots_cles:
+- alloc
+- argument
+- demarrage
+- grub
+- noyau
+- page
+- page_alloc.shuffle
+- shuffle
+resume: Le noyau doit demarrer avec page_alloc.shuffle=1. (regle grub2_page_alloc_shuffle_argument, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: cat /proc/cmdline
+  but: Lire les arguments du demarrage EN COURS
+  lecture: 'Attendu : page_alloc.shuffle=1.'
+- commande: grep -E '^GRUB_CMDLINE_LINUX' /etc/default/grub
+  but: Verifier la configuration persistante de GRUB
+  lecture: page_alloc.shuffle=1 doit figurer dans GRUB_CMDLINE_LINUX.
+controles:
+- controle: argument page_alloc.shuffle=1
+  bon: page_alloc.shuffle=1 dans /proc/cmdline et /etc/default/grub
+  mauvais: argument absent ou valeur plus faible
+  gravite: moyenne
+  risque: Rendre aleatoire l'allocation des pages memoire rend moins previsible l'emplacement des donnees
+    du noyau, et complique certaines exploitations.
+  action: Ajouter page_alloc.shuffle=1 a GRUB_CMDLINE_LINUX dans /etc/default/grub, regenerer la configuration
+    (update-grub) et redemarrer.
+  playbook: infra.grub-argument
+  parametres:
+    argument: page_alloc.shuffle=1
+    action: ajouter
+  evaluation:
+  - commande: 0
+    lecteur: cmdline
+    champ: page_alloc.shuffle
+    comparateur: egal
+    attendu: '1'
+  - commande: 1
+    lecteur: grub
+    champ: page_alloc.shuffle
+    comparateur: egal
+    attendu: '1'
+pieges:
+- 'Le changement ne prend effet qu''apres redemarrage : planifier la fenetre de maintenance.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R8 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

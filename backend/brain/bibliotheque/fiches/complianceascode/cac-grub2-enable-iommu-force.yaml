@@ -1,0 +1,70 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-grub2-enable-iommu-force
+titre: Argument de demarrage iommu=force
+domaine: systeme
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: demarrage
+  type_controle: argument-demarrage
+  niveaux:
+    cis: null
+    anssi: renforce
+source:
+  origine: complianceascode
+  regle: grub2_enable_iommu_force
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/bootloader-grub2/grub2_enable_iommu_force
+mots_cles:
+- argument
+- demarrage
+- grub
+- iommu
+- noyau
+resume: Le noyau doit demarrer avec iommu=force. (regle grub2_enable_iommu_force, ComplianceAsCode 0.1.82).
+observer:
+- commande: cat /proc/cmdline
+  but: Lire les arguments du demarrage EN COURS
+  lecture: 'Attendu : iommu=force.'
+- commande: grep -E '^GRUB_CMDLINE_LINUX' /etc/default/grub
+  but: Verifier la configuration persistante de GRUB
+  lecture: iommu=force doit figurer dans GRUB_CMDLINE_LINUX.
+controles:
+- controle: argument iommu=force
+  bon: iommu=force dans /proc/cmdline et /etc/default/grub
+  mauvais: argument absent ou valeur plus faible
+  gravite: moyenne
+  risque: L'IOMMU empeche un peripherique (carte reseau, Thunderbolt...) de lire ou ecrire n'importe ou
+    dans la memoire par acces direct (DMA).
+  action: Ajouter iommu=force a GRUB_CMDLINE_LINUX dans /etc/default/grub, regenerer la configuration
+    (update-grub) et redemarrer.
+  evaluation:
+  - commande: 0
+    lecteur: cmdline
+    champ: iommu
+    comparateur: egal
+    attendu: force
+  - commande: 1
+    lecteur: grub
+    champ: iommu
+    comparateur: egal
+    attendu: force
+  sans_playbook: 'iommu=force depend du materiel : certains peripheriques ou machines virtuelles ne demarrent
+    plus correctement'
+pieges:
+- 'iommu=force peut rendre inutilisables certains peripheriques (cartes reseau, GPU) ou machines virtuelles
+  : essayer d''abord sur une machine identique.'
+- 'Le changement ne prend effet qu''apres redemarrage : planifier la fenetre de maintenance.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R7 (niveau renforce)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

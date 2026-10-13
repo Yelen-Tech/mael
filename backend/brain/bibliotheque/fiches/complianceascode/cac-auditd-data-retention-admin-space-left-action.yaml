@@ -1,0 +1,80 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-auditd-data-retention-admin-space-left-action
+titre: 'auditd : action quand l''espace disque devient critique (admin_space_left_action)'
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: audit
+  type_controle: configuration
+  niveaux:
+    cis: 2
+    anssi: null
+source:
+  origine: complianceascode
+  regle: auditd_data_retention_admin_space_left_action
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/auditing/configure_auditd_data_retention/auditd_data_retention_admin_space_left_action
+mots_cles:
+- action
+- admin
+- admin_space_left_action
+- auditd
+- critique
+- disque
+- espace
+- left
+- space
+resume: 'auditd : action quand l''espace disque devient critique (admin_space_left_action). (regle auditd_data_retention_admin_space_left_action,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: head -c0 /etc/audit/auditd.conf || echo 'SENTINELLE:ILLISIBLE'; grep -Es '^[[:space:]]*(export[[:space:]]+|readonly[[:space:]]+)?admin_space_left_action[[:space:]]*='
+    /etc/audit/auditd.conf
+  but: Lire admin_space_left_action dans /etc/audit/auditd.conf
+  lecture: Valeur de admin_space_left_action ; aucune ligne = non defini.
+controles:
+- controle: admin_space_left_action = halt (ou single)
+  bon: halt ou single
+  mauvais: autre valeur, ou non defini
+  gravite: moyenne
+  risque: Les administrateurs doivent savoir quand l'audit ne peut plus enregistrer. Une partition dediee
+    de taille suffisante evite d'arriver a ce seuil critique.
+  action: Ecrire « admin_space_left_action = halt » (ou single) dans /etc/audit/auditd.conf.
+  playbook: infra.cle-valeur
+  parametres:
+    fichier: /etc/audit/auditd.conf
+    cle: admin_space_left_action
+    valeur: halt
+    format: egal_espaces
+  evaluation:
+  - commande: 0
+    lecteur: affectations
+    comparateur: toutes_egales
+    champ: admin_space_left_action
+    attendu: halt
+    accepte:
+    - single
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 6.3.2.4 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 6.2.2.4 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 6.2.2.4 (niveau 2)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

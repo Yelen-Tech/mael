@@ -1,0 +1,61 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-security-patches-up-to-date
+titre: Aucune mise a jour de securite en attente
+domaine: paquets
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: paquets
+  type_controle: detection
+  niveaux:
+    cis: null
+    anssi: minimal
+source:
+  origine: complianceascode
+  regle: security_patches_up_to_date
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/software/updating/security_patches_up_to_date
+mots_cles:
+- apt
+- correctifs
+- mises a jour
+- patch
+- securite
+resume: Aucune mise a jour de securite en attente. (regle security_patches_up_to_date, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: apt list --upgradable 2>/dev/null | grep -i security
+  but: Lister les mises a jour de securite disponibles
+  lecture: Chaque ligne est un element en defaut ; aucune ligne = conforme.
+controles:
+- controle: aucune mise a jour de securite en attente
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: 'Les failles corrigees sont publiques : chaque mise a jour de securite non installee est une
+    porte d''entree connue et souvent deja exploitee.'
+  action: apt update && apt full-upgrade (fenetre de maintenance), ou unattended-upgrades.
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- 'La liste depend du cache apt : lancer « apt update » avant (commande qui ecrit, validation humaine).'
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R61 (niveau minimal)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

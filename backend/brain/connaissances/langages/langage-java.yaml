@@ -1,0 +1,46 @@
+id: langage-java
+schema: 1
+nom: Java
+resume: Langage compilé en bytecode pour la JVM, à typage statique et fort ; la mémoire y est sûre, les risques dominants sont la désérialisation, l'injection et la chaîne de dépendances.
+famille: langage
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - java
+  - jvm
+  - désérialisation
+  - injection sql
+  - xxe
+  - xml
+  - dépendances
+  - log4shell
+caracteristiques:
+  paradigmes:
+    - orienté objet
+  typage: statique, fort
+  execution: compilé en bytecode puis exécuté par la JVM (compilation à la volée)
+  memoire: ramasse-miettes
+securite:
+  - titre: Désérialisation Java
+    risque: ObjectInputStream.readObject sur des données non fiables permet l'exécution de code arbitraire via des chaînes de gadgets.
+    conseil: Ne pas désérialiser de données externes ; filtrer les classes (JEP 290) ou utiliser un format sûr (JSON).
+    gravite: critique
+  - titre: Injection SQL
+    risque: Une requête construite par concaténation laisse modifier ou extraire la base.
+    conseil: PreparedStatement systématique, jamais de donnée interpolée dans le SQL.
+    gravite: elevee
+  - titre: Entités XML externes (XXE)
+    risque: "Les analyseurs XML historiques résolvent les entités externes : lecture de fichiers locaux et requêtes internes."
+    conseil: Désactiver DTD et entités externes sur chaque fabrique de parseurs (feature secure-processing).
+    gravite: elevee
+  - titre: Dépendances vulnérables
+    risque: Les bibliothèques tierces embarquent les vulnérabilités (Log4Shell en est le cas emblématique).
+    conseil: Inventaire des dépendances, épinglage des versions et analyse continue (OWASP Dependency-Check).
+    gravite: moyenne
+sources:
+  - titre: Oracle — Secure Coding Guidelines for Java SE
+    url: https://www.oracle.com/java/technologies/javase/seccodeguide.html
+  - titre: OWASP — Deserialization Cheat Sheet
+    url: https://cheatsheetseries.owasp.org/cheatsheets/Deserialization_Cheat_Sheet.html

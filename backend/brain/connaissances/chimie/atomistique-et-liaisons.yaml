@@ -1,0 +1,39 @@
+id: atomistique-et-liaisons
+schema: 1
+nom: Atomistique et liaisons chimiques
+resume: Structure de l'atome, configuration électronique et liaisons chimiques (covalente, ionique, métallique) ; base pour comprendre les matériaux des puces, les batteries et les capteurs utilisés en informatique.
+famille: chimie
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - atome
+  - électron
+  - liaison covalente
+  - liaison ionique
+  - liaison métallique
+  - tableau périodique
+  - silicium
+  - semi-conducteur
+  - couche de valence
+  - bande interdite
+caracteristiques:
+  notions_fondamentales: "Atome = noyau (protons, neutrons) et électrons répartis en couches ; la couche de valence gouverne la réactivité et les liaisons."
+  types_de_liaisons: "Covalente (partage d'électrons), ionique (transfert d'électrons entre ions), métallique (nuage électronique délocalisé, conducteur)."
+  bandes_d_energie: "Dans un solide, la largeur de la bande interdite distingue conducteurs (~0), semi-conducteurs (silicium : ~1,1 eV) et isolants (plusieurs eV)."
+  lien_informatique: "Les transistors CMOS exploitent les propriétés de bande du silicium dopé ; la compréhension des liaisons éclaire matériaux, batteries et capteurs."
+securite:
+  - titre: Confondre semi-conducteur et isolant dans un diagnostic
+    risque: Une erreur de vocabulaire sur les matériaux conduit à de mauvaises conclusions sur l'origine d'une panne matérielle ou d'une falsification de composant.
+    conseil: Vérifier les propriétés électriques réelles d'un composant suspect (contrefaçon) plutôt que se fier aux seules apparences ou étiquettes.
+    gravite: info
+  - titre: Contrefaçon de composants électroniques
+    risque: Des puces regravées ou fabriquées avec des matériaux non conformes s'introduisent dans la chaîne d'approvisionnement et peuvent embarquer des fonctions cachées.
+    conseil: Acheter auprès de fournisseurs agréés et contrôler les composants critiques (inspection, tests électriques) sur les équipements sensibles.
+    gravite: elevee
+sources:
+  - titre: IUPAC — Gold Book (Compendium of Chemical Terminology)
+    url: https://goldbook.iupac.org/
+  - titre: Wikipédia — Liaison chimique
+    url: https://fr.wikipedia.org/wiki/Liaison_chimique

@@ -1,0 +1,43 @@
+id: chimie-des-materiaux-et-puces
+schema: 1
+nom: Chimie des matériaux et fabrication des puces
+resume: Dopage du silicium, lithographie et gravure en salle blanche, exigences de pureté extrême ; la chaîne de fabrication des puces conditionne la confiance dans le matériel informatique.
+famille: chimie
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - semi-conducteur
+  - silicium
+  - dopage
+  - lithographie
+  - gravure
+  - salle blanche
+  - pureté
+  - fonderie
+  - chaîne d'approvisionnement
+  - contrefaçon
+caracteristiques:
+  dopage: "L'introduction contrôlée d'impuretés (bore pour le type P, phosphore ou arsenic pour le type N) ajuste la conductivité du silicium et crée les jonctions des transistors."
+  fabrication: "La lithographie dessine les motifs par lumière (UV profond puis extrême), la gravure (plasma ou humide) les reporte, le tout en salle blanche à particules contrôlées."
+  purete: "Le silicium électronique atteint des puretés de l'ordre de 99,9999999 % (qualité dite « 9N ») ; une contamination minime modifie les propriétés électriques."
+  lien_informatique: "Peu de fonderies maîtrisent les nœuds avancés ; la concentration géographique de la production est un enjeu de souveraineté et de continuité d'approvisionnement."
+securite:
+  - titre: Dépendance à quelques fonderies
+    risque: Une rupture d'approvisionnement (crise géopolitique, catastrophe) bloque le renouvellement du matériel et allonge les délais de remplacement des équipements.
+    conseil: Anticiper les cycles de renouvellement, diversifier les fournisseurs et dimensionner les stocks des composants critiques.
+    gravite: moyenne
+  - titre: Composants contrefaits ou regravés
+    risque: Des puces recyclées vendues comme neuves, ou fabriquées hors contrôle, peuvent comporter des défauts voire des modifications malveillantes (cheval de Troie matériel).
+    conseil: Acheter via des canaux agréés, tracer les lots et prévoir des inspections (rayons X, décapsulation) pour les équipements à haute criticité.
+    gravite: elevee
+  - titre: Surestimer la détection des altérations matérielles
+    risque: Une modification sub-nanométrique introduite en fonderie est pratiquement indétectable par les tests électriques classiques.
+    conseil: Adopter une approche de confiance par la chaîne (fournisseurs audités, composants certifiés) plutôt que par la seule inspection a posteriori.
+    gravite: info
+sources:
+  - titre: Wikipédia — Fabrication des dispositifs à semi-conducteurs
+    url: https://fr.wikipedia.org/wiki/Fabrication_des_dispositifs_%C3%A0_semi-conducteurs
+  - titre: NIST — Semiconductors
+    url: https://www.nist.gov/semiconductors

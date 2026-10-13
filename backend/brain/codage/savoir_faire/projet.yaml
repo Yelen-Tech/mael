@@ -1,0 +1,136 @@
+# Savoir-faire du CHEF DE CHANTIER : conduire un LONG projet.
+# Ces fiches ne vont pas a une tache : elles vont au PLAN (le decoupage),
+# la ou se decide l'ordre, la structure et ce dont le projet a besoin.
+#
+# pour : les langages qu'une fiche suppose (html = des pages ; serveur =
+# du code serveur ; python, php...). Une fiche n'est donnee au plan que si
+# la demande les contient TOUS. Banc des plans du 08/10/2026 : des exemples
+# melanges (« site : css/ ; API Python : app.py ») faisaient recopier
+# app.py et ses tests dans des sites vitrines et un formulaire PHP.
+specialiste: projet
+fiches:
+  - id: decouper-un-site
+    titre: decouper un site en taches
+    pour: [html]
+    mots: [site, pages, page, complet, vitrine, boutique, association, plusieurs, long]
+    comment:
+      - "les FONDATIONS d'abord : la feuille de style commune, puis la page d'accueil avec le menu commun"
+      - "puis les autres pages une a une, puis le script qui les rend interactives (s'il est demande)"
+      - "seulement les fichiers que la demande appelle : pas de code serveur pour un site qui n'en demande pas"
+    pourquoi: "la feuille et le menu fixent ce que les pages reutilisent (classes, id, chemins) ; chaque fichier en trop est une tache, un appel et un risque de plus."
+    source: "MDN, Organiser son CSS — https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Organizing"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    juges: []
+
+  - id: decouper-un-serveur
+    titre: decouper un code serveur en taches
+    pour: [serveur]
+    mots: [api, serveur, base, donnees, application, projet, routes, long]
+    comment:
+      - "les FONDATIONS d'abord : le schema de la base, puis le code qui l'utilise (les routes), puis ses tests"
+      - "un fichier = une responsabilite ; au-dela de 150 lignes, un fichier se decoupe"
+    pourquoi: "le schema fixe les noms que tout le code reprend ; un fichier trop long deborde la memoire du modele et se coupe (mission 09 du 08/10/2026)."
+    source: "The Twelve-Factor App — https://12factor.net/"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    juges: []
+
+  - id: arborescence-d-un-site
+    titre: l'arborescence d'un site
+    pour: [html]
+    mots: [site, dossier, fichiers, structure, pages, page, boutique, images]
+    comment:
+      - "les pages a la racine (index.html d'abord), la feuille dans css/, le script dans js/, les images dans images/"
+      - "des chemins RELATIFS, jamais un « / » au debut ; des noms en minuscules sans espaces ni accents"
+    pourquoi: "un chemin qui commence par « / » sort du dossier du projet et le plan l'ecarte (missions 07 et 10 du 08/10/2026) ; espaces et accents cassent des liens selon le serveur."
+    source: "MDN, Dealing with files — https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started/Environment_setup/Dealing_with_files"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    juges: []
+
+  - id: arborescence-d-une-api-python
+    titre: l'arborescence d'une API Python
+    pour: [python]
+    mots: [api, python, flask, fastapi, serveur, structure, fichiers, tests]
+    comment:
+      - "app.py a la racine ; ses tests dans tests/test_app.py"
+      - "des chemins RELATIFS, jamais un « / » au debut (app.py, pas /app.py)"
+    pourquoi: "pytest trouve seul les fichiers test_*.py ; un chemin qui commence par « / » est ecarte par le plan (missions 07 et 10 du 08/10/2026)."
+    source: "pytest, Good Integration Practices — https://docs.pytest.org/en/stable/explanation/goodpractices.html"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    juges: []
+
+  - id: arborescence-d-un-projet-php
+    titre: l'arborescence d'un projet PHP
+    pour: [php]
+    mots: [php, formulaire, contact, serveur, structure, fichiers, base]
+    comment:
+      - "le formulaire dans une page (index.html ou contact.php), le traitement dans contact.php a la racine"
+      - "la base de donnees et les messages enregistres HORS du dossier servi au public"
+    pourquoi: "un fichier de base place dans le dossier public se telecharge par son adresse ; OWASP : les donnees ne se servent pas comme des pages."
+    source: "OWASP File Upload Cheat Sheet — https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    juges: []
+
+  - id: contrats-entre-fichiers
+    titre: les contrats entre les pages et le serveur
+    pour: [html, serveur]
+    mots: [api, script, catalogue, charger, pages, boutique, application, projet]
+    comment:
+      - "chaque route d'API est ecrite UNE fois dans le plan (GET /api/produits -> liste JSON) ; le script et le serveur la reprennent a l'identique"
+      - "un champ JSON garde le meme nom partout (prix, pas price ici et tarif la)"
+    pourquoi: "deux fichiers ecrits separement ne se parlent que par ces contrats : un chemin ou un nom different, et la page reste vide sans aucune erreur visible."
+    source: "OpenAPI Specification — https://spec.openapis.org/oas/latest.html"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    juges: [selecteur-mort, fichier-absent, contrat-api]
+
+  - id: dependances-declarees
+    titre: des dependances declarees et bornees
+    pour: [serveur]
+    mots: [api, python, flask, node, express, php, dependances, application, projet, tests]
+    comment:
+      - "le fichier de dependances de la langue DEMANDEE seulement, chaque paquet avec une borne de version"
+      - "seulement ce que le code importe vraiment ; les outils de test a part"
+    pourquoi: "The Twelve-Factor App, II : un projet declare toutes ses dependances ; sans borne, une nouvelle version majeure casse le projet un matin."
+    source: "The Twelve-Factor App, Dependencies — https://12factor.net/dependencies"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    juges: []
+
+  - id: tests-au-fil-du-projet
+    titre: les tests au fil du projet
+    pour: [serveur]
+    mots: [tests, api, base, donnees, application, projet, long, automatiques]
+    comment:
+      - "une tache de tests juste apres le code qu'elle teste, pas tout a la fin"
+      - "chaque test sur une base jetable ; les cas limites d'abord (vide, absent, invalide)"
+    pourquoi: "un defaut trouve tot coute une tache ; trouve a la fin, il touche des fichiers deja verrouilles. Seule l'execution prouve la justesse."
+    source: "pytest, Good Integration Practices — https://docs.pytest.org/en/stable/explanation/goodpractices.html"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    juges: []
+
+  - id: documenter-et-reprendre
+    titre: documenter et pouvoir reprendre
+    mots: [projet, long, application, complet, documentation, reprendre]
+    comment:
+      - "dire dans le plan ce que fait chaque fichier, en une phrase claire : c'est la memoire du projet"
+      - "un commentaire dit le POURQUOI d'un choix, pas ce que fait la ligne"
+    pourquoi: "un long projet se reprend des jours plus tard, par MAEL ou par un humain : sans trace claire, il faut tout relire pour le relancer."
+    source: "GitHub Docs, About READMEs — https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    juges: []

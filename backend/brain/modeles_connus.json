@@ -1,0 +1,54 @@
+{
+  "_lisez_moi": [
+    "Ce que MAEL sait des modeles, en DONNEES et non en code : une seule",
+    "ligne a changer quand la campagne de mesure (L6) aura parle.",
+    "",
+    "MAEL ne suppose JAMAIS que l'utilisateur a nos modeles. Il prend le",
+    "meilleur de CEUX QUI SONT LA, dans la limite de ce que la machine peut",
+    "porter (brain/machine.py). Un inconnu plus grand qu'un connu plus petit",
+    "gagne : la garde est dans le code, pas dans le modele.",
+    "",
+    "categories_milliards : bornes des categories de capacite, en milliards de",
+    "            parametres. On compare d'abord par categorie (un 8b et un 9b",
+    "            sont equivalents), et seulement ensuite par ce qu'on connait.",
+    "mesures   : modeles reellement passes au banc. Ils gagnent a categorie",
+    "            EGALE, jamais contre une categorie superieure.",
+    "preferes  : ordre de preference a categorie egale, avant les inconnus.",
+    "exclus    : modeles qui ont ECHOUE la categorie « refuser » du banc.",
+    "            Un exclu n'est JAMAIS choisi tout seul (il reste utilisable",
+    "            si l'utilisateur l'impose : on le previent, on ne l'interdit",
+    "            pas).",
+    "particularites : ce qu'il faut dire a l'utilisateur sur un modele donne.",
+    "non_conversationnels : motifs de noms qui ne savent pas dialoguer",
+    "            (vectorisation, reclassement) : les choisir serait une panne",
+    "            garantie au premier message.",
+    "marge_memoire_octets : ce qu'il faut EN PLUS du fichier du modele pour le",
+    "            contexte et le programme (~1,5 Go a 8k de contexte)."
+  ],
+  "categories_milliards": [3, 7, 13, 27, 70],
+  "mesures": [
+    "qwen2.5:3b"
+  ],
+  "preferes": [
+    "qwen3:30b-a3b",
+    "qwen3:8b",
+    "qwen2.5:7b",
+    "llama3.1:8b",
+    "mistral:7b",
+    "qwen2.5:3b",
+    "gemma3:4b"
+  ],
+  "exclus": [],
+  "exclus_pourquoi": {},
+  "particularites": {
+    "deepseek-r1": "modele a raisonnement visible : il ecrit sa reflexion avant de repondre, les echanges sont plus longs",
+    "coder": "modele oriente code : correct en audit, moins a l'aise sur la conduite d'un entretien"
+  },
+  "non_conversationnels": [
+    "embed", "bge-", "bge:", "e5-", "gte-", "rerank", "minilm",
+    "all-minilm", "nomic-embed", "mxbai-embed", "snowflake-arctic-embed",
+    "paraphrase-multilingual"
+  ],
+  "marge_memoire_octets": 1610612736,
+  "conseille_si_rien": "qwen2.5:3b"
+}

@@ -1,0 +1,71 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-partition-for-var-log-audit
+titre: Partition separee pour /var/log/audit
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: audit
+  type_controle: partition-separee
+  niveaux:
+    cis: 2
+    anssi: renforce
+source:
+  origine: complianceascode
+  regle: partition_for_var_log_audit
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/software/disk_partitioning/partition_for_var_log_audit
+mots_cles:
+- audit
+- disque
+- journalisation
+- montage
+- partition
+- separee
+resume: /var/log/audit doit etre une partition (ou un montage) separe. (regle partition_for_var_log_audit,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: findmnt -kn /var/log/audit
+  but: Voir si /var/log/audit est un montage separe
+  lecture: Une ligne = montage separe ; aucune = meme partition que son parent.
+controles:
+- controle: /var/log/audit monte a part
+  bon: montage separe
+  mauvais: /var/log/audit sur la partition de son parent
+  gravite: faible
+  risque: 'Une partition dediee a /var/log/audit separe les traces des autres fichiers : un disque rempli
+    par ailleurs ne peut pas bloquer l''audit.'
+  action: 'Prevoir une partition (ou un volume LVM) dedie a /var/log/audit et la declarer dans /etc/fstab
+    : se planifie, surtout sur un systeme en production.'
+  playbook: null
+  sans_playbook: 'partition dediee : repartitionnement a planifier, non automatisable'
+  evaluation:
+  - commande: 0
+    lecteur: findmnt
+    comparateur: monte
+pieges:
+- 'Repartitionner un systeme en service est risque : a planifier (ou a appliquer aux prochaines installations).'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 1.1.2.7.1 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 1.1.2.7.1 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 1.1.2.7.1 (niveau 2)
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R71 (niveau renforce)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

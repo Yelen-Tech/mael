@@ -1,0 +1,70 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-grub2-mds-argument
+titre: Argument de demarrage mds=full,nosmt
+domaine: systeme
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: demarrage
+  type_controle: argument-demarrage
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: grub2_mds_argument
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/bootloader-grub2/grub2_mds_argument
+mots_cles:
+- argument
+- demarrage
+- grub
+- mds
+- noyau
+resume: Le noyau doit demarrer avec mds=full,nosmt. (regle grub2_mds_argument, ComplianceAsCode 0.1.82).
+observer:
+- commande: cat /proc/cmdline
+  but: Lire les arguments du demarrage EN COURS
+  lecture: 'Attendu : mds=full,nosmt.'
+- commande: grep -E '^GRUB_CMDLINE_LINUX' /etc/default/grub
+  but: Verifier la configuration persistante de GRUB
+  lecture: mds=full,nosmt doit figurer dans GRUB_CMDLINE_LINUX.
+controles:
+- controle: argument mds=full,nosmt
+  bon: mds=full,nosmt dans /proc/cmdline et /etc/default/grub
+  mauvais: argument absent ou valeur plus faible
+  gravite: moyenne
+  risque: 'La faille MDS permet de lire des donnees dans les tampons internes du processeur, y compris
+    celles d''autres processus : mds=full,nosmt active toutes les protections.'
+  action: Ajouter mds=full,nosmt a GRUB_CMDLINE_LINUX dans /etc/default/grub, regenerer la configuration
+    (update-grub) et redemarrer.
+  evaluation:
+  - commande: 0
+    lecteur: cmdline
+    champ: mds
+    comparateur: egal
+    attendu: full,nosmt
+  - commande: 1
+    lecteur: grub
+    champ: mds
+    comparateur: egal
+    attendu: full,nosmt
+  sans_playbook: 'nosmt desactive l''hyperthreading (moitie des fils d''execution) : decision de performance
+    a prendre avec l''exploitant'
+pieges:
+- 'mds=full,nosmt coupe l''hyperthreading au prochain demarrage : mesurer l''impact sur la charge avant
+  (serveurs de calcul, bases de donnees).'
+- 'Le changement ne prend effet qu''apres redemarrage : planifier la fenetre de maintenance.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R8 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

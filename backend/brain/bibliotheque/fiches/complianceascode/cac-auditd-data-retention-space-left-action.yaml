@@ -1,0 +1,77 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-auditd-data-retention-space-left-action
+titre: 'auditd : alerte quand l''espace disque baisse (space_left_action = email)'
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: audit
+  type_controle: configuration
+  niveaux:
+    cis: 2
+    anssi: null
+source:
+  origine: complianceascode
+  regle: auditd_data_retention_space_left_action
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/auditing/configure_auditd_data_retention/auditd_data_retention_space_left_action
+mots_cles:
+- action
+- alerte
+- auditd
+- disque
+- espace
+- left
+- space
+- space_left_action
+resume: 'auditd : alerte quand l''espace disque baisse (space_left_action = email). (regle auditd_data_retention_space_left_action,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: head -c0 /etc/audit/auditd.conf || echo 'SENTINELLE:ILLISIBLE'; grep -Es '^[[:space:]]*(export[[:space:]]+|readonly[[:space:]]+)?space_left_action[[:space:]]*='
+    /etc/audit/auditd.conf
+  but: Lire space_left_action dans /etc/audit/auditd.conf
+  lecture: Valeur de space_left_action ; aucune ligne = non defini.
+controles:
+- controle: space_left_action = email
+  bon: space_left_action = email
+  mauvais: autre valeur, ou non defini
+  gravite: moyenne
+  risque: Prevenir les administrateurs avant que le disque d'audit soit plein leur laisse le temps d'agir
+    avant toute interruption.
+  action: Ecrire « space_left_action = email » dans /etc/audit/auditd.conf.
+  playbook: infra.cle-valeur
+  parametres:
+    fichier: /etc/audit/auditd.conf
+    cle: space_left_action
+    valeur: email
+    format: egal_espaces
+  evaluation:
+  - commande: 0
+    lecteur: affectations
+    comparateur: toutes_egales
+    champ: space_left_action
+    attendu: email
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 6.3.2.4 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 6.2.2.4 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 6.2.2.4 (niveau 2)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

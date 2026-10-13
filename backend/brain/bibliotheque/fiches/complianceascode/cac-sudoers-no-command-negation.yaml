@@ -1,0 +1,60 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-sudoers-no-command-negation
+titre: 'sudoers : pas de commandes autorisees par exclusion (!commande)'
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: sudo
+  type_controle: detection
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: sudoers_no_command_negation
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/software/sudo/sudoers_no_command_negation
+mots_cles:
+- exclusion
+- negation
+- sudo
+- sudoers
+resume: 'sudoers : pas de commandes autorisees par exclusion (!commande). (regle sudoers_no_command_negation,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: head -c0 /etc/sudoers || echo 'SENTINELLE:ILLISIBLE'; grep -PRs '^(?:\s*[^#=]+)=(?:\s*(?:\([^\)]+\))?\s*(?!\s*\()[^,!\n][^,\n]+,)*\s*(?:\([^\)]+\))?\s*(?!\s*\()(!\S+).*'
+    /etc/sudoers /etc/sudoers.d/
+  but: Chercher les specifications sudo definies par negation
+  lecture: Chaque ligne est un element en defaut ; aucune ligne = conforme.
+controles:
+- controle: aucune negation dans les specifications
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: 'Autoriser « tout sauf une commande » (ALL, !/bin/sh) se contourne facilement : il suffit de
+    copier le programme interdit sous un autre nom. Il faut lister ce qui est permis, pas ce qui est interdit.'
+  action: Remplacer les exclusions par une liste explicite de commandes autorisees (visudo).
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R42 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

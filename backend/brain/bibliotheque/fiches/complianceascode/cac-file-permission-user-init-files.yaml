@@ -1,0 +1,72 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-file-permission-user-init-files
+titre: Fichiers d'initialisation des utilisateurs (.bashrc...) non modifiables par le groupe ni les autres
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: sessions
+  type_controle: detection
+  niveaux:
+    cis: 1
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: file_permission_user_init_files
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/accounts/accounts-session/file_permission_user_init_files
+mots_cles:
+- bashrc
+- droits
+- fichiers d'initialisation
+- profile
+resume: Fichiers d'initialisation des utilisateurs (.bashrc...) non modifiables par le groupe ni les autres.
+  (regle file_permission_user_init_files, ComplianceAsCode 0.1.82).
+observer:
+- commande: find /home -type f -name '.*' \( -perm -0002 -o -perm -0020 \) 2>/dev/null
+  but: Chercher les fichiers caches modifiables par le groupe ou les autres
+  lecture: Chaque ligne est un element en defaut ; aucune ligne = conforme.
+controles:
+- controle: pas d'ecriture pour le groupe ni les autres
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: Les fichiers d'initialisation configurent l'environnement de shell a la connexion. Une modification
+    malveillante de ces fichiers peut compromettre les comptes a la connexion.
+  action: 'chmod g-w,o-w /home/COMPTE/.FICHIER (la source propose u-s,g-wxs,o= : 0740 au plus)'
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- 'La description de la source vise 0740 au plus, mais sa verification ne controle que l''ecriture : un
+  .bashrc lisible par tous (0644, defaut Ubuntu) est accepte.'
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 7.2.10 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 7.2.10 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 7.2.10 (niveau 1)
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R50 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

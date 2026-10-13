@@ -1,0 +1,73 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-file-groupowner-at-allow
+titre: 'Groupe de /etc/at.allow : root'
+domaine: services
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: planification
+  type_controle: groupe-fichier
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: file_groupowner_at_allow
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/cron_and_at/restrict_at_cron_users/file_groupowner_at_allow
+mots_cles:
+- allow
+- chgrp
+- fichier
+- fichiers
+- groupe
+resume: 'Groupe de /etc/at.allow : root : groupe root. (regle file_groupowner_at_allow, ComplianceAsCode
+  0.1.82).'
+observer:
+- commande: stat -c '%a %U %G %n' /etc/at.allow 2>/dev/null
+  but: Lire droits, proprietaire et groupe (groupe)
+  lecture: '3e colonne = groupe : attendu root. Aucune ligne = fichier absent.'
+controles:
+- controle: groupe = root
+  bon: groupe root
+  mauvais: toute autre valeur
+  gravite: moyenne
+  risque: 'Les listes d''acces a cron et at decident qui peut planifier des taches : si un autre compte
+    que root peut les modifier, il s''autorise lui-meme (ou autorise un compte compromis).'
+  action: chgrp root sur les fichiers concernes.
+  playbook: infra.fichier-groupe
+  parametres:
+    chemin: /etc/at.allow
+    groupe: root
+  evaluation:
+  - commande: 0
+    lecteur: stat
+    champ: groupe
+    comparateur: dans
+    attendu:
+    - '0'
+    - root
+pieges:
+- 'Sans sudo, certains fichiers (ex. /etc/shadow) ne sont pas lisibles par stat/find : relancer avec les
+  droits root.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 2.4.2.1 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 2.4.2.1 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 2.4.2.1 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

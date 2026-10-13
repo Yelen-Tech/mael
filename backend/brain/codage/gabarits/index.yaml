@@ -1,0 +1,185 @@
+# Index des gabarits de l'atelier de code.
+#
+# Chaque gabarit est une FORME JUSTE, deja passee devant tous les juges
+# (verifie par brain/tests_codage.py). Il est court par principe : le budget
+# du savoir est de ~250 jetons sur une machine de 8 Go. On donne au modele la
+# structure juste, pas le decor.
+#
+#   mots   : ce qui, dans une demande, appelle ce gabarit (sans accents) ;
+#   regles : les defauts des juges que ce gabarit montre comment eviter —
+#            l'atelier le joint a la correction quand l'un d'eux tombe.
+
+gabarits:
+  # ---------------------------------------------------------- pages (HTML)
+  - fichier: page.html
+    titre: page complete conforme
+    mots: [site, page, accueil, vitrine, landing, html, web]
+    regles: [doctype, lang, charset, viewport, title, h1, main]
+  - fichier: menu.html
+    titre: menu de navigation adapte au telephone
+    mots: [menu, navigation, nav, entete, header, burger, hamburger]
+    regles: [nom-accessible, button-type]
+  - fichier: carte-produit.html
+    titre: carte produit
+    mots: [produit, carte, boutique, article, prix, panier, catalogue]
+    regles: [img-alt, button-type]
+  - fichier: galerie.html
+    titre: galerie d'images
+    mots: [galerie, images, photos, portfolio, realisations, creations]
+    regles: [img-alt, titres-sautes]
+  - fichier: pied-de-page.html
+    titre: pied de page
+    mots: [pied, footer, adresse, reseaux, mentions]
+    regles: [blank-noopener]
+  - fichier: formulaire.html
+    titre: formulaire de contact accessible
+    mots: [formulaire, contact, message, devis, reservation, commande]
+    regles: [champ-sans-label, mdp-en-get]
+  - fichier: connexion.html
+    titre: formulaire de connexion
+    mots: [connexion, login, identification, authentification, compte]
+    regles: [champ-sans-label, mdp-en-get]
+  - fichier: inscription.html
+    titre: formulaire d'inscription
+    mots: [inscription, inscrire, enregistrement, creer, signup, compte]
+    regles: [champ-sans-label, mdp-en-get]
+  # ------------------------------------------------------------------ CSS
+  - fichier: base.css
+    titre: styles de base accessibles (focus, mode sombre, mouvement)
+    mots: [css, style, styles, design, theme, couleurs, sombre]
+    regles: [focus-invisible, important]
+  - fichier: mise-en-page.css
+    titre: mise en page qui s'adapte a l'ecran
+    mots: [responsive, mobile, telephone, grille, grid, mise, adapte]
+    regles: []
+  # ----------------------------------------------- JavaScript (navigateur)
+  - fichier: menu.js
+    titre: ouvrir et fermer le menu (clavier compris)
+    mots: [menu, burger, hamburger, ouvrir, fermer, navigation]
+    regles: [evenement-en-ligne]
+  - fichier: afficher-donnees.js
+    titre: afficher des donnees sans innerHTML
+    mots: [afficher, liste, donnees, dynamique, tableau, resultats, recherche]
+    regles: [innerhtml, xss-dom]
+  - fichier: fetch-api.js
+    titre: appeler une API avec fetch, erreurs gerees
+    mots: [api, fetch, charger, ajax, requete, json, serveur]
+    regles: [innerhtml, xss-dom]
+  - fichier: valider-formulaire.js
+    titre: valider un formulaire cote navigateur
+    mots: [valider, validation, verifier, formulaire, champ, erreur]
+    regles: [evenement-en-ligne]
+  - fichier: message-fenetres.js
+    titre: messages entre fenetres (iframe, paiement)
+    mots: [iframe, postmessage, fenetre, paiement, widget, integration]
+    regles: [message-sans-origine, postmessage-etoile]
+  # --------------------------------------------------------- Python serveur
+  - fichier: sql.py
+    titre: requete SQL parametree
+    mots: [sql, sqlite, postgres, postgresql, mysql, base, donnees, requete]
+    regles: [injection-sql]
+  - fichier: flask-route.py
+    titre: route Flask sure
+    mots: [flask, python, route, api, serveur, backend]
+    regles: [injection-sql, xss-serveur]
+  - fichier: flask-connexion.py
+    titre: connexion Flask avec mot de passe hache
+    mots: [flask, connexion, login, session, mot, passe, authentification]
+    regles: [secret-en-dur, redirection-ouverte, hash-faible]
+  - fichier: flask-televersement.py
+    titre: envoi de fichier Flask
+    mots: [televersement, upload, envoyer, fichier, image, document, flask]
+    regles: [traversee-chemin]
+  - fichier: fastapi-route.py
+    titre: route FastAPI validee
+    mots: [fastapi, pydantic, api, python, rest]
+    regles: [injection-sql]
+  - fichier: config-env.py
+    titre: configuration lue depuis l'environnement
+    mots: [configuration, config, secret, cle, variable, environnement, env, django]
+    regles: [secret-en-dur]
+  # ------------------------------------------------------------ Node serveur
+  - fichier: express-base.js
+    titre: serveur Express durci
+    mots: [express, node, nodejs, serveur, backend, javascript]
+    regles: [xss-serveur]
+  - fichier: express-route.js
+    titre: route Express avec SQL parametre
+    mots: [express, node, route, api, postgres, sql, rest]
+    regles: [injection-sql]
+  - fichier: express-connexion.js
+    titre: connexion Express avec bcrypt
+    mots: [express, node, connexion, login, session, bcrypt, authentification]
+    regles: [hasard-faible, secret-en-dur]
+  - fichier: express-fichier.js
+    titre: servir un fichier Express sans traversee
+    mots: [express, node, fichier, telecharger, download, document]
+    regles: [traversee-chemin]
+  # ------------------------------------------------------------- Django
+  - fichier: django-vue.py
+    titre: vue Django protegee (connexion, objet du proprietaire)
+    mots: [django, vue, view, detail, compte, utilisateur, acces]
+    regles: [injection-sql, csrf-desactive]
+  - fichier: django-formulaire.html
+    titre: formulaire Django avec jeton CSRF
+    mots: [django, formulaire, template, gabarit, csrf, form]
+    regles: [champ-sans-label, csrf-desactive]
+  - fichier: django-settings.py
+    titre: reglages Django de production
+    mots: [django, settings, reglages, production, deploiement, configuration]
+    regles: [secret-en-dur, debug-actif, hotes-ouverts, cookie-faible]
+  - fichier: django-sql-brut.py
+    titre: SQL brut Django parametre
+    mots: [django, sql, raw, cursor, requete, orm]
+    regles: [injection-sql]
+  # -------------------------------------------------------------- React
+  - fichier: composant-liste.jsx
+    titre: composant React qui affiche une liste
+    mots: [react, composant, component, liste, jsx, affichage]
+    regles: [img-alt, xss-dom]
+  - fichier: formulaire-controle.jsx
+    titre: formulaire React accessible
+    mots: [react, formulaire, form, saisie, champ, jsx, usestate]
+    regles: [champ-sans-label, button-type, clic-sans-clavier]
+  - fichier: chargement-donnees.jsx
+    titre: charger des donnees en React (useEffect, annulation)
+    mots: [react, useeffect, fetch, api, charger, chargement, donnees]
+    regles: []
+  - fichier: html-nettoye.jsx
+    titre: afficher du HTML en React sans faille
+    mots: [react, html, dangerouslysetinnerhtml, article, editeur, markdown]
+    regles: [innerhtml, xss-dom]
+  # ---------------------------------------------------------------- PHP
+  - fichier: php-pdo.php
+    titre: requete PHP preparee (PDO)
+    mots: [php, pdo, mysql, sql, requete, base, donnees]
+    regles: [injection-sql]
+  - fichier: php-affichage.php
+    titre: afficher une valeur en PHP sans faille
+    mots: [php, afficher, echo, affichage, page]
+    regles: [xss-serveur]
+  - fichier: php-connexion.php
+    titre: connexion PHP (password_verify, session)
+    mots: [php, connexion, login, session, mot, passe, authentification]
+    regles: [hash-faible, redirection-ouverte]
+  - fichier: php-televersement.php
+    titre: envoi de fichier PHP
+    mots: [php, televersement, upload, envoyer, fichier, image]
+    regles: [traversee-chemin, inclusion-fichier]
+  # --------------------------------------------------------------- Java
+  - fichier: java-jdbc.java
+    titre: requete JDBC preparee
+    mots: [java, jdbc, sql, requete, preparedstatement, base, donnees]
+    regles: [injection-sql]
+  - fichier: spring-controleur.java
+    titre: controleur Spring valide
+    mots: [java, spring, controleur, controller, api, rest, boot]
+    regles: [csrf-desactive]
+  - fichier: java-securite.java
+    titre: mot de passe et jeton surs en Java
+    mots: [java, spring, mot, passe, jeton, token, bcrypt, hasard]
+    regles: [hasard-faible, hash-faible]
+  - fichier: java-xml.java
+    titre: lire du XML en Java sans XXE
+    mots: [java, xml, parser, analyseur, document, xxe]
+    regles: [xxe]

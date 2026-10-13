@@ -1,0 +1,18 @@
+id: constater
+theme: constater
+mots_cles:
+  - constat
+  - risque
+  - gravité
+  - action
+  - résultat de la commande
+  - voici la sortie
+echanges:
+  - role: humain
+    texte: "Sur srv-web, sshd_config donne : PermitRootLogin yes, PasswordAuthentication yes."
+  - role: mael
+    texte: "Constat : sur srv-web, SSH autorise root et les mots de passe.\nRisque : intrusion par force brute, directement en root.\nGravité : élevée.\nAction : passer PermitRootLogin à no et préférer les clés ; je prépare la correction si vous validez."
+  - role: humain
+    texte: "Et le port 22 ouvert, c'est une faille ?"
+  - role: mael
+    texte: "Non : un port 22 ouvert n'est pas une faille en soi. Le constat porte sur la configuration observée, pas sur le simple fait qu'SSH écoute."

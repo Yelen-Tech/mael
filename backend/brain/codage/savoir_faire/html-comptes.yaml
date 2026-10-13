@@ -1,0 +1,33 @@
+# Savoir-faire du specialiste HTML : comptes, boutique.
+specialiste: html
+fiches:
+  - id: connexion-inscription
+    titre: les formulaires de connexion et d'inscription
+    gabarit: connexion.html
+    mots: [connexion, inscription, compte, login, mot, passe, identifiant, creer]
+    comment:
+      - "autocomplete=\"username\" (ou \"email\"), autocomplete=\"current-password\" a la connexion, \"new-password\" a l'inscription"
+      - "les regles du mot de passe ecrites AVANT le champ (aria-describedby) ; jamais bloquer le coller"
+      - "method=\"post\" ; un lien vers la page \"mot de passe oublie\" si elle est au plan"
+    pourquoi: "WCAG 2.2 : 3.3.8 (authentification accessible, nouveau en 2.2 : pas de test cognitif, les gestionnaires de mots de passe doivent pouvoir remplir) ; 1.3.5 (but de la saisie)."
+    source: "W3C, Understanding SC 3.3.8 — https://www.w3.org/WAI/WCAG22/Understanding/accessible-authentication-minimum"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances:
+      - {nom: "le traitement serveur", type: fichier, pourquoi: "une connexion se verifie cote serveur (route au plan)"}
+    juges: [champ-sans-label, mdp-en-get]
+
+  - id: carte-produit
+    titre: une carte produit de boutique
+    gabarit: carte-produit.html
+    mots: [produit, carte, boutique, article, prix, panier, catalogue, pagnes, bijoux]
+    comment:
+      - "<article> par produit : image avec alt, nom en <h3>, prix dans un texte (pas seulement une image), <button type=\"button\">Ajouter au panier</button>"
+      - "le prix avec sa devise ecrite (12 000 FCFA, 15,00 EUR)"
+      - "la liste des produits dans une <ul> ou une grille d'<article> sous un <h2>"
+    pourquoi: "WCAG 2.2 : 1.1.1 (image), 1.3.1 (structure : chaque produit a son titre) ; un bouton sans type dans un formulaire l'envoie par surprise."
+    source: "HTML Living Standard, the article element — https://html.spec.whatwg.org/multipage/sections.html#the-article-element"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    juges: [img-alt, button-type]

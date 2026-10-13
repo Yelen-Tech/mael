@@ -1,0 +1,44 @@
+id: cartographie-et-projections
+schema: 1
+nom: Cartographie et projections
+resume: "Représenter la Terre sphérique sur un plan impose des projections qui déforment surfaces, distances ou angles ; les systèmes géodésiques (WGS 84) et les codes EPSG encadrent toute géolocalisation informatique."
+famille: histoire-geographie
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - cartographie
+  - projection
+  - mercator
+  - wgs 84
+  - epsg
+  - sig
+  - gps
+  - coordonnées
+  - géodésie
+  - tuiles
+caracteristiques:
+  principe: "Aucune projection plane ne préserve à la fois surfaces, distances, angles et formes ; chaque carte choisit ses déformations."
+  mercator: "Projection conforme (angles préservés) créée en 1569 pour la navigation ; elle grossit fortement les hautes latitudes. Sa variante Web Mercator (EPSG:3857) équipe la plupart des cartes en ligne."
+  wgs84: "Système géodésique mondial de référence du GPS : les coordonnées latitude/longitude s'expriment le plus souvent en WGS 84 (EPSG:4326)."
+  epsg: "Registre de codes numériques identifiant chaque système de coordonnées ; confondre EPSG:4326 (degrés) et EPSG:3857 (mètres) est une erreur classique."
+  tuiles_web: "Les cartes web découpent le monde en tuiles selon des niveaux de zoom, du monde entier (zoom 0) au détail de rue."
+securite:
+  - titre: Confusion de systèmes de coordonnées
+    risque: Mélanger WGS 84 et Web Mercator, ou degrés et mètres, produit des positions fausses de plusieurs kilomètres dans les alertes et journaux de géolocalisation.
+    conseil: Déclarer explicitement le système de référence de chaque donnée et convertir avec une bibliothèque éprouvée (PROJ, PostGIS).
+    gravite: moyenne
+  - titre: Usurpation et brouillage GPS
+    risque: Le spoofing (fausses positions) et le jamming (brouillage) des signaux GNSS trompent horodatage et localisation des systèmes qui s'y fient aveuglément.
+    conseil: Croiser la position GPS avec d'autres sources et surveiller les sauts de localisation incohérents.
+    gravite: elevee
+  - titre: Lecture biaisée des cartes de menaces
+    risque: Une carte en Mercator ou en aplats de couleur exagère certaines régions et induit de mauvaises priorités de défense.
+    conseil: Choisir une projection adaptée à l'analyse et accompagner les cartes de données chiffrées brutes.
+    gravite: info
+sources:
+  - titre: EPSG Geodetic Parameter Dataset
+    url: https://epsg.org/
+  - titre: Encyclopaedia Britannica — Mercator projection
+    url: https://www.britannica.com/science/Mercator-projection

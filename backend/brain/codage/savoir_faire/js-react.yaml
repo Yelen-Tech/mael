@@ -1,0 +1,95 @@
+# Savoir-faire du specialiste JavaScript, cote INTERFACE (React, JSX).
+specialiste: js
+contexte: react
+fiches:
+  - id: react-liste
+    titre: un composant React qui affiche une liste
+    gabarit: composant-liste.jsx
+    mots: [react, composant, liste, jsx, afficher, produits, elements]
+    comment:
+      - "chaque element de liste a une key STABLE et unique (l'id de la donnee, jamais l'index du tableau)"
+      - "une liste vide se dit : {produits.length === 0 ? <p>Aucun produit.</p> : <ul>...</ul>}"
+      - "le texte s'affiche tel quel entre accolades : React l'echappe"
+    pourquoi: "une key instable fait melanger les elements et leur etat a chaque mise a jour ; l'echappement automatique de React protege du XSS tant qu'on n'utilise pas dangerouslySetInnerHTML."
+    source: "React, Rendering Lists — https://react.dev/learn/rendering-lists"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-04-08"
+    dependances:
+      - {nom: react, type: npm, pourquoi: "la bibliotheque, declaree dans package.json"}
+    juges: [xss-dom]
+
+  - id: react-chargement
+    titre: charger des donnees en React
+    gabarit: chargement-donnees.jsx
+    mots: [react, charger, chargement, fetch, api, donnees, useeffect]
+    comment:
+      - "dans useEffect : un AbortController, fetch(url, { signal }), et return () => controleur.abort()"
+      - "tester r.ok avant r.json() ; ignorer l'erreur AbortError"
+      - "trois etats affiches : chargement (role=\"status\"), erreur (role=\"alert\"), donnees"
+    pourquoi: "sans annulation, une reponse arrivee apres le depart du composant met a jour un composant mort ; role status / alert annonce l'etat aux lecteurs d'ecran (WCAG 4.1.3)."
+    source: "React, Synchronizing with Effects — https://react.dev/learn/synchronizing-with-effects"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-04-08"
+    dependances: []
+    juges: [js-erreur-execution]
+
+  - id: react-formulaire
+    titre: un formulaire React accessible
+    gabarit: formulaire-controle.jsx
+    mots: [react, formulaire, champ, saisie, controle, valider]
+    comment:
+      - "chaque champ : <label htmlFor=\"courriel\"> et <input id=\"courriel\" ...> ; value + onChange (champ controle)"
+      - "les erreurs dans un element relie par aria-describedby, et aria-invalid=\"true\" sur le champ en faute"
+      - "onSubmit sur le <form> avec event.preventDefault(), un <button type=\"submit\">"
+    pourquoi: "WCAG 2.2 : 1.3.1 et 3.3.1 (erreur identifiee et decrite) ; un champ controle garde une seule source de verite."
+    source: "React, <input> — https://react.dev/reference/react-dom/components/input"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-04-08"
+    dependances: []
+    juges: [champ-sans-label, aria-invalide]
+
+  - id: react-html-nettoye
+    titre: afficher du HTML en React sans faille
+    gabarit: html-nettoye.jsx
+    mots: [react, html, contenu, editeur, article, riche, dangerouslysetinnerhtml]
+    comment:
+      - "d'abord se passer de HTML : afficher du texte suffit presque toujours"
+      - "si du HTML est vraiment voulu : dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(html) }}"
+    pourquoi: "du HTML recu non nettoye execute le script qu'il contient (XSS, CWE-79) ; DOMPurify retire scripts et attributs d'evenement."
+    source: "DOMPurify — https://github.com/cure53/DOMPurify"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-04-08"
+    dependances:
+      - {nom: dompurify, type: npm, pourquoi: "le nettoyage du HTML"}
+    juges: [innerhtml, xss-dom]
+
+  - id: valider-formulaire-navigateur
+    contexte: navigateur
+    titre: valider un formulaire dans le navigateur
+    gabarit: valider-formulaire.js
+    mots: [valider, validation, formulaire, champ, erreur, saisie]
+    comment:
+      - "garder les attributs HTML (required, type=\"email\", minlength) ; le script complete, il ne remplace pas"
+      - "au submit : si !form.checkValidity(), event.preventDefault(), marquer aria-invalid et ecrire le message pres du champ (aria-describedby), placer le focus sur le premier champ en faute"
+      - "le serveur revalide TOUJOURS : la validation du navigateur se contourne"
+    pourquoi: "WCAG 2.2 : 3.3.1 et 3.3.3 (erreur identifiee, suggestion) ; OWASP : toute validation cote client se contourne."
+    source: "MDN, Client-side form validation — https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Forms/Form_validation"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    juges: [aria-invalide]
+
+  - id: messages-entre-fenetres
+    contexte: navigateur
+    titre: des messages entre fenetres (iframe, paiement)
+    gabarit: message-fenetres.js
+    mots: [iframe, fenetre, postmessage, paiement, message, integration]
+    comment:
+      - "envoyer avec une origine precise : autre.postMessage(donnees, \"https://paiement.exemple\") — jamais \"*\""
+      - "a la reception : if (event.origin !== \"https://paiement.exemple\") return ; puis verifier la forme des donnees"
+    pourquoi: "\"*\" livre le message a n'importe quelle page chargee dans la fenetre ; sans controle d'origine, n'importe quel site peut piloter la page (CWE-346)."
+    source: "MDN, Window.postMessage — https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    juges: [postmessage-etoile, message-sans-origine]

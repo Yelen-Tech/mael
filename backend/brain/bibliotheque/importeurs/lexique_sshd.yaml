@@ -1,0 +1,103 @@
+# Lexique francais des directives sshd, pour l'importeur ComplianceAsCode.
+#
+# Sert a retrouver les fiches (titre lisible, mots-cles francais) et a
+# traduire le risque (a relire par un humain) :
+# les valeurs attendues, gravites et numeros CIS/ANSSI viennent toujours de la
+# source. Une directive absente ici garde son titre anglais d'origine.
+#
+# `politique` = REGLE SENTINELLE (decidee a la relecture du 17/09/2026),
+# distincte de la source et affichee comme telle dans la fiche :
+#   comparaison: max          -> une valeur plus stricte (plus petite, > 0)
+#                                est conforme
+#   comparaison: maxstartups  -> debut:taux:plein, debut et plein <=, taux >=
+#   comparaison: fichier      -> n'importe quel fichier de banniere, pas none
+#   acceptees: [..]           -> plusieurs valeurs conformes
+#   gravite: ...              -> remplace la gravite de la source (motif requis)
+#   avertissement: "..."      -> precaution affichee avant toute correction
+HostbasedAuthentication:
+  titre: "authentification par hote desactivee"
+  mots_cles: [hote, hostbased, authentification, confiance]
+  risque: "Avec une relation de confiance entre hotes, la compromission d'une machine permet a l'attaquant de rebondir sans effort vers les autres."
+PermitEmptyPasswords:
+  titre: "mots de passe vides interdits"
+  mots_cles: [vide, vides, "mot de passe", passwords, connexion]
+  risque: "Garantit qu'une connexion SSH exige un mot de passe, meme si un compte a ete mal configure ailleurs (mot de passe vide)."
+DisableForwarding:
+  titre: "toutes les redirections desactivees"
+  mots_cles: [redirection, redirections, tunnel, forwarding, transfert]
+  risque: "Les redirections (ports, agent, X11) permettent de faire transiter des flux a travers le serveur et de contourner le filtrage reseau ; a desactiver sauf besoin d'exploitation avere."
+  politique:
+    avertissement: "Controle CIS de niveau 2 : desactiver les redirections casse les tunnels SSH d'administration. Valider le besoin avec le client avant de corriger."
+GSSAPIAuthentication:
+  titre: "authentification GSSAPI desactivee"
+  mots_cles: [gssapi, kerberos, authentification]
+  risque: "L'authentification GSSAPI expose ce mecanisme aux machines distantes et augmente la surface d'attaque du systeme."
+  politique:
+    avertissement: "Controle CIS de niveau 2 : verifier qu'aucune authentification Kerberos/Active Directory ne passe par SSH avant de corriger."
+IgnoreRhosts:
+  titre: "fichiers .rhosts ignores"
+  mots_cles: [rhosts, confiance, authentification]
+  risque: "Les fichiers .rhosts etablissent des relations de confiance : la compromission d'une machine permet de rebondir sans effort vers les autres."
+PermitRootLogin:
+  titre: "connexion directe du compte root"
+  mots_cles: [root, administrateur, connexion, compte, superutilisateur]
+  risque: "La connexion directe en root offre une cible unique a la force brute et supprime la tracabilite : se connecter avec un compte nominatif puis elever ses privileges permet de savoir qui a fait quoi."
+  politique:
+    gravite: elevee
+    motif: "cible unique de force brute et perte de tracabilite ; aligne sur la fiche manuelle ssh-durcissement"
+PermitUserEnvironment:
+  titre: "variables d'environnement utilisateur refusees"
+  mots_cles: [environnement, variables, utilisateur]
+  risque: "Autoriser les utilisateurs a fixer leurs variables d'environnement via SSH peut permettre de contourner des restrictions d'acces."
+UsePAM:
+  titre: "PAM active"
+  mots_cles: [pam, authentification, modules]
+  risque: "Sans PAM, les controles de compte et de session (restrictions par adresse, horaire, verrouillage de compte) ne s'appliquent pas aux connexions SSH."
+Banner:
+  titre: "banniere d'avertissement a la connexion"
+  mots_cles: [banniere, avertissement, message, legal]
+  risque: "La banniere rappelle la politique d'usage avant la connexion et facilite d'eventuelles poursuites ; elle ne doit pas reveler d'information sur le proprietaire ou le systeme."
+  politique:
+    comparaison: fichier
+ClientAliveInterval:
+  titre: "deconnexion des sessions inactives (intervalle)"
+  mots_cles: [inactif, inactive, inactivite, delai, deconnexion, timeout, session]
+  risque: "Fermer rapidement une session inactive reduit le risque qu'une personne non autorisee reprenne une session d'administration laissee ouverte."
+  politique:
+    comparaison: max
+ClientAliveCountMax:
+  titre: "deconnexion des sessions inactives (nombre de relances)"
+  mots_cles: [inactif, inactive, inactivite, deconnexion, timeout, session, relances]
+  risque: "Limite le nombre de relances sans reponse avant de fermer une session inactive : la session se termine peu apres l'intervalle d'inactivite."
+  politique:
+    comparaison: max
+LoginGraceTime:
+  titre: "delai accorde pour s'authentifier"
+  mots_cles: [delai, authentification, connexion, timeout, grace]
+  risque: "Un delai court pour s'authentifier limite la force brute et le nombre de connexions non authentifiees simultanees."
+  politique:
+    comparaison: max
+LogLevel:
+  titre: "niveau de journalisation"
+  mots_cles: [journalisation, journaux, logs, niveau, traces]
+  risque: "Un niveau INFO ou VERBOSE journalise les connexions et deconnexions, indispensable en reponse a incident ; DEBUG noie l'information utile."
+  politique:
+    acceptees: [INFO, VERBOSE]
+MaxAuthTries:
+  titre: "nombre maximal de tentatives d'authentification"
+  mots_cles: [tentatives, essais, authentification, "force brute", limite]
+  risque: "Un nombre bas de tentatives par connexion freine la force brute sur les mots de passe."
+  politique:
+    comparaison: max
+MaxSessions:
+  titre: "nombre maximal de sessions par connexion"
+  mots_cles: [sessions, limite, nombre]
+  risque: "Limiter les sessions simultanees par connexion protege la disponibilite du service SSH contre la saturation."
+  politique:
+    comparaison: max
+MaxStartups:
+  titre: "limitation des connexions non authentifiees simultanees"
+  mots_cles: [connexions, simultanees, limite, saturation, "deni de service"]
+  risque: "Limiter les connexions en attente d'authentification protege le service SSH contre la saturation (deni de service)."
+  politique:
+    comparaison: maxstartups

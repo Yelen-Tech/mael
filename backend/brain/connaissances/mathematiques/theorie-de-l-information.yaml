@@ -1,0 +1,40 @@
+id: theorie-de-l-information
+schema: 1
+nom: Théorie de l'information
+resume: Théorie fondée par Shannon qui quantifie l'information et l'incertitude par l'entropie ; elle fixe les limites de la compression, de la transmission et donne un cadre rigoureux pour évaluer la force des secrets.
+famille: mathematiques
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - théorie de l'information
+  - entropie de shannon
+  - bits d'entropie
+  - mots de passe
+  - compression
+  - canal de transmission
+  - secret parfait
+  - information mutuelle
+caracteristiques:
+  notions_fondamentales: "Entropie de Shannon comme mesure de l'incertitude d'une source ; codage de source et limites de la compression sans perte ; capacité d'un canal et codes correcteurs ; information mutuelle."
+  liens_informatiques: "Évaluation de la force des mots de passe et des clés en bits d'entropie ; chiffrement à secret parfait (masque jetable) ; détection d'exfiltration par analyse d'entropie des flux ; limites des protocoles de communication."
+  ordres_de_grandeur: "Un mot de passe de 8 caractères minuscules ne dépasse pas 38 bits d'entropie même tiré au hasard, alors qu'une clé symétrique moderne en exige 128 au minimum."
+securite:
+  - titre: Entropie réelle surestimée
+    risque: Les mots de passe choisis par des humains ont une entropie effective très inférieure au maximum théorique, ce qui accélère les attaques par dictionnaire.
+    conseil: Mesurer la robustesse contre des craqueurs réels, imposer des phrases de passe longues et hacher avec un algorithme lent et du sel.
+    gravite: elevee
+  - titre: Confondre encodage et entropie
+    risque: Une donnée encodée en base64 ou en hexadécimal paraît plus longue mais ne gagne aucun bit d'entropie réel.
+    conseil: Évaluer l'entropie de la source aléatoire, pas la longueur de la chaîne encodée.
+    gravite: moyenne
+  - titre: Générateurs aléatoires faibles
+    risque: Un générateur pseudo-aléatoire mal ensemencé produit des clés dont l'entropie réelle est faible, cassables sans attaquer l'algorithme de chiffrement.
+    conseil: Utiliser les interfaces cryptographiques du système (CSPRNG) et jamais de générateur statistique maison pour des clés.
+    gravite: critique
+sources:
+  - titre: Wikipédia — Théorie de l'information
+    url: https://fr.wikipedia.org/wiki/Th%C3%A9orie_de_l%27information
+  - titre: NIST SP 800-63B — Digital Identity Guidelines (authentification et mots de passe)
+    url: https://pages.nist.gov/800-63-3/sp800-63b.html

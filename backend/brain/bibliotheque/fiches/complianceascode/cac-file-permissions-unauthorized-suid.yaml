@@ -1,0 +1,65 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-file-permissions-unauthorized-suid
+titre: Tous les executables SUID proviennent d'un paquet
+domaine: fichiers
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: fichiers-systeme
+  type_controle: detection
+  niveaux:
+    cis: null
+    anssi: minimal
+source:
+  origine: complianceascode
+  regle: file_permissions_unauthorized_suid
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/permissions/files/file_permissions_unauthorized_suid
+mots_cles:
+- executables
+- porte derobee
+- privileges
+- setuid
+- suid
+resume: Tous les executables SUID proviennent d'un paquet. (regle file_permissions_unauthorized_suid,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: 'find / -xdev -type f -perm -4000 -print 2>/dev/null | while read -r f; do dpkg -S "$f" >/dev/null
+    2>&1 || dpkg -S "${f#/usr}" >/dev/null 2>&1 || echo "hors paquet : $f"; done'
+  but: Lister les fichiers SUID qu'aucun paquet n'a installes
+  lecture: '« hors paquet : X » = fichier SUID qu''aucun paquet n''a installe (chemin avec et sans /usr
+    essayes) ; aucune ligne = conforme.'
+controles:
+- controle: aucun SUID hors paquet
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: Un executable SUID s'execute avec les privileges du proprietaire du fichier. Des fichiers SUID
+    d'origine incertaine peuvent permettre a des utilisateurs non privilegies d'elever leurs privileges.
+    Leur presence doit etre strictement controlee sur le systeme.
+  action: Enqueter sur chaque fichier (porte derobee possible) ; retirer le bit (chmod u-s) ou le fichier.
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- dpkg -S suppose Debian/Ubuntu ; sur RHEL utiliser rpm -qf.
+- 'Un logiciel installe hors paquet (ex. /opt) peut etre legitime : a qualifier.'
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R56 (niveau minimal)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

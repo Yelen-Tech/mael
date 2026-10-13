@@ -1,0 +1,78 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-auditd-data-retention-max-log-file-action
+titre: 'auditd : journaux conserves quand la taille maximale est atteinte (max_log_file_action = keep_logs)'
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: audit
+  type_controle: configuration
+  niveaux:
+    cis: 2
+    anssi: null
+source:
+  origine: complianceascode
+  regle: auditd_data_retention_max_log_file_action
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/auditing/configure_auditd_data_retention/auditd_data_retention_max_log_file_action
+mots_cles:
+- action
+- auditd
+- file
+- journal
+- keep_logs
+- max_log_file_action
+- retention
+- rotation
+resume: 'auditd : journaux conserves quand la taille maximale est atteinte (max_log_file_action = keep_logs).
+  (regle auditd_data_retention_max_log_file_action, ComplianceAsCode 0.1.82).'
+observer:
+- commande: head -c0 /etc/audit/auditd.conf || echo 'SENTINELLE:ILLISIBLE'; grep -Es '^[[:space:]]*(export[[:space:]]+|readonly[[:space:]]+)?max_log_file_action[[:space:]]*='
+    /etc/audit/auditd.conf
+  but: Lire max_log_file_action dans /etc/audit/auditd.conf
+  lecture: Valeur de max_log_file_action ; aucune ligne = non defini.
+controles:
+- controle: max_log_file_action = keep_logs
+  bon: max_log_file_action = keep_logs
+  mauvais: autre valeur, ou non defini
+  gravite: moyenne
+  risque: La rotation automatique (rotate) efface les journaux les plus anciens ; keep_logs conserve toutes
+    les traces, pour les systemes qui ne doivent jamais en perdre (l'espace disque doit alors etre surveille).
+  action: Ecrire « max_log_file_action = keep_logs » dans /etc/audit/auditd.conf (surveiller alors l'espace
+    disque).
+  playbook: infra.cle-valeur
+  parametres:
+    fichier: /etc/audit/auditd.conf
+    cle: max_log_file_action
+    valeur: keep_logs
+    format: egal_espaces
+  evaluation:
+  - commande: 0
+    lecteur: affectations
+    comparateur: toutes_egales
+    champ: max_log_file_action
+    attendu: keep_logs
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 6.3.2.2 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 6.2.2.2 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 6.2.2.2 (niveau 2)
+verifie_le: '2026-09-18'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

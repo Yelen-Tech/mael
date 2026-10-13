@@ -1,0 +1,36 @@
+venv/
+__pycache__/
+*.pyc
+.env
+db.sqlite3
+staticfiles/
+node_modules/
+dist/
+.DS_Store
+*.log
+/backend/media/
+/infra/vllm/models/
+db.sqlite3-journal
+/backend/reports/
+/data/sources/
+/atelier/travaux/
+
+# fabrication du paquet local (pip install .)
+/backend/build/
+*.egg-info/
+
+# fichiers jetables : captures et diagnostics d'ecran, brouillons, verrous Word
+/backend/capture*
+/backend/capA.png
+/backend/diag_*.py
+/gemini-code-*.py
+~$*
+*.tsbuildinfo
+
+# entrainement (abandonne le 06/10) : 85 Mo de donnees REGENERABLES
+# par generer_donnees.py / recolter_sorties.py -- seuls les scripts sont gardes
+/entrainement/donnees/
+/entrainement/recolte/
+
+# Outils externes telecharges pour MAEL (BESOINS-DE-MAEL.md), hors depot
+backend/outils-externes/

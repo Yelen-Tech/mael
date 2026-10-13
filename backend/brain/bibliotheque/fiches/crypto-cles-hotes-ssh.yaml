@@ -1,0 +1,81 @@
+id: crypto-cles-hotes-ssh
+titre: "Clés d'hôte SSH : algorithme et taille"
+domaine: tls
+schema: 2
+version: 1
+etat: verifie
+verifie_le: 2026-09-19
+relu_par: "assistant IA (Kimi), par delegation du responsable du projet"
+teste_sur: []            # a remplir par les tests en conteneur (etape 2.5)
+applicable:
+  os: [linux]
+  services: [openssh]
+taxonomie:
+  theme: cryptographie
+  type_controle: detection
+  niveaux: {cis: null, anssi: null}   # fiche manuelle hors referentiel
+source:
+  origine: manuel
+mots_cles: [ssh, cle d'hote, cles d'hote, host key, rsa, dsa, ed25519, ecdsa,
+            empreinte, ssh-keygen]
+resume: >
+  Les cles d'hote identifient le serveur aupres des clients : si elles sont
+  faibles (DSA, RSA trop court), un attaquant peut usurper le serveur. On lit
+  le type et la taille de chaque cle publique dans /etc/ssh, sans jamais
+  toucher aux cles privees.
+
+observer:
+  # Relecture 19/09/2026 (Claude) : une commande PAR controle ; avant, une
+  # cle DSA mettait aussi le controle RSA en ecart.
+  - commande: 'for k in /etc/ssh/ssh_host_*_key.pub; do ssh-keygen -lf "$k" 2>/dev/null; done | awk ''$NF=="(DSA)"'''
+    but: "Lister les cles d'hote DSA"
+    lecture: "Chaque ligne est une cle DSA ; aucune ligne = conforme. Format : bits empreinte commentaire (ALGORITHME)."
+  - commande: "for k in /etc/ssh/ssh_host_*_key.pub; do ssh-keygen -lf \"$k\" 2>/dev/null; done"
+    but: "Voir TOUTES les cles d'hote (type et taille), pas seulement les faibles"
+    lecture: "Ed25519 et ECDSA nistp256 sont attendus ; RSA seulement a partir de 3072 bits ; DSA ne doit plus exister."
+  - commande: 'for k in /etc/ssh/ssh_host_*_key.pub; do ssh-keygen -lf "$k" 2>/dev/null; done | awk ''$NF=="(RSA)" && $1+0<3072'''
+    but: "Lister les cles d'hote RSA de moins de 3072 bits"
+    lecture: "Chaque ligne est une cle RSA trop courte ; aucune ligne = conforme."
+
+controles:
+  - controle: "Cle d'hote DSA"
+    bon: "aucune cle DSA"
+    mauvais: "une cle ssh-dss existe encore"
+    gravite: critique
+    risque: "DSA est casse en pratique (1024 bits, SHA-1) : un attaquant peut
+      usurper le serveur et intercepter les connexions des administrateurs."
+    action: "Regenerer une cle Ed25519 (ssh-keygen -t ed25519), retirer la cle
+      DSA et la directive HostKey correspondante, prevenir les clients
+      (l'empreinte change)."
+    playbook: null
+    sans_playbook: "regenerer une cle d'hote change son empreinte : alertes
+      known_hosts chez tous les clients — decision et communication humaines"
+    evaluation:
+      - {commande: 0, lecteur: lignes, comparateur: vide}
+  - controle: "Cle d'hote RSA de moins de 3072 bits"
+    bon: "RSA >= 3072 bits, ou pas de RSA (Ed25519 suffit)"
+    mauvais: "RSA 2048 bits ou moins"
+    gravite: elevee
+    risque: "Une cle RSA courte vieillit mal face a la puissance de calcul ;
+      elle sera lisible avant la fin de vie du serveur."
+    action: "Regenerer une cle RSA 3072+ ou preferer Ed25519 ; deployer la
+      nouvelle empreinte vers les clients."
+    playbook: null
+    sans_playbook: "regenerer une cle d'hote change son empreinte : alertes
+      known_hosts chez tous les clients — decision et communication humaines"
+    evaluation:
+      - {commande: 2, lecteur: lignes, comparateur: vide}
+
+pieges:
+  - "Ed25519 est une bonne signature CLASSIQUE : rapide, sure, mais PAS
+    resistante au calcul quantique. Pour le post-quantique, voir la fiche
+    crypto-ssh-echange-pq (l'echange de cles, pas la signature, est la
+    priorite : un attaquant enregistre le trafic pour le dechiffrer plus
+    tard)."
+  - "La cle publique suffit a juger : ne jamais lire ni afficher les cles
+    privees ssh_host_*_key."
+  - "Une cle faible encore annoncee dans known_hosts des clients reste un
+    risque apres regeneration : deployer la nouvelle empreinte."
+
+referentiels:
+  - {nom: ANSSI, document: "Recommandations pour un usage securise d'(Open)SSH"}

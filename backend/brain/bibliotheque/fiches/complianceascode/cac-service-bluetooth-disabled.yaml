@@ -1,0 +1,69 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-service-bluetooth-disabled
+titre: Service bluetooth desactive et arrete
+domaine: services
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: services-inutiles
+  type_controle: service-inactif
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: service_bluetooth_disabled
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/network/network-wireless/wireless_software/service_bluetooth_disabled
+mots_cles:
+- bluetooth
+- demarrage
+- service
+- services
+- systemd
+resume: Le service bluetooth doit etre desactive et arrete. (regle service_bluetooth_disabled, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: systemctl is-enabled bluetooth.service 2>/dev/null; systemctl is-active bluetooth.service
+    2>/dev/null
+  but: Lire l'etat de demarrage et d'execution de bluetooth
+  lecture: 'Attendu : « disabled » ou « masked » (ou service absent) puis « inactive ».'
+controles:
+- controle: service bluetooth disabled/inactive
+  bon: disabled ou masked, inactive (ou absent)
+  mauvais: enabled ou active
+  gravite: moyenne
+  risque: Desactiver le service bluetooth empeche le systeme de tenter des connexions vers des appareils
+    Bluetooth, ce qui comporte un risque de securite. Ce choix peut neanmoins varier selon l'utilite de
+    la connexion Bluetooth et sa portee limitee.
+  action: systemctl disable --now bluetooth.service (ou mask) apres verification du besoin.
+  playbook: infra.service-desactiver
+  parametres:
+    service: bluetooth
+  evaluation:
+  - commande: 0
+    lecteur: systemctl
+    comparateur: inactif
+pieges:
+- 'Un service peut etre demarre par une socket systemd : verifier aussi « systemctl list-sockets ».'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 3.1.3 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 3.1.3 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 3.1.3 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

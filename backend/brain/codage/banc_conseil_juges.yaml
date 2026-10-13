@@ -1,0 +1,117 @@
+# Banc du CONSEIL SUR LES VERDICTS DES JUGES — 10 VRAIS cas, valides par le
+# responsable le 08/10/2026 : plans et defauts recopies TELS QUELS des
+# journaux des missions du 08/10 (MAEL-missions/<mission>/JOURNAL.md).
+# Les conclusions attendues sont ecrites a la main (tableau valide).
+#
+# Champs verifies : ce que doivent contenir impertinences, solutions,
+# hypotheses, ne_pas, reserves ; la cible (fichier qui porte la correction)
+# d'une solution ; la confiance.
+cas:
+  - id: footer-traite-en-page
+    mission: 04-demande-vague
+    demande: "un site pour mon salon de coiffure"
+    plan: [index.html, header.html, services.html, gallery.html, contact.html, footer.html, styles.css, main.css, js/app.js]
+    existants: [index.html, header.html, services.html, gallery.html, contact.html, footer.html, styles.css, main.css, js/app.js]
+    defauts:
+      - {fichier: header.html, ligne: 1, regle: critere-non-tenu, message: "critere de la tache non tenu : a un <main> (le contenu principal)"}
+      - {fichier: footer.html, ligne: 1, regle: critere-non-tenu, message: "critere de la tache non tenu : a un <main> (le contenu principal)"}
+      - {fichier: footer.html, ligne: 1, regle: critere-non-tenu, message: "critere de la tache non tenu : a un <h1> (le titre de la page)"}
+    attendu:
+      impertinences: ["morceau"]
+      solutions: ["ne plus exiger"]
+
+  - id: style-css-jamais-ecrit
+    mission: 09-site-association-8-pages
+    demande: "le site complet d'une association culturelle avec huit pages : accueil, a propos, actualites, agenda des evenements, galerie de photos, adhesion avec un formulaire, faire un don, et contact ; un menu commun sur toutes les pages, adapte au telephone"
+    plan: [index.html, about.html, news.html, events.html, gallery.html, subscribe.html, donate.html, contact.html, style.css]
+    existants: [index.html, about.html, news.html, events.html, gallery.html, subscribe.html, donate.html, contact.html]
+    coupures: {style.css: [boucle, trop-long]}
+    defauts:
+      - {fichier: about.html, ligne: 7, regle: fichier-absent, message: "href=\"style.css\" : ce fichier n'existe pas (lien casse)"}
+      - {fichier: contact.html, ligne: 7, regle: fichier-absent, message: "href=\"style.css\" : ce fichier n'existe pas (lien casse)"}
+    attendu:
+      solutions: ["plusieurs parties"]
+      cible: style.css
+      ne_pas: ["reecrire les pages"]
+
+  - id: contraste-vu-sur-la-page
+    mission: 05-demande-contradictoire
+    demande: "un site d'une seule page avec trois pages pour une association de quartier, avec un formulaire d'inscription"
+    plan: [index.html, about.html, contact.html, styles.css, script.js]
+    existants: [index.html, about.html, contact.html, styles.css, script.js]
+    defauts:
+      - {fichier: about.html, ligne: 20, regle: contraste, message: "contraste mesure 2.63:1 (? sur ?), 4.5:1 exige [axe-core link-in-text-block]"}
+    attendu:
+      solutions: ["mesurees"]
+      cible: styles.css
+
+  - id: script-null
+    mission: 06-script-interactif
+    demande: "une page qui calcule le prix d'une commande de pains : l'utilisateur choisit la quantite de chaque pain dans un formulaire et le total s'affiche en direct, plus une foire aux questions qui s'ouvre et se ferme au clic"
+    plan: [index.html, foireaux-questions.html, styles.css, foireaux-questions.css, script.js, foireaux-questions.js]
+    existants: [index.html, foireaux-questions.html, styles.css, foireaux-questions.css, script.js, foireaux-questions.js]
+    defauts:
+      - {fichier: foireaux-questions.js, ligne: 47, regle: js-erreur-execution, message: "erreur a l'execution : Cannot read properties of null (reading 'addEventListener') [navigateur]"}
+    attendu:
+      hypotheses: ["absent", "defer"]
+      solutions: ["verifie chaque element"]
+      cible: foireaux-questions.js
+
+  - id: bouton-trop-petit
+    mission: 06-script-interactif
+    demande: "une page qui calcule le prix d'une commande de pains : l'utilisateur choisit la quantite de chaque pain dans un formulaire et le total s'affiche en direct, plus une foire aux questions qui s'ouvre et se ferme au clic"
+    plan: [index.html, foireaux-questions.html, styles.css, foireaux-questions.css, script.js, foireaux-questions.js]
+    existants: [index.html, foireaux-questions.html, styles.css, foireaux-questions.css, script.js, foireaux-questions.js]
+    defauts:
+      - {fichier: foireaux-questions.html, ligne: 29, regle: cible-trop-petite, message: "All touch targets must be 24px large, or leave sufficient space [axe-core target-size]"}
+    attendu:
+      solutions: ["24 px"]
+      cible: styles.css
+
+  - id: lien-vers-contact-oublie
+    mission: 01-boulangerie-3-pages
+    demande: "un site pour une boulangerie avec trois pages : un accueil, une galerie de photos de nos pains, et une page de contact avec un formulaire"
+    plan: [index.html, photos.html, contact.html, style.css, js/app.js]
+    existants: [index.html, photos.html, contact.html, style.css, js/app.js]
+    defauts:
+      - {fichier: photos.html, ligne: 1, regle: critere-non-tenu, message: "critere de la tache non tenu : mene a contact.html : <a href=\"contact.html\">"}
+    attendu:
+      solutions: ["rappeler"]
+      hypotheses: ["deja ecrit"]
+
+  - id: lien-hors-du-plan
+    mission: 04-demande-vague
+    demande: "un site pour mon salon de coiffure"
+    plan: [index.html, services.html, gallery.html, contact.html, styles.css]
+    existants: [index.html, services.html, gallery.html, contact.html, styles.css]
+    defauts:
+      - {fichier: contact.html, ligne: 5, regle: fichier-absent, message: "href=\"/mentions-legales\" : ce fichier n'existe pas (lien casse)"}
+    attendu:
+      impertinences: ["hors du plan"]
+      ne_pas: ["inventer"]
+
+  - id: deux-pages-pour-une
+    mission: 06-script-interactif
+    demande: "une page qui calcule le prix d'une commande de pains : l'utilisateur choisit la quantite de chaque pain dans un formulaire et le total s'affiche en direct, plus une foire aux questions qui s'ouvre et se ferme au clic"
+    plan: [index.html, foireaux-questions.html, styles.css, script.js]
+    existants: []
+    attendu:
+      impertinences: ["2 pages au plan pour 1"]
+
+  - id: plan-aux-chemins-absolus
+    mission: 07-api-python-base-de-donnees
+    demande: "une API web en Python avec Flask pour gerer les produits d'une boutique, stockes dans une base de donnees SQLite : lister les produits, voir un produit, ajouter un produit et le supprimer, avec des tests automatiques"
+    plan: []
+    plan_brut: "- /index.html : Page d'accueil de la boutique avec liste des produits\n- /app.py : Le serveur Flask pour gerer les requetes API\n- /tests/test_app.py : Tests automatiques pour l'application Flask"
+    attendu:
+      impertinences: ["relatifs"]
+
+  - id: php-jamais-execute
+    mission: 08-formulaire-php
+    demande: "un formulaire de contact en PHP qui verifie les champs (nom, courriel, message), protege contre les failles et enregistre les messages dans une base de donnees avec PDO"
+    plan: [index.html, styles.css, script.js, contact.php]
+    existants: [index.html, styles.css, script.js, contact.php]
+    limites: ["code serveur LU mais non execute (couches 1 a 5) : contact.php"]
+    attendu:
+      reserves: ["sous reserve"]
+      confiance: moyenne

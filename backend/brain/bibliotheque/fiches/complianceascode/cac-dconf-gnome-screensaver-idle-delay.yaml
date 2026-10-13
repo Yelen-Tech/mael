@@ -1,0 +1,85 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-dconf-gnome-screensaver-idle-delay
+titre: 'GNOME : mise en veille apres 900 s d''inactivite au plus (idle-delay)'
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: sessions
+  type_controle: configuration
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: dconf_gnome_screensaver_idle_delay
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/software/gnome/gnome_screen_locking/dconf_gnome_screensaver_idle_delay
+mots_cles:
+- delay
+- ecran
+- gnome
+- idle
+- idle-delay
+- inactivite
+- veille
+- verrouillage
+resume: 'GNOME : mise en veille apres 900 s d''inactivite au plus (idle-delay). (regle dconf_gnome_screensaver_idle_delay,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: dpkg -s gdm3 >/dev/null 2>&1 || echo 'SENTINELLE:SANS_OBJET'; grep -EsR '^[[:space:]]*(export[[:space:]]+|readonly[[:space:]]+)?idle-delay[[:space:]]*='
+    /etc/dconf/db/
+  but: Lire idle-delay dans /etc/dconf/db/
+  lecture: Valeur de idle-delay ; aucune ligne = non defini.
+controles:
+- controle: idle-delay entre 1 et 900
+  bon: idle-delay=uint32 900
+  mauvais: autre valeur, ou non defini
+  gravite: moyenne
+  risque: Un poste laisse ouvert pendant une absence peut etre utilise par n'importe qui. Mettre la session
+    en veille apres une courte inactivite (15 minutes au plus) prepare son verrouillage automatique.
+  action: Ecrire idle-delay=uint32 900 (section [org/gnome/desktop/session]), verrouiller, puis dconf
+    update.
+  playbook: null
+  sans_playbook: 'fichier a sections ou repertoire (dconf, sssd) : correction manuelle'
+  evaluation:
+  - commande: 0
+    lecteur: affectations
+    comparateur: entre
+    champ: idle-delay
+    attendu:
+    - 1
+    - '900'
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 1.7.4 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 1.7.5 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 1.7.4 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 1.7.5 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 1.7.4 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 1.7.5 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

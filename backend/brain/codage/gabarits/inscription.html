@@ -1,0 +1,11 @@
+<form method="post" action="/inscription">
+  <label for="nom">Nom complet</label>
+  <input id="nom" name="nom" type="text" autocomplete="name" required>
+  <label for="courriel">Courriel</label>
+  <input id="courriel" name="courriel" type="email" autocomplete="email" required>
+  <label for="mdp">Mot de passe</label>
+  <input id="mdp" name="mdp" type="password" autocomplete="new-password" minlength="12" required aria-describedby="aide-mdp">
+  <p id="aide-mdp">12 caractères minimum.</p>
+  <label><input name="cgu" type="checkbox" required> J'accepte les conditions</label>
+  <button type="submit">Créer mon compte</button>
+</form>

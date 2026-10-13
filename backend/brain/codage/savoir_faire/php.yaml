@@ -1,0 +1,34 @@
+# Savoir-faire du specialiste PHP.
+specialiste: php
+fiches:
+  - id: formulaire-php-sur
+    titre: un formulaire PHP qui verifie et protege
+    mots: [php, formulaire, contact, verifier, champs, courriel, email, message, failles]
+    comment:
+      - "accepter seulement POST ; lire avec trim($_POST['nom'] ?? '') ; verifier le courriel avec filter_var($email, FILTER_VALIDATE_EMAIL)"
+      - "jeton CSRF : bin2hex(random_bytes(32)) en session, champ cache dans le formulaire, controle avec hash_equals()"
+      - "tout ce qui est affiche passe par htmlspecialchars($v, ENT_QUOTES, 'UTF-8')"
+      - "apres un envoi reussi : header('Location: merci.php'); exit; (pas de double envoi au rechargement)"
+    pourquoi: "OWASP : sans jeton, un autre site peut envoyer le formulaire a la place de l'utilisateur (CSRF) ; sans echappement, un message peut injecter du script (XSS, CWE-79)."
+    source: "OWASP CSRF Prevention Cheat Sheet — https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances:
+      - {nom: session, type: php-ext, pourquoi: "le jeton CSRF vit dans la session"}
+    juges: [xss-serveur, csrf-desactive]
+
+  - id: pdo-requetes-preparees
+    titre: enregistrer en base avec PDO
+    mots: [pdo, base, donnees, enregistre, enregistrer, sqlite, mysql, requete]
+    comment:
+      - "new PDO($dsn, $user, $mdp, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]) ; le mot de passe vient de getenv(), jamais ecrit dans le code"
+      - "$st = $pdo->prepare('INSERT INTO messages (nom, email, message) VALUES (?, ?, ?)'); $st->execute([$nom, $email, $message]);"
+      - "le schema : CREATE TABLE IF NOT EXISTS messages (id INTEGER PRIMARY KEY, nom TEXT NOT NULL, email TEXT NOT NULL, message TEXT NOT NULL, cree_le TEXT DEFAULT CURRENT_TIMESTAMP)"
+    pourquoi: "une requete preparee separe le code SQL des donnees (OWASP, CWE-89) ; ERRMODE_EXCEPTION empeche une erreur SQL de passer en silence ; un secret ecrit dans le code finit publie."
+    source: "PHP, PDO::prepare — https://www.php.net/manual/en/pdo.prepare.php"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances:
+      - {nom: PDO, type: php-ext, pourquoi: "l'acces a la base"}
+      - {nom: pdo_sqlite, type: php-ext, pourquoi: "le pilote SQLite de PDO : a activer dans php.ini (extension=pdo_sqlite) s'il manque"}
+    juges: [injection-sql, secret-en-dur]

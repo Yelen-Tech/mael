@@ -1,0 +1,76 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-file-owner-etc-shells
+titre: 'Proprietaire de /etc/shells : root'
+domaine: fichiers
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: fichiers-systeme
+  type_controle: proprietaire-fichier
+  niveaux:
+    cis: 1
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: file_owner_etc_shells
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/permissions/files/permissions_important_account_files/file_owner_etc_shells
+mots_cles:
+- chown
+- fichier
+- fichiers
+- proprietaire
+- shells
+resume: 'Proprietaire de /etc/shells : root : proprietaire root. (regle file_owner_etc_shells, ComplianceAsCode
+  0.1.82).'
+observer:
+- commande: stat -c '%a %U %G %n' /etc/shells 2>/dev/null
+  but: Lire droits, proprietaire et groupe (proprietaire)
+  lecture: '2e colonne = proprietaire : attendu root. Aucune ligne = fichier absent.'
+controles:
+- controle: proprietaire = root
+  bon: proprietaire root
+  mauvais: toute autre valeur
+  gravite: moyenne
+  risque: 'Le fichier /etc/shells contient la liste des chemins complets des shells du systeme. Beaucoup
+    de programmes systeme l''utilisent : il doit etre protege.'
+  action: chown root sur les fichiers concernes.
+  playbook: infra.fichier-proprietaire
+  parametres:
+    chemin: /etc/shells
+    proprietaire: root
+  evaluation:
+  - commande: 0
+    lecteur: stat
+    champ: proprietaire
+    comparateur: dans
+    attendu:
+    - '0'
+    - root
+pieges:
+- 'Sans sudo, certains fichiers (ex. /etc/shadow) ne sont pas lisibles par stat/find : relancer avec les
+  droits root.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 7.1.9 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 7.1.9 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 7.1.9 (niveau 1)
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R50 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

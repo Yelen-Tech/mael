@@ -1,0 +1,69 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-partition-for-var-log
+titre: Partition separee pour /var/log
+domaine: journaux
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: journalisation
+  type_controle: partition-separee
+  niveaux:
+    cis: 2
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: partition_for_var_log
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/software/disk_partitioning/partition_for_var_log
+mots_cles:
+- disque
+- montage
+- partition
+- separee
+resume: /var/log doit etre une partition (ou un montage) separe. (regle partition_for_var_log, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: findmnt -kn /var/log
+  but: Voir si /var/log est un montage separe
+  lecture: Une ligne = montage separe ; aucune = meme partition que son parent.
+controles:
+- controle: /var/log monte a part
+  bon: montage separe
+  mauvais: /var/log sur la partition de son parent
+  gravite: faible
+  risque: 'Une partition dediee a /var/log separe les journaux du reste de /var : des journaux qui debordent
+    ne remplissent pas le disque du systeme, et un disque plein ailleurs n''empeche pas la journalisation.'
+  action: 'Prevoir une partition (ou un volume LVM) dedie a /var/log et la declarer dans /etc/fstab :
+    se planifie, surtout sur un systeme en production.'
+  playbook: null
+  sans_playbook: 'partition dediee : repartitionnement a planifier, non automatisable'
+  evaluation:
+  - commande: 0
+    lecteur: findmnt
+    comparateur: monte
+pieges:
+- 'Repartitionner un systeme en service est risque : a planifier (ou a appliquer aux prochaines installations).'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 1.1.2.6.1 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 1.1.2.6.1 (niveau 2)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 1.1.2.6.1 (niveau 2)
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R28 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

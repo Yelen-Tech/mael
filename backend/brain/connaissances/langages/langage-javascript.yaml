@@ -1,0 +1,49 @@
+id: langage-javascript
+schema: 1
+nom: JavaScript
+resume: Langage interprété à typage dynamique et faible, du navigateur au serveur (Node.js) ; coercitions implicites et injection dans le DOM sont ses pièges dominants.
+famille: langage
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - javascript
+  - js
+  - node
+  - xss
+  - dom
+  - prototype
+  - eval
+  - npm
+  - navigateur
+caracteristiques:
+  paradigmes:
+    - événementiel
+    - orienté objet (prototypes)
+    - fonctionnel
+  typage: dynamique, faible (coercitions implicites nombreuses, == vs ===)
+  execution: interprété avec compilation à la volée (V8, SpiderMonkey, JavaScriptCore)
+  memoire: ramasse-miettes
+securite:
+  - titre: Injection dans le DOM (XSS)
+    risque: Écrire une entrée utilisateur via innerHTML ou équivalent exécute du script dans le navigateur de la victime.
+    conseil: Utiliser textContent, échapper toute donnée affichée et imposer une Content-Security-Policy.
+    gravite: critique
+  - titre: Pollution de prototype
+    risque: Une fusion récursive d'objets non fiables peut écrire dans __proto__ et modifier le comportement de tout le programme.
+    conseil: Valider les clés fusionnées, préférer Object.create(null) ou Map pour les données externes.
+    gravite: elevee
+  - titre: Évaluation dynamique (eval, Function)
+    risque: eval ou new Function sur une entrée externe exécute du code arbitraire.
+    conseil: Ne jamais évaluer une entrée externe ; JSON.parse pour les données.
+    gravite: elevee
+  - titre: Dépendances npm malveillantes
+    risque: La chaîne de dépendances npm est un vecteur majeur (typosquattage, paquets compromis, scripts postinstall).
+    conseil: Épingler les versions (lockfile), auditer (npm audit) et limiter les scripts d'installation.
+    gravite: moyenne
+sources:
+  - titre: MDN Web Docs — Sécurité web
+    url: https://developer.mozilla.org/fr/docs/Web/Security
+  - titre: OWASP — Cross Site Scripting (XSS)
+    url: https://owasp.org/www-community/attacks/xss/

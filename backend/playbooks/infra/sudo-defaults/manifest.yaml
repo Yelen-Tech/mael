@@ -1,0 +1,20 @@
+id: infra.sudo-defaults
+titre: "sudo : option Defaults"
+description: >
+  Ecrit « Defaults option[=valeur] » dans /etc/sudoers.d/60-mael (lu apres /etc/sudoers : la derniere valeur l'emporte). visudo -c valide ; sinon retour arriere, comme la source.
+risque: moyen
+parametres:
+  - {nom: option, type: string, requis: true, motif: '^[a-z_]+$'}
+  - {nom: valeur, type: string, requis: false, motif: '^[A-Za-z0-9._/-]*$'}
+racine_requise: true
+reversible: true
+simulation: true
+idempotent: true
+redemarrage: false
+indisponibilite: "0 s"
+source:
+  origine: complianceascode
+  version: 0.1.82
+  gabarit: shared/templates/sudo_defaults_option/bash.template
+  ecarts: "fichier dedie /etc/sudoers.d/60-mael au lieu d'editer /etc/sudoers"
+references: [ANSSI-BP-028, CIS Benchmarks]

@@ -1,0 +1,43 @@
+id: chimie-des-capteurs
+schema: 1
+nom: Chimie des capteurs
+resume: "Principes de détection chimique (gaz, humidité, particules) et leur usage en salle machine : détection d'incendie naissant, de fuite de fluide frigorigène et de qualité d'air."
+famille: chimie
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - capteur
+  - détection de gaz
+  - salle machine
+  - vesda
+  - détection incendie
+  - humidité
+  - fluide frigorigène
+  - électrochimique
+  - infrarouge
+  - faux positif
+caracteristiques:
+  principes_de_detection: "Cellules électrochimiques (CO, gaz toxiques), capteurs infrarouges (CO2, hydrocarbures), capteurs à oxyde métallique, aspiration de fumée (type VESDA)."
+  usages_salle_machine: "Détection très précoce de fumée, surveillance de température et d'humidité, détection de fuite d'eau et de fluide frigorigène des climatisations."
+  limites: "Chaque technologie a des sensibilités croisées et une dérive dans le temps ; les cellules électrochimiques ont une durée de vie limitée (de l'ordre de quelques années)."
+  lien_informatique: "Les capteurs environnementaux remontent dans la supervision (SNMP, Modbus) : ils font partie du périmètre à surveiller comme tout équipement connecté."
+securite:
+  - titre: Capteurs non étalonnés ou en fin de vie
+    risque: Une cellule dérivée ne détecte plus un dégagement de gaz ou une surchauffe, ou déclenche de faux positifs qui finissent ignorés par les équipes.
+    conseil: Planifier étalonnage et remplacement selon les préconisations constructeur, et tester les alarmes de bout en bout.
+    gravite: elevee
+  - titre: Supervision environnementale exposée
+    risque: Une sonde ou une passerelle Modbus/SNMP mal protégée permet de masquer une alarme incendie ou de fausser les mesures de température.
+    conseil: Isoler le réseau des capteurs, changer les identifiants par défaut et journaliser les remontées d'alarme de façon inviolable.
+    gravite: moyenne
+  - titre: Négliger la coupure automatique sur alarme
+    risque: Sans couplage entre détection et action (extinction, coupure électrique, arrêt de climatisation), une alarme fiable reste sans effet sur le sinistre.
+    conseil: Tester régulièrement la chaîne complète détection -> décision -> action, y compris pendant les exercices d'évacuation.
+    gravite: moyenne
+sources:
+  - titre: Wikipédia — Capteur
+    url: https://fr.wikipedia.org/wiki/Capteur
+  - titre: NFPA — Standard for the Fire Protection of Information Technology Equipment (NFPA 75)
+    url: https://www.nfpa.org/codes-and-standards/nfpa-75-standard-development/75

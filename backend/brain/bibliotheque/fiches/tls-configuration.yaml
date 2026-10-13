@@ -1,0 +1,57 @@
+id: tls-configuration
+titre: "Configuration TLS d'un service"
+domaine: tls
+schema: 2
+version: 1
+etat: verifie
+verifie_le: 2026-09-16
+teste_sur: []            # a remplir par les tests en conteneur (etape 2.5)
+applicable:
+  os: [linux]
+taxonomie:
+  theme: tls
+  type_controle: observation
+  niveaux: {cis: null, anssi: null}   # fiche manuelle hors referentiel
+source:
+  origine: manuel
+mots_cles: [tls, ssl, https, certificat, chiffrement, expiration, protocole, "443"]
+resume: >
+  On verifie qu'un service expose en TLS utilise des protocoles surs (TLS 1.2 /
+  1.3), un certificat valide et non expire, et pas de version obsolete
+  (SSLv3, TLS 1.0/1.1). Lecture seule, cote reseau.
+
+observer:
+  - commande: "echo | openssl s_client -connect DOMAINE:443 -servername DOMAINE 2>/dev/null | openssl x509 -noout -dates -subject -issuer"
+    but: "Lire les dates de validite et l'identite du certificat"
+    lecture: "notBefore / notAfter (expiration), subject (le domaine), issuer (l'autorite)."
+  - commande: "for p in tls1 tls1_1 tls1_2 tls1_3; do echo -n \"$p: \"; echo | openssl s_client -connect DOMAINE:443 -$p 2>/dev/null | grep -q 'Cipher is' && echo ACCEPTE || echo refuse; done"
+    but: "Voir quels protocoles le serveur accepte"
+    lecture: "tls1 et tls1_1 devraient etre 'refuse' ; tls1_2 et/ou tls1_3 'ACCEPTE'."
+
+controles:
+  - controle: "Certificat expire"
+    bon: "notAfter dans le futur, avec marge"
+    mauvais: "date depassee ou < 15 jours"
+    gravite: elevee
+    risque: "Un certificat expire casse la confiance : avertissements navigateur, interception possible."
+    action: "Renouveler le certificat (souvent via certbot / le fournisseur)."
+    playbook: null
+    sans_playbook: "certificats et suites TLS propres a chaque service : correction manuelle"
+  - controle: "Protocoles obsoletes (TLS 1.0 / 1.1 / SSLv3)"
+    bon: "refuses"
+    mauvais: "acceptes"
+    gravite: moyenne
+    risque: "Protocoles vulnerables (BEAST, POODLE) exploitables pour dechiffrer ou degrader la connexion."
+    action: "Desactiver TLS < 1.2 dans la configuration du service (nginx/apache)."
+    playbook: null
+    sans_playbook: "certificats et suites TLS propres a chaque service : correction manuelle"
+
+pieges:
+  - "Remplacer DOMAINE par le vrai nom. -servername (SNI) est indispensable en hebergement mutualise, sinon on lit le mauvais certificat."
+  - "Un port TLS n'est pas toujours 443 (mail: 465/993, LDAP: 636). Adapter le port."
+  - "openssl doit etre recent ; les vieilles versions ne connaissent pas -tls1_3."
+
+referentiels:
+  - {nom: ANSSI, document: "Recommandations de securite relatives a TLS"}
+  - {nom: RFC, document: "RFC 8996 - depreciation de TLS 1.0 et TLS 1.1"}
+  - {nom: autre, document: "Mozilla SSL Configuration Generator"}

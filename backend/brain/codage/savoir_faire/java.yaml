@@ -1,0 +1,62 @@
+# Savoir-faire du specialiste Java.
+specialiste: java
+fiches:
+  - id: jdbc-preparee
+    titre: une requete JDBC preparee
+    gabarit: java-jdbc.java
+    mots: [java, jdbc, sql, base, requete, donnees]
+    comment:
+      - "PreparedStatement avec des ? : ps.setLong(1, id) — jamais de concatenation de chaines dans le SQL"
+      - "try-with-resources pour Connection, PreparedStatement et ResultSet (fermeture garantie)"
+    pourquoi: "injection SQL (OWASP, CWE-89) ; une connexion jamais fermee epuise le pool en quelques minutes de charge."
+    source: "Oracle, Using Prepared Statements — https://docs.oracle.com/javase/tutorial/jdbc/basics/prepared.html"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances:
+      - {nom: "pilote JDBC de la base", type: fichier, pourquoi: "declare dans pom.xml ou build.gradle"}
+    juges: [injection-sql]
+
+  - id: spring-controleur-valide
+    titre: un controleur Spring valide
+    gabarit: spring-controleur.java
+    mots: [spring, controleur, api, route, validation, java, rest]
+    comment:
+      - "@RestController ; le corps en @Valid @RequestBody avec des contraintes (@NotBlank, @Positive) sur le DTO"
+      - "ResponseEntity.status(HttpStatus.CREATED) a la creation ; 404 quand rien n'est trouve"
+      - "jamais l'entite JPA exposee telle quelle : un DTO d'entree, un DTO de sortie"
+    pourquoi: "Jakarta Bean Validation refuse la donnee avant le code (400) ; exposer l'entite permet de modifier des champs internes (mass assignment, OWASP API3)."
+    source: "Spring, Validation — https://docs.spring.io/spring-framework/reference/core/validation/beanvalidation.html"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-04-08"
+    dependances:
+      - {nom: spring-boot-starter-validation, type: fichier, pourquoi: "la validation, declaree dans pom.xml"}
+    juges: []
+
+  - id: java-secrets-et-mots-de-passe
+    titre: mots de passe et jetons surs en Java
+    gabarit: java-securite.java
+    mots: [java, mot, passe, jeton, token, hasard, securite, bcrypt]
+    comment:
+      - "le hasard d'un jeton : SecureRandom (jamais java.util.Random) ; 32 octets encodes en Base64 URL"
+      - "les mots de passe : BCryptPasswordEncoder (Spring Security) ; comparer avec matches()"
+    pourquoi: "java.util.Random se devine a partir de quelques valeurs (CWE-338) ; un hachage rapide (SHA-256 seul) se casse par force brute."
+    source: "OWASP Password Storage Cheat Sheet — https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances:
+      - {nom: spring-security-crypto, type: fichier, pourquoi: "BCryptPasswordEncoder, declare dans pom.xml"}
+    juges: [hasard-faible, hash-faible]
+
+  - id: java-xml-sans-xxe
+    titre: lire du XML en Java sans XXE
+    gabarit: java-xml.java
+    mots: [java, xml, lire, analyser, parser, document]
+    comment:
+      - "DocumentBuilderFactory : setFeature(\"http://apache.org/xml/features/disallow-doctype-decl\", true)"
+      - "FEATURE_SECURE_PROCESSING a true, setXIncludeAware(false), setExpandEntityReferences(false)"
+    pourquoi: "un XML avec une entite externe lit des fichiers du serveur ou appelle le reseau interne (XXE, CWE-611)."
+    source: "OWASP XXE Prevention Cheat Sheet — https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    juges: [xxe]

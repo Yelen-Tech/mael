@@ -1,0 +1,45 @@
+id: langage-go
+schema: 1
+nom: Go
+resume: Langage compilé à ramasse-miettes pensé pour la concurrence ; la mémoire y est sûre mais les courses entre goroutines restent possibles.
+famille: langage
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - go
+  - golang
+  - goroutine
+  - course
+  - race
+  - concurrence
+  - injection
+  - sql
+  - ramasse-miettes
+  - canal
+caracteristiques:
+  paradigmes:
+    - impératif
+    - concurrent (goroutines et canaux)
+  typage: statique, fort
+  execution: compilé en code machine natif
+  memoire: ramasse-miettes (GC)
+securite:
+  - titre: Courses entre goroutines
+    risque: Des goroutines accédant sans synchronisation à une même donnée provoquent des courses (data races) et des états incohérents.
+    conseil: Tester avec go vet et le détecteur -race, synchroniser par canaux ou sync.Mutex.
+    gravite: elevee
+  - titre: Injection SQL par concaténation
+    risque: Construire une requête SQL en concaténant des entrées utilisateur permet l'injection SQL.
+    conseil: Utiliser database/sql avec des requêtes paramétrées (placeholders ? ou $1).
+    gravite: critique
+  - titre: Faux sentiment de sécurité mémoire
+    risque: Le GC supprime les fuites d'usage mais pas les fuites logiques (goroutines bloquées, références retenues).
+    conseil: Surveiller les goroutines orphelines et profiler la mémoire en production.
+    gravite: info
+sources:
+  - titre: Documentation officielle Go
+    url: https://go.dev/doc/
+  - titre: Go Memory Model
+    url: https://go.dev/ref/mem

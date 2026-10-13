@@ -1,0 +1,62 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-accounts-polyinstantiated-var-tmp
+titre: /var/tmp polyinstancie par utilisateur (pam_namespace)
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: sessions
+  type_controle: detection
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: accounts_polyinstantiated_var_tmp
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/accounts/accounts-session/accounts_polyinstantiated_var_tmp
+mots_cles:
+- /var/tmp
+- namespace
+- polyinstanciation
+- temporaire
+resume: /var/tmp polyinstancie par utilisateur (pam_namespace). (regle accounts_polyinstantiated_var_tmp,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: grep -Es '^[[:space:]]*/var/tmp[[:space:]]+/var/tmp/tmp-inst/[[:space:]]+level[[:space:]]+root,adm'
+    /etc/security/namespace.conf
+  but: Lire la configuration de polyinstanciation de /var/tmp
+  lecture: Une ligne = conforme ; aucune = ecart.
+controles:
+- controle: « /var/tmp /var/tmp/tmp-inst/ level root,adm » dans namespace.conf
+  bon: une ligne
+  mauvais: aucune ligne
+  gravite: faible
+  risque: Un /var/tmp commun a tous les utilisateurs permet des attaques entre comptes (fichier piege,
+    lien symbolique, lecture de fichiers temporaires). La polyinstanciation donne a chaque utilisateur
+    son propre /var/tmp prive.
+  action: mkdir --mode 000 /var/tmp/tmp-inst puis ajouter « /var/tmp /var/tmp/tmp-inst/ level root,adm
+    » a /etc/security/namespace.conf.
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: presente
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R55 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

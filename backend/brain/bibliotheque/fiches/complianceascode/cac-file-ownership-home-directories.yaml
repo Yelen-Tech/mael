@@ -1,0 +1,70 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-file-ownership-home-directories
+titre: Chaque repertoire personnel appartient a son utilisateur
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: sessions
+  type_controle: detection
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: file_ownership_home_directories
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/accounts/accounts-session/file_ownership_home_directories
+mots_cles:
+- chown
+- home
+- proprietaire
+- repertoire personnel
+resume: Chaque repertoire personnel appartient a son utilisateur. (regle file_ownership_home_directories,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: 'awk -F: ''($3 >= 1000 && $7 !~ /(nologin|false)$/) {print $6}'' /etc/passwd | xargs -r stat
+    -c ''%U %n'' 2>/dev/null | awk ''BEGIN{while ((getline l < "/etc/passwd") > 0) {split(l, c, ":");
+    if (c[3] >= 1000) h[c[6]] = c[1]}} ($2 in h) && $1 != h[$2] {print $2" appartient a "$1" (attendu
+    "h[$2]")"}'''
+  but: Comparer le proprietaire de chaque repertoire personnel a son utilisateur
+  lecture: Chaque ligne est un element en defaut ; aucune ligne = conforme.
+controles:
+- controle: proprietaire = utilisateur
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: Si un utilisateur ne possede pas son repertoire personnel, des utilisateurs non autorises peuvent
+    lire ou modifier ses fichiers, et l'utilisateur peut lui-meme perdre l'acces a ses propres fichiers.
+  action: chown COMPTE /home/COMPTE
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 7.2.9 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 7.2.9 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 7.2.9 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

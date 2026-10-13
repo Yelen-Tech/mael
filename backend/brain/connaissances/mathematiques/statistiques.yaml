@@ -1,0 +1,39 @@
+id: statistiques
+schema: 1
+nom: Statistiques
+resume: Ensemble des méthodes de collecte, de description et d'inférence à partir de données ; en cybersécurité elles alimentent la détection d'anomalies, la mesure des risques et l'interprétation des métriques de sécurité.
+famille: mathematiques
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - statistiques
+  - moyenne
+  - médiane
+  - écart-type
+  - intervalle de confiance
+  - test d'hypothèse
+  - corrélation
+  - détection d'anomalies
+  - régression
+caracteristiques:
+  notions_fondamentales: "Statistique descriptive (moyenne, médiane, quantiles, écart-type) ; estimation et intervalles de confiance ; tests d'hypothèses, erreurs de première et de seconde espèce ; corrélation et régression."
+  liens_informatiques: "Détection d'anomalies sur journaux, trafic réseau et comportements utilisateurs ; mesure de performance des contrôles de sécurité ; sondages et échantillonnage lors d'audits sur de grands parcs."
+  ordres_de_grandeur: "Un échantillon trop petit rend tout intervalle de confiance très large ; avec 30 observations, la marge d'erreur d'une proportion à 95 % de confiance peut encore atteindre près de 20 points de pourcentage."
+securite:
+  - titre: Corrélation prise pour causalité
+    risque: Conclure qu'un contrôle « cause » une baisse des incidents à partir d'une simple corrélation mène à des décisions de sécurité infondées.
+    conseil: Exiger un protocole de comparaison (groupe témoin, avant/après contrôlé) avant d'attribuer un effet.
+    gravite: moyenne
+  - titre: Moyennes trompeuses
+    risque: Une moyenne de temps de détection ou de latence masque les queues de distribution où se cachent les incidents graves.
+    conseil: Rapporter médiane et quantiles extrêmes (p95, p99) plutôt que la seule moyenne.
+    gravite: moyenne
+  - titre: Seuils d'anomalie mal calibrés
+    risque: Un seuil statistique fixé sans tenir compte du volume d'alertes génère soit une surcharge de faux positifs, soit des angles morts.
+    conseil: Calibrer les seuils sur des données historiques étiquetées et mesurer le taux de faux positifs en production.
+    gravite: elevee
+sources:
+  - titre: Wikipédia — Statistique
+    url: https://fr.wikipedia.org/wiki/Statistique

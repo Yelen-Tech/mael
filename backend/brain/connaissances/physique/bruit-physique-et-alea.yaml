@@ -1,0 +1,44 @@
+id: bruit-physique-et-alea
+schema: 1
+nom: "Bruit physique et aléa (TRNG)"
+resume: Les générateurs physiques de nombres aléatoires extraient l'entropie de phénomènes imprévisibles (bruit thermique, quantique) ; une entropie insuffisante est une cause historique de clés cryptographiques faibles.
+famille: physique
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - bruit physique
+  - aléa
+  - entropie
+  - générateur de nombres aléatoires
+  - trng
+  - rng
+  - bruit thermique
+  - shot noise
+  - rdrand
+  - sp 800-90b
+  - clé cryptographique
+caracteristiques:
+  notions_fondamentales: "entropie au sens de Shannon, sources de bruit (thermique, grenaille, oscillateurs en anneau, photonique quantique), post-traitement et conditionnement"
+  ordres_de_grandeur: "une clé AES-256 exige 256 bits d'entropie ; les débits des sources physiques vont de quelques bits/s (dispositifs quantiques) à plusieurs Mbit/s (oscillateurs sur puce)"
+  normes: "NIST SP 800-90A/B/C encadrent la conception et l'évaluation des générateurs ; les instructions matérielles RDRAND/RDSEED exposent l'aléa des processeurs"
+  lien_informatique: "fondation de toute la cryptographie : génération de clés, nonces, sels, identifiants de session ; /dev/random et getrandom() sous Linux"
+securite:
+  - titre: Entropie insuffisante au démarrage
+    risque: "Sur systèmes embarqués ou machines virtuelles fraîchement clonées, l'entropie est quasi nulle au premier démarrage et les clés générées sont prévisibles ou dupliquées."
+    conseil: "Différer la génération de clés jusqu'à confirmation d'entropie suffisante et persister un graine (seed) entre les démarrages."
+    gravite: critique
+  - titre: Générateur logiciel affaibli
+    risque: "Une erreur d'implémentation peut réduire l'entropie à quelques bits, comme le bogue Debian d'OpenSSL (2008) qui a rendu prévisibles des milliers de clés SSH et TLS."
+    conseil: "Ne jamais modifier le chemin de génération d'aléa sans revue et tester les clés générées contre les bases de clés faibles connues."
+    gravite: critique
+  - titre: Confiance aveugle en RDRAND
+    risque: "Une instruction matérielle opaque peut être biaisée ou compromise sans que le logiciel puisse le détecter seul."
+    conseil: "Mélanger plusieurs sources d'entropie (matérielle et système) comme le font les noyaux modernes plutôt que d'utiliser RDRAND directement."
+    gravite: moyenne
+sources:
+  - titre: "NIST — SP 800-90B: Recommendation for the Entropy Sources Used for Random Bit Generation"
+    url: https://csrc.nist.gov/pubs/sp/800/90/b/final
+  - titre: "Linux man-pages — random(4) : kernel random number generator"
+    url: https://man7.org/linux/man-pages/man4/random.4.html

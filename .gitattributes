@@ -1,0 +1,9 @@
+# Les playbooks s'executent sur des serveurs Linux : CRLF = « bad interpreter ».
+*.sh        text eol=lf
+*.yaml      text eol=lf
+*.yml       text eol=lf
+Dockerfile  text eol=lf
+installer.sh text eol=lf
+# Fichiers tiers embarques : verifies par empreinte sha256 (VERSION).
+# Git ne doit JAMAIS changer leurs fins de ligne, sinon l empreinte casse.
+backend/brain/codage/vendor/** -text

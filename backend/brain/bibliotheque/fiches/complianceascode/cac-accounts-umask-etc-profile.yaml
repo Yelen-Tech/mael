@@ -1,0 +1,77 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-accounts-umask-etc-profile
+titre: umask par defaut dans /etc/profile (027 ou plus strict)
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: sessions
+  type_controle: configuration
+  niveaux:
+    cis: 1
+    anssi: renforce
+source:
+  origine: complianceascode
+  regle: accounts_umask_etc_profile
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/accounts/accounts-session/user_umask/accounts_umask_etc_profile
+mots_cles:
+- droits
+- profile
+- shell
+- umask
+resume: umask par defaut dans /etc/profile (027 ou plus strict). (regle accounts_umask_etc_profile, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: grep -EsR '^[[:space:]]*umask[[:space:]]' /etc/profile /etc/profile.d/
+  but: Lire umask dans /etc/profile, /etc/profile.d/
+  lecture: Valeur de umask ; aucune ligne = non defini.
+controles:
+- controle: umask au moins aussi strict que 027
+  bon: umask 027
+  mauvais: autre valeur, ou non defini
+  gravite: moyenne
+  risque: Le umask determine les droits appliques aux fichiers a leur creation. Un umask mal configure
+    peut donner a des fichiers des droits excessifs, lisibles ou inscriptibles par des utilisateurs non
+    autorises.
+  action: Ecrire « umask 027 » dans /etc/profile (ou un fichier de /etc/profile.d/).
+  playbook: infra.cle-valeur
+  parametres:
+    fichier: /etc/profile
+    cle: umask
+    valeur: '027'
+    format: espace
+  evaluation:
+  - commande: 0
+    lecteur: affectations
+    comparateur: umask
+    champ: umask
+    attendu: '027'
+    sep: espace
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 5.4.3.3 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 5.4.3.3 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 5.4.3.3 (niveau 1)
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R36 (niveau renforce)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

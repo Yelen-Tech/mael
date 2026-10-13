@@ -1,0 +1,43 @@
+id: geopolitique-du-numerique
+schema: 1
+nom: Géopolitique du numérique
+resume: "Souveraineté des États sur les données et les réseaux : câbles sous-marins, lois extraterritoriales (RGPD, CLOUD Act) et fragmentations d'Internet redessinent les risques auxquels sont exposés les systèmes d'information."
+famille: histoire-geographie
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - géopolitique
+  - souveraineté numérique
+  - câbles sous-marins
+  - rgpd
+  - cloud act
+  - sanctions
+  - splinternet
+  - localisation des données
+  - état-nation
+caracteristiques:
+  cables_sous_marins: "La quasi-totalité du trafic intercontinental transite par quelques centaines de câbles sous-marins, points de concentration stratégiques surveillés par les États."
+  souverainete: "Les États affirment une souveraineté sur les données et infrastructures situées sur leur territoire, avec des lois de localisation parfois contraignantes."
+  rgpd: "Règlement européen 2016/679, applicable depuis mai 2018 : protection des données personnelles, sanctions jusqu'à 4 % du chiffre d'affaires mondial."
+  cloud_act: "Loi américaine de 2018 permettant aux autorités fédérales d'exiger des données détenues par des fournisseurs américains, même stockées à l'étranger."
+  fragmentation: "Certains pays filtrent ou cloisonnent leur Internet national (grand pare-feu chinois, Runet russe), ce que l'on nomme parfois splinternet."
+securite:
+  - titre: Conflits de lois sur les données
+    risque: Des données hébergées chez un fournisseur étranger peuvent être saisies en vertu d'une loi extraterritoriale malgré les engagements de confidentialité.
+    conseil: Connaître la nationalité juridique des fournisseurs et chiffrer les données sensibles avec des clés maîtrisées localement.
+    gravite: elevee
+  - titre: Dépendances aux infrastructures critiques
+    risque: Coupure ou sabotage de câbles sous-marins, blocus de services cloud ou retrait de fournisseurs pour raisons politiques isolent des services entiers.
+    conseil: Prévoir des plans de repli multi-fournisseurs et des routes réseau diversifiées pour les activités critiques.
+    gravite: elevee
+  - titre: Sanctions et listes d'embargo
+    risque: Traiter avec des entités sous sanctions (pays, entreprises, personnes) expose à des poursuites et à des coupures de service.
+    conseil: Intégrer les listes de sanctions (UE, OFAC, ONU) dans les processus de conformité et de filtrage des clients et fournisseurs.
+    gravite: moyenne
+sources:
+  - titre: Règlement (UE) 2016/679 — RGPD (texte officiel)
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+  - titre: UIT — Union internationale des télécommunications (site officiel)
+    url: https://www.itu.int/fr/Pages/default.aspx

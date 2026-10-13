@@ -1,0 +1,21 @@
+id: infra.module-interdit
+titre: "Module noyau : interdire le chargement"
+description: >
+  Ecrit « install MODULE /bin/false » et « blacklist MODULE » dans
+  /etc/modprobe.d/MODULE.conf, comme la source. Le module deja charge le
+  reste jusqu'au prochain redemarrage (ou dechargement manuel).
+risque: faible
+parametres:
+  - {nom: module, type: string, requis: true, motif: '^[a-z0-9_-]+$'}
+racine_requise: true
+reversible: true
+simulation: true
+idempotent: true
+redemarrage: true
+indisponibilite: "0 s (effet complet au redemarrage)"
+source:
+  origine: complianceascode
+  version: 0.1.82
+  gabarit: shared/templates/kernel_module_disabled/bash.template
+  ecarts: "fichier d'origine sauvegarde"
+references: [ANSSI-BP-028, CIS Benchmarks]

@@ -1,0 +1,78 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-sysctl-net-ipv6-conf-default-router-solicitations
+titre: Parametre noyau net.ipv6.conf.default.router_solicitations = 0
+domaine: reseau
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: parametres-reseau
+  type_controle: parametre-noyau
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: sysctl_net_ipv6_conf_default_router_solicitations
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/network/network-ipv6/configuring_ipv6/sysctl_net_ipv6_conf_default_router_solicitations
+mots_cles:
+- conf
+- default
+- ipv6
+- net.ipv6.conf.default.router_solicitations
+- noyau
+- parametre
+- router
+- solicitations
+- sysctl
+resume: Le parametre noyau net.ipv6.conf.default.router_solicitations doit valoir 0, en memoire et de
+  facon persistante. (regle sysctl_net_ipv6_conf_default_router_solicitations, ComplianceAsCode 0.1.82).
+observer:
+- commande: sysctl -n net.ipv6.conf.default.router_solicitations
+  but: Lire la valeur ACTIVE de net.ipv6.conf.default.router_solicitations
+  lecture: 'Attendu : 0.'
+- commande: grep -Rs '^[[:space:]]*net\.ipv6\.conf\.default\.router_solicitations[[:space:]]*=' /etc/sysctl.conf
+    /etc/sysctl.d/ /run/sysctl.d/ /usr/local/lib/sysctl.d/ /usr/lib/sysctl.d/ 2>/dev/null
+  but: Verifier la valeur PERSISTANTE (appliquee au redemarrage)
+  lecture: 'Valeur retenue au demarrage = derniere affectation (fichiers tries par nom, /etc/sysctl.conf
+    en dernier) : attendu « net.ipv6.conf.default.router_solicitations = 0 » ; aucune ligne = non persistant.'
+controles:
+- controle: net.ipv6.conf.default.router_solicitations = 0
+  bon: 0 en memoire et au demarrage
+  mauvais: autre valeur, ou valeur non persistante
+  gravite: moyenne
+  risque: Ne pas solliciter les routeurs evite que la machine se signale sur le reseau et attende une
+    configuration qu'un attaquant pourrait fournir.
+  action: Ecrire « net.ipv6.conf.default.router_solicitations = 0 » dans /etc/sysctl.conf (lu en dernier)
+    puis appliquer avec sysctl --system.
+  playbook: infra.sysctl
+  parametres:
+    cle: net.ipv6.conf.default.router_solicitations
+    valeur: '0'
+  evaluation:
+  - commande: 0
+    lecteur: valeur
+    comparateur: egal
+    attendu: '0'
+  - commande: 1
+    lecteur: affectations
+    comparateur: toutes_egales
+    champ: net.ipv6.conf.default.router_solicitations
+    attendu: '0'
+    precedence: sysctl
+pieges:
+- 'Le fichier lu en dernier l''emporte (ordre alphabetique dans /etc/sysctl.d/) : verifier qu''aucun autre
+  fichier ne remet une autre valeur.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R13 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

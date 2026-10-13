@@ -1,0 +1,580 @@
+{
+ "systeme": "ubuntu:26.04",
+ "date": "2026-09-22T16:22:27.571565+00:00",
+ "playbooks": [
+  {
+   "playbook": "app.en-tetes-http",
+   "etapes": [],
+   "ecarts": [],
+   "ok": false,
+   "vm": null,
+   "cadre": "4 fiche(s) citent ce playbook mais sans parametres : ils viennent du client (domaine, certificat), rien a inventer ici"
+  },
+  {
+   "playbook": "infra.audit-regles",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer",
+     "code": 4,
+     "note": "auditd absent (augenrules introuvable)."
+    },
+    {
+     "etape": "re-mesure",
+     "code": 1,
+     "note": "indetermine"
+    },
+    {
+     "etape": "revenir",
+     "code": 0,
+     "note": ""
+    }
+   ],
+   "ecarts": [],
+   "ok": false,
+   "vm": null,
+   "cadre": "re-mesure sans objet sur cette machine : commande impossible"
+  },
+  {
+   "playbook": "infra.cle-valeur",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "verifier",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "re-mesure",
+     "code": 0,
+     "note": "conforme"
+    },
+    {
+     "etape": "revenir",
+     "code": 0,
+     "note": ""
+    }
+   ],
+   "ecarts": [],
+   "ok": true,
+   "vm": null,
+   "cadre": null
+  },
+  {
+   "playbook": "infra.fichier-droits",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "verifier",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "re-mesure",
+     "code": 0,
+     "note": "conforme"
+    },
+    {
+     "etape": "revenir",
+     "code": 0,
+     "note": ""
+    }
+   ],
+   "ecarts": [],
+   "ok": true,
+   "vm": null,
+   "cadre": null
+  },
+  {
+   "playbook": "infra.fichier-existence",
+   "etapes": [],
+   "ecarts": [],
+   "ok": false,
+   "vm": null,
+   "cadre": "AUCUNE fiche ne cite ce playbook : trou de couverture a combler, pas un defaut du playbook"
+  },
+  {
+   "playbook": "infra.fichier-groupe",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "verifier",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "re-mesure",
+     "code": 0,
+     "note": "conforme"
+    },
+    {
+     "etape": "revenir",
+     "code": 0,
+     "note": ""
+    }
+   ],
+   "ecarts": [],
+   "ok": true,
+   "vm": null,
+   "cadre": null
+  },
+  {
+   "playbook": "infra.fichier-proprietaire",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "verifier",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "re-mesure",
+     "code": 0,
+     "note": "conforme"
+    },
+    {
+     "etape": "revenir",
+     "code": 0,
+     "note": ""
+    }
+   ],
+   "ecarts": [],
+   "ok": true,
+   "vm": null,
+   "cadre": null
+  },
+  {
+   "playbook": "infra.fichiers-motif",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "verifier",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "re-mesure",
+     "code": 1,
+     "note": "indetermine"
+    },
+    {
+     "etape": "revenir",
+     "code": 0,
+     "note": ""
+    }
+   ],
+   "ecarts": [],
+   "ok": false,
+   "vm": null,
+   "cadre": "re-mesure sans objet sur cette machine : aucune ligne"
+  },
+  {
+   "playbook": "infra.grub-argument",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": "grep: /etc/default/grub: No such file or directory"
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 5,
+     "note": "Refus : /etc/default/grub absent (autre chargeur ?)."
+    }
+   ],
+   "ecarts": [],
+   "ok": false,
+   "vm": null,
+   "cadre": "le playbook a refuse d'agir (prealable absent de cette machine) : Refus : /etc/default/grub absent (autre chargeur ?)."
+  },
+  {
+   "playbook": "infra.module-interdit",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "verifier",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "re-mesure",
+     "code": 0,
+     "note": "conforme"
+    },
+    {
+     "etape": "revenir",
+     "code": 0,
+     "note": ""
+    }
+   ],
+   "ecarts": [],
+   "ok": true,
+   "vm": null,
+   "cadre": null
+  },
+  {
+   "playbook": "infra.montage-option",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 5,
+     "note": "Refus : /boot n'est pas declare dans /etc/fstab (partition dediee a creer d'abord)."
+    }
+   ],
+   "ecarts": [],
+   "ok": false,
+   "vm": null,
+   "cadre": "le playbook a refuse d'agir (prealable absent de cette machine) : Refus : /boot n'est pas declare dans /etc/fstab (partition dediee a creer d'abord)."
+  },
+  {
+   "playbook": "infra.paquet-installer",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "verifier",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "re-mesure",
+     "code": 0,
+     "note": "conforme"
+    },
+    {
+     "etape": "revenir",
+     "code": 0,
+     "note": ""
+    }
+   ],
+   "ecarts": [],
+   "ok": true,
+   "vm": null,
+   "cadre": null
+  },
+  {
+   "playbook": "infra.paquet-retirer",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "verifier",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "re-mesure",
+     "code": 0,
+     "note": "conforme"
+    },
+    {
+     "etape": "revenir",
+     "code": 0,
+     "note": ""
+    }
+   ],
+   "ecarts": [],
+   "ok": true,
+   "vm": null,
+   "cadre": null
+  },
+  {
+   "playbook": "infra.service-activer",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer",
+     "code": 0,
+     "note": "Synchronizing state of apparmor.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.\nExecuting: "
+    },
+    {
+     "etape": "verifier",
+     "code": 1,
+     "note": "Non conforme : apparmor enabled / inactive."
+    },
+    {
+     "etape": "revenir",
+     "code": 0,
+     "note": ""
+    }
+   ],
+   "ecarts": [],
+   "ok": false,
+   "vm": null,
+   "cadre": "systemd refuse de demarrer cette unite sur cette machine (ConditionResult=no) : Condition: start condition unmet at Tue 2026-09-22 18:22:07 CEST; 2s ago Sep 22 18:14:17 TBV22 systemd[1]: apparmor.service - Load AppArmor profiles skipped, unmet condition check "
+  },
+  {
+   "playbook": "infra.service-desactiver",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer",
+     "code": 0,
+     "note": "Synchronizing state of apport.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.\nExecuting: /u"
+    },
+    {
+     "etape": "verifier",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "re-mesure",
+     "code": 0,
+     "note": "conforme"
+    },
+    {
+     "etape": "revenir",
+     "code": 0,
+     "note": "Removed '/etc/systemd/system/apport.service'.\nSynchronizing state of apport.service with SysV service script with /usr/l"
+    }
+   ],
+   "ecarts": [],
+   "ok": true,
+   "vm": null,
+   "cadre": null
+  },
+  {
+   "playbook": "infra.ssh-directive",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 5,
+     "note": "Refus : /etc/ssh/sshd_config n'inclut pas /etc/ssh/sshd_config.d/*.conf ; correction a faire a la main."
+    }
+   ],
+   "ecarts": [],
+   "ok": false,
+   "vm": null,
+   "cadre": "le playbook a refuse d'agir (prealable absent de cette machine) : Refus : /etc/ssh/sshd_config n'inclut pas /etc/ssh/sshd_config.d/*.conf ; correction a faire a la main."
+  },
+  {
+   "playbook": "infra.sudo-defaults",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "verifier",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "re-mesure",
+     "code": 0,
+     "note": "conforme"
+    },
+    {
+     "etape": "revenir",
+     "code": 0,
+     "note": ""
+    }
+   ],
+   "ecarts": [],
+   "ok": true,
+   "vm": null,
+   "cadre": null
+  },
+  {
+   "playbook": "infra.sysctl",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "verifier",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "re-mesure",
+     "code": 0,
+     "note": "conforme"
+    },
+    {
+     "etape": "revenir",
+     "code": 0,
+     "note": ""
+    }
+   ],
+   "ecarts": [],
+   "ok": true,
+   "vm": null,
+   "cadre": null
+  }
+ ],
+ "juges": 10,
+ "reussis": 10,
+ "a_tester_en_vm": 0,
+ "hors_cadre": 8
+}

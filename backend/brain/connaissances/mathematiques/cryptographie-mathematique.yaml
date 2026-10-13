@@ -1,0 +1,41 @@
+id: cryptographie-mathematique
+schema: 1
+nom: Cryptographie mathématique
+resume: "Fondements mathématiques du chiffrement asymétrique : RSA repose sur la factorisation, les courbes elliptiques sur le logarithme discret, et le post-quantique sur les réseaux euclidiens face à l'algorithme de Shor."
+famille: mathematiques
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - cryptographie
+  - rsa
+  - factorisation
+  - courbes elliptiques
+  - logarithme discret
+  - post-quantique
+  - algorithme de shor
+  - réseaux euclidiens
+  - clé publique
+caracteristiques:
+  notions_fondamentales: "RSA et la difficulté présumée de la factorisation de grands entiers ; courbes elliptiques et logarithme discret ; échange de clés Diffie-Hellman ; cryptographie post-quantique sur réseaux euclidiens (ML-KEM, ML-DSA standardisés par le NIST en 2024)."
+  liens_informatiques: "TLS, certificats et infrastructures à clés publiques ; signatures de paquets logiciels et de mises à jour ; planification de la migration post-quantique (agilité cryptographique)."
+  ordres_de_grandeur: "Une clé RSA de 2048 bits offre une sécurité classique estimée autour de 112 bits, comparable à une courbe elliptique de 224 bits ; l'algorithme de Shor casserait les deux sur un ordinateur quantique de taille suffisante."
+securite:
+  - titre: Clés RSA trop courtes ou mal générées
+    risque: Des clés inférieures à 2048 bits ou issues d'un générateur faible sont factorisables, ce qui compromet toutes les communications qu'elles protègent.
+    conseil: Imposer au minimum 2048 bits, vérifier la qualité du générateur aléatoire et bannir les clés partageant un facteur commun.
+    gravite: critique
+  - titre: Algorithme de Shor et menace quantique
+    risque: Un ordinateur quantique de taille suffisante casserait RSA et ECC ; les données chiffrées interceptées aujourd'hui pourraient être déchiffrées plus tard (harvest now, decrypt later).
+    conseil: Inventorier les usages de cryptographie asymétrique et préparer une migration vers les algorithmes post-quantiques standardisés par le NIST.
+    gravite: elevee
+  - titre: Cryptographie maison
+    risque: Implémenter soi-même RSA ou ECC introduit des fuites (padding incorrect, canaux auxiliaires de temporisation) que les mathématiques seules ne préviennent pas.
+    conseil: N'utiliser que des bibliothèques éprouvées et des constructions standardisées (OAEP pour RSA, PSS pour les signatures).
+    gravite: critique
+sources:
+  - titre: NIST FIPS 203 — Module-Lattice-Based Key-Encapsulation Mechanism Standard
+    url: https://csrc.nist.gov/pubs/fips/203/final
+  - titre: Wikipédia — Chiffrement RSA
+    url: https://fr.wikipedia.org/wiki/Chiffrement_RSA

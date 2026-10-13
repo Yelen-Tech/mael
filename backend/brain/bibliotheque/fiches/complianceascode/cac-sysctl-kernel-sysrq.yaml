@@ -1,0 +1,75 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-sysctl-kernel-sysrq
+titre: Parametre noyau kernel.sysrq = 0
+domaine: noyau
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: parametres-noyau
+  type_controle: parametre-noyau
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: sysctl_kernel_sysrq
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/permissions/restrictions/sysctl_kernel_sysrq
+mots_cles:
+- kernel
+- kernel.sysrq
+- noyau
+- parametre
+- sysctl
+- sysrq
+resume: Le parametre noyau kernel.sysrq doit valoir 0, en memoire et de facon persistante. (regle sysctl_kernel_sysrq,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: sysctl -n kernel.sysrq
+  but: Lire la valeur ACTIVE de kernel.sysrq
+  lecture: 'Attendu : 0.'
+- commande: grep -Rs '^[[:space:]]*kernel\.sysrq[[:space:]]*=' /etc/sysctl.conf /etc/sysctl.d/ /run/sysctl.d/
+    /usr/local/lib/sysctl.d/ /usr/lib/sysctl.d/ 2>/dev/null
+  but: Verifier la valeur PERSISTANTE (appliquee au redemarrage)
+  lecture: 'Valeur retenue au demarrage = derniere affectation (fichiers tries par nom, /etc/sysctl.conf
+    en dernier) : attendu « kernel.sysrq = 0 » ; aucune ligne = non persistant.'
+controles:
+- controle: kernel.sysrq = 0
+  bon: 0 en memoire et au demarrage
+  mauvais: autre valeur, ou valeur non persistante
+  gravite: moyenne
+  risque: 'La touche SysRq envoie des commandes directement au noyau : afficher des informations sensibles,
+    redemarrer ou arreter la machine. Qui a acces a la console peut ainsi contourner le systeme.'
+  action: Ecrire « kernel.sysrq = 0 » dans /etc/sysctl.conf (lu en dernier) puis appliquer avec sysctl
+    --system.
+  playbook: infra.sysctl
+  parametres:
+    cle: kernel.sysrq
+    valeur: '0'
+  evaluation:
+  - commande: 0
+    lecteur: valeur
+    comparateur: egal
+    attendu: '0'
+  - commande: 1
+    lecteur: affectations
+    comparateur: toutes_egales
+    champ: kernel.sysrq
+    attendu: '0'
+    precedence: sysctl
+pieges:
+- 'Le fichier lu en dernier l''emporte (ordre alphabetique dans /etc/sysctl.d/) : verifier qu''aucun autre
+  fichier ne remet une autre valeur.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R9 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

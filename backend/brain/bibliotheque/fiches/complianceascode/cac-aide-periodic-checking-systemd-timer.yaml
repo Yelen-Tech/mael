@@ -1,0 +1,67 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-aide-periodic-checking-systemd-timer
+titre: AIDE execute periodiquement (minuteur systemd)
+domaine: systeme
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==24.04
+taxonomie:
+  theme: integrite
+  type_controle: detection
+  niveaux:
+    cis: 1
+    anssi: eleve
+source:
+  origine: complianceascode
+  regle: aide_periodic_checking_systemd_timer
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/software/integrity/software-integrity/aide/aide_periodic_checking_systemd_timer
+mots_cles:
+- aide
+- controle
+- minuteur
+- timer
+resume: AIDE execute periodiquement (minuteur systemd). (regle aide_periodic_checking_systemd_timer, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: dpkg -s aide >/dev/null 2>&1 || echo 'SENTINELLE:SANS_OBJET'; systemctl is-enabled dailyaidecheck.timer
+    aidecheck.timer 2>/dev/null | grep -x enabled
+  but: Verifier le minuteur de controle AIDE
+  lecture: Une ligne = conforme ; aucune = ecart.
+controles:
+- controle: minuteur AIDE active
+  bon: une ligne « enabled »
+  mauvais: aucun minuteur
+  gravite: moyenne
+  risque: 'AIDE ne se lance pas seul : sans execution reguliere, une modification non autorisee des fichiers
+    systeme n''est jamais signalee.'
+  action: systemctl enable --now dailyaidecheck.timer
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: presente
+pieges:
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 6.3.2 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 6.3.2 (niveau 1)
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R76 (niveau eleve)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

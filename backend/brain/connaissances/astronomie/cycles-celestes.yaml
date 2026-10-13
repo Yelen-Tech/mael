@@ -1,0 +1,42 @@
+id: cycles-celestes
+schema: 1
+nom: "Cycles célestes (saisons, Lune, éclipses)"
+resume: "Saisons, phases lunaires et éclipses résultent de la géométrie Soleil-Terre-Lune ; le cycle de Saros, d'environ 18 ans et 11 jours, permet de prévoir les éclipses avec une grande régularité."
+famille: astronomie
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - saisons
+  - inclinaison axiale
+  - phases lunaires
+  - éclipse
+  - saros
+  - lunaison
+  - solstice
+  - équinoxe
+caracteristiques:
+  saisons: "elles viennent de l'inclinaison de l'axe terrestre d'environ 23,44 degrés par rapport au plan de l'écliptique, et non de la distance au Soleil ; l'année tropique vaut environ 365,2422 jours"
+  phases_lunaires: "la lunaison (mois synodique) vaut environ 29,53 jours ; le mois sidéral, mesuré par rapport aux étoiles, vaut environ 27,32 jours"
+  eclipses: "une éclipse solaire exige une nouvelle Lune au voisinage d'un nœud de l'orbite lunaire, une éclipse lunaire une pleine Lune dans les mêmes conditions ; la totalité solaire n'est visible que sur une bande étroite"
+  cycle_de_saros: "période d'environ 18 ans 11 jours 8 heures (223 lunaisons) au terme de laquelle les géométries Soleil-Terre-Lune se répètent, produisant une série d'éclipses semblables"
+  lien_informatique: "les années tropiques et lunaisons non entières expliquent la complexité des calendriers logiciels et la nécessité de bibliothèques de dates éprouvées plutôt que de calculs maison"
+securite:
+  - titre: Calculs calendaires maison
+    risque: "Approximer l'année à 365 jours ou le mois à 30 jours produit des erreurs cumulées dans les échéances, les abonnements et les fenêtres de validité de jetons ou de certificats."
+    conseil: "Utiliser les bibliothèques de dates de la plateforme (datetime, java.time, ICU) qui implémentent années bissextiles et calendriers réels."
+    gravite: moyenne
+  - titre: Planification d'opérations sensibles aux éclipses
+    risque: "Les éclipses solaires perturbent la production photovoltaïque et la charge des réseaux, et les éclipses lunaires privent les satellites d'alimentation ; une supervision non préparée génère de fausses alertes."
+    conseil: "Intégrer les prévisions d'éclipses publiées par la NASA dans la planification des systèmes énergétiques et spatiaux."
+    gravite: info
+  - titre: Confusion entre année tropique et année civile
+    risque: "Ignorer l'écart entre année tropique et calendrier grégorien fausse les calculs de long terme (rendements annualisés, modèles climatiques, calendriers luni-solaires)."
+    conseil: "Documenter la convention d'année utilisée dans tout calcul financier ou scientifique et la vérifier sur des horizons pluriannuels."
+    gravite: info
+sources:
+  - titre: "NASA — Eclipse Web Site (prévisions d'éclipses et Saros)"
+    url: https://eclipse.gsfc.nasa.gov/eclipse.html
+  - titre: "Wikipédia — Saros (astronomie)"
+    url: https://fr.wikipedia.org/wiki/Saros

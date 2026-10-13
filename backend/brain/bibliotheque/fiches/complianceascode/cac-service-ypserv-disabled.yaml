@@ -1,0 +1,67 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-service-ypserv-disabled
+titre: Service ypserv desactive et arrete
+domaine: services
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: services-inutiles
+  type_controle: service-inactif
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: service_ypserv_disabled
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/services/obsolete/nis/service_ypserv_disabled
+mots_cles:
+- demarrage
+- service
+- services
+- systemd
+- ypserv
+resume: Le service ypserv doit etre desactive et arrete. (regle service_ypserv_disabled, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: systemctl is-enabled ypserv.service 2>/dev/null; systemctl is-active ypserv.service 2>/dev/null
+  but: Lire l'etat de demarrage et d'execution de ypserv
+  lecture: 'Attendu : « disabled » ou « masked » (ou service absent) puis « inactive ».'
+controles:
+- controle: service ypserv disabled/inactive
+  bon: disabled ou masked, inactive (ou absent)
+  mauvais: enabled ou active
+  gravite: moyenne
+  risque: ypserv est le serveur NIS, dont l'authentification n'est pas chiffree. Le desactiver garantit
+    que la machine ne sert pas de serveur NIS ou NIS+ ; a garder seulement s'il est utilise.
+  action: systemctl disable --now ypserv.service (ou mask) apres verification du besoin.
+  playbook: infra.service-desactiver
+  parametres:
+    service: ypserv
+  evaluation:
+  - commande: 0
+    lecteur: systemctl
+    comparateur: inactif
+pieges:
+- 'Un service peut etre demarre par une socket systemd : verifier aussi « systemctl list-sockets ».'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 2.1.10 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 2.1.10 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 2.1.10 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

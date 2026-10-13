@@ -1,0 +1,48 @@
+# Savoir-faire du specialiste PHP : comptes, affichage, fichiers envoyes.
+specialiste: php
+fiches:
+  - id: php-connexion
+    titre: une connexion PHP sure
+    gabarit: php-connexion.php
+    mots: [connexion, login, compte, mot, passe, session, php]
+    comment:
+      - "a l'inscription : password_hash($mdp, PASSWORD_DEFAULT) ; a la connexion : password_verify($mdp, $compte['hash'])"
+      - "le compte cherche par requete preparee ; le meme message (401) dans les deux cas d'echec"
+      - "session_regenerate_id(true) des que la connexion reussit"
+    pourquoi: "OWASP Authentication : PASSWORD_DEFAULT suit l'algorithme recommande par PHP ; regenerer l'identifiant empeche la fixation de session."
+    source: "PHP, password_hash — https://www.php.net/manual/en/function.password-hash.php"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances:
+      - {nom: session, type: php-ext, pourquoi: "la session de l'utilisateur connecte"}
+    juges: [hash-faible, injection-sql]
+
+  - id: php-affichage-sur
+    titre: afficher une valeur en PHP sans faille
+    gabarit: php-affichage.php
+    mots: [afficher, affichage, echo, valeur, nom, message, php, page]
+    comment:
+      - "une fonction e($v) { return htmlspecialchars($v, ENT_QUOTES, 'UTF-8'); } pour TOUT ce qui vient de l'utilisateur ou de la base"
+      - "dans un attribut aussi : value=\"<?= e($nom) ?>\""
+    pourquoi: "XSS (CWE-79) : un nom contenant <script> s'executerait chez chaque visiteur ; ENT_QUOTES protege aussi les attributs."
+    source: "PHP, htmlspecialchars — https://www.php.net/manual/en/function.htmlspecialchars.php"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances: []
+    juges: [xss-serveur]
+
+  - id: php-televersement
+    titre: recevoir un fichier envoye en PHP
+    gabarit: php-televersement.php
+    mots: [televerser, televersement, envoyer, fichier, upload, image, document, php]
+    comment:
+      - "verifier $_FILES['fichier']['error'] === UPLOAD_ERR_OK et la taille"
+      - "le type REEL avec finfo (FILEINFO_MIME_TYPE), jamais l'extension ni le type envoye par le navigateur"
+      - "un nom choisi par le serveur (bin2hex(random_bytes(16))) ; move_uploaded_file vers un dossier HORS de la racine web"
+    pourquoi: "OWASP File Upload : un .php televerse puis servi s'execute sur le serveur ; le type annonce par le navigateur se falsifie."
+    source: "OWASP File Upload Cheat Sheet — https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html"
+    verifie_le: "2026-10-08"
+    revoir_apres: "2027-10-08"
+    dependances:
+      - {nom: fileinfo, type: php-ext, pourquoi: "lire le type reel du fichier"}
+    juges: [traversee-chemin, inclusion-fichier]

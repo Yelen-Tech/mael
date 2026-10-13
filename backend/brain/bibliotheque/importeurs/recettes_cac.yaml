@@ -1,0 +1,2341 @@
+# Recettes Sentinelle pour les regles ComplianceAsCode ECRITES A LA MAIN
+# (sans gabarit), citees par CIS Ubuntu/Debian ou ANSSI.
+#
+# Principe (decision du 17/09/2026 : jamais de fait genere par l'IA) :
+#   - le FAIT vient de la source : critere de la description / de la section
+#     OCIL de la regle, valeurs = variables des referentiels ({var:NOM}) ;
+#   - la COMMANDE est une lecture : celle de l'OCIL quand elle existe,
+#     sinon une lecture Sentinelle equivalente ; le garde-fou la verifie.
+#   - chaque fiche produite porte la note « Recette Sentinelle... a relire ».
+#
+# gabarit : cle_valeur | detecteur | fichiers_stat | pam_options | lineinfile
+#           | file_groupowner (gabarits de gabarits_cac.py)
+# ignorer : raison -> regle ecartee, raison affichee par l'importeur.
+# Commandes : UID_MIN = 1000 (Debian/Ubuntu) ; un fichier lisible par root
+# seulement -> « || echo 'SENTINELLE:ILLISIBLE' » (sinon « rien » passerait
+# pour « conforme »).
+
+recettes:
+
+  # =============================================== ecartees a la relecture
+  # (regles A GABARIT : l'ignorer vaut aussi pour elles)
+  file_groupowner_efi_grub2_cfg:
+    ignorer: "GRUB EFI : /boot/efi est en FAT sous Debian/Ubuntu, chmod/chown sans effet (droits fixes par les options de montage umask/fmask) ; chemin EFI different par distribution"
+  file_groupowner_efi_user_cfg:
+    ignorer: "GRUB EFI : /boot/efi est en FAT sous Debian/Ubuntu, chmod/chown sans effet (droits fixes par les options de montage umask/fmask) ; chemin EFI different par distribution"
+  file_owner_efi_grub2_cfg:
+    ignorer: "GRUB EFI : /boot/efi est en FAT sous Debian/Ubuntu, chmod/chown sans effet (droits fixes par les options de montage umask/fmask) ; chemin EFI different par distribution"
+  file_owner_efi_user_cfg:
+    ignorer: "GRUB EFI : /boot/efi est en FAT sous Debian/Ubuntu, chmod/chown sans effet (droits fixes par les options de montage umask/fmask) ; chemin EFI different par distribution"
+  file_permissions_efi_grub2_cfg:
+    ignorer: "GRUB EFI : /boot/efi est en FAT sous Debian/Ubuntu, chmod/chown sans effet (droits fixes par les options de montage umask/fmask) ; chemin EFI different par distribution"
+  file_permissions_efi_user_cfg:
+    ignorer: "GRUB EFI : /boot/efi est en FAT sous Debian/Ubuntu, chmod/chown sans effet (droits fixes par les options de montage umask/fmask) ; chemin EFI different par distribution"
+  # Releve a la relecture du 19/09/2026 : importe via le guide ANSSI
+  # (generique) alors que dnf n'existe pas sur Debian/Ubuntu -> ecart
+  # perpetuel et /corriger aurait active un minuteur inexistant.
+  package_dnf-automatic_installed:
+    ignorer: "dnf-automatic : propre a RHEL/Fedora (voir timer_dnf-automatic_enabled)"
+  # La source (controls/anssi.yml) : « this is relevant for RHEL only ».
+  package_sequoia-sq_installed:
+    ignorer: "sequoia-sq : pertinent pour RHEL seulement selon la source (controls/anssi.yml)"
+  timer_dnf-automatic_enabled:
+    ignorer: "dnf-automatic : propre a RHEL/Fedora ; equivalent Debian/Ubuntu = unattended-upgrades (apt-daily-upgrade.timer), a traiter par une fiche manuelle relue"
+
+  accounts_password_minlen_login_defs:
+    ignorer: "PASS_MIN_LEN de login.defs est ignore sous Debian/Ubuntu (shadow compile avec PAM) ; la longueur est imposee par pam_pwquality minlen (fiche accounts_password_pam_minlen, meme niveau ANSSI)"
+  cracklib_accounts_password_pam_dcredit:
+    ignorer: "pam_cracklib retire de PAM 1.5 (Debian 12, Ubuntu 24.04) ; meme exigence couverte par pam_pwquality (fiche accounts_password_pam_dcredit, meme niveau ANSSI)"
+  cracklib_accounts_password_pam_lcredit:
+    ignorer: "pam_cracklib retire de PAM 1.5 (Debian 12, Ubuntu 24.04) ; meme exigence couverte par pam_pwquality (fiche accounts_password_pam_lcredit, meme niveau ANSSI)"
+  cracklib_accounts_password_pam_minlen:
+    ignorer: "pam_cracklib retire de PAM 1.5 (Debian 12, Ubuntu 24.04) ; meme exigence couverte par pam_pwquality (fiche accounts_password_pam_minlen, meme niveau ANSSI)"
+  cracklib_accounts_password_pam_ocredit:
+    ignorer: "pam_cracklib retire de PAM 1.5 (Debian 12, Ubuntu 24.04) ; meme exigence couverte par pam_pwquality (fiche accounts_password_pam_ocredit, meme niveau ANSSI)"
+  cracklib_accounts_password_pam_ucredit:
+    ignorer: "pam_cracklib retire de PAM 1.5 (Debian 12, Ubuntu 24.04) ; meme exigence couverte par pam_pwquality (fiche accounts_password_pam_ucredit, meme niveau ANSSI)"
+  audit_rules_mac_modification_etc_selinux:
+    ignorer: "SELinux non utilise par defaut sous Debian/Ubuntu (AppArmor) ; la surveillance de la politique MAC est couverte par audit_rules_mac_modification (/etc/apparmor/, /etc/apparmor.d/)"
+
+  # ======================================================== PAM (Debian/Ubuntu)
+  accounts_password_pam_unix_enabled:
+    gabarit: pam_options
+    theme: authentification
+    vars: {path: /etc/pam.d/common-auth, type: auth, module: pam_unix.so}
+  accounts_password_pam_pwhistory_enabled:
+    gabarit: pam_options
+    theme: authentification
+    vars: {path: /etc/pam.d/common-password, type: password, module: pam_pwhistory.so}
+  accounts_password_pam_pwhistory_enforce_root:
+    gabarit: pam_options
+    theme: authentification
+    vars:
+      path: /etc/pam.d/common-password
+      type: password
+      module: pam_pwhistory.so
+      arguments: [{argument: enforce_for_root}]
+  accounts_password_pam_pwhistory_use_authtok:
+    gabarit: pam_options
+    theme: authentification
+    vars:
+      path: /etc/pam.d/common-password
+      type: password
+      module: pam_pwhistory.so
+      arguments: [{argument: use_authtok}]
+  accounts_password_pam_unix_authtok:
+    gabarit: pam_options
+    theme: authentification
+    vars:
+      path: /etc/pam.d/common-password
+      type: password
+      module: pam_unix.so
+      arguments: [{argument: use_authtok}]
+  accounts_passwords_pam_faillock_enabled:
+    gabarit: pam_options
+    theme: authentification
+    vars: {path: /etc/pam.d/common-auth, type: auth, module: pam_faillock.so}
+  accounts_password_pam_pwquality_enabled:
+    gabarit: pam_options
+    theme: authentification
+    vars: {path: /etc/pam.d/common-password, type: password, module: pam_pwquality.so}
+  accounts_password_pam_retry:
+    gabarit: pam_options
+    theme: authentification
+    vars:
+      path: /etc/pam.d/common-password
+      type: password
+      module: pam_pwquality.so
+      arguments: [{variable: retry, variable_name: var_password_pam_retry,
+                   operation: less than or equal}]
+  set_password_hashing_algorithm_systemauth:
+    gabarit: pam_options
+    theme: authentification
+    vars:
+      path: /etc/pam.d/common-password
+      type: password
+      module: pam_unix.so
+      arguments: [{argument_variable: var_password_hashing_algorithm_pam}]
+  enable_pam_namespace:
+    gabarit: pam_options
+    theme: authentification
+    vars: {path: /etc/pam.d/login, type: session, module: pam_namespace.so}
+  accounts_passwords_pam_faillock_deny_root:
+    gabarit: lineinfile
+    theme: authentification
+    vars: {text: even_deny_root, path: /etc/security/faillock.conf}
+  accounts_password_pam_unix_no_remember:
+    gabarit: detecteur
+    theme: authentification
+    vars:
+      titre: "PAM : pas d'option remember sur pam_unix (utiliser pam_pwhistory)"
+      commande: |-
+        grep -rEs '^\s*password\s+.*pam_unix\.so.*\bremember=' /etc/pam.d/common-password /etc/pam.d/common-auth /etc/pam.d/common-account /etc/pam.d/common-session
+      but: "Chercher l'option remember sur pam_unix"
+      controle: "remember absent de pam_unix"
+      bon: "aucune ligne"
+      action: "Retirer remember= de pam_unix.so et regler l'historique avec pam_pwhistory (remember=N)."
+      mots_cles: [remember, pam_unix, historique, "mots de passe"]
+  no_empty_passwords_unix:
+    gabarit: detecteur
+    theme: authentification
+    vars:
+      titre: "PAM : pas de connexion avec un mot de passe vide (nullok absent)"
+      commande: |-
+        grep -Es '^[^#]*pam_unix\.so.*\bnullok\b' /etc/pam.d/common-password /etc/pam.d/common-auth /etc/pam.d/common-account /etc/pam.d/common-session /etc/pam.d/common-session-noninteractive
+      but: "Chercher l'option nullok sur pam_unix"
+      controle: "nullok absent"
+      bon: "aucune ligne"
+      action: "Retirer nullok des lignes pam_unix.so de /etc/pam.d/common-* (pam-auth-update)."
+      mots_cles: [nullok, "mot de passe vide", "mots de passe vides", pam_unix]
+  accounts_password_pam_unix_remember:
+    ignorer: "contredit accounts_password_pam_unix_no_remember (CIS) ; l'historique est couvert par pam_pwhistory remember"
+  accounts_passwords_pam_tally2:
+    ignorer: "pam_tally2 retire d'Ubuntu 22.04+ et Debian 12 (remplace par pam_faillock, deja couvert)"
+  accounts_passwords_pam_tally2_deny_root:
+    ignorer: "pam_tally2 retire d'Ubuntu 22.04+ et Debian 12 (remplace par pam_faillock, deja couvert)"
+  accounts_passwords_pam_tally2_unlock_time:
+    ignorer: "pam_tally2 retire d'Ubuntu 22.04+ et Debian 12 (remplace par pam_faillock, deja couvert)"
+  accounts_password_pam_unix_rounds_password_auth:
+    ignorer: "fichier PAM propre a RHEL (password-auth) ; sur Debian/Ubuntu le hachage est regle par set_password_hashing_algorithm_*"
+  accounts_password_pam_unix_rounds_system_auth:
+    ignorer: "fichier PAM propre a RHEL (system-auth) ; sur Debian/Ubuntu le hachage est regle par set_password_hashing_algorithm_*"
+
+  # ================================================ login.defs, useradd, TMOUT
+  set_password_hashing_algorithm_logindefs:
+    gabarit: cle_valeur
+    theme: authentification
+    vars:
+      titre: "Mots de passe : algorithme de hachage (ENCRYPT_METHOD {var:var_password_hashing_algorithm})"
+      fichiers: [/etc/login.defs]
+      cle: ENCRYPT_METHOD
+      sep: espace
+      attendu: "{var:var_password_hashing_algorithm}"
+      controle: "ENCRYPT_METHOD {var:var_password_hashing_algorithm}"
+      bon: "ENCRYPT_METHOD {var:var_password_hashing_algorithm}"
+      # Relecture 18/09/2026 : SHA512 et YESCRYPT sont admis ; on ecrit
+      # YESCRYPT (plus fort, defaut Debian 12 / Ubuntu 22.04+) : ecrire SHA512
+      # retrograderait une machine deja en YESCRYPT.
+      ecrire: YESCRYPT
+      action: "Ecrire « ENCRYPT_METHOD YESCRYPT » dans /etc/login.defs (SHA512 est aussi admis). Ne vaut que pour les mots de passe changes ensuite."
+      mots_cles: [hachage, chiffrement, "mots de passe", encrypt_method, login.defs, yescrypt, sha512]
+  accounts_maximum_age_login_defs:
+    gabarit: cle_valeur
+    theme: authentification
+    vars:
+      titre: "Mots de passe : duree de vie maximale (PASS_MAX_DAYS au plus {var:var_accounts_maximum_age_login_defs})"
+      fichiers: [/etc/login.defs]
+      cle: PASS_MAX_DAYS
+      sep: espace
+      comparateur: entre
+      attendu: [1, "{var:var_accounts_maximum_age_login_defs}"]
+      controle: "PASS_MAX_DAYS entre 1 et {var:var_accounts_maximum_age_login_defs}"
+      bon: "PASS_MAX_DAYS {var:var_accounts_maximum_age_login_defs} ou moins"
+      action: "Ecrire « PASS_MAX_DAYS {var:var_accounts_maximum_age_login_defs} » dans /etc/login.defs (comptes nouveaux ; chage -M pour les existants)."
+      mots_cles: [expiration, "duree de vie", "mots de passe", pass_max_days, login.defs]
+      pieges: ["login.defs ne s'applique qu'aux comptes CREES ensuite : voir aussi la fiche des mots de passe existants (chage)."]
+  accounts_minimum_age_login_defs:
+    gabarit: cle_valeur
+    theme: authentification
+    vars:
+      titre: "Mots de passe : duree de vie minimale (PASS_MIN_DAYS au moins {var:var_accounts_minimum_age_login_defs})"
+      fichiers: [/etc/login.defs]
+      cle: PASS_MIN_DAYS
+      sep: espace
+      comparateur: au_moins
+      attendu: "{var:var_accounts_minimum_age_login_defs}"
+      controle: "PASS_MIN_DAYS au moins {var:var_accounts_minimum_age_login_defs}"
+      bon: "PASS_MIN_DAYS {var:var_accounts_minimum_age_login_defs} ou plus"
+      action: "Ecrire « PASS_MIN_DAYS {var:var_accounts_minimum_age_login_defs} » dans /etc/login.defs."
+      mots_cles: [expiration, "duree de vie", "mots de passe", pass_min_days, login.defs]
+  accounts_password_warn_age_login_defs:
+    gabarit: cle_valeur
+    theme: authentification
+    vars:
+      titre: "Mots de passe : preavis d'expiration (PASS_WARN_AGE au moins {var:var_accounts_password_warn_age_login_defs})"
+      fichiers: [/etc/login.defs]
+      cle: PASS_WARN_AGE
+      sep: espace
+      comparateur: au_moins
+      attendu: "{var:var_accounts_password_warn_age_login_defs}"
+      controle: "PASS_WARN_AGE au moins {var:var_accounts_password_warn_age_login_defs}"
+      bon: "PASS_WARN_AGE {var:var_accounts_password_warn_age_login_defs} ou plus"
+      action: "Ecrire « PASS_WARN_AGE {var:var_accounts_password_warn_age_login_defs} » dans /etc/login.defs."
+      mots_cles: [avertissement, expiration, "mots de passe", pass_warn_age]
+  account_disable_post_pw_expiration:
+    gabarit: cle_valeur
+    theme: authentification
+    vars:
+      titre: "Comptes inactifs desactives apres expiration (INACTIVE au plus {var:var_account_disable_post_pw_expiration} jours)"
+      fichiers: [/etc/default/useradd]
+      cle: INACTIVE
+      comparateur: entre
+      attendu: [0, "{var:var_account_disable_post_pw_expiration}"]
+      defaut: "-1"
+      controle: "INACTIVE entre 0 et {var:var_account_disable_post_pw_expiration}"
+      bon: "INACTIVE={var:var_account_disable_post_pw_expiration} ou moins (-1 = jamais : non conforme)"
+      action: "useradd -D -f {var:var_account_disable_post_pw_expiration} (ecrit INACTIVE dans /etc/default/useradd)."
+      mots_cles: [inactif, inactivite, expiration, comptes, useradd]
+  accounts_tmout:
+    gabarit: cle_valeur
+    theme: sessions
+    vars:
+      titre: "Deconnexion des sessions inactives (TMOUT au plus {var:var_accounts_tmout} s, en lecture seule)"
+      playbook_fichier: /etc/profile.d/mael-tmout.sh
+      format: readonly
+      fichiers: [/etc/bash.bashrc, /etc/profile, /etc/profile.d/*.sh]
+      cle: TMOUT
+      comparateur: entre
+      attendu: [1, "{var:var_accounts_tmout}"]
+      controle: "TMOUT entre 1 et {var:var_accounts_tmout}, readonly"
+      bon: "TMOUT={var:var_accounts_tmout} (ou moins), readonly TMOUT, export TMOUT"
+      action: "Creer /etc/profile.d/tmout.sh : « TMOUT={var:var_accounts_tmout} », « readonly TMOUT », « export TMOUT »."
+      mots_cles: [tmout, inactivite, deconnexion, session, shell]
+      observer_en_plus:
+        - commande: |-
+            grep -Es '(readonly|declare[[:space:]]+-r)[[:space:]]+TMOUT' /etc/bash.bashrc /etc/profile /etc/profile.d/*.sh
+          but: "Verifier que TMOUT est en lecture seule"
+          lecture: "Une ligne « readonly TMOUT » (ou declare -r) ; aucune = l'utilisateur peut l'annuler."
+      pieges: ["TMOUT=0 desactive la deconnexion automatique : non conforme."]
+
+  # ========================================== umask (sessions utilisateurs)
+  accounts_umask_etc_login_defs:
+    gabarit: cle_valeur
+    theme: sessions
+    vars:
+      titre: "umask par defaut dans login.defs (UMASK {var:var_accounts_user_umask} ou plus strict)"
+      fichiers: [/etc/login.defs]
+      cle: UMASK
+      sep: espace
+      comparateur: umask
+      attendu: "{var:var_accounts_user_umask}"
+      controle: "UMASK au moins aussi strict que {var:var_accounts_user_umask}"
+      bon: "UMASK {var:var_accounts_user_umask}"
+      action: "Ecrire « UMASK {var:var_accounts_user_umask} » dans /etc/login.defs."
+      mots_cles: [umask, droits, "fichiers crees", login.defs]
+  accounts_umask_etc_profile:
+    gabarit: cle_valeur
+    theme: sessions
+    vars:
+      titre: "umask par defaut dans /etc/profile ({var:var_accounts_user_umask} ou plus strict)"
+      fichiers: [/etc/profile, /etc/profile.d/]
+      cle: umask
+      sep: espace
+      comparateur: umask
+      attendu: "{var:var_accounts_user_umask}"
+      controle: "umask au moins aussi strict que {var:var_accounts_user_umask}"
+      bon: "umask {var:var_accounts_user_umask}"
+      action: "Ecrire « umask {var:var_accounts_user_umask} » dans /etc/profile (ou un fichier de /etc/profile.d/)."
+      mots_cles: [umask, droits, profile, shell]
+  accounts_umask_etc_bashrc:
+    gabarit: cle_valeur
+    theme: sessions
+    vars:
+      titre: "umask par defaut de bash (/etc/bash.bashrc : {var:var_accounts_user_umask} ou plus strict)"
+      fichiers: [/etc/bash.bashrc]
+      cle: umask
+      sep: espace
+      comparateur: umask
+      attendu: "{var:var_accounts_user_umask}"
+      controle: "umask au moins aussi strict que {var:var_accounts_user_umask}"
+      bon: "umask {var:var_accounts_user_umask}"
+      action: "Ecrire « umask {var:var_accounts_user_umask} » dans /etc/bash.bashrc."
+      mots_cles: [umask, droits, bash, bashrc]
+  accounts_umask_root:
+    gabarit: cle_valeur
+    theme: sessions
+    vars:
+      titre: "umask de root (/root/.bashrc, /root/.profile : 0027 ou plus strict)"
+      fichiers: [/root/.bashrc, /root/.profile]
+      root: true
+      cle: umask
+      sep: espace
+      comparateur: umask
+      attendu: "0027"
+      controle: "umask de root au moins aussi strict que 0027"
+      bon: "umask 0027"
+      action: "Ecrire « umask 0027 » dans /root/.bashrc ou /root/.profile."
+      mots_cles: [umask, root, droits, bashrc]
+      pieges: ["/root n'est lisible que par root : lancer la lecture avec sudo (sinon aucune ligne, a ne pas prendre pour un ecart)."]
+
+  # ============================================ stockage des mots de passe
+  accounts_password_all_shadowed:
+    gabarit: detecteur
+    theme: comptes
+    vars:
+      titre: "Aucune empreinte de mot de passe dans /etc/passwd (toutes dans /etc/shadow)"
+      commande: |-
+        awk -F: '($2 != "x" && $2 != "*") {print $1}' /etc/passwd
+      but: "Chercher des empreintes de mot de passe dans /etc/passwd"
+      controle: "2e champ de /etc/passwd = x pour tous les comptes"
+      bon: "aucune ligne"
+      action: "Reinitialiser le mot de passe du compte (pwconv) ou supprimer le compte ; enqueter sur la cause."
+      mots_cles: [shadow, passwd, empreinte, hachage, "mots de passe"]
+  no_empty_passwords_etc_shadow:
+    gabarit: detecteur
+    theme: comptes
+    vars:
+      titre: "Aucun compte sans mot de passe dans /etc/shadow"
+      commande: |-
+        awk -F: '!$2 {print $1}' /etc/shadow || echo 'SENTINELLE:ILLISIBLE'
+      but: "Lister les comptes dont le mot de passe est vide"
+      controle: "aucun champ mot de passe vide"
+      bon: "aucune ligne"
+      action: "Donner un mot de passe (passwd COMPTE) ou verrouiller le compte (passwd -l COMPTE)."
+      mots_cles: [shadow, "mot de passe vide", "mots de passe vides", comptes]
+      pieges: ["/etc/shadow n'est lisible que par root : lancer avec sudo."]
+  accounts_password_last_change_is_in_past:
+    gabarit: detecteur
+    theme: comptes
+    vars:
+      titre: "Aucune date de dernier changement de mot de passe dans le futur"
+      commande: |-
+        awk -F: 'BEGIN{srand(); t=int(srand()/86400)} $3 > t {print $1" "$3}' /etc/shadow || echo 'SENTINELLE:ILLISIBLE'
+      but: "Lister les comptes dont le dernier changement est dans le futur"
+      controle: "date de dernier changement dans le passe pour tous"
+      bon: "aucune ligne"
+      action: "Corriger la date (chage -d AAAA-MM-JJ COMPTE) et verifier l'horloge du systeme."
+      mots_cles: [shadow, "dernier changement", date, "mots de passe"]
+  gid_passwd_group_same:
+    gabarit: detecteur
+    theme: comptes
+    vars:
+      titre: "Chaque groupe principal de /etc/passwd existe dans /etc/group"
+      commande: |-
+        awk -F: 'NR==FNR{g[$3]=1; next} !($4 in g) {print $1":"$4}' /etc/group /etc/passwd
+      but: "Lister les comptes dont le GID n'existe pas"
+      controle: "tous les GID de /etc/passwd definis"
+      bon: "aucune ligne"
+      action: "Creer le groupe manquant (groupadd -g GID NOM) ou corriger le compte."
+      mots_cles: [gid, groupe, passwd, group, comptes]
+  no_forward_files:
+    gabarit: detecteur
+    theme: sessions
+    vars:
+      titre: "Aucun fichier .forward dans les repertoires personnels"
+      commande: |-
+        find /home -xdev -name .forward 2>/dev/null
+      but: "Chercher les fichiers .forward"
+      controle: "aucun .forward"
+      bon: "aucune ligne"
+      action: "Supprimer les fichiers .forward apres accord de l'utilisateur."
+      mots_cles: [forward, messagerie, "repertoire personnel"]
+  no_netrc_files:
+    gabarit: detecteur
+    theme: sessions
+    vars:
+      titre: "Aucun fichier .netrc (mots de passe FTP en clair)"
+      commande: |-
+        find /home -xdev -name .netrc 2>/dev/null
+      but: "Chercher les fichiers .netrc"
+      controle: "aucun .netrc"
+      bon: "aucune ligne"
+      action: "Supprimer les fichiers .netrc (ils peuvent contenir des mots de passe en clair)."
+      mots_cles: [netrc, ftp, "mots de passe", "repertoire personnel"]
+
+  # ================================================== expiration des comptes
+  accounts_password_set_max_life_existing:
+    gabarit: detecteur
+    theme: authentification
+    vars:
+      titre: "Mots de passe existants : duree de vie maximale ({var:var_accounts_maximum_age_login_defs} jours au plus)"
+      commande: |-
+        awk -F: '$2 ~ /^\$/ && ($5 == "" || $5 < 1 || $5 > {var:var_accounts_maximum_age_login_defs}) {print $1" "$5}' /etc/shadow || echo 'SENTINELLE:ILLISIBLE'
+      but: "Lister les comptes a mot de passe dont la duree maximale est trop longue"
+      controle: "5e champ de /etc/shadow entre 1 et {var:var_accounts_maximum_age_login_defs}"
+      bon: "aucune ligne"
+      action: "chage -M {var:var_accounts_maximum_age_login_defs} COMPTE pour chaque compte liste."
+      mots_cles: [expiration, chage, shadow, "mots de passe", existants]
+  accounts_password_set_min_life_existing:
+    gabarit: detecteur
+    theme: authentification
+    vars:
+      titre: "Mots de passe existants : duree de vie minimale ({var:var_accounts_minimum_age_login_defs} jour(s) au moins)"
+      commande: |-
+        awk -F: '$2 ~ /^\$/ && ($4 == "" || $4 < {var:var_accounts_minimum_age_login_defs}) {print $1" "$4}' /etc/shadow || echo 'SENTINELLE:ILLISIBLE'
+      but: "Lister les comptes a mot de passe dont la duree minimale est trop courte"
+      controle: "4e champ de /etc/shadow au moins {var:var_accounts_minimum_age_login_defs}"
+      bon: "aucune ligne"
+      action: "chage -m {var:var_accounts_minimum_age_login_defs} COMPTE pour chaque compte liste."
+      mots_cles: [expiration, chage, shadow, "mots de passe", existants]
+  accounts_set_post_pw_existing:
+    gabarit: detecteur
+    theme: authentification
+    vars:
+      titre: "Comptes existants : desactivation apres {var:var_account_disable_post_pw_expiration} jours d'inactivite au plus"
+      commande: |-
+        awk -F: '$2 ~ /^\$/ && ($7 == "" || $7 < 0 || $7 > {var:var_account_disable_post_pw_expiration}) {print $1" "$7}' /etc/shadow || echo 'SENTINELLE:ILLISIBLE'
+      but: "Lister les comptes a mot de passe sans desactivation d'inactivite"
+      controle: "7e champ de /etc/shadow entre 0 et {var:var_account_disable_post_pw_expiration}"
+      bon: "aucune ligne"
+      action: "chage --inactive {var:var_account_disable_post_pw_expiration} COMPTE pour chaque compte liste."
+      mots_cles: [inactif, inactivite, chage, shadow, existants]
+  accounts_password_set_max_life_root:
+    gabarit: detecteur
+    theme: authentification
+    vars:
+      titre: "Mot de passe de root : duree de vie maximale ({var:var_accounts_maximum_age_root} jours au plus)"
+      commande: |-
+        awk -F: '$1 == "root" && $2 ~ /^\$/ && ($5 == "" || $5 < 1 || $5 > {var:var_accounts_maximum_age_root}) {print $1" "$5}' /etc/shadow || echo 'SENTINELLE:ILLISIBLE'
+      but: "Lire la duree maximale du mot de passe de root"
+      controle: "duree maximale de root entre 1 et {var:var_accounts_maximum_age_root}"
+      bon: "aucune ligne"
+      action: "chage -M {var:var_accounts_maximum_age_root} root"
+      mots_cles: [root, expiration, chage, shadow]
+
+  # ================================================ compte root et comptes
+  accounts_no_uid_except_zero:
+    gabarit: detecteur
+    theme: comptes
+    vars:
+      titre: "Seul root a l'UID 0"
+      commande: |-
+        awk -F: '$3 == 0 && $1 != "root" {print $1}' /etc/passwd
+      but: "Lister les comptes autres que root avec l'UID 0"
+      controle: "aucun autre compte en UID 0"
+      bon: "aucune ligne"
+      action: "Supprimer, verrouiller ou changer l'UID des comptes listes (enqueter : porte derobee possible)."
+      mots_cles: [uid, root, "uid 0", superutilisateur, comptes, passwd]
+  accounts_root_gid_zero:
+    gabarit: detecteur
+    theme: comptes
+    vars:
+      titre: "Le groupe principal de root est le GID 0"
+      commande: |-
+        awk -F: '$1 == "root" && $4 != 0 {print $1":"$4}' /etc/passwd
+      but: "Lire le groupe principal de root"
+      controle: "root en GID 0"
+      bon: "aucune ligne"
+      action: "usermod -g 0 root"
+      mots_cles: [gid, root, groupe, passwd]
+  groups_no_zero_gid_except_root:
+    gabarit: detecteur
+    theme: comptes
+    vars:
+      titre: "Seul le groupe root a le GID 0"
+      commande: |-
+        awk -F: '$3 == 0 && $1 != "root" {print $1}' /etc/group
+      but: "Lister les groupes autres que root avec le GID 0"
+      controle: "aucun autre groupe en GID 0"
+      bon: "aucune ligne"
+      action: "Supprimer ou renumeroter les groupes listes (groupmod -g)."
+      mots_cles: [gid, root, groupe, group]
+  account_unique_id:
+    gabarit: detecteur
+    theme: comptes
+    vars:
+      titre: "Chaque compte a un UID unique"
+      commande: |-
+        awk -F: 'list[$3]++ {print $1, $3}' /etc/passwd
+      but: "Lister les UID en double"
+      controle: "aucun UID en double"
+      bon: "aucune ligne"
+      action: "Renumeroter (usermod -u) ou supprimer les comptes en double."
+      mots_cles: [uid, doublon, unique, comptes, passwd]
+  account_unique_name:
+    gabarit: detecteur
+    theme: comptes
+    vars:
+      titre: "Chaque compte a un nom unique"
+      commande: |-
+        cut -d: -f1 /etc/passwd | sort | uniq -d
+      but: "Lister les noms de compte en double"
+      controle: "aucun nom en double"
+      bon: "aucune ligne"
+      action: "Renommer ou supprimer les comptes en double."
+      mots_cles: [nom, doublon, unique, comptes, passwd]
+  group_unique_id:
+    gabarit: detecteur
+    theme: comptes
+    vars:
+      titre: "Chaque groupe a un GID unique"
+      commande: |-
+        cut -d: -f3 /etc/group | sort | uniq -d
+      but: "Lister les GID en double"
+      controle: "aucun GID en double"
+      bon: "aucune ligne"
+      action: "Renumeroter (groupmod -g) ou supprimer les groupes en double."
+      mots_cles: [gid, doublon, unique, groupe, group]
+  group_unique_name:
+    gabarit: detecteur
+    theme: comptes
+    vars:
+      titre: "Chaque groupe a un nom unique"
+      commande: |-
+        cut -d: -f1 /etc/group | sort | uniq -d
+      but: "Lister les noms de groupe en double"
+      controle: "aucun nom de groupe en double"
+      bon: "aucune ligne"
+      action: "Renommer ou supprimer les groupes en double."
+      mots_cles: [nom, doublon, unique, groupe, group]
+  ensure_shadow_group_empty:
+    gabarit: detecteur
+    theme: comptes
+    vars:
+      titre: "Le groupe shadow n'a aucun membre (ni membre declare, ni groupe principal)"
+      # Les deux verifications de la source (OCIL) en une lecture : membres
+      # dans /etc/group ET comptes dont shadow est le groupe principal.
+      commande: |-
+        awk -F: 'NR==FNR{if ($1 == "shadow") {g=$3; if ($4 != "") print "membres de shadow : "$4}; next} g != "" && $4 == g {print $1": groupe principal shadow"}' /etc/group /etc/passwd
+      but: "Lire les membres du groupe shadow et les comptes dont c'est le groupe principal"
+      controle: "groupe shadow sans membre"
+      bon: "aucune ligne"
+      action: "Retirer les membres du groupe shadow (gpasswd -d COMPTE shadow) ; changer le groupe principal des comptes listes (usermod -g GROUPE COMPTE)."
+      mots_cles: [shadow, groupe, membres, group]
+      pieges: ["Changer le groupe principal d'un compte peut perturber un service : la source ne le corrige jamais automatiquement."]
+  ensure_pam_wheel_group_empty:
+    gabarit: detecteur
+    theme: authentification
+    vars:
+      titre: "Le groupe de su ({var:var_pam_wheel_group_for_su}) existe et est vide"
+      commande: |-
+        grep -E '^{var:var_pam_wheel_group_for_su}:[^:]*:[^:]*:$' /etc/group
+      attendu: presente
+      but: "Verifier que le groupe {var:var_pam_wheel_group_for_su} existe sans membre"
+      lecture: "Une ligne « {var:var_pam_wheel_group_for_su}:x:GID: » = conforme ; aucune = groupe absent ou avec des membres."
+      controle: "groupe {var:var_pam_wheel_group_for_su} present et vide"
+      bon: "une ligne sans membre"
+      mauvais: "groupe absent, ou avec des membres"
+      action: "groupadd {var:var_pam_wheel_group_for_su} (sans membre), reference par pam_wheel.so dans /etc/pam.d/su."
+      mots_cles: [su, pam_wheel, groupe, wheel, root]
+  ensure_root_access_controlled:
+    gabarit: detecteur
+    theme: comptes
+    vars:
+      titre: "Le compte root est protege (mot de passe defini ou compte verrouille)"
+      commande: |-
+        awk -F: '$1 == "root" && $2 !~ /^[$!*]/ {print $1": ni mot de passe ni verrouillage"}' /etc/shadow || echo 'SENTINELLE:ILLISIBLE'
+      but: "Verifier que root a un mot de passe (empreinte $...) ou est verrouille (! ou *)"
+      controle: "root avec un mot de passe defini ou verrouille"
+      bon: "aucune ligne"
+      action: "Definir un mot de passe robuste pour root (passwd root) ou le verrouiller (passwd -l root) si l'administration passe par sudo."
+      mots_cles: [root, "mot de passe", shadow, acces, verrouille]
+      # Releve a la relecture du 19/09/2026 : la source accepte « defini OU
+      # verrouille » (P ou L) sauf pour ubuntu2204 ; l'ancienne recette
+      # signalait le root verrouille par defaut d'Ubuntu (faux ecart).
+      pieges: ["Pour CIS Ubuntu 22.04, la source (ComplianceAsCode) exige un mot de passe DEFINI : un root verrouille y reste a qualifier avec l'exploitant. CIS Ubuntu 24.04 et Debian 12 acceptent un root verrouille.", "Le champ du mot de passe n'est jamais affiche (empreinte)."]
+  no_direct_root_logins:
+    gabarit: detecteur
+    theme: comptes
+    vars:
+      titre: "Pas de connexion directe de root sur les consoles (/etc/securetty vide)"
+      commande: |-
+        grep -v '^[[:space:]]*#' /etc/securetty 2>/dev/null
+      but: "Lire les consoles autorisees a root"
+      controle: "aucune console autorisee"
+      bon: "aucune ligne"
+      action: "Vider /etc/securetty (et utiliser sudo pour l'administration)."
+      mots_cles: [securetty, root, console, connexion]
+      pieges: ["Selon la source, un /etc/securetty ABSENT laisse root se connecter partout si pam_securetty est utilise ; sur Ubuntu recent le module n'est plus actif par defaut."]
+  no_shelllogin_for_systemaccounts:
+    gabarit: detecteur
+    theme: comptes
+    vars:
+      titre: "Les comptes systeme n'ont pas de shell de connexion"
+      commande: |-
+        awk -F: 'NR==FNR{s[$1]=1; next} ($3 < 1000 && $1 != "root" && ($7 in s)) {print $1":"$7}' /etc/shells /etc/passwd
+      but: "Lister les comptes systeme (UID < 1000) dotes d'un shell valide"
+      controle: "aucun compte systeme avec un shell de /etc/shells"
+      bon: "aucune ligne"
+      action: "usermod -s /usr/sbin/nologin COMPTE pour chaque compte liste."
+      mots_cles: [shell, nologin, "comptes systeme", passwd]
+  no_invalid_shell_accounts_unlocked:
+    gabarit: detecteur
+    theme: comptes
+    vars:
+      titre: "Les comptes sans shell valide sont verrouilles"
+      commande: |-
+        awk -F: 'FILENAME=="/etc/shells"{s[$1]=1; next} FILENAME=="/etc/passwd"{if (!($7 in s)) c[$1]=1; next} ($1 in c) && $2 !~ /^[!*]/ {print $1}' /etc/shells /etc/passwd /etc/shadow || echo 'SENTINELLE:ILLISIBLE'
+      but: "Lister les comptes non interactifs non verrouilles"
+      controle: "comptes hors /etc/shells verrouilles"
+      bon: "aucune ligne"
+      action: "usermod -L COMPTE pour chaque compte liste."
+      mots_cles: [verrouillage, shell, nologin, comptes, shadow]
+  no_nologin_in_shells:
+    gabarit: detecteur
+    theme: comptes
+    vars:
+      titre: "nologin n'est pas declare comme shell valide (/etc/shells)"
+      commande: |-
+        grep nologin /etc/shells
+      but: "Chercher nologin dans /etc/shells"
+      controle: "nologin absent de /etc/shells"
+      bon: "aucune ligne"
+      action: "Retirer les lignes nologin de /etc/shells."
+      mots_cles: [nologin, shells, shell]
+
+  # ============================================= sessions, repertoires perso
+  accounts_polyinstantiated_tmp:
+    gabarit: detecteur
+    theme: sessions
+    vars:
+      titre: "/tmp polyinstancie par utilisateur (pam_namespace)"
+      commande: |-
+        grep -Es '^[[:space:]]*/tmp[[:space:]]+/tmp/tmp-inst/[[:space:]]+level[[:space:]]+root,adm' /etc/security/namespace.conf
+      attendu: presente
+      but: "Lire la configuration de polyinstanciation de /tmp"
+      controle: "« /tmp /tmp/tmp-inst/ level root,adm » dans namespace.conf"
+      bon: "une ligne"
+      action: "mkdir --mode 000 /tmp/tmp-inst puis ajouter « /tmp /tmp/tmp-inst/ level root,adm » a /etc/security/namespace.conf."
+      mots_cles: [polyinstanciation, namespace, /tmp, temporaire]
+  accounts_polyinstantiated_var_tmp:
+    gabarit: detecteur
+    theme: sessions
+    vars:
+      titre: "/var/tmp polyinstancie par utilisateur (pam_namespace)"
+      commande: |-
+        grep -Es '^[[:space:]]*/var/tmp[[:space:]]+/var/tmp/tmp-inst/[[:space:]]+level[[:space:]]+root,adm' /etc/security/namespace.conf
+      attendu: presente
+      but: "Lire la configuration de polyinstanciation de /var/tmp"
+      controle: "« /var/tmp /var/tmp/tmp-inst/ level root,adm » dans namespace.conf"
+      bon: "une ligne"
+      action: "mkdir --mode 000 /var/tmp/tmp-inst puis ajouter « /var/tmp /var/tmp/tmp-inst/ level root,adm » a /etc/security/namespace.conf."
+      mots_cles: [polyinstanciation, namespace, /var/tmp, temporaire]
+  accounts_user_interactive_home_directory_exists:
+    gabarit: detecteur
+    theme: sessions
+    vars:
+      titre: "Chaque utilisateur interactif a un repertoire personnel existant"
+      commande: |-
+        awk -F: '($3 >= 1000 && $7 !~ /(nologin|false)$/) {print $6}' /etc/passwd | xargs -r ls -d 2>&1 >/dev/null
+      but: "Lister les repertoires personnels manquants"
+      lecture: "Chaque ligne « ls ... No such file or directory » = repertoire manquant ; aucune = conforme."
+      controle: "repertoires personnels presents"
+      bon: "aucune ligne"
+      action: "mkdir /home/COMPTE, puis chown COMPTE:GROUPE et chmod 0750."
+      mots_cles: [home, "repertoire personnel", "repertoires personnels", utilisateurs]
+  file_permissions_home_directories:
+    gabarit: fichiers_stat
+    theme: sessions
+    vars:
+      titre: "Repertoires personnels en 0750 au plus"
+      commande: |-
+        awk -F: '($3 >= 1000 && $7 !~ /(nologin|false)$/) {print $6}' /etc/passwd | xargs -r stat -c '%a %U %G %n' 2>/dev/null
+      but: "Lire les droits des repertoires personnels"
+      droits_max: "0750"
+      action: "chmod 0750 /home/COMPTE"
+      mots_cles: [home, "repertoire personnel", "repertoires personnels"]
+  file_ownership_home_directories:
+    gabarit: detecteur
+    theme: sessions
+    vars:
+      titre: "Chaque repertoire personnel appartient a son utilisateur"
+      commande: |-
+        awk -F: '($3 >= 1000 && $7 !~ /(nologin|false)$/) {print $6}' /etc/passwd | xargs -r stat -c '%U %n' 2>/dev/null | awk 'BEGIN{while ((getline l < "/etc/passwd") > 0) {split(l, c, ":"); if (c[3] >= 1000) h[c[6]] = c[1]}} ($2 in h) && $1 != h[$2] {print $2" appartient a "$1" (attendu "h[$2]")"}'
+      but: "Comparer le proprietaire de chaque repertoire personnel a son utilisateur"
+      controle: "proprietaire = utilisateur"
+      bon: "aucune ligne"
+      action: "chown COMPTE /home/COMPTE"
+      mots_cles: [home, "repertoire personnel", proprietaire, chown]
+  file_permission_user_bash_history:
+    gabarit: detecteur
+    theme: sessions
+    vars:
+      titre: "Historiques bash (.bash_history) en 0600 au plus"
+      commande: |-
+        find /home -type f -name '.bash_history' -perm /0177 2>/dev/null
+      but: "Chercher les .bash_history trop ouverts"
+      controle: ".bash_history en 0600 au plus"
+      bon: "aucune ligne"
+      action: "chmod 0600 /home/COMPTE/.bash_history"
+      mots_cles: [bash_history, historique, droits, "repertoire personnel"]
+  file_permission_user_init_files:
+    gabarit: detecteur
+    theme: sessions
+    vars:
+      # Relecture 19/09/2026 : la source annonce 0740 dans sa description
+      # mais sa verification (OCIL) ne teste que l'ecriture groupe/autres ;
+      # on suit la verification (le .bashrc 0644 d'Ubuntu reste accepte).
+      titre: "Fichiers d'initialisation des utilisateurs (.bashrc...) non modifiables par le groupe ni les autres"
+      commande: |-
+        find /home -type f -name '.*' \( -perm -0002 -o -perm -0020 \) 2>/dev/null
+      but: "Chercher les fichiers caches modifiables par le groupe ou les autres"
+      controle: "pas d'ecriture pour le groupe ni les autres"
+      bon: "aucune ligne"
+      action: "chmod g-w,o-w /home/COMPTE/.FICHIER (la source propose u-s,g-wxs,o= : 0740 au plus)"
+      mots_cles: ["fichiers d'initialisation", bashrc, profile, droits]
+      pieges: ["La description de la source vise 0740 au plus, mais sa verification ne controle que l'ecriture : un .bashrc lisible par tous (0644, defaut Ubuntu) est accepte."]
+
+  # =============================================================== sudo
+  sudo_remove_no_authenticate:
+    gabarit: detecteur
+    theme: sudo
+    vars:
+      titre: "sudo : pas d'option !authenticate (reauthentification obligatoire)"
+      commande: |-
+        head -c0 /etc/sudoers || echo 'SENTINELLE:ILLISIBLE'; grep -rs '^[^#]*!authenticate' /etc/sudoers /etc/sudoers.d/
+      but: "Chercher !authenticate dans la configuration de sudo"
+      controle: "aucune ligne !authenticate"
+      bon: "aucune ligne"
+      action: "Retirer !authenticate avec visudo."
+      mots_cles: [sudo, authenticate, reauthentification, sudoers]
+  sudo_require_authentication:
+    gabarit: detecteur
+    theme: sudo
+    vars:
+      titre: "sudo : pas de NOPASSWD ni de !authenticate"
+      commande: |-
+        head -c0 /etc/sudoers || echo 'SENTINELLE:ILLISIBLE'; grep -riEs '^[^#]*(nopasswd|!authenticate)' /etc/sudoers /etc/sudoers.d/
+      but: "Chercher NOPASSWD et !authenticate dans la configuration de sudo"
+      controle: "aucune ligne NOPASSWD ou !authenticate"
+      bon: "aucune ligne"
+      action: "Retirer NOPASSWD / !authenticate avec visudo (prevoir l'impact sur les scripts d'automatisation)."
+      mots_cles: [sudo, nopasswd, "sans mot de passe", sudoers]
+      pieges: ["Les images cloud donnent souvent NOPASSWD au compte par defaut (ex. ubuntu) : ecart frequent, a traiter avec l'exploitant."]
+  sudo_require_reauthentication:
+    gabarit: sudo_defaults_option
+    theme: sudo
+    vars:
+      option: timestamp_timeout
+      variable_name: var_sudo_timestamp_timeout
+      comparateur: au_plus
+      defaut: "15"
+  sudo_dedicated_group:
+    gabarit: detecteur
+    theme: sudo
+    vars:
+      titre: "sudo : /usr/bin/sudo appartient au groupe dedie {var:var_sudo_dedicated_group}"
+      commande: |-
+        stat -c '%G' /usr/bin/sudo | grep -vx '{var:var_sudo_dedicated_group}'
+      but: "Lire le groupe proprietaire de /usr/bin/sudo"
+      lecture: "Une ligne = autre groupe que {var:var_sudo_dedicated_group} ; aucune = conforme."
+      controle: "groupe de /usr/bin/sudo = {var:var_sudo_dedicated_group}"
+      bon: "aucune ligne"
+      action: "chgrp {var:var_sudo_dedicated_group} /usr/bin/sudo et chmod 4710 /usr/bin/sudo (seul ce groupe execute sudo)."
+      mots_cles: [sudo, groupe, dedie, elevation]
+  sudoers_no_command_negation:
+    gabarit: detecteur
+    theme: sudo
+    vars:
+      titre: "sudoers : pas de commandes autorisees par exclusion (!commande)"
+      commande: |-
+        head -c0 /etc/sudoers || echo 'SENTINELLE:ILLISIBLE'; grep -PRs '^(?:\s*[^#=]+)=(?:\s*(?:\([^\)]+\))?\s*(?!\s*\()[^,!\n][^,\n]+,)*\s*(?:\([^\)]+\))?\s*(?!\s*\()(!\S+).*' /etc/sudoers /etc/sudoers.d/
+      but: "Chercher les specifications sudo definies par negation"
+      controle: "aucune negation dans les specifications"
+      bon: "aucune ligne"
+      action: "Remplacer les exclusions par une liste explicite de commandes autorisees (visudo)."
+      mots_cles: [sudoers, negation, exclusion, sudo]
+  sudoers_explicit_command_args:
+    ignorer: "controle sur la syntaxe des specifications (regex OCIL tres permissive) : a traiter avec une fiche manuelle relue"
+  sudoers_no_root_target:
+    ignorer: "deux regex OCIL a combiner et interpreter (runas ALL/root) : a traiter avec une fiche manuelle relue"
+
+
+  # ================================================= auditd.conf (3e vague)
+  auditd_data_disk_error_action:
+    gabarit: cle_valeur
+    theme: audit
+    vars:
+      titre: "auditd : action sur erreur disque (disk_error_action = {var:var_auditd_disk_error_action})"
+      fichiers: [/etc/audit/auditd.conf]
+      root: true
+      cle: disk_error_action
+      attendu: "{var:var_auditd_disk_error_action}"
+      controle: "disk_error_action dans {var:var_auditd_disk_error_action}"
+      bon: "une des valeurs {var:var_auditd_disk_error_action}"
+      action: "Ecrire « disk_error_action = VALEUR » (une de {var:var_auditd_disk_error_action}) dans /etc/audit/auditd.conf, puis redemarrer auditd."
+      mots_cles: [auditd, auditd.conf, disque, erreur, journaux]
+  auditd_data_disk_full_action:
+    gabarit: cle_valeur
+    theme: audit
+    vars:
+      titre: "auditd : action sur disque plein (disk_full_action = {var:var_auditd_disk_full_action})"
+      fichiers: [/etc/audit/auditd.conf]
+      root: true
+      cle: disk_full_action
+      attendu: "{var:var_auditd_disk_full_action}"
+      controle: "disk_full_action dans {var:var_auditd_disk_full_action}"
+      bon: "une des valeurs {var:var_auditd_disk_full_action}"
+      action: "Ecrire « disk_full_action = VALEUR » (une de {var:var_auditd_disk_full_action}) dans /etc/audit/auditd.conf."
+      mots_cles: [auditd, auditd.conf, disque, plein, journaux]
+      pieges: ["halt arrete la machine quand le disque d'audit est plein : choix a valider avec l'exploitant (disponibilite contre tracabilite)."]
+  auditd_data_retention_action_mail_acct:
+    gabarit: cle_valeur
+    theme: audit
+    vars:
+      titre: "auditd : alertes envoyees a {var:var_auditd_action_mail_acct} (action_mail_acct)"
+      fichiers: [/etc/audit/auditd.conf]
+      root: true
+      cle: action_mail_acct
+      attendu: "{var:var_auditd_action_mail_acct}"
+      defaut: root
+      controle: "action_mail_acct = {var:var_auditd_action_mail_acct}"
+      bon: "action_mail_acct = {var:var_auditd_action_mail_acct}"
+      action: "Ecrire « action_mail_acct = {var:var_auditd_action_mail_acct} » dans /etc/audit/auditd.conf."
+      mots_cles: [auditd, alerte, courriel, mail]
+  auditd_data_retention_admin_space_left_action:
+    gabarit: cle_valeur
+    theme: audit
+    vars:
+      titre: "auditd : action quand l'espace disque devient critique (admin_space_left_action)"
+      fichiers: [/etc/audit/auditd.conf]
+      root: true
+      cle: admin_space_left_action
+      attendu: "{var:var_auditd_admin_space_left_action}"
+      accepte: [single]
+      controle: "admin_space_left_action = {var:var_auditd_admin_space_left_action} (ou single)"
+      bon: "{var:var_auditd_admin_space_left_action} ou single"
+      action: "Ecrire « admin_space_left_action = {var:var_auditd_admin_space_left_action} » (ou single) dans /etc/audit/auditd.conf."
+      mots_cles: [auditd, espace, disque, critique]
+  auditd_data_retention_max_log_file:
+    gabarit: cle_valeur
+    theme: audit
+    vars:
+      titre: "auditd : taille maximale d'un journal ({var:var_auditd_max_log_file} Mo au moins)"
+      fichiers: [/etc/audit/auditd.conf]
+      root: true
+      cle: max_log_file
+      comparateur: au_moins
+      attendu: "{var:var_auditd_max_log_file}"
+      controle: "max_log_file au moins {var:var_auditd_max_log_file}"
+      bon: "max_log_file = {var:var_auditd_max_log_file} ou plus"
+      action: "Ecrire « max_log_file = {var:var_auditd_max_log_file} » (ou plus) dans /etc/audit/auditd.conf."
+      mots_cles: [auditd, taille, journal, retention]
+  auditd_data_retention_max_log_file_action:
+    gabarit: cle_valeur
+    theme: audit
+    vars:
+      titre: "auditd : journaux conserves quand la taille maximale est atteinte (max_log_file_action = {var:var_auditd_max_log_file_action})"
+      fichiers: [/etc/audit/auditd.conf]
+      root: true
+      cle: max_log_file_action
+      attendu: "{var:var_auditd_max_log_file_action}"
+      controle: "max_log_file_action = {var:var_auditd_max_log_file_action}"
+      bon: "max_log_file_action = {var:var_auditd_max_log_file_action}"
+      action: "Ecrire « max_log_file_action = {var:var_auditd_max_log_file_action} » dans /etc/audit/auditd.conf (surveiller alors l'espace disque)."
+      mots_cles: [auditd, rotation, journal, retention, keep_logs]
+  auditd_data_retention_space_left_action:
+    gabarit: cle_valeur
+    theme: audit
+    vars:
+      titre: "auditd : alerte quand l'espace disque baisse (space_left_action = {var:var_auditd_space_left_action})"
+      fichiers: [/etc/audit/auditd.conf]
+      root: true
+      cle: space_left_action
+      attendu: "{var:var_auditd_space_left_action}"
+      controle: "space_left_action = {var:var_auditd_space_left_action}"
+      bon: "space_left_action = {var:var_auditd_space_left_action}"
+      action: "Ecrire « space_left_action = {var:var_auditd_space_left_action} » dans /etc/audit/auditd.conf."
+      mots_cles: [auditd, espace, disque, alerte]
+
+  # ============================================= regles d'audit composites
+  audit_rules_networkconfig_modification:
+    gabarit: audit_composite
+    theme: audit
+    vars:
+      titre: "Audit des modifications de l'environnement reseau (nom d'hote, /etc/hosts, /etc/issue...)"
+      appels: [sethostname, setdomainname]
+      surveilles: [/etc/issue, /etc/issue.net, /etc/hosts, /etc/networks, /etc/network/]
+      mots_cles: [reseau, "nom d'hote", hosts, hostname, sethostname]
+  audit_rules_session_events:
+    gabarit: audit_composite
+    theme: audit
+    vars:
+      titre: "Audit des fichiers de sessions (utmp, wtmp, btmp)"
+      surveilles: [/var/run/utmp, /var/log/wtmp, /var/log/btmp]
+      mots_cles: [session, connexion, utmp, wtmp, btmp]
+  audit_rules_sysadmin_actions:
+    gabarit: audit_composite
+    theme: audit
+    vars:
+      titre: "Audit des modifications de la configuration de sudo (/etc/sudoers, /etc/sudoers.d/)"
+      surveilles: [/etc/sudoers, /etc/sudoers.d/]
+      mots_cles: [sudoers, sudo, administrateur, actions]
+  audit_rules_mac_modification:
+    gabarit: audit_composite
+    theme: audit
+    vars:
+      titre: "Audit des modifications d'AppArmor (/etc/apparmor/, /etc/apparmor.d/)"
+      surveilles: [/etc/apparmor/, /etc/apparmor.d/]
+      mots_cles: [apparmor, "controle d'acces obligatoire", mac]
+  audit_rules_suid_auid_privilege_function:
+    gabarit: audit_composite
+    theme: audit
+    vars:
+      titre: "Audit des commandes executees sous l'identite d'un autre utilisateur (execve, euid != uid)"
+      appels:
+        - {nom: execve, options: [["euid!=uid"]]}
+      mots_cles: [execve, sudo, "autre utilisateur", elevation, euid]
+  audit_rules_time_adjtimex:
+    gabarit: audit_composite
+    theme: audit
+    vars:
+      titre: "Audit des changements d'heure par adjtimex"
+      appels: [adjtimex]
+      mots_cles: [heure, horloge, temps, adjtimex]
+  audit_rules_time_settimeofday:
+    gabarit: audit_composite
+    theme: audit
+    vars:
+      titre: "Audit des changements d'heure par settimeofday"
+      appels: [settimeofday]
+      mots_cles: [heure, horloge, temps, settimeofday]
+  audit_rules_time_clock_settime:
+    gabarit: audit_composite
+    theme: audit
+    vars:
+      titre: "Audit des changements de l'horloge systeme par clock_settime (a0=0x0)"
+      appels:
+        - {nom: clock_settime, options: [["a0=0x0"]]}
+      mots_cles: [heure, horloge, temps, clock_settime]
+  audit_rules_privileged_commands_insmod:
+    gabarit: audit_composite
+    theme: audit
+    vars:
+      titre: "Audit de l'execution d'insmod"
+      executions: [/sbin/insmod]
+      mots_cles: [insmod, module, noyau, chargement]
+  audit_rules_privileged_commands_modprobe:
+    gabarit: audit_composite
+    theme: audit
+    vars:
+      titre: "Audit de l'execution de modprobe"
+      executions: [/sbin/modprobe]
+      mots_cles: [modprobe, module, noyau, chargement]
+  audit_rules_privileged_commands_rmmod:
+    gabarit: audit_composite
+    theme: audit
+    vars:
+      titre: "Audit de l'execution de rmmod"
+      executions: [/sbin/rmmod]
+      mots_cles: [rmmod, module, noyau, dechargement]
+  audit_rules_immutable:
+    gabarit: detecteur
+    theme: audit
+    vars:
+      titre: "Configuration d'audit immuable (-e 2 en derniere regle)"
+      commande: |-
+        ls /etc/audit/rules.d/ >/dev/null || echo 'SENTINELLE:ILLISIBLE'; grep -hs '^[[:space:]]*[^#[:space:]]' /etc/audit/rules.d/*.rules | tail -1 | grep -x -- '-e 2'
+      attendu: presente
+      but: "Lire la derniere regle d'audit persistante"
+      lecture: "« -e 2 » = regles figees jusqu'au redemarrage ; aucune ligne = modifiables a chaud."
+      controle: "derniere regle = -e 2"
+      bon: "-e 2"
+      mauvais: "autre derniere regle"
+      action: "Ajouter « -e 2 » a la fin du dernier fichier de /etc/audit/rules.d/ (ex. 99-finalize.rules), puis redemarrer."
+      mots_cles: [audit, immuable, auditctl, "-e 2"]
+  audit_rules_time_stime:
+    ignorer: "stime n'existe qu'en 32 bits (non applicable aux systemes 64 bits, cf. OCIL de la source)"
+  audit_rules_privileged_commands:
+    ignorer: "exige la liste des binaires SUID/SGID de la machine : a traiter par une fiche dediee (liste calculee)"
+
+  # ========================================== journaux d'audit (droits)
+  directory_permissions_var_log_audit:
+    gabarit: file_permissions
+    theme: audit
+    vars: {filepath: /var/log/audit, filemode: "0750"}
+  file_permissions_var_log_audit:
+    gabarit: file_permissions
+    theme: audit
+    vars: {filepath: /var/log/audit/, file_regex: "^.*$", filemode: "0640"}
+  file_ownership_var_log_audit_stig:
+    gabarit: file_owner
+    theme: audit
+    vars: {filepath: /var/log/audit/, file_regex: "^.*$", uid_or_name: "0"}
+  file_group_ownership_var_log_audit:
+    ignorer: "le groupe attendu depend de log_group dans auditd.conf (root ou autre) : a traiter par une fiche qui lit les deux"
+
+  # ======================================================== journalisation
+  logging_services_active:
+    gabarit: detecteur
+    theme: journalisation
+    vars:
+      titre: "Un service de journalisation est actif (rsyslog, syslog-ng ou journald)"
+      commande: |-
+        systemctl is-active rsyslog syslog-ng systemd-journald 2>/dev/null | grep -x active
+      attendu: presente
+      but: "Verifier qu'au moins un service de journalisation tourne"
+      controle: "au moins un service actif"
+      bon: "au moins une ligne « active »"
+      action: "Activer rsyslog ou systemd-journald (systemctl enable --now)."
+      mots_cles: [journalisation, rsyslog, journald, syslog, logs]
+  rsyslog_filecreatemode:
+    gabarit: cle_valeur
+    theme: journalisation
+    vars:
+      titre: "rsyslog : droits des journaux crees ($FileCreateMode 0640 au plus)"
+      fichiers: [/etc/rsyslog.conf, /etc/rsyslog.d/*.conf]
+      cle: $FileCreateMode
+      sep: espace
+      comparateur: droits_au_plus
+      attendu: "0640"
+      controle: "$FileCreateMode 0640 ou plus strict"
+      bon: "$FileCreateMode 0640"
+      action: "Ecrire « $FileCreateMode 0640 » dans /etc/rsyslog.conf, puis redemarrer rsyslog."
+      mots_cles: [rsyslog, filecreatemode, droits, journaux]
+  rsyslog_nolisten:
+    gabarit: detecteur
+    theme: journalisation
+    vars:
+      titre: "rsyslog n'accepte pas de journaux distants (sauf serveur de journaux)"
+      commande: |-
+        grep -Es '^[[:space:]]*(\$ModLoad[[:space:]]+im(tcp|udp|relp)|\$(InputTCPServerRun|UDPServerRun|InputRELPServerRun)|module\(load="im(tcp|udp|relp)"|input\(type="im(tcp|udp|relp)")' /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+      but: "Chercher les modules de reception reseau de rsyslog"
+      controle: "aucun module de reception reseau"
+      bon: "aucune ligne"
+      action: "Commenter ces lignes, sauf si la machine est le serveur central de journaux (a documenter)."
+      mots_cles: [rsyslog, reception, "journaux distants", 514, imtcp, imudp]
+  rsyslog_remote_loghost:
+    gabarit: detecteur
+    theme: journalisation
+    vars:
+      titre: "Les journaux sont envoyes a un serveur distant (rsyslog)"
+      commande: |-
+        grep -Es '^[^#]*(@@?[A-Za-z0-9\[]|omfwd)' /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+      attendu: presente
+      but: "Chercher une regle d'envoi des journaux vers un serveur distant"
+      controle: "une regle d'envoi presente"
+      bon: "une ligne « *.* @@serveur » ou action(type=\"omfwd\" ...)"
+      mauvais: "aucun envoi distant"
+      action: "Ajouter « *.* @@serveur-journaux:514 » (TCP) ou une action omfwd dans /etc/rsyslog.d/."
+      mots_cles: [rsyslog, "serveur distant", centralisation, omfwd, journaux]
+  rsyslog_remote_tls:
+    gabarit: detecteur
+    theme: journalisation
+    vars:
+      titre: "L'envoi distant rsyslog est chiffre (TLS, pilote gtls)"
+      commande: |-
+        grep -Eis 'omfwd.*streamdriver="?gtls' /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+      attendu: presente
+      but: "Chercher une action omfwd utilisant TLS"
+      controle: "omfwd avec StreamDriver gtls"
+      bon: "une ligne"
+      mauvais: "envoi en clair, ou pas d'envoi"
+      action: "action(type=\"omfwd\" protocol=\"tcp\" Target=\"serveur\" port=\"6514\" StreamDriver=\"gtls\" StreamDriverMode=\"1\" StreamDriverAuthMode=\"x509/name\")"
+      mots_cles: [rsyslog, tls, chiffrement, gtls, omfwd]
+      pieges: ["Une action ecrite sur plusieurs lignes echappe a cette lecture ligne a ligne : relire le fichier en cas d'ecart."]
+  rsyslog_remote_tls_cacert:
+    gabarit: detecteur
+    theme: journalisation
+    vars:
+      titre: "rsyslog : certificat d'autorite pour l'envoi TLS (DefaultNetstreamDriverCAFile)"
+      commande: |-
+        grep -Es 'DefaultNetstreamDriverCAFile' /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+      attendu: presente
+      but: "Chercher le certificat d'autorite de l'envoi TLS"
+      controle: "DefaultNetstreamDriverCAFile defini"
+      bon: "une ligne"
+      mauvais: "aucune ligne"
+      action: "global(DefaultNetstreamDriverCAFile=\"/chemin/ca.pem\") dans /etc/rsyslog.conf."
+      mots_cles: [rsyslog, tls, certificat, ca]
+  systemd_journal_upload_url:
+    gabarit: detecteur
+    theme: journalisation
+    vars:
+      titre: "journald : serveur distant defini pour systemd-journal-upload (URL=)"
+      commande: |-
+        grep -hEs '^[[:space:]]*URL=[^[:space:]]+' /etc/systemd/journal-upload.conf /etc/systemd/journal-upload.conf.d/*.conf
+      attendu: presente
+      but: "Lire l'URL du serveur de journaux distant"
+      controle: "URL= renseignee"
+      bon: "une ligne URL=..."
+      mauvais: "aucune URL"
+      action: "Ecrire « URL=https://serveur-journaux:19532 » dans /etc/systemd/journal-upload.conf."
+      mots_cles: [journald, journal-upload, "serveur distant", centralisation]
+      pieges: ["Ne s'applique que si journald est le service de journalisation retenu (sinon voir rsyslog)."]
+  systemd_journal_upload_server_tls:
+    gabarit: detecteur
+    theme: journalisation
+    vars:
+      titre: "journald : cle, certificat et autorite TLS de systemd-journal-upload"
+      commande: |-
+        cat /etc/systemd/journal-upload.conf /etc/systemd/journal-upload.conf.d/*.conf 2>/dev/null | awk -F= '/^(ServerKeyFile|ServerCertificateFile|TrustedCertificateFile)=/{v[$1]=1} END{n=split("ServerKeyFile ServerCertificateFile TrustedCertificateFile",k," "); for(i=1;i<=n;i++) if(!(k[i] in v)) print k[i]" manquant"}'
+      but: "Verifier les trois parametres TLS"
+      controle: "ServerKeyFile, ServerCertificateFile et TrustedCertificateFile definis"
+      bon: "aucune ligne (rien de manquant)"
+      action: "Renseigner les trois parametres dans /etc/systemd/journal-upload.conf."
+      mots_cles: [journald, journal-upload, tls, certificat]
+      pieges: ["Ne s'applique que si journald est le service de journalisation retenu (sinon voir rsyslog)."]
+  ensure_logrotate_activated:
+    gabarit: detecteur
+    theme: journalisation
+    vars:
+      titre: "logrotate tourne periodiquement (rotation quotidienne)"
+      commande: |-
+        grep -Es '^[[:space:]]*daily' /etc/logrotate.conf
+      attendu: presente
+      but: "Lire la frequence de rotation par defaut"
+      controle: "rotation daily dans logrotate.conf"
+      bon: "une ligne « daily »"
+      mauvais: "autre frequence"
+      action: "Ecrire « daily » dans /etc/logrotate.conf (et verifier logrotate.timer ou cron.daily)."
+      mots_cles: [logrotate, rotation, journaux, daily]
+  file_groupownerships_var_log:
+    ignorer: "la source exclut certains journaux sans les lister : a traiter par une fiche manuelle relue"
+  file_ownerships_var_log:
+    ignorer: "la source exclut certains journaux sans les lister : a traiter par une fiche manuelle relue"
+
+  # ========================================== fichiers et droits systeme
+  file_permissions_unauthorized_world_writable:
+    gabarit: detecteur
+    theme: fichiers-systeme
+    vars:
+      titre: "Aucun fichier modifiable par tout le monde"
+      commande: |-
+        find / -xdev -type f -perm -0002 2>/dev/null
+      but: "Chercher les fichiers modifiables par tous (partition racine)"
+      controle: "aucun fichier en ecriture pour les autres"
+      bon: "aucune ligne"
+      action: "chmod o-w FICHIER (apres verification de l'application concernee)."
+      mots_cles: [world-writable, "modifiable par tous", droits, fichiers]
+      pieges: ["-xdev limite la recherche a la partition racine : relancer pour chaque partition locale (findmnt)."]
+  file_permissions_ungroupowned:
+    gabarit: detecteur
+    theme: fichiers-systeme
+    vars:
+      titre: "Aucun fichier sans groupe proprietaire valide"
+      commande: |-
+        find / -xdev -nogroup 2>/dev/null
+      but: "Chercher les fichiers dont le groupe n'existe pas"
+      controle: "aucun fichier sans groupe"
+      bon: "aucune ligne"
+      action: "chgrp GROUPE FICHIER, ou supprimer (enqueter sur l'origine)."
+      mots_cles: [nogroup, groupe, orphelin, fichiers]
+      pieges: ["-xdev limite la recherche a la partition racine : relancer pour chaque partition locale (findmnt)."]
+  no_files_unowned_by_user:
+    gabarit: detecteur
+    theme: fichiers-systeme
+    vars:
+      titre: "Aucun fichier sans proprietaire valide"
+      commande: |-
+        find / -xdev -nouser 2>/dev/null
+      but: "Chercher les fichiers dont le proprietaire n'existe pas"
+      controle: "aucun fichier sans proprietaire"
+      bon: "aucune ligne"
+      action: "chown COMPTE FICHIER, ou supprimer (enqueter sur l'origine)."
+      mots_cles: [nouser, proprietaire, orphelin, fichiers]
+      pieges: ["-xdev limite la recherche a la partition racine : relancer pour chaque partition locale (findmnt)."]
+  dir_perms_world_writable_sticky_bits:
+    gabarit: detecteur
+    theme: fichiers-systeme
+    vars:
+      titre: "Repertoires modifiables par tous : bit sticky present"
+      commande: |-
+        find / -xdev -type d \( -perm -0002 -a ! -perm -1000 \) -print 2>/dev/null
+      but: "Chercher les repertoires ouverts a tous sans bit sticky"
+      controle: "bit sticky sur tout repertoire modifiable par tous"
+      bon: "aucune ligne"
+      action: "chmod +t REPERTOIRE (ou retirer l'ecriture pour tous)."
+      mots_cles: [sticky, repertoires, world-writable, /tmp]
+  dir_perms_world_writable_root_owned:
+    gabarit: detecteur
+    theme: fichiers-systeme
+    vars:
+      titre: "Les repertoires modifiables par tous appartiennent a root"
+      commande: |-
+        find / -xdev -type d -perm -0002 -uid +0 -print 2>/dev/null
+      but: "Chercher les repertoires ouverts a tous qui n'appartiennent pas a root"
+      controle: "proprietaire root"
+      bon: "aucune ligne"
+      action: "chown root REPERTOIRE (apres enquete)."
+      mots_cles: [repertoires, world-writable, root, proprietaire]
+  file_permissions_unauthorized_suid:
+    gabarit: detecteur
+    theme: fichiers-systeme
+    vars:
+      titre: "Tous les executables SUID proviennent d'un paquet"
+      commande: |-
+        find / -xdev -type f -perm -4000 -print 2>/dev/null | while read -r f; do dpkg -S "$f" >/dev/null 2>&1 || dpkg -S "${f#/usr}" >/dev/null 2>&1 || echo "hors paquet : $f"; done
+      but: "Lister les fichiers SUID qu'aucun paquet n'a installes"
+      # Banc reel 19/09/2026 : fusion /usr -> dpkg connait /bin/umount, find
+      # trouve /usr/bin/umount ; les deux chemins sont essayes.
+      lecture: "« hors paquet : X » = fichier SUID qu'aucun paquet n'a installe (chemin avec et sans /usr essayes) ; aucune ligne = conforme."
+      controle: "aucun SUID hors paquet"
+      bon: "aucune ligne"
+      action: "Enqueter sur chaque fichier (porte derobee possible) ; retirer le bit (chmod u-s) ou le fichier."
+      mots_cles: [suid, setuid, privileges, executables, "porte derobee"]
+      pieges: ["dpkg -S suppose Debian/Ubuntu ; sur RHEL utiliser rpm -qf.", "Un logiciel installe hors paquet (ex. /opt) peut etre legitime : a qualifier."]
+  file_permissions_unauthorized_sgid:
+    gabarit: detecteur
+    theme: fichiers-systeme
+    vars:
+      titre: "Tous les executables SGID proviennent d'un paquet"
+      commande: |-
+        find / -xdev -type f -perm -2000 -print 2>/dev/null | while read -r f; do dpkg -S "$f" >/dev/null 2>&1 || dpkg -S "${f#/usr}" >/dev/null 2>&1 || echo "hors paquet : $f"; done
+      but: "Lister les fichiers SGID qu'aucun paquet n'a installes"
+      # Banc reel 19/09/2026 : fusion /usr -> dpkg connait /bin/umount, find
+      # trouve /usr/bin/umount ; les deux chemins sont essayes.
+      lecture: "« hors paquet : X » = fichier SGID qu'aucun paquet n'a installe (chemin avec et sans /usr essayes) ; aucune ligne = conforme."
+      controle: "aucun SGID hors paquet"
+      bon: "aucune ligne"
+      action: "Enqueter sur chaque fichier ; retirer le bit (chmod g-s) ou le fichier."
+      mots_cles: [sgid, setgid, privileges, executables]
+      pieges: ["dpkg -S suppose Debian/Ubuntu ; sur RHEL utiliser rpm -qf."]
+  dir_system_commands_root_owned:
+    gabarit: detecteur
+    theme: fichiers-systeme
+    vars:
+      titre: "Les repertoires de commandes systeme appartiennent a root"
+      commande: |-
+        find -L /bin /sbin /usr/bin /usr/sbin /usr/local/bin /usr/local/sbin ! -user root -type d -printf '%u %p\n' 2>/dev/null
+      but: "Chercher les repertoires de commandes qui n'appartiennent pas a root"
+      controle: "proprietaire root"
+      bon: "aucune ligne"
+      action: "chown root REPERTOIRE"
+      mots_cles: [commandes, binaires, repertoires, proprietaire, /usr/bin]
+  dir_system_commands_group_root_owned:
+    gabarit: detecteur
+    theme: fichiers-systeme
+    vars:
+      titre: "Les repertoires de commandes systeme ont le groupe root"
+      commande: |-
+        find -L /bin /sbin /usr/bin /usr/sbin /usr/local/bin /usr/local/sbin ! -group root -type d -printf '%g %p\n' 2>/dev/null
+      but: "Chercher les repertoires de commandes hors du groupe root"
+      controle: "groupe root"
+      bon: "aucune ligne"
+      action: "chgrp root REPERTOIRE"
+      mots_cles: [commandes, binaires, repertoires, groupe, /usr/bin]
+  file_ownership_binary_dirs:
+    gabarit: detecteur
+    theme: fichiers-systeme
+    vars:
+      titre: "Les executables systeme appartiennent a root"
+      commande: |-
+        find -L /bin /sbin /usr/bin /usr/sbin /usr/libexec /usr/local/bin /usr/local/sbin ! -user root -printf '%u %p\n' 2>/dev/null
+      but: "Chercher les executables systeme qui n'appartiennent pas a root"
+      controle: "proprietaire root"
+      bon: "aucune ligne"
+      action: "chown root FICHIER"
+      mots_cles: [executables, binaires, proprietaire, /usr/bin]
+  file_groupownership_system_commands_dirs:
+    gabarit: detecteur
+    theme: fichiers-systeme
+    vars:
+      titre: "Les executables systeme ont le groupe root ou un groupe systeme"
+      commande: |-
+        find -L /bin /sbin /usr/bin /usr/sbin /usr/local/bin /usr/local/sbin -gid +999 -printf '%g %p\n' 2>/dev/null
+      but: "Chercher les executables dont le groupe n'est pas un groupe systeme (GID >= 1000)"
+      controle: "groupe root ou systeme (GID < 1000)"
+      bon: "aucune ligne"
+      action: "chgrp root FICHIER"
+      mots_cles: [executables, binaires, groupe, /usr/bin]
+  file_permissions_binary_dirs:
+    gabarit: detecteur
+    theme: fichiers-systeme
+    vars:
+      titre: "Les executables systeme ne sont pas modifiables par le groupe ni les autres"
+      commande: |-
+        find -L /bin /sbin /usr/bin /usr/sbin /usr/libexec /usr/local/bin /usr/local/sbin -perm /022 -printf '%m %p\n' 2>/dev/null
+      but: "Chercher les executables modifiables par le groupe ou les autres"
+      controle: "pas d'ecriture pour le groupe ni les autres"
+      bon: "aucune ligne"
+      action: "chmod go-w FICHIER"
+      mots_cles: [executables, binaires, droits, /usr/bin]
+  mount_option_nodev_nonroot_local_partitions:
+    gabarit: detecteur
+    theme: montage
+    vars:
+      titre: "Partitions locales (hors racine) montees avec nodev"
+      commande: |-
+        mount | grep '^/dev\S* on /\S' | grep --invert-match 'nodev'
+      but: "Lister les partitions locales hors racine montees sans nodev"
+      controle: "nodev sur toutes les partitions locales hors racine"
+      bon: "aucune ligne"
+      action: "Ajouter nodev aux options de ces partitions dans /etc/fstab, puis remonter."
+      mots_cles: [nodev, montage, partitions, fstab]
+  disable_users_coredumps:
+    gabarit: detecteur
+    theme: parametres-noyau
+    vars:
+      titre: "Core dumps interdits pour tous les utilisateurs (* hard core 0)"
+      commande: |-
+        grep -Rhs '^[[:space:]]*\*[[:space:]]+hard[[:space:]]+core[[:space:]]+0' /etc/security/limits.conf /etc/security/limits.d/
+      attendu: presente
+      but: "Chercher la limite « * hard core 0 »"
+      controle: "* hard core 0 present"
+      bon: "une ligne"
+      mauvais: "aucune limite"
+      action: "Ajouter « * hard core 0 » dans /etc/security/limits.d/60-sentinelle.conf."
+      mots_cles: [core, "core dump", limits, memoire]
+  wireless_disable_interfaces:
+    gabarit: detecteur
+    theme: exposition-reseau
+    vars:
+      titre: "Aucune interface reseau sans fil active"
+      commande: |-
+        ls -L -d /sys/class/net/*/wireless 2>/dev/null | xargs -r dirname | xargs -r basename -a
+      but: "Lister les interfaces sans fil"
+      controle: "aucune interface wifi"
+      bon: "aucune ligne"
+      action: "Desactiver les interfaces listees (nmcli radio all off) ou retirer le materiel."
+      mots_cles: [wifi, "sans fil", wireless, interface]
+      pieges: ["Non applicable sans materiel sans fil ; sur un portable, a valider avec l'exploitant."]
+  install_PAE_kernel_on_x86-32:
+    ignorer: "concerne uniquement les systemes x86 32 bits"
+
+  # ======================================================== pare-feu
+  firewall_single_service_active:
+    gabarit: detecteur
+    theme: pare-feu
+    vars:
+      titre: "Exactement un pare-feu actif (ufw, nftables ou iptables)"
+      # Relecture 19/09/2026 : ufw.service (oneshot) reste « active » meme
+      # quand ufw est desactive -> on lit « ufw status » (root exige).
+      commande: |-
+        (ufw status 2>&1 | awk '/need to be root/{print "SENTINELLE:ILLISIBLE"} /^Status: active/{print "ufw"}'; systemctl is-active nftables netfilter-persistent 2>/dev/null | awk '$1=="active"{print "actif"}') | awk '/^SENTINELLE:/{print; next} {n++} END{if (n != 1) print n+0" pare-feu actif(s), attendu : 1"}'
+      but: "Compter les pare-feu reellement actifs (ufw active, nftables, netfilter-persistent)"
+      controle: "un seul service de pare-feu actif"
+      bon: "aucune ligne"
+      action: "Garder un seul outil (ufw OU nftables OU iptables) et desactiver les autres (systemctl disable --now)."
+      mots_cles: [pare-feu, firewall, ufw, nftables, iptables]
+  check_ufw_active:
+    gabarit: detecteur
+    theme: pare-feu
+    condition: {variable: var_network_filtering_service, valeur: ufw}
+    vars:
+      titre: "ufw est actif"
+      commande: |-
+        ufw status
+      but: "Lire l'etat d'ufw"
+      lecture: "« Status: active » attendu ; « inactive » ou erreur = ecart."
+      controle: "Status: active"
+      bon: "Status: active"
+      action: "ufw enable"
+      mots_cles: [ufw, pare-feu, actif]
+  set_ufw_default_rule:
+    gabarit: detecteur
+    theme: pare-feu
+    condition: {variable: var_network_filtering_service, valeur: ufw}
+    vars:
+      titre: "ufw : politique par defaut en refus"
+      commande: |-
+        ufw status verbose | grep Default:
+      but: "Lire les politiques par defaut d'ufw"
+      lecture: "Attendu : deny (ou reject/disabled) pour incoming, outgoing et routed."
+      controle: "politique par defaut deny"
+      bon: "Default: deny (incoming), deny (outgoing), disabled (routed)"
+      action: "ufw default deny incoming ; ufw default deny outgoing ; ufw default deny routed (ouvrir ensuite le necessaire)."
+      mots_cles: [ufw, politique, "par defaut", refus, deny]
+  set_ufw_loopback_traffic:
+    gabarit: detecteur
+    theme: pare-feu
+    condition: {variable: var_network_filtering_service, valeur: ufw}
+    vars:
+      titre: "ufw : trafic de boucle locale (lo) autorise, 127.0.0.0/8 refuse ailleurs"
+      commande: |-
+        ufw status verbose
+      but: "Lire les regles d'ufw"
+      lecture: "Attendu : allow in/out on lo, deny in from 127.0.0.0/8 et ::1."
+      controle: "regles de boucle locale presentes"
+      bon: "4 regles de boucle locale"
+      action: "ufw allow in on lo ; ufw allow out on lo ; ufw deny in from 127.0.0.0/8 ; ufw deny in from ::1"
+      mots_cles: [ufw, loopback, "boucle locale", lo]
+  ufw_rules_for_open_ports:
+    gabarit: detecteur
+    theme: pare-feu
+    condition: {variable: var_network_filtering_service, valeur: ufw}
+    vars:
+      titre: "ufw : une regle pour chaque port ouvert"
+      commande: |-
+        ss -tuln
+      but: "Lister les ports ouverts, a comparer aux regles d'ufw (ufw status verbose)"
+      lecture: "Chaque port en ecoute hors 127.0.0.1/::1 doit avoir une regle ufw."
+      controle: "regle ufw pour chaque port ouvert"
+      bon: "tous les ports couverts"
+      action: "ufw allow in PORT/PROTO (ou deny) pour chaque port non couvert."
+      mots_cles: [ufw, ports, ouverts, regles]
+  set_nftables_table:
+    gabarit: detecteur
+    theme: pare-feu
+    condition: {variable: var_network_filtering_service, valeur: nftables}
+    vars:
+      titre: "nftables : une table existe"
+      commande: |-
+        nft list tables
+      but: "Lister les tables nftables"
+      lecture: "Une ligne « table ... » = conforme ; aucune = aucune table."
+      controle: "au moins une table"
+      bon: "une ligne « table inet filter » (par exemple)"
+      action: "nft create table inet filter"
+      mots_cles: [nftables, table, pare-feu]
+  set_nftables_base_chain:
+    gabarit: detecteur
+    theme: pare-feu
+    condition: {variable: var_network_filtering_service, valeur: nftables}
+    vars:
+      titre: "nftables : chaines de base input, forward et output"
+      commande: |-
+        nft list ruleset | grep -E 'hook (input|forward|output)'
+      but: "Lister les chaines de base"
+      lecture: "Attendu : une ligne par chaine de base (hook input, forward, output) ; une chaine manquante = ecart."
+      controle: "chaines input, forward, output presentes"
+      bon: "3 lignes « type filter hook ... »"
+      action: "Creer les chaines de base dans /etc/nftables.conf (type filter hook input/forward/output)."
+      mots_cles: [nftables, chaine, hook, pare-feu]
+  nftables_ensure_default_deny_policy:
+    gabarit: detecteur
+    theme: pare-feu
+    condition: {variable: var_network_filtering_service, valeur: nftables}
+    vars:
+      titre: "nftables : politique par defaut drop"
+      commande: |-
+        nft list ruleset | grep -E 'hook (input|forward|output)'
+      but: "Lire la politique des chaines de base"
+      lecture: "Chaque chaine doit afficher « policy drop; »."
+      controle: "policy drop sur input, forward, output"
+      bon: "policy drop partout"
+      action: "Mettre « policy drop; » sur chaque chaine de base (apres avoir autorise le necessaire)."
+      mots_cles: [nftables, politique, drop, refus]
+  set_nftables_loopback_traffic:
+    gabarit: detecteur
+    theme: pare-feu
+    condition: {variable: var_network_filtering_service, valeur: nftables}
+    vars:
+      titre: "nftables : boucle locale autorisee, 127.0.0.0/8 et ::1 refuses ailleurs"
+      commande: |-
+        nft list ruleset | awk '/hook input/,/}/' | grep -E 'iif "lo" accept|saddr (127.0.0.0/8|::1)'
+      but: "Lire les regles de boucle locale de la chaine input"
+      lecture: "Attendu : iif \"lo\" accept ET un refus de 127.0.0.0/8 et de ::1 ; une regle manquante = ecart."
+      controle: "regles de boucle locale presentes"
+      bon: "iif \"lo\" accept + drop de 127.0.0.0/8 et ::1"
+      action: "Ajouter : iif \"lo\" accept ; ip saddr 127.0.0.0/8 drop ; ip6 saddr ::1 drop"
+      mots_cles: [nftables, loopback, "boucle locale", lo]
+  nftables_rules_permanent:
+    gabarit: detecteur
+    theme: pare-feu
+    condition: {variable: var_network_filtering_service, valeur: nftables}
+    vars:
+      titre: "nftables : regles chargees au demarrage (/etc/nftables.conf)"
+      commande: |-
+        grep -Es '^[[:space:]]*(include|table)' /etc/nftables.conf
+      but: "Verifier que la configuration persistante declare les regles"
+      lecture: "Au moins une ligne include ou table = regles chargees au demarrage ; aucune = ecart."
+      controle: "regles presentes dans /etc/nftables.conf"
+      bon: "lignes include ou table"
+      action: "Enregistrer les regles dans /etc/nftables.conf (nft list ruleset > ...) et systemctl enable nftables."
+      mots_cles: [nftables, persistant, demarrage, nftables.conf]
+  set_iptables_default_rule:
+    gabarit: detecteur
+    theme: pare-feu
+    condition: {variable: var_network_filtering_service, valeur: iptables}
+    vars:
+      titre: "iptables : politique DROP sur INPUT"
+      commande: |-
+        iptables -L INPUT -n | head -1
+      but: "Lire la politique de la chaine INPUT"
+      lecture: "Attendu : « Chain INPUT (policy DROP) »."
+      controle: "policy DROP"
+      bon: "Chain INPUT (policy DROP)"
+      action: "iptables -P INPUT DROP (apres les regles d'autorisation), puis sauvegarder (netfilter-persistent save)."
+      mots_cles: [iptables, politique, drop, input]
+  set_ip6tables_default_rule:
+    gabarit: detecteur
+    theme: pare-feu
+    condition: {variable: var_network_filtering_service, valeur: iptables}
+    vars:
+      titre: "ip6tables : politique DROP sur INPUT"
+      commande: |-
+        ip6tables -L INPUT -n | head -1
+      but: "Lire la politique IPv6 de la chaine INPUT"
+      lecture: "Attendu : « Chain INPUT (policy DROP) » (non applicable si IPv6 est desactive)."
+      controle: "policy DROP"
+      bon: "Chain INPUT (policy DROP)"
+      action: "ip6tables -P INPUT DROP, puis sauvegarder."
+      mots_cles: [ip6tables, ipv6, politique, drop]
+  set_loopback_traffic:
+    gabarit: detecteur
+    theme: pare-feu
+    condition: {variable: var_network_filtering_service, valeur: iptables}
+    vars:
+      titre: "iptables : boucle locale autorisee, 127.0.0.0/8 refuse ailleurs"
+      commande: |-
+        iptables -L INPUT -v -n
+      but: "Lire les regles INPUT"
+      lecture: "Attendu : ACCEPT sur lo, DROP de 127.0.0.0/8 ; et ACCEPT sur lo en OUTPUT."
+      controle: "regles de boucle locale presentes"
+      bon: "regles lo presentes"
+      action: "iptables -A INPUT -i lo -j ACCEPT ; iptables -A OUTPUT -o lo -j ACCEPT ; iptables -A INPUT -s 127.0.0.0/8 -j DROP"
+      mots_cles: [iptables, loopback, "boucle locale", lo]
+  set_ipv6_loopback_traffic:
+    gabarit: detecteur
+    theme: pare-feu
+    condition: {variable: var_network_filtering_service, valeur: iptables}
+    vars:
+      titre: "ip6tables : boucle locale autorisee, ::1 refuse ailleurs"
+      commande: |-
+        ip6tables -L INPUT -v -n
+      but: "Lire les regles INPUT IPv6"
+      lecture: "Attendu : ACCEPT sur lo, DROP de ::1."
+      controle: "regles de boucle locale IPv6 presentes"
+      bon: "regles lo presentes"
+      action: "ip6tables -A INPUT -i lo -j ACCEPT ; ip6tables -A OUTPUT -o lo -j ACCEPT ; ip6tables -A INPUT -s ::1 -j DROP"
+      mots_cles: [ip6tables, ipv6, loopback, "boucle locale"]
+  iptables_rules_for_open_ports:
+    gabarit: detecteur
+    theme: pare-feu
+    condition: {variable: var_network_filtering_service, valeur: iptables}
+    vars:
+      titre: "iptables : une regle pour chaque port ouvert (IPv4)"
+      commande: |-
+        ss -4tuln
+      but: "Lister les ports IPv4 ouverts, a comparer a iptables -L INPUT -v -n"
+      lecture: "Liste des ports en ecoute (IPv4) : chacun doit avoir une regle dans iptables -L INPUT -v -n."
+      controle: "regle pour chaque port ouvert"
+      bon: "tous les ports couverts"
+      action: "iptables -A INPUT -p PROTO --dport PORT -j ACCEPT (ou DROP) pour chaque port non couvert."
+      mots_cles: [iptables, ports, ouverts]
+  ip6tables_rules_for_open_ports:
+    gabarit: detecteur
+    theme: pare-feu
+    condition: {variable: var_network_filtering_service, valeur: iptables}
+    vars:
+      titre: "ip6tables : une regle pour chaque port ouvert (IPv6)"
+      commande: |-
+        ss -6tuln
+      but: "Lister les ports IPv6 ouverts, a comparer a ip6tables -L INPUT -v -n"
+      lecture: "Liste des ports en ecoute (IPv6) : chacun doit avoir une regle dans ip6tables -L INPUT -v -n."
+      controle: "regle pour chaque port ouvert"
+      bon: "tous les ports couverts"
+      action: "ip6tables -A INPUT -p PROTO --dport PORT -j ACCEPT (ou DROP) pour chaque port non couvert."
+      mots_cles: [ip6tables, ipv6, ports, ouverts]
+
+
+  # ======================================================== SSH (4e vague)
+  sshd_use_strong_ciphers:
+    gabarit: detecteur
+    theme: ssh
+    vars:
+      titre: "SSH : uniquement des chiffrements forts (Ciphers)"
+      commande: |-
+        sshd -T 2>/dev/null | awk '$1=="ciphers"{v=1; n=split($2,c,","); for(i=1;i<=n;i++) if (index(",chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr,", ","c[i]",")==0) print "chiffrement faible : "c[i]} END{if(!v) print "SENTINELLE:ILLISIBLE"}'
+      but: "Lister les chiffrements SSH hors de la liste forte"
+      controle: "Ciphers limites a chacha20-poly1305, aes-gcm, aes-ctr"
+      bon: "aucune ligne"
+      action: "Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr dans /etc/ssh/sshd_config.d/, puis recharger sshd."
+      mots_cles: [ssh, ciphers, chiffrement, algorithmes, cbc]
+      pieges: ["sshd -T exige root : sans sudo, resultat « indetermine »."]
+  sshd_use_strong_kex:
+    gabarit: detecteur
+    theme: ssh
+    vars:
+      titre: "SSH : uniquement des echanges de cles forts (KexAlgorithms)"
+      commande: |-
+        sshd -T 2>/dev/null | awk '$1=="kexalgorithms"{v=1; n=split($2,c,","); for(i=1;i<=n;i++) if (index(",{union:sshd_strong_kex},", ","c[i]",")==0) print "echange de cles faible : "c[i]} END{if(!v) print "SENTINELLE:ILLISIBLE"}'
+      but: "Lister les algorithmes d'echange de cles hors de la liste forte"
+      controle: "KexAlgorithms limites a {union:sshd_strong_kex}"
+      bon: "aucune ligne"
+      action: "KexAlgorithms {union:sshd_strong_kex} dans /etc/ssh/sshd_config.d/, puis recharger sshd."
+      mots_cles: [ssh, kex, kexalgorithms, "echange de cles", algorithmes]
+  sshd_use_strong_macs:
+    gabarit: detecteur
+    theme: ssh
+    vars:
+      titre: "SSH : uniquement des MAC forts (MACs)"
+      commande: |-
+        sshd -T 2>/dev/null | awk '$1=="macs"{v=1; n=split($2,c,","); for(i=1;i<=n;i++) if (index(",{union:sshd_strong_macs},", ","c[i]",")==0) print "MAC faible : "c[i]} END{if(!v) print "SENTINELLE:ILLISIBLE"}'
+      but: "Lister les MAC hors de la liste forte"
+      controle: "MACs limites a {union:sshd_strong_macs}"
+      bon: "aucune ligne"
+      action: "MACs {union:sshd_strong_macs} dans /etc/ssh/sshd_config.d/, puis recharger sshd."
+      mots_cles: [ssh, macs, integrite, md5, algorithmes]
+  sshd_limit_user_access:
+    gabarit: detecteur
+    theme: ssh
+    vars:
+      titre: "SSH : acces limite a des utilisateurs ou groupes (AllowUsers, AllowGroups...)"
+      commande: |-
+        sshd -T 2>/dev/null | awk 'NR==1{ok=1} /^(allowusers|allowgroups|denyusers|denygroups) /{print} END{if(!ok) print "SENTINELLE:ILLISIBLE"}'
+      attendu: presente
+      but: "Lire les restrictions d'acces de sshd"
+      controle: "au moins une directive Allow/Deny Users/Groups"
+      bon: "une ligne allowusers/allowgroups/denyusers/denygroups"
+      mauvais: "tout compte peut se connecter"
+      action: "Ajouter « AllowGroups ssh-autorises » (ou AllowUsers) dans /etc/ssh/sshd_config.d/, garder une session ouverte, recharger."
+      mots_cles: [ssh, allowusers, allowgroups, "acces ssh", restriction]
+  file_permissions_sshd_private_key:
+    gabarit: file_permissions
+    theme: ssh
+    vars: {filepath: /etc/ssh/, file_regex: "^.*_key$", filemode: "0600"}
+
+  # ================================================================ heure
+  ntp_single_service_active:
+    gabarit: detecteur
+    theme: synchronisation-heure
+    vars:
+      titre: "Un seul service de synchronisation de l'heure actif"
+      commande: |-
+        systemctl is-active chrony systemd-timesyncd ntp 2>/dev/null | awk '$1=="active"{n++} END{if (n != 1) print n+0" service(s) de synchronisation actif(s), attendu : 1"}'
+      but: "Compter les services de synchronisation de l'heure actifs"
+      controle: "exactement un service actif"
+      bon: "aucune ligne"
+      action: "Garder chrony OU systemd-timesyncd et desactiver l'autre (systemctl disable --now)."
+      mots_cles: [heure, ntp, chrony, timesyncd, synchronisation]
+  service_chronyd_or_ntpd_enabled:
+    gabarit: detecteur
+    theme: synchronisation-heure
+    vars:
+      titre: "Un demon NTP (chrony ou ntpd) est actif"
+      commande: |-
+        systemctl is-active chrony chronyd ntp ntpd 2>/dev/null | grep -x active
+      attendu: presente
+      but: "Verifier qu'un demon NTP tourne"
+      controle: "chrony ou ntpd actif"
+      bon: "une ligne « active »"
+      mauvais: "aucun demon NTP"
+      action: "apt install chrony puis systemctl enable --now chrony."
+      mots_cles: [ntp, chrony, ntpd, heure]
+  chronyd_configure_pool_and_server:
+    gabarit: detecteur
+    theme: synchronisation-heure
+    vars:
+      titre: "chrony : serveurs de temps configures (server / pool)"
+      paquet: chrony
+      commande: |-
+        grep -hEs '^(server|pool)[[:space:]]' /etc/chrony/chrony.conf /etc/chrony/sources.d/*.sources /etc/chrony/conf.d/*.conf
+      attendu: presente
+      but: "Lire les sources de temps de chrony"
+      controle: "au moins une ligne server ou pool"
+      bon: "une ligne server/pool"
+      mauvais: "aucune source de temps"
+      action: "Ajouter « pool SERVEUR iburst » (ou server) dans /etc/chrony/sources.d/, puis redemarrer chrony."
+      mots_cles: [chrony, server, pool, ntp, heure]
+  chronyd_specify_remote_server:
+    gabarit: detecteur
+    theme: synchronisation-heure
+    vars:
+      titre: "chrony : un serveur de temps distant est defini"
+      paquet: chrony
+      commande: |-
+        grep -hEs '^(server|pool)[[:space:]]' /etc/chrony/chrony.conf /etc/chrony/sources.d/*.sources /etc/chrony/conf.d/*.conf
+      attendu: presente
+      but: "Lire les sources de temps (fichier principal, sourcedir, confdir)"
+      controle: "au moins une source distante"
+      bon: "une ligne server/pool"
+      mauvais: "aucune source"
+      action: "Ajouter « server SERVEUR iburst » dans /etc/chrony/sources.d/."
+      mots_cles: [chrony, "serveur de temps", ntp, heure]
+  chronyd_run_as_chrony_user:
+    gabarit: detecteur
+    theme: synchronisation-heure
+    vars:
+      titre: "chrony tourne sous le compte _chrony"
+      paquet: chrony
+      commande: |-
+        grep -Es '^user[[:space:]]' /etc/chrony/chrony.conf | grep -v '[[:space:]]_chrony$'
+      but: "Lire le compte d'execution de chronyd"
+      lecture: "Une ligne = autre compte que _chrony ; aucune (ou « user _chrony ») = conforme."
+      controle: "user _chrony (ou absent)"
+      bon: "aucune ligne"
+      action: "Mettre « user _chrony » (ou retirer la ligne user) dans /etc/chrony/chrony.conf."
+      mots_cles: [chrony, user, compte, privileges]
+  service_timesyncd_configured:
+    gabarit: detecteur
+    theme: synchronisation-heure
+    vars:
+      titre: "systemd-timesyncd : serveurs NTP configures (NTP= / FallbackNTP=)"
+      paquet: systemd-timesyncd
+      commande: |-
+        grep -hEs '^[[:space:]]*(NTP|FallbackNTP)=[^[:space:]]+' /etc/systemd/timesyncd.conf /etc/systemd/timesyncd.conf.d/*.conf
+      attendu: presente
+      but: "Lire les serveurs de timesyncd"
+      controle: "NTP= ou FallbackNTP= renseigne"
+      bon: "une ligne"
+      mauvais: "aucun serveur explicite"
+      action: "Ecrire « NTP=serveur1 serveur2 » dans /etc/systemd/timesyncd.conf.d/60-sentinelle.conf."
+      mots_cles: [timesyncd, ntp, heure, serveur]
+
+  # ============================================== mail, NIS, rsh, LDAP
+  has_nonlocal_mta:
+    gabarit: detecteur
+    theme: messagerie
+    vars:
+      titre: "Aucun serveur de messagerie en ecoute hors boucle locale (port 25)"
+      commande: |-
+        ss -lntu | grep -E ':25\s' | grep -E -v '\s(127\.0\.0\.1|\[::1\]|::1):25\s'
+      but: "Chercher une ecoute du port 25 hors 127.0.0.1 / ::1"
+      controle: "port 25 en boucle locale seulement"
+      bon: "aucune ligne"
+      action: "Limiter l'agent de messagerie a la boucle locale (postfix : inet_interfaces = loopback-only)."
+      mots_cles: [smtp, "port 25", postfix, messagerie, mta]
+  postfix_network_listening_disabled:
+    gabarit: cle_valeur
+    theme: messagerie
+    vars:
+      titre: "postfix n'ecoute que localement (inet_interfaces = {var:var_postfix_inet_interfaces})"
+      paquet: postfix
+      fichiers: [/etc/postfix/main.cf]
+      cle: inet_interfaces
+      attendu: "{var:var_postfix_inet_interfaces}"
+      controle: "inet_interfaces = {var:var_postfix_inet_interfaces}"
+      bon: "inet_interfaces = {var:var_postfix_inet_interfaces}"
+      action: "Ecrire « inet_interfaces = {var:var_postfix_inet_interfaces} » dans /etc/postfix/main.cf, puis redemarrer postfix."
+      mots_cles: [postfix, inet_interfaces, smtp, messagerie]
+  postfix_client_configure_mail_alias:
+    gabarit: detecteur
+    theme: messagerie
+    vars:
+      titre: "Les courriels de root sont rediriges vers une adresse surveillee"
+      paquet: postfix
+      commande: |-
+        grep -Es '^root:[[:space:]]*[^[:space:]]+' /etc/aliases
+      attendu: presente
+      but: "Lire l'alias de root"
+      controle: "alias root defini"
+      bon: "une ligne « root: adresse »"
+      mauvais: "aucun alias"
+      action: "Ajouter « root: {var:var_postfix_root_mail_alias} » a /etc/aliases, puis newaliases."
+      mots_cles: [aliases, root, courriel, messagerie]
+  no_nis_in_nsswitch:
+    gabarit: detecteur
+    theme: authentification
+    vars:
+      titre: "NIS n'est pas utilise par nsswitch"
+      commande: |-
+        grep -E '^[a-z]+:.*\bnis\b' /etc/nsswitch.conf
+      but: "Chercher nis dans /etc/nsswitch.conf"
+      controle: "aucun service nis"
+      bon: "aucune ligne"
+      action: "Retirer nis des lignes de /etc/nsswitch.conf."
+      mots_cles: [nis, nsswitch, annuaire]
+      pieges: ["Le motif de l'OCIL de la source omet le « : » des lignes de nsswitch.conf : la lecture ici l'accepte."]
+  no_rsh_trust_files:
+    gabarit: detecteur
+    theme: services-inutiles
+    vars:
+      titre: "Aucun fichier de confiance rsh (/etc/hosts.equiv, .rhosts)"
+      commande: |-
+        ls /etc/hosts.equiv 2>/dev/null; find /home /root -maxdepth 2 -name .rhosts 2>/dev/null
+      but: "Chercher hosts.equiv et les .rhosts"
+      controle: "aucun fichier de confiance rsh"
+      bon: "aucune ligne"
+      action: "Supprimer /etc/hosts.equiv et les fichiers .rhosts."
+      mots_cles: [rsh, rhosts, hosts.equiv, confiance]
+  ldap_client_start_tls:
+    gabarit: detecteur
+    theme: authentification
+    vars:
+      titre: "Client LDAP (pam_ldap) : TLS obligatoire (ssl start_tls)"
+      paquet: libpam-ldap
+      commande: |-
+        grep -Es '^[[:space:]]*ssl[[:space:]]+start_tls' /etc/pam_ldap.conf
+      attendu: presente
+      but: "Lire l'option TLS de pam_ldap"
+      controle: "ssl start_tls"
+      bon: "une ligne"
+      mauvais: "LDAP en clair"
+      action: "Ecrire « ssl start_tls » dans /etc/pam_ldap.conf."
+      mots_cles: [ldap, tls, start_tls, annuaire]
+  ldap_client_tls_cacertpath:
+    gabarit: detecteur
+    theme: authentification
+    vars:
+      titre: "Client LDAP (nslcd) : certificat d'autorite TLS defini"
+      paquet: nslcd
+      commande: |-
+        grep -Es '^[[:space:]]*tls_cacert(dir|file)[[:space:]]+' /etc/nslcd.conf
+      attendu: presente
+      but: "Lire le certificat d'autorite de nslcd"
+      controle: "tls_cacertdir ou tls_cacertfile"
+      bon: "une ligne"
+      mauvais: "aucune autorite definie"
+      action: "Ecrire « tls_cacertfile /chemin/ca.pem » dans /etc/nslcd.conf."
+      mots_cles: [ldap, nslcd, certificat, tls]
+  sssd_enable_pam_services:
+    gabarit: detecteur
+    theme: authentification
+    vars:
+      titre: "SSSD : service pam active"
+      paquet: sssd
+      commande: |-
+        head -c0 /etc/sssd/sssd.conf || echo 'SENTINELLE:ILLISIBLE'; grep -Ehs '^[[:space:]]*services[[:space:]]*=.*\bpam\b' /etc/sssd/sssd.conf /etc/sssd/conf.d/*.conf
+      attendu: presente
+      but: "Lire les services de SSSD"
+      controle: "pam dans services"
+      bon: "services = ..., pam"
+      mauvais: "pam absent"
+      action: "Ajouter pam a « services = » dans la section [sssd] de /etc/sssd/sssd.conf."
+      mots_cles: [sssd, pam, services, annuaire]
+  sssd_ldap_configure_tls_reqcert:
+    sans_playbook: "sssd.conf a plusieurs sections : la directive doit aller dans la section [domain/...] concernee, correction manuelle"
+    gabarit: cle_valeur
+    theme: authentification
+    vars:
+      titre: "SSSD : certificat du serveur LDAP exige (ldap_tls_reqcert = demand)"
+      paquet: sssd
+      fichiers: [/etc/sssd/sssd.conf, /etc/sssd/conf.d/]
+      root: true
+      cle: ldap_tls_reqcert
+      attendu: demand
+      controle: "ldap_tls_reqcert = demand"
+      bon: "ldap_tls_reqcert = demand"
+      action: "Ecrire « ldap_tls_reqcert = demand » dans /etc/sssd/sssd.conf, puis redemarrer sssd."
+      mots_cles: [sssd, ldap, tls, certificat]
+  sssd_ldap_start_tls:
+    sans_playbook: "sssd.conf a plusieurs sections : la directive doit aller dans la section [domain/...] concernee, correction manuelle"
+    gabarit: cle_valeur
+    theme: authentification
+    vars:
+      titre: "SSSD : TLS pour toutes les requetes LDAP (ldap_id_use_start_tls = true)"
+      paquet: sssd
+      fichiers: [/etc/sssd/sssd.conf, /etc/sssd/conf.d/]
+      root: true
+      cle: ldap_id_use_start_tls
+      attendu: "true"
+      accepte: ["True", "yes"]
+      controle: "ldap_id_use_start_tls = true"
+      bon: "ldap_id_use_start_tls = true"
+      action: "Ecrire « ldap_id_use_start_tls = true » dans /etc/sssd/sssd.conf."
+      mots_cles: [sssd, ldap, tls, start_tls]
+      pieges: ["Ne s'applique que si id_provider = ldap ou ipa."]
+
+  # ==================================================== sessions, root PATH
+  logind_session_timeout:
+    gabarit: cle_valeur
+    theme: sessions
+    vars:
+      titre: "logind ferme les sessions inactives (StopIdleSessionSec au plus {var:var_logind_session_timeout} s)"
+      fichiers: [/etc/systemd/logind.conf, /etc/systemd/logind.conf.d/]
+      cle: StopIdleSessionSec
+      comparateur: entre
+      attendu: [1, "{var:var_logind_session_timeout}"]
+      controle: "StopIdleSessionSec entre 1 et {var:var_logind_session_timeout}"
+      bon: "StopIdleSessionSec={var:var_logind_session_timeout}"
+      action: "Ecrire « StopIdleSessionSec={var:var_logind_session_timeout} » dans la section [Login] de /etc/systemd/logind.conf, puis redemarrer systemd-logind."
+      mots_cles: [logind, inactivite, session, deconnexion]
+      # Relecture 19/09/2026 : option apparue dans systemd 252.
+      pieges: ["StopIdleSessionSec exige systemd 252 ou plus (Debian 12, Ubuntu 24.04) : sur Ubuntu 22.04 (systemd 249) l'option est ignoree, la lire dans le fichier ne prouve rien ; y utiliser TMOUT (fiche dediee)."]
+  accounts_user_dot_user_ownership:
+    gabarit: detecteur
+    theme: sessions
+    vars:
+      titre: "Fichiers d'initialisation (.bashrc...) possedes par leur utilisateur"
+      commande: |-
+        find /home -mindepth 2 -maxdepth 2 -name '.*' -type f -printf '%u %p\n' 2>/dev/null | awk 'BEGIN{while ((getline l < "/etc/passwd") > 0) {split(l, c, ":"); if (c[3] >= 1000) h[c[6]] = c[1]}} {d = $2; sub(/\/[^\/]*$/, "", d)} (d in h) && $1 != h[d] {print $2" appartient a "$1" (attendu "h[d]")"}'
+      but: "Comparer le proprietaire des fichiers caches a l'utilisateur du repertoire"
+      controle: "proprietaire = utilisateur"
+      bon: "aucune ligne"
+      action: "chown UTILISATEUR /home/UTILISATEUR/.FICHIER"
+      mots_cles: ["fichiers d'initialisation", bashrc, proprietaire]
+  accounts_user_dot_group_ownership:
+    gabarit: detecteur
+    theme: sessions
+    vars:
+      titre: "Fichiers d'initialisation (.bashrc...) au groupe principal de l'utilisateur"
+      commande: |-
+        find /home -mindepth 2 -maxdepth 2 -name '.*' -type f -printf '%G %p\n' 2>/dev/null | awk 'BEGIN{while ((getline l < "/etc/passwd") > 0) {split(l, c, ":"); if (c[3] >= 1000) g[c[6]] = c[4]}} {d = $2; sub(/\/[^\/]*$/, "", d)} (d in g) && $1 != g[d] {print $2" : groupe "$1" (attendu "g[d]")"}'
+      but: "Comparer le groupe des fichiers caches au groupe principal de l'utilisateur"
+      controle: "groupe = groupe principal"
+      bon: "aucune ligne"
+      action: "chgrp GROUPE_PRINCIPAL /home/UTILISATEUR/.FICHIER"
+      mots_cles: ["fichiers d'initialisation", bashrc, groupe]
+  file_groupownership_home_directories:
+    gabarit: detecteur
+    theme: sessions
+    vars:
+      titre: "Chaque repertoire personnel a le groupe principal de son utilisateur"
+      commande: |-
+        find /home -mindepth 1 -maxdepth 1 -type d -printf '%G %p\n' 2>/dev/null | awk 'BEGIN{while ((getline l < "/etc/passwd") > 0) {split(l, c, ":"); if (c[3] >= 1000) g[c[6]] = c[4]}} ($2 in g) && $1 != g[$2] {print $2" : groupe "$1" (attendu "g[$2]")"}'
+      but: "Comparer le groupe de chaque repertoire personnel au groupe principal"
+      controle: "groupe = groupe principal"
+      bon: "aucune ligne"
+      action: "chgrp GROUPE_PRINCIPAL /home/UTILISATEUR"
+      mots_cles: [home, "repertoire personnel", groupe]
+  accounts_users_home_files_ownership:
+    gabarit: detecteur
+    theme: sessions
+    vars:
+      titre: "Fichiers des repertoires personnels : proprietaire valide"
+      commande: |-
+        find /home -xdev -nouser 2>/dev/null
+      but: "Chercher les fichiers sans proprietaire valide sous /home"
+      controle: "aucun fichier orphelin"
+      bon: "aucune ligne"
+      action: "chown -R UTILISATEUR /home/UTILISATEUR (ou supprimer les fichiers orphelins)."
+      mots_cles: [home, nouser, proprietaire, orphelin]
+  accounts_users_home_files_groupownership:
+    gabarit: detecteur
+    theme: sessions
+    vars:
+      titre: "Fichiers des repertoires personnels : groupe dont l'utilisateur est membre"
+      commande: |-
+        find /home -mindepth 2 -xdev -printf '%G %p\n' 2>/dev/null | awk 'BEGIN{while ((getline l < "/etc/passwd") > 0) {split(l, c, ":"); if (c[3] >= 1000) {u[c[6]] = c[1]; g[c[1]] = c[4]}} while ((getline l < "/etc/group") > 0) {split(l, c, ":"); n = split(c[4], m, ","); for (i = 1; i <= n; i++) mb[m[i]","c[3]] = 1}} {split($2, p, "/"); d = "/"p[2]"/"p[3]} (d in u) && $1 != g[u[d]] && !((u[d]","$1) in mb) {print $2" : groupe "$1}'
+      but: "Chercher les fichiers dont le groupe n'est pas un groupe de l'utilisateur"
+      controle: "groupe = groupe principal ou groupe dont l'utilisateur est membre"
+      bon: "aucune ligne"
+      action: "chgrp GROUPE /home/UTILISATEUR/FICHIER"
+      mots_cles: [home, groupe, fichiers, utilisateurs]
+  accounts_users_home_files_permissions:
+    gabarit: detecteur
+    theme: sessions
+    vars:
+      titre: "Fichiers des repertoires personnels en 0750 au plus (hors fichiers caches)"
+      commande: |-
+        find /home -mindepth 2 -xdev ! -path '*/.*' -perm /0027 -printf '%m %p\n' 2>/dev/null
+      but: "Chercher les fichiers trop ouverts sous /home"
+      controle: "pas d'ecriture groupe ni d'acces pour les autres"
+      bon: "aucune ligne"
+      action: "chmod 0750 /home/UTILISATEUR/FICHIER (ou g-w,o-rwx)."
+      mots_cles: [home, droits, fichiers, utilisateurs]
+  root_path_no_dot:
+    gabarit: detecteur
+    theme: sessions
+    vars:
+      titre: "PATH : aucune entree relative, vide ou « .. »"
+      commande: |-
+        echo "$PATH" | awk -F: '{for (i = 1; i <= NF; i++) if ($i == "" || $i !~ /^\// || $i ~ /\.\./) print "entree invalide : ["$i"]"}'
+      but: "Controler les entrees du PATH"
+      controle: "entrees absolues uniquement"
+      bon: "aucune ligne"
+      action: "Corriger PATH dans /root/.profile (et /etc/environment) : chemins absolus, sans vide ni point."
+      mots_cles: [path, root, relatif, chemin]
+      pieges: ["C'est le PATH du shell d'audit : lancer l'audit en tant que root (sudo -i) pour lire celui de root."]
+  root_path_all_dirs:
+    gabarit: detecteur
+    theme: sessions
+    vars:
+      titre: "PATH : chaque entree est un repertoire existant"
+      commande: |-
+        echo "$PATH" | tr ':' '\n' | xargs -r stat -L -c '%F %n' 2>&1 | grep -v '^directory '
+      but: "Verifier que chaque entree du PATH est un repertoire"
+      controle: "toutes les entrees sont des repertoires"
+      bon: "aucune ligne"
+      action: "Retirer du PATH les entrees inexistantes ou qui ne sont pas des repertoires."
+      mots_cles: [path, root, repertoires]
+      pieges: ["C'est le PATH du shell d'audit : lancer l'audit en tant que root (sudo -i) pour lire celui de root."]
+  accounts_root_path_dirs_no_write:
+    gabarit: fichiers_stat
+    theme: sessions
+    vars:
+      titre: "PATH : aucun repertoire modifiable par le groupe ou les autres"
+      commande: |-
+        echo "$PATH" | tr ':' '\n' | xargs -r stat -L -c '%a %U %G %n' 2>/dev/null
+      but: "Lire les droits des repertoires du PATH"
+      droits_max: "0755"
+      action: "chmod go-w REPERTOIRE"
+      mots_cles: [path, root, droits, repertoires]
+      pieges: ["C'est le PATH du shell d'audit : lancer l'audit en tant que root (sudo -i) pour lire celui de root."]
+  no_dirs_unowned_by_root:
+    gabarit: detecteur
+    theme: sessions
+    vars:
+      titre: "PATH : tous les repertoires appartiennent a root"
+      commande: |-
+        echo "$PATH" | tr ':' '\n' | xargs -r stat -L -c '%U %n' 2>/dev/null | grep -v '^root '
+      but: "Lire le proprietaire des repertoires du PATH"
+      controle: "proprietaire root"
+      bon: "aucune ligne"
+      action: "chown root REPERTOIRE"
+      mots_cles: [path, root, proprietaire]
+      pieges: ["C'est le PATH du shell d'audit : lancer l'audit en tant que root (sudo -i) pour lire celui de root."]
+
+  # ========================================================== AppArmor, GRUB
+  all_apparmor_profiles_in_enforce_complain_mode:
+    gabarit: detecteur
+    theme: controle-acces
+    vars:
+      titre: "AppArmor : aucun processus avec profil defini mais non confine"
+      commande: |-
+        aa-status 2>/dev/null | awk 'NR==1{ok=1} /processes are unconfined but have a profile defined/ && $1+0 > 0 {print} END{if(!ok) print "SENTINELLE:ILLISIBLE"}'
+      but: "Compter les processus non confines malgre un profil"
+      controle: "0 processus non confine avec profil"
+      bon: "aucune ligne"
+      action: "Charger les profils (aa-enforce ou aa-complain /etc/apparmor.d/*) puis redemarrer les processus concernes."
+      mots_cles: [apparmor, profils, confinement, aa-status]
+  all_apparmor_profiles_enforced:
+    gabarit: detecteur
+    theme: controle-acces
+    vars:
+      titre: "AppArmor : tous les profils en mode enforce"
+      commande: |-
+        aa-status 2>/dev/null | awk 'NR==1{ok=1} (/profiles are in complain mode/ || /processes are unconfined but have a profile defined/) && $1+0 > 0 {print} END{if(!ok) print "SENTINELLE:ILLISIBLE"}'
+      but: "Compter les profils en mode complain et les processus non confines"
+      controle: "0 profil complain, 0 processus non confine"
+      bon: "aucune ligne"
+      action: "aa-enforce /etc/apparmor.d/* (tester d'abord : un profil trop strict bloque le service)."
+      mots_cles: [apparmor, enforce, complain, profils]
+  grub2_enable_apparmor:
+    playbook: {id: infra.grub-argument, parametres: {argument: "apparmor=1 security=apparmor", action: ajouter}}
+    gabarit: detecteur
+    theme: controle-acces
+    vars:
+      titre: "AppArmor active au demarrage (apparmor=1 security=apparmor)"
+      commande: |-
+        awk '{for (i = 1; i <= NF; i++) a[$i] = 1} END{if (!("apparmor=1" in a)) print "apparmor=1 absent"; if (!("security=apparmor" in a)) print "security=apparmor absent"}' /proc/cmdline
+      but: "Lire les arguments AppArmor du demarrage en cours"
+      controle: "apparmor=1 et security=apparmor presents"
+      bon: "aucune ligne"
+      action: "Ajouter « apparmor=1 security=apparmor » a GRUB_CMDLINE_LINUX dans /etc/default/grub, update-grub, redemarrer."
+      mots_cles: [apparmor, grub, demarrage, arguments]
+      pieges: ["Lit le demarrage EN COURS ; verifier aussi /etc/default/grub (persistance)."]
+  grub2_password:
+    gabarit: detecteur
+    theme: demarrage
+    vars:
+      titre: "GRUB protege par un superutilisateur et un mot de passe chiffre"
+      commande: |-
+        head -c0 /boot/grub/grub.cfg || echo 'SENTINELLE:ILLISIBLE'; awk '/^[[:space:]]*set[[:space:]]+superusers=/{s=1} /^[[:space:]]*password_pbkdf2[[:space:]].*grub\.pbkdf2\.sha512/{p=1} END{if (!s) print "superusers absent"; if (!p) print "password_pbkdf2 absent"}' /boot/grub/grub.cfg
+      but: "Chercher superusers et password_pbkdf2 dans grub.cfg"
+      controle: "superusers + password_pbkdf2 grub.pbkdf2.sha512"
+      bon: "aucune ligne"
+      action: "grub-mkpasswd-pbkdf2, puis dans /etc/grub.d/40_custom : set superusers=\"admin\" et password_pbkdf2 admin <empreinte> ; update-grub."
+      mots_cles: [grub, "mot de passe", demarrage, superusers, pbkdf2]
+  grub2_uefi_password:
+    gabarit: detecteur
+    theme: demarrage
+    vars:
+      titre: "GRUB (UEFI) protege par un superutilisateur et un mot de passe chiffre"
+      commande: |-
+        head -c0 /boot/grub/grub.cfg || echo 'SENTINELLE:ILLISIBLE'; awk '/^[[:space:]]*set[[:space:]]+superusers=/{s=1} /^[[:space:]]*password_pbkdf2[[:space:]].*grub\.pbkdf2\.sha512/{p=1} END{if (!s) print "superusers absent"; if (!p) print "password_pbkdf2 absent"}' /boot/grub/grub.cfg
+      but: "Chercher superusers et password_pbkdf2 dans grub.cfg"
+      controle: "superusers + password_pbkdf2 grub.pbkdf2.sha512"
+      bon: "aucune ligne"
+      action: "grub-mkpasswd-pbkdf2, puis dans /etc/grub.d/40_custom : set superusers=\"admin\" et password_pbkdf2 admin <empreinte> ; update-grub."
+      mots_cles: [grub, uefi, "mot de passe", demarrage]
+  kernel_config_default_mmap_min_addr:
+    gabarit: kernel_build_config
+    theme: compilation-noyau
+    vars: {config: CONFIG_DEFAULT_MMAP_MIN_ADDR, value: "65536"}
+  prefer_64bit_os:
+    gabarit: detecteur
+    theme: demarrage
+    vars:
+      titre: "Systeme d'exploitation 64 bits"
+      commande: |-
+        uname -m | grep -Ev '^(x86_64|aarch64|ppc64le|s390x)$'
+      but: "Lire l'architecture du systeme"
+      controle: "architecture 64 bits"
+      bon: "aucune ligne"
+      action: "Reinstaller en 64 bits si le processeur le permet (lscpu | grep 'CPU op-mode')."
+      mots_cles: [64 bits, architecture, uname]
+
+  # ================================================================= AIDE
+  aide_build_database:
+    gabarit: detecteur
+    theme: integrite
+    vars:
+      titre: "AIDE : base de reference initialisee (/var/lib/aide/aide.db)"
+      paquet: aide
+      commande: |-
+        ls /var/lib/aide/ >/dev/null || echo 'SENTINELLE:ILLISIBLE'; ls /var/lib/aide/aide.db 2>/dev/null
+      attendu: presente
+      but: "Verifier la presence de la base AIDE"
+      controle: "/var/lib/aide/aide.db present"
+      bon: "une ligne"
+      mauvais: "base absente"
+      action: "aideinit, puis cp /var/lib/aide/aide.db.new /var/lib/aide/aide.db ; conserver une copie hors ligne."
+      mots_cles: [aide, integrite, base, reference]
+  aide_check_audit_tools:
+    gabarit: detecteur
+    theme: integrite
+    vars:
+      titre: "AIDE surveille les outils d'audit (auditctl, auditd, ausearch...)"
+      paquet: aide
+      commande: |-
+        cat /etc/aide/aide.conf /etc/aide/aide.conf.d/* 2>/dev/null | awk '{c[$1] = 1} END{n = split("/usr/sbin/auditctl /usr/sbin/auditd /usr/sbin/ausearch /usr/sbin/aureport /usr/sbin/autrace /usr/sbin/augenrules", t, " "); for (i = 1; i <= n; i++) if (!(t[i] in c)) print t[i]" non surveille"}'
+      but: "Chercher les outils d'audit dans la configuration d'AIDE"
+      controle: "les 6 outils d'audit surveilles"
+      bon: "aucune ligne"
+      action: "Ajouter les lignes /usr/sbin/auditctl p+i+n+u+g+s+b+acl+xattrs+sha512 (idem pour auditd, ausearch, aureport, autrace, augenrules) a /etc/aide/aide.conf."
+      mots_cles: [aide, audit, outils, integrite]
+  aide_periodic_checking_systemd_timer:
+    gabarit: detecteur
+    theme: integrite
+    vars:
+      titre: "AIDE execute periodiquement (minuteur systemd)"
+      paquet: aide
+      commande: |-
+        systemctl is-enabled dailyaidecheck.timer aidecheck.timer 2>/dev/null | grep -x enabled
+      attendu: presente
+      but: "Verifier le minuteur de controle AIDE"
+      controle: "minuteur AIDE active"
+      bon: "une ligne « enabled »"
+      mauvais: "aucun minuteur"
+      action: "systemctl enable --now dailyaidecheck.timer"
+      mots_cles: [aide, minuteur, timer, controle]
+  aide_periodic_cron_checking:
+    gabarit: detecteur
+    theme: integrite
+    vars:
+      titre: "AIDE execute periodiquement (cron)"
+      paquet: aide
+      commande: |-
+        grep -Rls 'aide' /etc/crontab /etc/cron.d/ /etc/cron.daily/ /etc/cron.weekly/
+      attendu: presente
+      but: "Chercher une tache planifiee AIDE"
+      controle: "tache AIDE au moins hebdomadaire"
+      bon: "un fichier cron"
+      mauvais: "aucune tache"
+      action: "Ajouter « 05 4 * * * root /usr/bin/aide --check » dans /etc/crontab (ou garder /etc/cron.daily/aide)."
+      mots_cles: [aide, cron, planification, controle]
+  aide_scan_notification:
+    gabarit: detecteur
+    theme: integrite
+    vars:
+      titre: "AIDE : rapport de controle envoye par courriel"
+      paquet: aide
+      commande: |-
+        grep -Rhs 'aide.*--check.*|.*mail' /etc/crontab /etc/cron.d/
+      attendu: presente
+      but: "Chercher l'envoi du rapport AIDE"
+      controle: "rapport envoye a {var:var_aide_scan_notification_email}"
+      bon: "une ligne aide --check | mail"
+      mauvais: "rapport non transmis"
+      action: "Ajouter « | /bin/mail -s \"$(hostname) - AIDE\" {var:var_aide_scan_notification_email} » a la tache AIDE."
+      mots_cles: [aide, courriel, notification, rapport]
+      pieges: ["Sur Debian/Ubuntu, /etc/cron.daily/aide envoie deja un rapport (MAILTO de /etc/default/aide) : a verifier avant de conclure."]
+  aide_verify_acls:
+    gabarit: detecteur
+    theme: integrite
+    vars:
+      titre: "AIDE verifie les ACL (option acl)"
+      paquet: aide
+      commande: |-
+        grep -hEs '^[^#]*\bacl\b' /etc/aide/aide.conf /etc/aide/aide.conf.d/*
+      attendu: presente
+      but: "Chercher l'option acl dans les regles AIDE"
+      controle: "acl dans les regles"
+      bon: "une ligne"
+      mauvais: "acl absent"
+      action: "Ajouter acl a la regle utilisee (ex. FIPSR = p+i+n+u+g+s+m+c+acl+xattrs+sha256)."
+      mots_cles: [aide, acl, integrite]
+  aide_verify_ext_attributes:
+    gabarit: detecteur
+    theme: integrite
+    vars:
+      titre: "AIDE verifie les attributs etendus (option xattrs)"
+      paquet: aide
+      commande: |-
+        grep -hEs '^[^#]*\bxattrs\b' /etc/aide/aide.conf /etc/aide/aide.conf.d/*
+      attendu: presente
+      but: "Chercher l'option xattrs dans les regles AIDE"
+      controle: "xattrs dans les regles"
+      bon: "une ligne"
+      mauvais: "xattrs absent"
+      action: "Ajouter xattrs a la regle utilisee."
+      mots_cles: [aide, xattrs, attributs, integrite]
+
+  # ================================================================ GNOME
+  dconf_gnome_disable_automount:
+    gabarit: cle_valeur
+    theme: services-inutiles
+    vars:
+      titre: "GNOME : montage automatique des supports desactive (automount=false)"
+      paquet: gdm3
+      fichiers: [/etc/dconf/db/]
+      cle: automount
+      attendu: "false"
+      controle: "automount=false"
+      bon: "automount=false"
+      action: "Ecrire automount=false dans /etc/dconf/db/local.d/00-security-settings (section [org/gnome/desktop/media-handling]), verrouiller, puis dconf update."
+      mots_cles: [gnome, automount, usb, supports, amovibles]
+  dconf_gnome_disable_automount_open:
+    gabarit: cle_valeur
+    theme: services-inutiles
+    vars:
+      titre: "GNOME : ouverture automatique des supports desactivee (automount-open=false)"
+      paquet: gdm3
+      fichiers: [/etc/dconf/db/]
+      cle: automount-open
+      attendu: "false"
+      controle: "automount-open=false"
+      bon: "automount-open=false"
+      action: "Ecrire automount-open=false dans /etc/dconf/db/local.d/00-security-settings, verrouiller, puis dconf update."
+      mots_cles: [gnome, automount, supports, amovibles]
+  dconf_gnome_disable_autorun:
+    gabarit: cle_valeur
+    theme: services-inutiles
+    vars:
+      titre: "GNOME : execution automatique des supports interdite (autorun-never=true)"
+      paquet: gdm3
+      fichiers: [/etc/dconf/db/]
+      cle: autorun-never
+      attendu: "true"
+      controle: "autorun-never=true"
+      bon: "autorun-never=true"
+      action: "Ecrire autorun-never=true dans /etc/dconf/db/local.d/00-security-settings, verrouiller, puis dconf update."
+      mots_cles: [gnome, autorun, supports, usb]
+  dconf_gnome_screensaver_idle_delay:
+    gabarit: cle_valeur
+    theme: sessions
+    vars:
+      titre: "GNOME : mise en veille apres {var:inactivity_timeout_value} s d'inactivite au plus (idle-delay)"
+      paquet: gdm3
+      fichiers: [/etc/dconf/db/]
+      cle: idle-delay
+      comparateur: entre
+      attendu: [1, "{var:inactivity_timeout_value}"]
+      controle: "idle-delay entre 1 et {var:inactivity_timeout_value}"
+      bon: "idle-delay=uint32 {var:inactivity_timeout_value}"
+      action: "Ecrire idle-delay=uint32 {var:inactivity_timeout_value} (section [org/gnome/desktop/session]), verrouiller, puis dconf update."
+      mots_cles: [gnome, veille, inactivite, ecran, verrouillage]
+  dconf_gnome_screensaver_lock_delay:
+    gabarit: cle_valeur
+    theme: sessions
+    vars:
+      titre: "GNOME : verrouillage au plus {var:var_screensaver_lock_delay} s apres la mise en veille (lock-delay)"
+      paquet: gdm3
+      fichiers: [/etc/dconf/db/]
+      cle: lock-delay
+      comparateur: entre
+      attendu: [0, "{var:var_screensaver_lock_delay}"]
+      controle: "lock-delay entre 0 et {var:var_screensaver_lock_delay}"
+      bon: "lock-delay=uint32 {var:var_screensaver_lock_delay}"
+      action: "Ecrire lock-delay=uint32 {var:var_screensaver_lock_delay} (section [org/gnome/desktop/screensaver]), puis dconf update."
+      mots_cles: [gnome, verrouillage, ecran, veille]
+  dconf_gnome_screensaver_lock_enabled:
+    gabarit: cle_valeur
+    theme: sessions
+    vars:
+      titre: "GNOME : ecran verrouille a la mise en veille (lock-enabled=true)"
+      paquet: gdm3
+      fichiers: [/etc/dconf/db/]
+      cle: lock-enabled
+      attendu: "true"
+      controle: "lock-enabled=true"
+      bon: "lock-enabled=true"
+      action: "Ecrire lock-enabled=true (section [org/gnome/desktop/screensaver]), verrouiller, puis dconf update."
+      mots_cles: [gnome, verrouillage, ecran]
+  dconf_gnome_banner_enabled:
+    gabarit: cle_valeur
+    theme: sessions
+    vars:
+      titre: "GNOME : banniere d'avertissement a la connexion (banner-message-enable=true)"
+      paquet: gdm3
+      fichiers: [/etc/dconf/db/, /etc/gdm3/greeter.dconf-defaults]
+      cle: banner-message-enable
+      attendu: "true"
+      controle: "banner-message-enable=true"
+      bon: "banner-message-enable=true"
+      action: "Ecrire banner-message-enable=true (section [org/gnome/login-screen]), verrouiller, puis dconf update."
+      mots_cles: [gnome, banniere, connexion, avertissement]
+  dconf_gnome_login_banner_text:
+    gabarit: detecteur
+    theme: sessions
+    vars:
+      titre: "GNOME : texte de la banniere de connexion defini"
+      paquet: gdm3
+      commande: |-
+        grep -Rhs "^[[:space:]]*banner-message-text[[:space:]]*=[[:space:]]*'..*'" /etc/dconf/db/ /etc/gdm3/greeter.dconf-defaults
+      attendu: presente
+      but: "Lire le texte de la banniere de connexion"
+      controle: "banner-message-text renseigne"
+      bon: "une ligne"
+      mauvais: "texte absent"
+      action: "Ecrire banner-message-text='TEXTE APPROUVE' dans /etc/gdm3/greeter.dconf-defaults, puis dconf update."
+      mots_cles: [gnome, banniere, texte, connexion]
+  dconf_gnome_disable_user_list:
+    gabarit: cle_valeur
+    theme: sessions
+    vars:
+      titre: "GNOME : liste des utilisateurs masquee a la connexion (disable-user-list=true)"
+      paquet: gdm3
+      fichiers: [/etc/dconf/db/, /etc/gdm3/greeter.dconf-defaults]
+      cle: disable-user-list
+      attendu: "true"
+      controle: "disable-user-list=true"
+      bon: "disable-user-list=true"
+      action: "Ecrire disable-user-list=true (section [org/gnome/login-screen]), verrouiller, puis dconf update."
+      mots_cles: [gnome, utilisateurs, liste, connexion]
+  gnome_gdm_disable_xdmcp:
+    gabarit: detecteur
+    theme: services-inutiles
+    vars:
+      titre: "GDM : XDMCP desactive (Enable=false dans [xdmcp])"
+      paquet: gdm3
+      commande: |-
+        awk '/^\[xdmcp\]/{s = 1; next} /^\[/{s = 0} s && /^[[:space:]]*Enable[[:space:]]*=[[:space:]]*false/{print FILENAME}' /etc/gdm3/custom.conf /etc/gdm3/daemon.conf 2>/dev/null
+      attendu: presente
+      but: "Lire la section [xdmcp] de GDM (Ubuntu custom.conf, Debian daemon.conf)"
+      controle: "Enable=false dans [xdmcp]"
+      bon: "une ligne"
+      mauvais: "Enable absent ou true"
+      action: "Ecrire « [xdmcp] » puis « Enable=false » dans /etc/gdm3/custom.conf (Debian : daemon.conf)."
+      mots_cles: [gdm, xdmcp, gnome, "acces distant"]
+
+  # ======================================================== mises a jour
+  security_patches_up_to_date:
+    gabarit: detecteur
+    theme: paquets
+    vars:
+      titre: "Aucune mise a jour de securite en attente"
+      commande: |-
+        apt list --upgradable 2>/dev/null | grep -i security
+      but: "Lister les mises a jour de securite disponibles"
+      controle: "aucune mise a jour de securite en attente"
+      bon: "aucune ligne"
+      action: "apt update && apt full-upgrade (fenetre de maintenance), ou unattended-upgrades."
+      mots_cles: [mises a jour, correctifs, securite, apt, patch]
+      pieges: ["La liste depend du cache apt : lancer « apt update » avant (commande qui ecrit, validation humaine)."]
+
+  # =============================================== propres a RHEL / autres
+  ensure_gpgcheck_globally_activated:
+    ignorer: "option yum/dnf (gpgcheck) sans equivalent apt ; apt verifie les signatures par defaut"
+  ensure_gpgcheck_local_packages:
+    ignorer: "option yum/dnf (localpkg_gpgcheck) sans equivalent apt"
+  ensure_gpgcheck_never_disabled:
+    ignorer: "option yum/dnf (gpgcheck=0 par depot) sans equivalent apt"
+  dnf-automatic_apply_updates:
+    ignorer: "dnf-automatic : propre a RHEL/Fedora"
+  dnf-automatic_security_updates_only:
+    ignorer: "dnf-automatic : propre a RHEL/Fedora"
+  ensure_almalinux_gpgkey_installed:
+    ignorer: "cle GPG AlmaLinux : propre a AlmaLinux"
+  ensure_oracle_gpgkey_installed:
+    ignorer: "cle GPG Oracle : propre a Oracle Linux"
+  ensure_redhat_gpgkey_installed:
+    ignorer: "cle GPG Red Hat : propre a RHEL"
+  package_dracut-fips-aesni_installed:
+    ignorer: "dracut-fips-aesni : propre a RHEL"
+  enable_authselect:
+    ignorer: "authselect : propre a RHEL/Fedora (Debian/Ubuntu : pam-auth-update)"
+  selinux_state:
+    ignorer: "SELinux non utilise par defaut sur Debian/Ubuntu (AppArmor, couvert par ailleurs)"

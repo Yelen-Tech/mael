@@ -1,0 +1,68 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-directory-groupowner-etc-iptables
+titre: 'Groupe de /etc/iptables/ : root'
+domaine: reseau
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: pare-feu
+  type_controle: groupe-fichier
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: directory_groupowner_etc_iptables
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/network/network-iptables/directory_groupowner_etc_iptables
+mots_cles:
+- chgrp
+- fichier
+- fichiers
+- groupe
+- iptables
+resume: 'Groupe de /etc/iptables/ : root : groupe root. (regle directory_groupowner_etc_iptables, ComplianceAsCode
+  0.1.82).'
+observer:
+- commande: dpkg -s iptables >/dev/null 2>&1 || echo 'SENTINELLE:SANS_OBJET'; stat -c '%a %U %G %n' /etc/iptables/
+    2>/dev/null
+  but: Lire droits, proprietaire et groupe (groupe)
+  lecture: '3e colonne = groupe : attendu root. Aucune ligne = fichier absent.'
+controles:
+- controle: groupe = root
+  bon: groupe root
+  mauvais: toute autre valeur
+  gravite: moyenne
+  risque: 'Le groupe root en proprietaire de /etc/iptables est important car ce repertoire contient la
+    configuration iptables. Le proteger est essentiel a la securite : a root revient le controle exclusif
+    de la configuration iptables.'
+  action: chgrp root sur les fichiers concernes.
+  playbook: infra.fichier-groupe
+  parametres:
+    chemin: /etc/iptables/
+    groupe: root
+  evaluation:
+  - commande: 0
+    lecteur: stat
+    champ: groupe
+    comparateur: dans
+    attendu:
+    - root
+pieges:
+- 'Regle limitee par la source a : package[iptables]. Hors de ce cas, la commande repond « sans objet
+  » (aucun ecart).'
+- 'Sans sudo, certains fichiers (ex. /etc/shadow) ne sont pas lisibles par stat/find : relancer avec les
+  droits root.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R50 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

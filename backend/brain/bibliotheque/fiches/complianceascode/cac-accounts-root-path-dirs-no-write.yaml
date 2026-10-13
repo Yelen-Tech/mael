@@ -1,0 +1,70 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-accounts-root-path-dirs-no-write
+titre: 'PATH : aucun repertoire modifiable par le groupe ou les autres'
+domaine: comptes
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: sessions
+  type_controle: droits-fichier
+  niveaux:
+    cis: 1
+    anssi: null
+source:
+  origine: complianceascode
+  regle: accounts_root_path_dirs_no_write
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/accounts/accounts-session/root_paths/accounts_root_path_dirs_no_write
+mots_cles:
+- droits
+- path
+- permissions
+- repertoires
+- root
+resume: 'PATH : aucun repertoire modifiable par le groupe ou les autres. (regle accounts_root_path_dirs_no_write,
+  ComplianceAsCode 0.1.82).'
+observer:
+- commande: echo "$PATH" | tr ':' '\n' | xargs -r stat -L -c '%a %U %G %n' 2>/dev/null
+  but: Lire les droits des repertoires du PATH
+  lecture: '1re colonne = droits : au plus 0755.'
+controles:
+- controle: droits <= 0755
+  bon: 0755 ou plus strict
+  mauvais: droits plus larges
+  gravite: moyenne
+  risque: 'Si un repertoire du PATH de root est modifiable par d''autres comptes, ils peuvent y deposer
+    un programme portant le nom d''une commande courante : root l''executera a sa place.'
+  action: chmod go-w REPERTOIRE
+  playbook: null
+  sans_playbook: 'droits calcules (PATH, repertoires personnels) : correction au cas par cas'
+  evaluation:
+  - commande: 0
+    lecteur: stat
+    champ: droits
+    comparateur: droits_au_plus
+    attendu: '0755'
+pieges:
+- 'C''est le PATH du shell d''audit : lancer l''audit en tant que root (sudo -i) pour lire celui de root.'
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 5.4.2.5 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 5.4.2.5 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 5.4.2.5 (niveau 1)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

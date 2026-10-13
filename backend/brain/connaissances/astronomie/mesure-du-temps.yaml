@@ -1,0 +1,51 @@
+id: mesure-du-temps
+schema: 1
+nom: "Mesure du temps et synchronisation"
+resume: "Le temps civil UTC s'adosse au temps atomique TAI corrigé de secondes intercalaires ; sa distribution par NTP conditionne Kerberos, la validité des certificats et la corrélation des journaux."
+famille: astronomie
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - utc
+  - tai
+  - temps gps
+  - seconde intercalaire
+  - ntp
+  - nts
+  - synchronisation
+  - kerberos
+  - certificats
+  - corrélation de journaux
+  - calendrier grégorien
+caracteristiques:
+  echelles_de_temps: "le TAI est une échelle atomique continue établie par le BIPM ; UTC en dérive par des secondes intercalaires qui la maintiennent à moins de 0,9 seconde du temps solaire UT1 ; le temps GPS, continu, court depuis le 6 janvier 1980 sans seconde intercalaire"
+  secondes_intercalaires: "27 secondes intercalaires ont été insérées depuis 1972, la dernière le 31 décembre 2016 ; la CGPM a décidé en 2022 d'abandonner ce mécanisme d'ici 2035"
+  distribution: "NTP (RFC 5905) synchronise les machines à la milliseconde près sur Internet ; NTS (RFC 8915) en ajoute l'authentification ; PTP sert aux réseaux locaux exigeant la microseconde"
+  calendriers: "le calendrier grégorien (1582) corrige le julien en supprimant trois années bissextiles par quatre siècles ; les systèmes doivent aussi gérer fuseaux horaires et heures d'été, régis par la base tz de l'IANA"
+  lien_cyber: "Kerberos rejette par défaut un écart d'horloge supérieur à cinq minutes ; la validité des certificats X.509 et l'ordonnancement des journaux d'audit dépendent entièrement d'un temps fiable"
+securite:
+  - titre: Désynchronisation et authentification
+    risque: "Une horloge déréglée fait échouer Kerberos et invalide les vérifications de certificats (notBefore, notAfter), bloquant des services ou, à l'inverse, faisant accepter des certificats expirés."
+    conseil: "Synchroniser tous les serveurs sur des sources NTP redondantes et surveiller l'écart d'horloge comme un indicateur de santé."
+    gravite: elevee
+  - titre: Manipulation du temps par un attaquant
+    risque: "Un attaquant qui recule l'horloge d'une machine peut prolonger des jetons expirés, rejouer des tickets ou brouiller la chronologie des journaux pour masquer son intrusion."
+    conseil: "Authentifier le temps réseau (NTS), restreindre les droits de modification d'horloge et journaliser tout saut de temps."
+    gravite: elevee
+  - titre: Corrélation de journaux sans référence commune
+    risque: "Des horodatages hétérogènes (fuseaux, formats, dérives) rendent la reconstruction d'un incident impossible entre pare-feu, serveurs et postes."
+    conseil: "Horodater en UTC avec un format normalisé (ISO 8601), centraliser les journaux et vérifier la dérive maximale entre sources."
+    gravite: moyenne
+  - titre: Gestion chaotique de la seconde intercalaire
+    risque: "L'insertion d'une seconde à 23:59:60 UTC a historiquement provoqué des plantages de systèmes mal préparés ; certains grands opérateurs lissent la seconde, créant des écarts temporaires entre sources."
+    conseil: "Tester le comportement des applications lors d'une seconde intercalaire et connaître la politique de lissage de ses fournisseurs de temps."
+    gravite: moyenne
+sources:
+  - titre: "BIPM — métrologie du temps (TAI, UTC)"
+    url: https://www.bipm.org/en/time-metrology
+  - titre: "IETF RFC 5905 — Network Time Protocol Version 4"
+    url: https://www.rfc-editor.org/rfc/rfc5905
+  - titre: "IERS — International Earth Rotation and Reference Systems Service"
+    url: https://www.iers.org/IERS/EN/Home/home_node.html

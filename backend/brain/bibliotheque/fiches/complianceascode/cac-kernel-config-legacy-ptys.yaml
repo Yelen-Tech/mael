@@ -1,0 +1,65 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-kernel-config-legacy-ptys
+titre: Option de compilation du noyau CONFIG_LEGACY_PTYS = n
+domaine: noyau
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: compilation-noyau
+  type_controle: option-compilation
+  niveaux:
+    cis: null
+    anssi: eleve
+source:
+  origine: complianceascode
+  regle: kernel_config_legacy_ptys
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/kernel_build_config/kernel_config_legacy_ptys
+mots_cles:
+- compilation
+- config_legacy_ptys
+- kernel
+- legacy
+- noyau
+- ptys
+resume: Le noyau doit etre compile avec CONFIG_LEGACY_PTYS=n. (regle kernel_config_legacy_ptys, ComplianceAsCode
+  0.1.82).
+observer:
+- commande: grep -E '^# Linux/|^(# )?CONFIG_LEGACY_PTYS( is not set|=)' /boot/config-$(uname -r)
+  but: Lire l'option dans la configuration du noyau en cours
+  lecture: 'Attendu : « # CONFIG_LEGACY_PTYS is not set ». La ligne « # Linux/... » donne l''architecture
+    ; option absente = inexistante dans ce noyau.'
+controles:
+- controle: CONFIG_LEGACY_PTYS = n
+  bon: '# CONFIG_LEGACY_PTYS is not set (ou option inexistante dans ce noyau)'
+  mauvais: autre valeur
+  gravite: moyenne
+  risque: 'L''ancien systeme de pseudo-terminaux (/dev/pty*) a des problemes de securite connus (terminaux
+    partages, droits mal controles) : seul devpts doit etre utilise.'
+  action: 'Utiliser un noyau compile avec cette option (noyau de la distribution ou recompilation) : ce
+    n''est pas un reglage a chaud.'
+  playbook: null
+  sans_playbook: 'option de compilation du noyau : changer de noyau ou le recompiler, non automatisable'
+  evaluation:
+  - commande: 0
+    lecteur: kconfig
+    comparateur: egal
+    champ: CONFIG_LEGACY_PTYS
+    attendu: n
+pieges:
+- '/boot/config-<version> peut manquer (images cloud, conteneurs) : essayer /proc/config.gz si disponible.'
+- 'Regle issue du guide ANSSI : un ecart est frequent sur les noyaux generiques, a qualifier plutot qu''a
+  corriger seul.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R23 (niveau eleve)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

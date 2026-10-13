@@ -1,0 +1,62 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-no-direct-root-logins
+titre: Pas de connexion directe de root sur les consoles (/etc/securetty vide)
+domaine: fichiers
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: comptes
+  type_controle: detection
+  niveaux:
+    cis: null
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: no_direct_root_logins
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/accounts/accounts-restrictions/root_logins/no_direct_root_logins
+mots_cles:
+- connexion
+- console
+- root
+- securetty
+resume: Pas de connexion directe de root sur les consoles (/etc/securetty vide). (regle no_direct_root_logins,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: grep -v '^[[:space:]]*#' /etc/securetty 2>/dev/null
+  but: Lire les consoles autorisees a root
+  lecture: Chaque ligne est un element en defaut ; aucune ligne = conforme.
+controles:
+- controle: aucune console autorisee
+  bon: aucune ligne
+  mauvais: au moins une ligne
+  gravite: moyenne
+  risque: 'Une connexion directe en root ne dit pas qui s''est connecte. En interdisant root sur les consoles,
+    chaque administrateur se connecte d''abord avec son propre compte puis eleve ses droits (su, sudo)
+    : l''action est imputable.'
+  action: Vider /etc/securetty (et utiliser sudo pour l'administration).
+  playbook: null
+  sans_playbook: 'la commande liste des elements a examiner un par un (comptes, fichiers, regles) : la
+    correction (supprimer, verrouiller, modifier) reste une decision humaine'
+  evaluation:
+  - commande: 0
+    lecteur: lignes
+    comparateur: vide
+pieges:
+- Selon la source, un /etc/securetty ABSENT laisse root se connecter partout si pam_securetty est utilise
+  ; sur Ubuntu recent le module n'est plus actif par defaut.
+- 'Recette Sentinelle : regle ecrite a la main dans ComplianceAsCode (sans gabarit) ; commande et critere
+  rediges d''apres sa description et sa verification (OCIL). A relire en priorite.'
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R33 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

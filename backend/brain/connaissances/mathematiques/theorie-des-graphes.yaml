@@ -1,0 +1,39 @@
+id: theorie-des-graphes
+schema: 1
+nom: Théorie des graphes
+resume: Étude des relations entre objets sous forme de sommets et d'arêtes ; elle modélise les réseaux informatiques, les chaînes de dépendances et les chemins d'attaque dans un système d'information.
+famille: mathematiques
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - théorie des graphes
+  - graphe
+  - sommet
+  - arête
+  - plus court chemin
+  - connexité
+  - arbre
+  - flot maximal
+  - graphe d'attaque
+caracteristiques:
+  notions_fondamentales: "Graphes orientés et non orientés, degrés et adjacence ; parcours en largeur et en profondeur, connexité ; plus courts chemins, arbres couvrants et flots ; coloration, cycles et planarité."
+  liens_informatiques: "Cartographie des réseaux et segmentation en zones de sécurité ; graphes d'attaque et chemins de compromission ; analyse des dépendances logicielles et des chaînes d'approvisionnement ; propagation de vers."
+  ordres_de_grandeur: "Le parcours d'un graphe coûte O(sommets + arêtes) ; l'algorithme de Dijkstra tourne en temps quasi linéaire avec un bon tas, ce qui permet l'analyse de grands réseaux."
+securite:
+  - titre: Chemins d'attaque invisibles
+    risque: Sans modélisation en graphe, une chaîne de relations (comptes, partages, dépendances) offre un chemin de compromission que l'analyse machine par machine ne voit pas.
+    conseil: Construire des graphes d'attaque à partir des relations réelles et chercher les chemins vers les actifs critiques.
+    gravite: elevee
+  - titre: Nœuds centraux sous-protégés
+    risque: "Les sommets de forte centralité (serveurs pivot, fournisseurs communs) concentrent le risque : leur compromission se propage largement."
+    conseil: Identifier les points d'articulation et les nœuds de forte centralité pour y concentrer supervision et durcissement.
+    gravite: moyenne
+  - titre: Segmentation fondée sur l'intuition
+    risque: Une segmentation réseau non vérifiée laisse des chemins de contournement entre zones supposées isolées.
+    conseil: Vérifier formellement la connexité entre zones dans le graphe de flux réel, pas seulement dans le schéma d'architecture.
+    gravite: moyenne
+sources:
+  - titre: Wikipédia — Théorie des graphes
+    url: https://fr.wikipedia.org/wiki/Th%C3%A9orie_des_graphes

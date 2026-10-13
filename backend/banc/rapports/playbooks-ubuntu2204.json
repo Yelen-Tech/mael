@@ -1,0 +1,450 @@
+{
+ "systeme": "ubuntu:22.04",
+ "date": "2026-09-20T18:56:25.588563+00:00",
+ "playbooks": [
+  {
+   "playbook": "app.en-tetes-http",
+   "etapes": [],
+   "ecarts": [],
+   "ok": false,
+   "vm": null,
+   "cadre": "aucune fiche liee ne porte de parametres : rien a mesurer sans en inventer"
+  },
+  {
+   "playbook": "infra.audit-regles",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer",
+     "code": 3,
+     "note": "You must be root to run this program.\nChargement des regles impossible (configuration immuable -e 2 ?) : retour arriere."
+    },
+    {
+     "etape": "revenir",
+     "code": 0,
+     "note": ""
+    }
+   ],
+   "ecarts": [],
+   "ok": false,
+   "vm": null,
+   "cadre": "sous-systeme d'audit du noyau : absent d'un conteneur (a tester en VM)"
+  },
+  {
+   "playbook": "infra.cle-valeur",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "verifier",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "re-mesure",
+     "code": 0,
+     "note": "conforme"
+    },
+    {
+     "etape": "revenir",
+     "code": 0,
+     "note": ""
+    }
+   ],
+   "ecarts": [],
+   "ok": true,
+   "vm": null,
+   "cadre": null
+  },
+  {
+   "playbook": "infra.fichier-droits",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "verifier",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "re-mesure",
+     "code": 0,
+     "note": "conforme"
+    },
+    {
+     "etape": "revenir",
+     "code": 0,
+     "note": ""
+    }
+   ],
+   "ecarts": [],
+   "ok": true,
+   "vm": null,
+   "cadre": null
+  },
+  {
+   "playbook": "infra.fichier-existence",
+   "etapes": [],
+   "ecarts": [],
+   "ok": false,
+   "vm": null,
+   "cadre": "aucune fiche liee ne porte de parametres : rien a mesurer sans en inventer"
+  },
+  {
+   "playbook": "infra.fichier-groupe",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "verifier",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "re-mesure",
+     "code": 0,
+     "note": "conforme"
+    },
+    {
+     "etape": "revenir",
+     "code": 0,
+     "note": ""
+    }
+   ],
+   "ecarts": [],
+   "ok": true,
+   "vm": null,
+   "cadre": null
+  },
+  {
+   "playbook": "infra.fichier-proprietaire",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "verifier",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "re-mesure",
+     "code": 0,
+     "note": "conforme"
+    },
+    {
+     "etape": "revenir",
+     "code": 0,
+     "note": ""
+    }
+   ],
+   "ecarts": [],
+   "ok": true,
+   "vm": null,
+   "cadre": null
+  },
+  {
+   "playbook": "infra.fichiers-motif",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "verifier",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "re-mesure",
+     "code": 1,
+     "note": "indetermine"
+    },
+    {
+     "etape": "revenir",
+     "code": 0,
+     "note": ""
+    }
+   ],
+   "ecarts": [],
+   "ok": false,
+   "vm": null,
+   "cadre": "re-mesure sans objet sur cette machine : aucune ligne"
+  },
+  {
+   "playbook": "infra.grub-argument",
+   "etapes": [],
+   "ecarts": [],
+   "ok": false,
+   "vm": "commande « /proc/cmdline » : conteneur ≠ vraie machine (fiche liee cac-grub2-audit-argument)",
+   "cadre": null
+  },
+  {
+   "playbook": "infra.module-interdit",
+   "etapes": [],
+   "ecarts": [],
+   "ok": false,
+   "vm": "theme « modules-noyau » : noyau d'un conteneur ≠ vraie machine (fiche liee cac-kernel-module-cramfs-disabled)",
+   "cadre": null
+  },
+  {
+   "playbook": "infra.montage-option",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 5,
+     "note": "Refus : /boot n'est pas declare dans /etc/fstab (partition dediee a creer d'abord)."
+    }
+   ],
+   "ecarts": [],
+   "ok": false,
+   "vm": null,
+   "cadre": "le playbook a refuse d'agir (prealable absent de cette machine) : Refus : /boot n'est pas declare dans /etc/fstab (partition dediee a creer d'abord)."
+  },
+  {
+   "playbook": "infra.paquet-installer",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer",
+     "code": 100,
+     "note": "E: Unable to locate package aide"
+    },
+    {
+     "etape": "revenir",
+     "code": 100,
+     "note": "E: Unable to locate package aide"
+    }
+   ],
+   "ecarts": [],
+   "ok": false,
+   "vm": null,
+   "cadre": "le banc coupe le reseau : apt ne peut rien installer (a rejouer sur une machine reliee)"
+  },
+  {
+   "playbook": "infra.paquet-retirer",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "verifier",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "re-mesure",
+     "code": 0,
+     "note": "conforme"
+    },
+    {
+     "etape": "revenir",
+     "code": 0,
+     "note": ""
+    }
+   ],
+   "ecarts": [],
+   "ok": true,
+   "vm": null,
+   "cadre": null
+  },
+  {
+   "playbook": "infra.service-activer",
+   "etapes": [],
+   "ecarts": [],
+   "ok": false,
+   "vm": "commande « systemctl » : conteneur ≠ vraie machine (fiche liee cac-apparmor-configured)",
+   "cadre": null
+  },
+  {
+   "playbook": "infra.service-desactiver",
+   "etapes": [],
+   "ecarts": [],
+   "ok": false,
+   "vm": "commande « systemctl » : conteneur ≠ vraie machine (fiche liee cac-service-apport-disabled)",
+   "cadre": null
+  },
+  {
+   "playbook": "infra.ssh-directive",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer",
+     "code": 127,
+     "note": "/mael/infra/ssh-directive/appliquer.sh: line 45: systemctl: command not found"
+    },
+    {
+     "etape": "re-mesure",
+     "code": 0,
+     "note": "conforme"
+    },
+    {
+     "etape": "revenir",
+     "code": 0,
+     "note": "/mael/infra/ssh-directive/revenir.sh: line 13: systemctl: command not found"
+    }
+   ],
+   "ecarts": [],
+   "ok": true,
+   "vm": null,
+   "cadre": null
+  },
+  {
+   "playbook": "infra.sudo-defaults",
+   "etapes": [
+    {
+     "etape": "detecter",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer --simulation",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "appliquer",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "verifier",
+     "code": 0,
+     "note": ""
+    },
+    {
+     "etape": "re-mesure",
+     "code": 0,
+     "note": "conforme"
+    },
+    {
+     "etape": "revenir",
+     "code": 0,
+     "note": ""
+    }
+   ],
+   "ecarts": [],
+   "ok": true,
+   "vm": null,
+   "cadre": null
+  },
+  {
+   "playbook": "infra.sysctl",
+   "etapes": [],
+   "ecarts": [],
+   "ok": false,
+   "vm": "theme « parametres-noyau » : noyau d'un conteneur ≠ vraie machine (fiche liee cac-sysctl-fs-protected-fifos)",
+   "cadre": null
+  }
+ ],
+ "juges": 7,
+ "reussis": 7,
+ "a_tester_en_vm": 5,
+ "hors_cadre": 6
+}

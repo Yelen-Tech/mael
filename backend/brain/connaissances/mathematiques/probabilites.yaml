@@ -1,0 +1,38 @@
+id: probabilites
+schema: 1
+nom: Probabilités
+resume: Cadre mathématique du raisonnement sur l'incertain ; le conditionnement et le théorème de Bayes y expliquent notamment pourquoi un bon détecteur produit beaucoup de faux positifs quand l'attaque est rare.
+famille: mathematiques
+version: 1
+etat: verifie
+verifie_le: 2026-09-20
+note: Relu par Kimi (IA) sur délégation du responsable, 20/09/2026
+mots_cles:
+  - probabilités
+  - théorème de bayes
+  - probabilité conditionnelle
+  - taux de base
+  - faux positifs
+  - événements indépendants
+  - loi des grands nombres
+  - variables aléatoires
+caracteristiques:
+  notions_fondamentales: "Espaces probabilisés, événements et mesures de probabilité ; probabilités conditionnelles, indépendance et théorème de Bayes ; variables aléatoires, espérance et variance ; lois usuelles (binomiale, géométrique, normale, poissonienne)."
+  liens_informatiques: "Évaluation des taux de faux positifs et de faux négatifs des systèmes de détection ; estimation de la probabilité de collisions de hachage ; files d'attente, fiabilité et modélisation de la charge."
+  ordres_de_grandeur: "Pour un détecteur à 99 % de sensibilité et 95 % de spécificité appliqué à une attaque touchant 1 machine sur 1000, moins de 2 % des alertes concernent de vraies attaques ; c'est l'effet du taux de base."
+securite:
+  - titre: Paradoxe du taux de base en détection
+    risque: Ignorer la rareté des attaques conduit à surestimer la fiabilité d'une alerte et à épuiser les analystes sur des faux positifs.
+    conseil: Raisonner en probabilités a posteriori (théorème de Bayes) et enrichir les alertes avant escalade.
+    gravite: elevee
+  - titre: Indépendance supposée à tort
+    risque: Multiplier des probabilités d'événements corrélés (même mot de passe, même faille sur plusieurs machines) sous-estime fortement le risque global.
+    conseil: Identifier les dépendances entre événements avant de combiner des estimations de risque.
+    gravite: moyenne
+  - titre: Paradoxe des anniversaires négligé
+    risque: "Les collisions de hachage arrivent bien plus tôt que l'intuition : environ 2^(n/2) essais suffisent pour une empreinte de n bits."
+    conseil: Choisir des empreintes suffisamment longues et des algorithmes de hachage reconnus.
+    gravite: moyenne
+sources:
+  - titre: Wikipédia — Théorème de Bayes
+    url: https://fr.wikipedia.org/wiki/Th%C3%A9or%C3%A8me_de_Bayes

@@ -1,0 +1,80 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-file-owner-etc-gshadow
+titre: 'Proprietaire de /etc/gshadow : root'
+domaine: fichiers
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - debian==12
+  - ubuntu==22.04
+  - ubuntu==24.04
+taxonomie:
+  theme: comptes
+  type_controle: proprietaire-fichier
+  niveaux:
+    cis: 1
+    anssi: intermediaire
+source:
+  origine: complianceascode
+  regle: file_owner_etc_gshadow
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/permissions/files/permissions_important_account_files/file_owner_etc_gshadow
+mots_cles:
+- chown
+- comptes
+- fichier
+- fichiers
+- groupes
+- gshadow
+- mots de passe
+- proprietaire
+resume: 'Proprietaire de /etc/gshadow : root : proprietaire root. (regle file_owner_etc_gshadow, ComplianceAsCode
+  0.1.82).'
+observer:
+- commande: stat -c '%a %U %G %n' /etc/gshadow 2>/dev/null
+  but: Lire droits, proprietaire et groupe (proprietaire)
+  lecture: '2e colonne = proprietaire : attendu root. Aucune ligne = fichier absent.'
+controles:
+- controle: proprietaire = root
+  bon: proprietaire root
+  mauvais: toute autre valeur
+  gravite: moyenne
+  risque: /etc/gshadow (et sa copie /etc/gshadow-) contient les empreintes des mots de passe de groupe
+    et la liste de leurs administrateurs. Lisible par un autre compte, il permet de les casser hors ligne
+    ; modifiable, il permet d'entrer dans n'importe quel groupe.
+  action: chown root sur les fichiers concernes.
+  playbook: infra.fichier-proprietaire
+  parametres:
+    chemin: /etc/gshadow
+    proprietaire: root
+  evaluation:
+  - commande: 0
+    lecteur: stat
+    champ: proprietaire
+    comparateur: dans
+    attendu:
+    - '0'
+    - root
+pieges:
+- 'Sans sudo, certains fichiers (ex. /etc/shadow) ne sont pas lisibles par stat/find : relancer avec les
+  droits root.'
+referentiels:
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 22.04 LTS v2.0.0
+  ref: 7.1.7 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Ubuntu 24.04 LTS v1.0.0
+  ref: 7.1.7 (niveau 1)
+- nom: CIS
+  document: CIS Benchmark for Debian 12 v1.1.0
+  ref: 7.1.7 (niveau 1)
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R50 (niveau intermediaire)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet

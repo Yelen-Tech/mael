@@ -1,0 +1,10 @@
+{
+ "aquasec/trivy": "aquasec/trivy@sha256:62b1e65e8869bc4b4c6aa4fa2b21595256c7c2f6018a9d9ad61caf87187c1969",
+ "clamav/clamav": "clamav/clamav@sha256:9cb27d7660bdf66e9878c832cb433dd8aa152cfbe16f3c2c0084c80b04ae22b4",
+ "drwetter/testssl.sh": "drwetter/testssl.sh@sha256:a40614f5867254f6fee2d277fa367e31de29fc74a36eb5d126d93ba182f7e412",
+ "projectdiscovery/httpx": "projectdiscovery/httpx@sha256:f8275a7c6aaec187249df9eaf4ad9196f4677adfc6a51a47b4aaa1d4db4f8ffc",
+ "projectdiscovery/naabu": "projectdiscovery/naabu@sha256:0b7efcd6eb4bf7be2c5cfb2bbfe091a132df0e442e549267bca818a4cef15ea4",
+ "projectdiscovery/nuclei": "projectdiscovery/nuclei@sha256:582d5546902e67052097cb2d07296c642d50a1afc5e44623cb038845df9a32eb",
+ "projectdiscovery/subfinder": "projectdiscovery/subfinder@sha256:c0f4683f91e8e30fbb5bf45051ef45e245ef48424b0d5bc99f8a72cb45163ea9",
+ "zricethezav/gitleaks": "zricethezav/gitleaks@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f"
+}

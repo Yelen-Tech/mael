@@ -1,0 +1,68 @@
+# Fiche GENEREE depuis ComplianceAsCode (BSD-3-Clause) -- voir NOTICE.
+# Ne pas editer a la main : relancer l'importeur. Pour valider une
+# fiche apres relecture, passer etat a verifie + verifie_le.
+id: cac-grub2-nosmep-argument-absent
+titre: Argument de demarrage nosmep absent
+domaine: systeme
+schema: 2
+version: 1
+etat: verifie
+teste_sur: []
+applicable:
+  os:
+  - linux
+taxonomie:
+  theme: demarrage
+  type_controle: argument-absent
+  niveaux:
+    cis: null
+    anssi: renforce
+source:
+  origine: complianceascode
+  regle: grub2_nosmep_argument_absent
+  version: 0.1.82
+  url: https://github.com/ComplianceAsCode/content/tree/v0.1.82/linux_os/guide/system/bootloader-grub2/grub2_nosmep_argument_absent
+mots_cles:
+- argument
+- demarrage
+- grub
+- nosmep
+- noyau
+resume: Le noyau ne doit pas demarrer avec nosmep (il desactive une protection). (regle grub2_nosmep_argument_absent,
+  ComplianceAsCode 0.1.82).
+observer:
+- commande: cat /proc/cmdline
+  but: Lire les arguments du demarrage EN COURS
+  lecture: nosmep ne doit pas figurer.
+- commande: grep -E '^GRUB_CMDLINE_LINUX' /etc/default/grub
+  but: Verifier la configuration persistante de GRUB
+  lecture: nosmep ne doit pas figurer.
+controles:
+- controle: nosmep absent
+  bon: nosmep absent
+  mauvais: nosmep present
+  gravite: moyenne
+  risque: 'SMEP empeche le noyau d''executer du code place en memoire utilisateur : le desactiver (nosmep)
+    rend bien plus simple l''exploitation d''une faille du noyau.'
+  action: Retirer nosmep de GRUB_CMDLINE_LINUX dans /etc/default/grub, update-grub, redemarrer.
+  playbook: infra.grub-argument
+  parametres:
+    argument: nosmep
+    action: retirer
+  evaluation:
+  - commande: 0
+    lecteur: cmdline
+    comparateur: absent
+    champ: nosmep
+  - commande: 1
+    lecteur: grub
+    comparateur: absent
+    champ: nosmep
+pieges:
+- Effet au prochain redemarrage seulement.
+referentiels:
+- nom: ANSSI
+  document: ANSSI-BP-028 v2.0
+  ref: R1 (niveau renforce)
+verifie_le: '2026-09-19'
+relu_par: assistant IA (Claude), par delegation du responsable du projet
