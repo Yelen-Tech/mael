@@ -331,3 +331,26 @@ def test_le_budget_suit_le_modele():
     from brain.codage.envergure import Envergure
     assert Envergure(milliards=3.8, contexte=8192).budget_extraits == 6_000
     assert Envergure(milliards=70, contexte=131072).budget_extraits == 120_000
+
+
+def test_les_tours_ne_s_empilent_pas_et_tiennent_dans_le_contexte(tmp_path):
+    """Kaggle 15/10 : au 3e tour, 46 352 jetons demandes pour 32 768 — les
+    extraits de chaque tour s'ajoutaient aux precedents. Chaque demande est
+    maintenant UN message, sous la limite, quel que soit le tour."""
+    from brain.codage.envergure import Envergure
+    gros = "".join(f"def f{i}(x):\n    return x + {i}  # {'z' * 60}\n\n"
+                   for i in range(3_000))
+    idx = _depot(tmp_path, {"boutique/panier.py": PANIER + gros,
+                            "boutique/autre.py": gros})
+    env = Envergure(milliards=30, contexte=32_768)
+    faux = bloc("boutique/panier.py", "rien de tel", "pass")
+    moteur = FauxMoteur([faux, faux, faux])
+    c = correctif.Correcteur(moteur, tmp_path, envergure=env)
+    r = c.corriger(TICKET + " " + "detail " * 8_000, idx)
+    limite = correctif.limite_demande(env)
+    assert len(moteur.recus) == c.tours >= 3 and not r.corrige
+    for messages in moteur.recus:
+        assert len(messages) == 1
+        assert len(messages[0]["content"]) <= limite
+    assert "n'existe pas tel quel" in moteur.recus[-1][0]["content"]
+    assert "TICKET" in moteur.recus[-1][0]["content"]

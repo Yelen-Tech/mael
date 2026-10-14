@@ -195,6 +195,16 @@ def _langage(fichier: str) -> str:
     return depot.LANGAGES.get(Path(fichier).suffix.lower(), "")
 
 
+def limite_demande(envergure) -> int:
+    """Caracteres qu'une demande au modele peut faire : le contexte moins la
+    place de la reponse, a 2,8 caracteres par jeton (du code se decoupe plus
+    fin que 3). Kaggle 15/10 : 46 352 jetons demandes pour 32 768 (chaque
+    tour EMPILAIT les extraits des tours precedents), 5 tickets sur 5
+    perdus."""
+    reponse = min(envergure.jetons_reponse, envergure.contexte // 4)
+    return int((envergure.contexte - reponse) * 2.8)
+
+
 def message_initial(ticket: str, lieux, extraits: list[Extrait],
                     textes: dict[str, str], limite_ticket: int) -> str:
     t = ticket.strip()
@@ -473,6 +483,10 @@ class Correcteur:
         lieux = lieux if lieux is not None else localisation.localiser(
             index, ticket)
         budget = self.envergure.budget_extraits
+        limite = limite_demande(self.envergure)
+        # extraits + ticket (au plus budget // 2) doivent tenir : sinon,
+        # moins d'extraits
+        budget = min(budget, int(limite * 2 / 3))
         extraits = choisir_extraits(self.racine, lieux, budget, index)
         r = Resultat(lieux=lieux, extraits=extraits)
         if not extraits:
@@ -482,13 +496,24 @@ class Correcteur:
         fichiers = sorted({e.fichier for e in extraits})
         originaux = {f: self.espace.lire(f) for f in fichiers}
         tests = {f for f, fi in index.fichiers.items() if fi.test}
-        premier = message_initial(ticket, lieux, extraits, originaux,
-                                  budget // 2)
-        if retour:
-            premier += ("\n\nUNE PREMIERE CORRECTION EST DEJA APPLIQUEE "
-                        "(les extraits montrent l'etat actuel), mais les "
-                        f"tests disent :\n{retour}\n\nCorrige ce qui reste.")
-        messages = [{"role": "user", "content": premier}]
+
+        def demande(textes: dict[str, str], suite: str = "") -> str:
+            """Le ticket et les extraits dans leur etat ACTUEL, puis la
+            suite : chaque tour REMPLACE le precedent, rien ne s'empile."""
+            plafond = budget // 2
+            while True:
+                m = message_initial(ticket, lieux, extraits, textes, plafond)
+                if retour:
+                    m += ("\n\nUNE PREMIERE CORRECTION EST DEJA APPLIQUEE "
+                          "(les extraits montrent l'etat actuel), mais les "
+                          f"tests disent :\n{retour[:4_000]}\n\n"
+                          "Corrige ce qui reste.")
+                exces = len(m) + len(suite) - limite
+                if exces <= 0 or plafond <= 1_000:
+                    return (m + suite)[:limite]
+                plafond = max(1_000, plafond - exces)
+
+        messages = [{"role": "user", "content": demande(originaux)}]
         for tour in range(1, self.tours + 1):
             r.tours = tour
             if self.contraint:
@@ -517,19 +542,14 @@ class Correcteur:
                 break
             # le modele revoit l'etat ACTUEL des extraits et les refus
             actuels = {f: self.espace.lire(f) for f in fichiers}
-            par_fichier: dict[str, list[Extrait]] = {}
-            for e in extraits:
-                par_fichier.setdefault(e.fichier, []).append(e)
-            messages += [
-                {"role": "assistant", "content": rep.texte},
-                {"role": "user", "content":
-                    "Refuse :\n" + "\n".join(f"- {x}" for x in r.refus)
-                    + ("\n\nDeja applique : " + ", ".join(
-                        a.fichier for a in r.appliquees)
-                       if r.appliquees else "")
-                    + "\n\nEXTRAITS (etat actuel) :\n" + "\n\n".join(
-                        montrer(actuels[f], es, _langage(f))
-                        for f, es in par_fichier.items())
-                    + "\n\nRenvoie seulement les blocs qui restent."}]
+            suite =("\n\nTA REPONSE PRECEDENTE (fin) :\n"
+                     + rep.texte[-3_000:]
+                     + "\n\nRefuse :\n" + "\n".join(f"- {x}" for x in r.refus)
+                     + ("\n\nDeja applique : " + ", ".join(
+                         a.fichier for a in r.appliquees)
+                        if r.appliquees else "")
+                     + "\n\nLes EXTRAITS ci-dessus montrent l'etat actuel des "
+                     "fichiers. Renvoie seulement les blocs qui restent.")
+            messages = [{"role": "user", "content": demande(actuels, suite)}]
         r.diff = diff(originaux, self.espace)
         return r
