@@ -164,6 +164,21 @@ def test_la_trace_designe_le_fichier_et_la_fonction(tmp_path):
     assert (lieux[0].symboles[0].debut, lieux[0].symboles[0].fin) == (2, 5)
 
 
+def test_une_phrase_d_erreur_n_est_pas_du_code():
+    """Kaggle 15/10 (sympy-21627) : « depth » designait ideals.py."""
+    i = localisation.indices(
+        "causes a `RecursionError: maximum recursion depth exceeded while "
+        "calling a Python object` error\n```\nx = f(1)\n"
+        "ValueError: invalid literal for parse_expr\n```\n"
+        "see `my_option` and `Point.distance`")
+    for mot in ("maximum", "recursion", "depth", "calling", "invalid",
+                "literal"):
+        assert mot not in i.identifiants
+    for code in ("RecursionError", "ValueError", "my_option",
+                 "Point.distance"):
+        assert code in i.identifiants
+
+
 def test_une_recursion_designe_la_boucle_pas_le_fond(tmp_path):
     """sympy-21627 : la pile d'une RecursionError finit n'importe ou (ici
     core/sympify.py, 3 cadres) ; le coupable est dans la BOUCLE repetee —
@@ -237,6 +252,30 @@ def test_lignes_changees_d_un_diff():
              "@@ -40 +41,2 @@\n y\n")
     assert banc_depot.lignes_changees(patch) == {
         "geo/point.py": [(3, 6), (40, 40)]}
+
+
+def test_lignes_touchees_sans_le_contexte():
+    patch = ("--- a/geo/point.py\n+++ b/geo/point.py\n"
+             "@@ -3,4 +3,5 @@ class Point:\n a\n-b\n+c\n+d\n e\n"
+             "@@ -40,2 +41,3 @@\n x\n+y\n z\n")
+    assert banc_depot.lignes_touchees(patch) == {"geo/point.py": {4, 41}}
+
+
+def test_lignes_montrees_au_modele(tmp_path):
+    """La mesure du rejeu du 15/10 : les lignes a corriger sont-elles dans
+    les extraits que le correcteur montrerait ?"""
+    idx = _depot(tmp_path)
+    lieux = localisation.localiser(idx, (
+        '  File "/x/geo/point.py", line 4, in __new__\n'
+        "ValueError: Imaginary coordinates are not permitted.\n"))
+    patch = ("--- a/geo/point.py\n+++ b/geo/point.py\n"
+             "@@ -3,3 +3,3 @@\n         if any(a.is_imaginary for a in "
+             "args):\n-            raise ValueError('x')\n+            pass\n")
+    m = banc_depot.montrees(tmp_path, lieux, idx, patch, "geo/point.py")
+    assert m["montre"] and (m["vues"], m["lignes"]) == (1, 1)
+    loin = patch.replace("-3,3 +3,3", "-7,3 +7,3")      # distance(), ligne 8
+    m = banc_depot.montrees(tmp_path, lieux[:1], idx, loin, "geo/point.py")
+    assert m["lignes"] == 1
 
 
 def test_les_moities_sont_fixes_et_equilibrees():
@@ -360,3 +399,17 @@ def test_sortie_d_outil_collee_ignoree_pas_l_explication_pytest():
     assert "ignore_paths" in ind.identifiants
     assert not {"R2044", "C0103", "Constant_Name"} & set(ind.identifiants)
     assert "AssertionError" in ind.identifiants
+
+
+def test_identifiants_des_tests_officiels():
+    """Format Django de SWE-bench -> identifiant lu par MAEL ; pytest
+    inchange."""
+    assert banc_depot.identifiant(
+        "test_urlfield_clean_invalid (forms_tests.field_tests.test_urlfield."
+        "URLFieldTest)") == ("tests/forms_tests/field_tests/test_urlfield.py"
+                             "::URLFieldTest::test_urlfield_clean_invalid")
+    assert banc_depot.identifiant(
+        "test_a (app.tests.T.test_a)\nUne docstring.") == (
+        "tests/app/tests.py::T::test_a")
+    assert banc_depot.identifiant("testing/test_x.py::test_y[1]") == (
+        "testing/test_x.py::test_y[1]")

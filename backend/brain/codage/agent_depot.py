@@ -28,7 +28,7 @@ import textwrap
 from dataclasses import dataclass, field
 from pathlib import Path, PurePosixPath
 
-from . import correctif, depot, localisation
+from . import correctif, couverture, depot, localisation
 from . import essais_depot as ed
 from .envergure import PETIT, Envergure
 from .espace import CheminRefuse, Espace
@@ -54,6 +54,25 @@ Regles : importe le code du depot comme le font ses tests existants ;
 des fonctions test_... courtes ; une assertion qui verifie le comportement
 ATTENDU decrit par le ticket ; aucun acces reseau ; ne modifie rien
 d'autre."""
+
+# Django se teste par son lanceur (tests/runtests.py, unittest) : une
+# fonction pytest n'y est jamais executee (Kaggle 15/10, django-15202 :
+# « aucun test ne reproduit le ticket » a chaque fois)
+SYSTEME_REPRO_DJANGO = """Tu ecris UN test qui REPRODUIT le ticket dans le
+depot de DJANGO : il doit ECHOUER sur le code actuel (le bug est la) et
+REUSSIR quand le bug sera corrige. Les tests de Django tournent avec son
+lanceur (tests/runtests.py, unittest), PAS avec pytest. On te montre le
+ticket, les extraits du code concerne, et un test existant pour le style.
+Reponds par UN seul bloc :
+
+```python fichier=CHEMIN_DONNE
+from django.test import SimpleTestCase
+...une classe SimpleTestCase (ou TestCase s'il faut la base de donnees)...
+```
+
+Regles : des methodes test_... courtes ; self.assertEqual, assertRaises,
+assertRaisesMessage... qui verifient le comportement ATTENDU decrit par le
+ticket ; pas de pytest ; aucun acces reseau ; ne modifie rien d'autre."""
 
 
 @dataclass
@@ -272,6 +291,7 @@ class AgentDepot:
         # levier 3 : le modele departage les candidats (choix.py). Desactive
         # par defaut tant que le banc ne l'a pas valide (12/10/2026).
         self.choix = choix
+        self.couverture: dict = {}       # ce que l'exemple du ticket traverse
 
     # ---------------------------------------------------------- les tests
     def _lancer(self, env, tests: list[str], suite) -> ed.Execution:
@@ -294,7 +314,10 @@ class AgentDepot:
         """Execute le code d'exemple du ticket (sans reseau, sur une copie)
         et rend la trace d'erreur obtenue si elle passe par le depot : le
         meilleur indice de localisation (fichier ET ligne). Rien si le
-        ticket a deja sa trace."""
+        ticket a deja sa trace. L'execution est TRACEE (couverture.py) : ce
+        qu'elle traverse du depot va dans self.couverture, meme sans
+        plantage (sympy-12236 : un mauvais resultat, aucune trace)."""
+        self.couverture = {}
         if not self.executer or localisation.indices(ticket).trace:
             return ""
         codes = exemples(ticket)
@@ -313,12 +336,22 @@ class AgentDepot:
             essais = [code]
             if paquets:
                 # une session collee oublie souvent son import
-                # (« from sympy import * ») : second essai avec
-                essais.append("".join(f"from {p} import *\n"
-                                      for p in paquets[:2]) + code)
+                # (« from sympy import * ») : second essai avec. Et ses
+                # symboles (x, k, theta — sympy-11400, 11870 : NameError
+                # avant d'entrer dans sympy) : le module « abc » du paquet
+                # s'il en a un, importe AVANT (le vrai I ne doit pas etre
+                # ecrase par une lettre)
+                essais.append("".join(
+                    f"from {p}.abc import *\n" for p in paquets[:2]
+                    if (self.racine / p / "abc.py").is_file()) + "".join(
+                    f"from {p} import *\n" for p in paquets[:2]) + code)
             for n, essai in enumerate(essais, 1):
-                t = trace_de(ed.executer_script(env, self.racine,
-                                                essai).sortie)
+                sortie = ed.executer_script(env, self.racine,
+                                            couverture.script(essai)).sortie
+                vu = couverture.lire(sortie)
+                if couverture.MARQUE in sortie:
+                    sortie = sortie[:sortie.rfind(couverture.MARQUE)]
+                t = trace_de(sortie)
                 derniere = t.splitlines()[-1] if t else ""
                 if derniere.startswith("NameError") and n < len(essais):
                     continue
@@ -331,6 +364,10 @@ class AgentDepot:
                     b.notes.append("exemple du ticket execute : erreur "
                                    f"d'environnement ignoree ({derniere[:150]})")
                     return ""
+                # chemins relatifs au dossier de la suite -> au depot
+                self.couverture = {
+                    (f"{suite.dossier}/{f}" if suite.dossier else f): c
+                    for f, c in vu.items()}
                 if t and any(localisation._par_suffixe(index, c)
                              for c, _, _ in localisation.indices(t).trace):
                     b.notes.append("exemple du ticket execute : "
@@ -338,7 +375,8 @@ class AgentDepot:
                     return t
                 break
         b.notes.append("exemple du ticket execute : aucune trace dans le "
-                       "depot")
+                       f"depot ; {len(self.couverture)} fichier(s) du depot "
+                       "traverses")
         return ""
 
     # ---------------------------------------------------- la reproduction
@@ -368,7 +406,8 @@ class AgentDepot:
         messages = [{"role": "user", "content": message}]
         for tour in range(1, TOURS_REPRODUCTION + 1):
             rep = self.backend.completer(
-                systeme=SYSTEME_REPRO.replace("CHEMIN_DONNE", chemin),
+                systeme=(SYSTEME_REPRO_DJANGO if depot.est_django(suite)
+                         else SYSTEME_REPRO).replace("CHEMIN_DONNE", chemin),
                 messages=messages, role_modele="codeur")
             fichiers = extraire(rep.texte).fichiers
             code = _sans_entete(fichiers.get(chemin) or next(
@@ -434,7 +473,8 @@ class AgentDepot:
         if trace:
             ticket += ("\n\nTRACE OBTENUE PAR MAEL EN EXECUTANT L'EXEMPLE DU "
                        "TICKET (code actuel) :\n```\n" + trace + "\n```")
-        lieux = localisation.localiser(index, ticket)
+        lieux = localisation.localiser(index, ticket,
+                                       couverture=self.couverture)
         if self.choix and lieux:
             from . import choix as choix_
             textes = {}

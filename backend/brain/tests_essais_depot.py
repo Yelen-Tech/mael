@@ -356,3 +356,47 @@ def test_mode_hote_execute_avant_apres_sur_la_copie(tmp_path, monkeypatch):
     apres = ed.executer_tests(env, depot_)
     c = ed.comparer(avant, apres)
     assert c.repares == ["test_mini.py::test_ajoute"] and not c.regressions
+
+
+def test_la_copie_garde_bin_mais_pas_les_binaires_ni_les_venvs(tmp_path):
+    """Banc du 15/10 : sympy declare bin/isympy dans setup.py ; la copie
+    l'ecartait, « pip install -e . » echouait, aucun test sympy ne
+    tournait."""
+    import io
+    import tarfile
+    for c in ("bin/isympy", "setup.py", "App/obj/x.json", "App/bin/App.dll",
+              "env/pyvenv.cfg", "env/lib/x.py", "coverage/report.py"):
+        (tmp_path / c).parent.mkdir(parents=True, exist_ok=True)
+        (tmp_path / c).write_text("x")
+    with tarfile.open(fileobj=io.BytesIO(ed.archive(tmp_path))) as t:
+        noms = set(t.getnames())
+    assert {"bin/isympy", "setup.py", "coverage/report.py"} <= noms
+    assert not any(n.startswith(("App/bin", "env")) for n in noms)
+
+
+def test_django_libelles_et_statuts():
+    """Le lanceur de Django (SWE-bench : 114 tickets sur 300) : libelles
+    a partir des chemins, et sortie unittest lue avec les MEMES
+    identifiants que pytest. Sortie reelle du 15/10 (validators)."""
+    assert ed.libelle_django("tests/validators/tests.py") == "validators.tests"
+    assert ed.libelle_django(
+        "tests/forms_tests/field_tests/test_urlfield.py::T::test_a") == (
+        "forms_tests.field_tests.test_urlfield.T.test_a")
+    sortie = (
+        "test_message_dict (validators.tests.TestValidators) ... ok\n"
+        "test_url (forms_tests.tests.UrlTests.test_url)\n"
+        "Docstring du test ... FAIL\n"
+        "test_validators (validators.tests.TestValidators) ... skipped "
+        "'Pillow is required'\n"
+        "test_mael_ticket (unittest.loader._FailedTest) ... ERROR\n"
+        "======\nERROR: test_validators (validators.tests.TestValidators) "
+        "[URLValidator] (value='http://[::1:2::3]:8080/')\n")
+    assert ed.statuts_django(sortie) == {
+        "tests/validators/tests.py::TestValidators::test_message_dict":
+            "PASSED",
+        "tests/forms_tests/tests.py::UrlTests::test_url": "FAILED",
+        "tests/validators/tests.py::TestValidators::test_validators": "ERROR",
+        "tests/test_mael_ticket.py": "ERROR"}
+    s = Suite(dossier="", commande=["python", "tests/runtests.py"])
+    assert ed.commande_hors_ligne(s, ["tests/validators/tests.py"])[-1] == (
+        "validators.tests")

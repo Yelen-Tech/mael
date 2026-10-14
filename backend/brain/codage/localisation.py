@@ -142,6 +142,30 @@ _SORTIE = re.compile(
 # portent l'explication du bug (pytest-5495 reculait de 2 a 8, banc 13/10).
 
 
+_LIGNE_ERREUR = re.compile(
+    r"^(\s*[\w.]*(?:Error|Exception|Warning)\w*):\s.*$", re.M)
+
+
+def sans_messages(code: str) -> str:
+    """« RecursionError: maximum recursion depth exceeded » -> la classe
+    d'erreur seule : le message est de la prose (il est lu a part, comme
+    MESSAGE, et cherche tel quel dans le code)."""
+    return _LIGNE_ERREUR.sub(r"\1", code)
+
+
+def _forme_code(t: str) -> bool:
+    """Un mot qui a la forme du code : snake_case, camelCase, CamelCase
+    compose, ou pointe."""
+    return bool("_" in t.strip("_") or re.search(r"[a-z][A-Z]", t)
+                or "." in t or re.match(r"[A-Z][a-z]+[A-Z]", t))
+
+
+def _phrase(texte: str) -> bool:
+    """De la prose : au moins 4 mots, sans ponctuation de code."""
+    return (len(re.findall(r"[A-Za-z]+", texte)) >= 4
+            and not re.search(r"[()\[\]{}=<>]", texte))
+
+
 def sans_sortie(code: str) -> str:
     return "\n".join(l for l in code.splitlines() if not _SORTIE.match(l))
 
@@ -200,9 +224,15 @@ def indices(ticket: str) -> Indices:
     prose, code = _blocs_de_code(ticket)
     candidats = Counter()
     for m in re.finditer(r"`([^`\n]+)`", ticket):        # entre accents graves
+        # une PHRASE entre accents graves (« `RecursionError: maximum
+        # recursion depth exceeded` », sympy-21627) n'est pas du code :
+        # seuls ses mots qui ONT la forme du code comptent — sinon
+        # « depth » designait polys/agca/ideals.py (Kaggle, 15/10)
+        phrase = _phrase(m.group(1))
         for t in _IDENT.findall(m.group(1)):
-            candidats[t] += 3
-    for t in _IDENT.findall(sans_sortie(code)):
+            if not phrase or _forme_code(t):
+                candidats[t] += 3
+    for t in _IDENT.findall(sans_messages(sans_sortie(code))):
         candidats[t] += 1
     for t in _IDENT.findall(prose):
         if ("_" in t.strip("_") or re.search(r"[a-z][A-Z]", t)
@@ -281,10 +311,45 @@ def _module(index: Index, module: str) -> list[str]:
 
 
 # ------------------------------------------------------------- localiser
+P_COUVERTURE = 12.0
+COUVERTURE_FICHIERS = 8
+# une seule instruction : rien a comparer, tout ce qu'elle traverse compte
+COUVERTURE_UNE_INSTRUCTION = True
+
+
+def fonctions_fautives(couverture) -> dict[str, list[tuple[str, int]]]:
+    """{fichier: [(fonction, premiere ligne)]} traversees par la DERNIERE
+    instruction de l'exemple qui touche au depot, et par AUCUNE avant elle :
+    les premieres preparent ou montrent le cas qui marche, la derniere
+    montre le bug (sympy-12236 : 652 fonctions executees -> 136, dont
+    from_FractionField, la fonction du correctif officiel). Une seule
+    instruction : tout ce qu'elle traverse."""
+    par: dict[int, set] = {}
+    for f, appels in (couverture or {}).items():
+        for nom, ligne, i in appels:
+            par.setdefault(i, set()).add((f, nom, ligne))
+    if not par or (len(par) == 1 and not COUVERTURE_UNE_INSTRUCTION):
+        return {}
+    derniere = max(par)
+    avant = set().union(*(s for i, s in par.items() if i != derniere))
+    out: dict[str, list[tuple[str, int]]] = {}
+    for f, nom, ligne in sorted(par[derniere] - avant):
+        out.setdefault(f, []).append((nom, ligne))
+    return out
+
+
+def _nommee(nom: str) -> bool:
+    """Une vraie fonction du depot : ni <listcomp>/<lambda>, ni __dunder__."""
+    return not nom.startswith("<") and not (nom.startswith("__")
+                                            and nom.endswith("__"))
+
+
 def localiser(index: Index, ticket: str, n: int = 10,
-              textes: dict[str, str] | None = None) -> list[Lieu]:
+              textes: dict[str, str] | None = None,
+              couverture=None) -> list[Lieu]:
     """Les n fichiers les plus probables, avec leurs raisons et, dans chacun,
-    les fonctions a lire. `textes` : contenus deja lus (sinon lus ici)."""
+    les fonctions a lire. `textes` : contenus deja lus (sinon lus ici).
+    `couverture` : ce que l'exemple du ticket a execute (couverture.lire)."""
     racine = Path(index.racine)
     ind = indices(ticket)
     lieux: dict[str, Lieu] = {}
@@ -295,6 +360,30 @@ def localiser(index: Index, ticket: str, n: int = 10,
         if raison not in l.raisons:
             l.raisons.append(raison)
         return l
+
+    # 0. l'exemple du ticket, EXECUTE : les fichiers que seule l'instruction
+    # fautive traverse, d'autant plus qu'elle y appelle de vraies fonctions
+    fautives = {f: [x for x in fs if _nommee(x[0])]
+                for f, fs in fonctions_fautives(couverture).items()
+                if f in index.fichiers and not index.fichiers[f].test}
+    fautives = {f: fs for f, fs in fautives.items() if fs}
+    if fautives:
+        # la DENSITE (part des fonctions du fichier traversees), pas leur
+        # nombre : sinon un gros fichier utilitaire (rings.py, 150
+        # fonctions) ecrase le petit fichier fautif (polynomialring.py)
+        def densite(f):
+            total = sum(1 for s in index.fichiers[f].symboles
+                        if s.sorte != "classe")
+            return len(fautives[f]) / max(total, len(fautives[f]), 1)
+        plus = max(densite(f) for f in fautives)
+        for f in sorted(fautives, key=densite,
+                        reverse=True)[:COUVERTURE_FICHIERS]:
+            fs = fautives[f]
+            l = ajouter(f, P_COUVERTURE * (0.5 + 0.5 * densite(f) / plus),
+                        "execute par l'exemple : "
+                        + ", ".join(nom for nom, _ in fs[:4]))
+            # co_firstlineno est le decorateur ou le def : +1 tombe dedans
+            l.lignes += [ligne + 1 for _, ligne in fs[:6]]
 
     # 1. traces : le cadre le plus profond (le dernier) compte le plus —
     # sauf dans une RecursionError, ou le fond de la pile est n'importe ou

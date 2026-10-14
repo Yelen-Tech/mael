@@ -44,6 +44,9 @@ from .retouche import Extrait, montrer
 
 CONTEXTE = 3                 # lignes autour d'une fonction montree
 FENETRE = 60                 # une fonction trop longue : fenetre autour du lieu
+PREMIERS_LIEUX = 6         # chacun montre d'abord ses meilleures fonctions
+PREMIERES_FONCTIONS = 6
+FONCTION_COURTE = 40         # lignes
 TOURS = 3
 
 SYSTEME = """Tu corriges un ticket dans un depot de code existant.
@@ -160,8 +163,11 @@ def choisir_extraits(racine: Path, lieux, budget: int,
     # lignes ne sert qu'a la presentation. Essai reel du 12/10 : trie par
     # ligne, Response.__init__ (50 lignes, sans rapport) mangeait le budget
     # avant iter_content, la fonction du ticket — jamais montree.
-    choisies: list[tuple[str, int, int]] = []
-    total = 0
+    # Deux passes : d'abord la MEILLEURE fonction de chacun des premiers
+    # lieux, puis le reste dans l'ordre. Rejeu du 15/10 (sympy-12236) : le
+    # bon fichier etait 4e, mais les 3 premiers mangeaient tout le budget
+    # fonction apres fonction — sa fonction fautive jamais montree.
+    fichiers: list[tuple[str, list[str], list[tuple[int, int]]]] = []
     for lieu in lieux:
         fi = index.fichiers.get(lieu.fichier) if index else None
         if fi and fi.test:
@@ -171,20 +177,36 @@ def choisir_extraits(racine: Path, lieux, budget: int,
                 encoding="utf-8", errors="replace").split("\n")
         except OSError:
             continue
-        for a, b in _plages_du_lieu(lieu, len(lignes)):
-            deja = [(x, y) for f, x, y in choisies if f == lieu.fichier]
-            if any(x <= a and b <= y for x, y in deja):
-                continue                       # deja montre (methode d'une classe)
-            taille = sum(len(l) + 6 for l in lignes[a - 1:b])
-            if total + taille > budget:
-                if not choisies:               # au moins un extrait, coupe
-                    while b > a and total + taille > budget:
-                        b -= 1
-                        taille = sum(len(l) + 6 for l in lignes[a - 1:b])
-                else:
-                    continue
-            choisies.append((lieu.fichier, a, b))
-            total += taille
+        fichiers.append((lieu.fichier, lignes,
+                         list(_plages_du_lieu(lieu, len(lignes)))))
+    # la meilleure fonction de chaque fichier, puis ses suivantes COURTES
+    # (les fonctions designees courtes coutent peu et sont souvent le coeur
+    # du bug : sympy-12236, from_FractionField, 8 lignes, 4e ex aequo)
+    tete = [(k, j) for j in range(PREMIERES_FONCTIONS)
+            for k in range(min(len(fichiers), PREMIERS_LIEUX))
+            if j < len(fichiers[k][2]) and (
+                j == 0 or fichiers[k][2][j][1] - fichiers[k][2][j][0]
+                <= FONCTION_COURTE)]
+    ordre = tete + [(k, j) for k, (_, _, ps) in enumerate(fichiers)
+                    for j in range(len(ps)) if (k, j) not in set(tete)]
+    choisies: list[tuple[str, int, int]] = []
+    total = 0
+    for k, j in ordre:
+        f, lignes, plages = fichiers[k]
+        a, b = plages[j]
+        deja = [(x, y) for g, x, y in choisies if g == f]
+        if any(x <= a and b <= y for x, y in deja):
+            continue                           # deja montre (methode d'une classe)
+        taille = sum(len(l) + 6 for l in lignes[a - 1:b])
+        if total + taille > budget:
+            if not choisies:                   # au moins un extrait, coupe
+                while b > a and total + taille > budget:
+                    b -= 1
+                    taille = sum(len(l) + 6 for l in lignes[a - 1:b])
+            else:
+                continue
+        choisies.append((f, a, b))
+        total += taille
         if total >= budget:
             break
     extraits: list[Extrait] = []
@@ -206,6 +228,14 @@ def limite_demande(envergure) -> int:
     perdus."""
     reponse = min(envergure.jetons_reponse, envergure.contexte // 4)
     return int((envergure.contexte - reponse) * 2.8)
+
+
+def budget_correction(envergure) -> int:
+    """Caracteres d'extraits montres a la correction : extraits + ticket (au
+    plus budget // 2) doivent tenir dans la demande, sinon moins d'extraits.
+    Le banc (banc_depot) mesure avec ce MEME budget."""
+    return min(envergure.budget_extraits,
+               int(limite_demande(envergure) * 2 / 3))
 
 
 def message_initial(ticket: str, lieux, extraits: list[Extrait],
@@ -537,11 +567,8 @@ class Correcteur:
         index = index or depot.indexer(self.racine)
         lieux = lieux if lieux is not None else localisation.localiser(
             index, ticket)
-        budget = self.envergure.budget_extraits
+        budget = budget_correction(self.envergure)
         limite = limite_demande(self.envergure)
-        # extraits + ticket (au plus budget // 2) doivent tenir : sinon,
-        # moins d'extraits
-        budget = min(budget, int(limite * 2 / 3))
         extraits = choisir_extraits(self.racine, lieux, budget, index)
         r = Resultat(lieux=lieux, extraits=extraits)
         if not extraits:

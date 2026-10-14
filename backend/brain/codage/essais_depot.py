@@ -45,13 +45,22 @@ import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from .depot import ECARTES, Suite
+from .depot import ECARTES, RUNTESTS_DJANGO, Suite, est_django
 
 MEMOIRE = "2g"
+# La copie n'emporte pas .git : setuptools_scm (pytest, xarray, astropy...)
+# ne trouve plus sa version et « pip install -e . » echoue (Kaggle 15/10,
+# pytest-9359). Une version haute : les « >= » des dependances passent.
+VERSION_SANS_GIT = "9999.0.0"
 DELAI_CONSTRUCTION = 3600         # connexion lente : pip peut etre long
 DELAI_TESTS = 900
 PYTHONS = ("3.12", "3.11", "3.10", "3.9", "3.8", "3.7", "3.6", "3.5")
-EXCLUS_COPIE = ECARTES | {".git", ".mael"}
+# Ce que l'INDEX ignore n'est pas tout ce que la COPIE doit ignorer : bin/,
+# env/ et coverage/ sont souvent du code (sympy : bin/isympy, declare dans
+# setup.py — sans lui « pip install -e . » echouait, et aucun test sympy ne
+# tournait ; banc du 15/10). Le bin/ d'un projet .NET (a cote d'obj/) reste
+# ecarte : des binaires compiles.
+EXCLUS_COPIE = (ECARTES - {"bin", "env", "coverage"}) | {".git", ".mael"}
 # recettes eprouvees EN VRAI (banc du 13/10 : un test qui passe, un qui
 # echoue, par langage ; Node : node --test et jest — vitest et mocha lus
 # par les tests unitaires seulement)
@@ -144,6 +153,7 @@ def dockerfile(racine: Path, suite: Suite) -> str:
                 "/var/lib/apt/lists/*) || echo 'outils de compilation "
                 "indisponibles'\n"
                 "WORKDIR /travail\nCOPY . /travail\n"
+                f"ENV SETUPTOOLS_SCM_PRETEND_VERSION={VERSION_SANS_GIT}\n"
                 f"RUN {' && '.join(installe)}\n"
                 "ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1\n")
     if s == "node":
@@ -207,6 +217,11 @@ def commande_hors_ligne(suite: Suite, cibles: list[str],
                         racine: Path | None = None) -> list[str]:
     """La commande de test, sans reseau, limitee aux cibles si possible."""
     s = sorte(suite)
+    if s == "python" and est_django(suite):
+        # comme SWE-bench : sqlite, un seul processus, un test par ligne
+        return ["python", RUNTESTS_DJANGO, "--verbosity", "2",
+                "--settings=test_sqlite", "--parallel", "1",
+                *dict.fromkeys(libelle_django(c) for c in cibles)]
     if s == "python":
         return ["python", "-m", "pytest", "-v", "-rA", "--tb=short",
                 "-p", "no:cacheprovider", *cibles]
@@ -367,6 +382,11 @@ def archive(racine: Path) -> bytes:
             parties = Path(info.name).parts
             if set(parties) & EXCLUS_COPIE:
                 return None
+            if "bin" in parties and (racine.joinpath(
+                    *parties[:parties.index("bin")]) / "obj").is_dir():
+                return None                       # sortie de build .NET
+            if info.isdir() and (racine / info.name / "pyvenv.cfg").exists():
+                return None                       # un environnement virtuel
             if info.issym() or info.islnk():
                 return None                       # aucun lien vers l'hote
             info.uid = info.gid = 0
@@ -387,11 +407,73 @@ _RESUME = re.compile(rf"^({_STATUTS}) (\S+?)(?: - .*)?$", re.M)
 _DETAIL = re.compile(rf"^(\S+::\S+) ({_STATUTS})\b", re.M)
 
 
+def libelle_django(cible: str) -> str:
+    """« tests/validators/tests.py[::Classe[::test]] » -> le libelle du
+    lanceur de Django : « validators.tests[.Classe[.test]] »."""
+    chemin, _, reste = cible.partition("::")
+    module = chemin.removeprefix("tests/").removesuffix(".py").replace(
+        "/", ".")
+    return ".".join([module, *[x for x in reste.split("::") if x]])
+
+
+_LIGNE_DJANGO = re.compile(r"^([\w.]+) \(([\w.]+)\)(.*)$")
+_FIN_DJANGO = re.compile(r"\.\.\. (ok|FAIL|ERROR|skipped|expected failure|"
+                         r"unexpected success)\b")
+_STATUT_DJANGO = {"ok": "PASSED", "FAIL": "FAILED", "ERROR": "ERROR",
+                  "skipped": "SKIPPED", "expected failure": "XFAIL",
+                  "unexpected success": "FAILED"}
+
+
+def statuts_django(sortie: str) -> dict[str, str]:
+    """La sortie de `runtests.py --verbosity 2` (unittest) -> les MEMES
+    identifiants que pytest : « tests/validators/tests.py::Classe::test ».
+    Une ligne de docstring peut s'intercaler avant « ... ok ». Un module
+    qui ne s'importe pas (_FailedTest) donne ERROR sur son fichier."""
+    out: dict[str, str] = {}
+    lignes = sortie.splitlines()
+    for k, l in enumerate(lignes):
+        m = _LIGNE_DJANGO.match(l)
+        if not m:
+            continue
+        fin = _FIN_DJANGO.search(m.group(3)) or (
+            _FIN_DJANGO.search(lignes[k + 1]) if k + 1 < len(lignes)
+            else None)
+        if not fin:
+            continue
+        nom, chemin = m.group(1), m.group(2)
+        if "_FailedTest" in chemin:
+            out[f"tests/{nom.replace('.', '/')}.py"] = "ERROR"
+            continue
+        parties = chemin.split(".")
+        if parties[-1] == nom:                  # Python 3.11+ : Classe.test
+            parties = parties[:-1]
+        if len(parties) < 2:
+            continue
+        fichier = "tests/" + "/".join(parties[:-1]) + ".py"
+        out[f"{fichier}::{parties[-1]}::{nom}"] = _STATUT_DJANGO[fin.group(1)]
+    # le RESUME l'emporte : un sous-test en echec n'apparait que la (essai
+    # reel du 15/10, validators : la ligne disait « skipped », le resume
+    # « ERROR: test_validators (...) [URLValidator] »)
+    for m in _RESUME_DJANGO.finditer(sortie):
+        parties = m.group(3).split(".")
+        if parties[-1] == m.group(2):
+            parties = parties[:-1]
+        if len(parties) >= 2 and "_FailedTest" not in m.group(3):
+            fichier = "tests/" + "/".join(parties[:-1]) + ".py"
+            out[f"{fichier}::{parties[-1]}::{m.group(2)}"] = (
+                "FAILED" if m.group(1) == "FAIL" else "ERROR")
+    return out
+
+
+_RESUME_DJANGO = re.compile(r"^(FAIL|ERROR): (\w+) \(([\w.]+)\)", re.M)
+
+
 def lire_statuts(sortie: str) -> dict[str, str]:
     """Sortie de `pytest -v -rA` -> {identifiant du test : PASSED|FAILED|
     ERROR|...}. Une erreur de COLLECTE (le module ne s'importe pas) donne
-    ERROR sur le fichier. Le resume fait foi s'il existe."""
-    out: dict[str, str] = {}
+    ERROR sur le fichier. Le resume fait foi s'il existe. La sortie du
+    lanceur de Django est lue aussi (memes identifiants)."""
+    out: dict[str, str] = statuts_django(sortie)
     for test, statut in _DETAIL.findall(sortie):
         out[test] = statut.upper()
     for statut, test in _RESUME.findall(sortie):
@@ -696,7 +778,9 @@ def _preparer_hote(racine: Path, suite: Suite, env: Environnement,
                 r = subprocess.run(
                     [*_uv(), "pip", "install", "--python", python, *a],
                     capture_output=True, timeout=DELAI_CONSTRUCTION,
-                    cwd=travail)
+                    cwd=travail, env={**os.environ,
+                                      "SETUPTOOLS_SCM_PRETEND_VERSION":
+                                      VERSION_SANS_GIT})
                 journal.append(_texte(r.stdout)[-1000:] +
                                _texte(r.stderr)[-2000:])
                 if r.returncode == 0:

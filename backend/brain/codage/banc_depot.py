@@ -55,6 +55,52 @@ def lignes_changees(patch: str) -> dict[str, list[tuple[int, int]]]:
     return dict(out)
 
 
+def lignes_touchees(patch: str) -> dict[str, set[int]]:
+    """Les lignes PRECISES de l'ancien fichier que le correctif officiel
+    retire (-) ou devant lesquelles il insere (+), sans le contexte du
+    diff : ce que le modele doit VOIR pour pouvoir corriger."""
+    out: dict[str, set[int]] = defaultdict(set)
+    courant, n, precedente = None, 0, ""
+    for l in patch.splitlines():
+        if l.startswith("--- a/"):
+            courant = l[6:].strip()
+        elif l.startswith("+++") or courant is None:
+            continue
+        elif l.startswith("@@"):
+            n = int(re.match(r"@@ -(\d+)", l).group(1))
+        elif l.startswith("-"):
+            out[courant].add(n)
+            n += 1
+        elif l.startswith("+") and not precedente.startswith(("-", "+")):
+            out[courant].add(n)         # insertion pure : devant la ligne n
+        elif l.startswith(" "):
+            n += 1
+        precedente = l
+    return dict(out)
+
+
+# Ce que le modele voit a l'examen Kaggle : Qwen3-Coder-30B-A3B, 32 768
+# jetons (le banc mesure avec le MEME budget d'extraits que le correcteur)
+ENVERGURE_EXAMEN = ("Qwen3-Coder-30B-A3B", 30.5, 32_768)
+
+
+def montrees(racine: Path, lieux, idx, patch: str, cible: str) -> dict:
+    """Les lignes a corriger sont-elles dans les extraits montres au
+    modele ? Mesure du rejeu du 15/10 : 2 tickets sur 5 seulement — la
+    localisation est le frein, pas l'application des correctifs."""
+    from . import correctif
+    from .envergure import Envergure
+    env = Envergure(*ENVERGURE_EXAMEN)
+    extraits = correctif.choisir_extraits(
+        racine, lieux, correctif.budget_correction(env), idx)
+    touchees = lignes_touchees(patch).get(cible, set())
+    vues = {n for n in touchees if any(
+        e.fichier == cible and e.debut <= n <= e.fin for e in extraits)}
+    return {"lignes": len(touchees), "vues": len(vues),
+            "montre": bool(touchees) and vues == touchees,
+            "fichiers_montres": len({e.fichier for e in extraits})}
+
+
 def telecharger(repo: str, commit: str, archives: Path) -> Path | None:
     """L'archive du depot a ce commit (codeload.github.com). Le clonage git
     restait bloque sur la connexion du responsable (12/10/2026) ; une archive
@@ -106,8 +152,35 @@ def _backend():
     return obtenir_backend()
 
 
+def executer_exemple(instance: dict, depot_dir: Path, idx,
+                     cache: Path) -> tuple[str, dict, list[str]]:
+    """(trace, couverture, notes) de l'exemple du ticket, execute une fois
+    puis relu du cache."""
+    from collections import Counter
+
+    from .agent_depot import AgentDepot, Bilan
+    fichier = cache / f"{instance['id']}.json"
+    if fichier.exists():
+        d = json.loads(fichier.read_text(encoding="utf-8"))
+        cv = {f: Counter({tuple(k): n for k, n in appels})
+              for f, appels in d["couverture"].items()}
+        return d["trace"], cv, d["notes"]
+    a, b = AgentDepot(None, depot_dir), Bilan()
+    try:
+        trace = a._executer_exemples(instance["ticket"], idx, b)
+    except Exception as e:                              # noqa: BLE001
+        trace, b.notes = "", [f"panne : {type(e).__name__} {e}"[:200]]
+    cache.mkdir(parents=True, exist_ok=True)
+    fichier.write_text(json.dumps({
+        "trace": trace, "notes": b.notes,
+        "couverture": {f: [[list(k), n] for k, n in c.items()]
+                       for f, c in a.couverture.items()}}),
+        encoding="utf-8")
+    return trace, a.couverture, b.notes
+
+
 def evaluer(instance: dict, archives: Path, travail: Path,
-            backend=None) -> dict:
+            backend=None, executer: bool = False) -> dict:
     archive = telecharger(instance["repo"], instance["commit"], archives)
     if archive is None:
         return {"id": instance["id"], "erreur": "telechargement impossible"}
@@ -130,7 +203,18 @@ def evaluer(instance: dict, archives: Path, travail: Path,
     idx = depot.indexer(depot_dir)
     t_index = time.monotonic() - d
     d = time.monotonic()
-    lieux = localisation.localiser(idx, instance["ticket"], n=10)
+    ticket, cv, execution = instance["ticket"], None, []
+    if executer:
+        # phase 1 : l'exemple du ticket EXECUTE (trace + couverture), comme
+        # l'agent le fait a l'examen (environnement du mode hote). Le
+        # resultat est GARDE (execution/<id>.json) : regler les poids de la
+        # localisation ne demande pas de tout reexecuter
+        trace, cv, execution = executer_exemple(instance, depot_dir, idx,
+                                                travail.parent / "execution")
+        if trace:
+            ticket += ("\n\nTRACE OBTENUE PAR MAEL EN EXECUTANT L'EXEMPLE "
+                       "DU TICKET (code actuel) :\n```\n" + trace + "\n```")
+    lieux = localisation.localiser(idx, ticket, n=10, couverture=cv)
     t_loc = time.monotonic() - d
     cible = instance["fichiers"][0]
     rang_calcule = next((k + 1 for k, l in enumerate(lieux)
@@ -157,8 +241,13 @@ def evaluer(instance: dict, archives: Path, travail: Path,
         for s in lieux[rang - 1].symboles[:3]:
             if any(s.debut <= fin and debut <= s.fin for debut, fin in plages):
                 fonction = True
+    m = montrees(depot_dir, lieux, idx, instance["patch"], cible)
     return {"id": instance["id"], "moitie": moitie(instance["id"]),
             "rang": rang, "fonction": fonction,
+            "montre": m["montre"], "vues": f"{m['vues']}/{m['lignes']}",
+            "fichiers_montres": m["fichiers_montres"],
+            **({"execution": execution[-1][:160] if execution else "aucun "
+                "exemple"} if executer else {}),
             "fichiers": len(idx.fichiers), "t_index": round(t_index, 1),
             "t_loc": round(t_loc, 1),
             "premier": lieux[0].fichier if lieux else None,
@@ -183,13 +272,35 @@ def appliquer_patch(racine: Path, patch: str) -> tuple[bool, str]:
         Path(chemin).unlink(missing_ok=True)
 
 
+_TEST_DJANGO = re.compile(r"^(\w+) \(([\w.]+)\)")
+
+
+def identifiant(test: str) -> str:
+    """Un test officiel de SWE-bench -> l'identifiant que MAEL lit. Les
+    tickets Django nomment « test_x (forms_tests.tests.Classe) » (parfois
+    suivi de la docstring) : -> « tests/forms_tests/tests.py::Classe::
+    test_x ». Verifie en vrai le 15/10 sur django-15202 : FAIL_TO_PASS en
+    echec avant le correctif officiel, reussis apres, PASS_TO_PASS 6/6."""
+    m = _TEST_DJANGO.match(test.split("\n", 1)[0])
+    if not m or "::" in test:
+        return test
+    p = m.group(2).split(".")
+    if p[-1] == m.group(1):
+        p = p[:-1]
+    return f"tests/{'/'.join(p[:-1])}.py::{p[-1]}::{m.group(1)}"
+
+
+def tests_officiels(instance: dict, cle: str) -> list[str]:
+    return [identifiant(t) for t in json.loads(instance[cle])]
+
+
 def etalonner(instance: dict, racine: Path, env) -> set[str]:
     """Les tests que NOTRE environnement ne peut pas faire reussir, meme avec
     le correctif officiel (requests-3362 : 2 tests sur 75 veulent internet,
     le conteneur n'en a pas). Ils sont ecartes de la note — et LISTES dans le
     rapport, jamais caches. `racine` : une copie neuve du depot."""
     from . import essais_depot as ed
-    tests = json.loads(instance["f2p"]) + json.loads(instance["p2p"])
+    tests = tests_officiels(instance, "f2p") + tests_officiels(instance, "p2p")
     for patch in (instance["patch"], instance["test_patch"]):
         ok, _ = appliquer_patch(racine, patch)
         if not ok:
@@ -206,8 +317,8 @@ def noter(instance: dict, racine: Path, env,
     execute FAIL_TO_PASS et PASS_TO_PASS. Resolu = tous reussissent (la
     regle officielle). MAEL n'a jamais vu ces tests."""
     from . import essais_depot as ed
-    f2p = [t for t in json.loads(instance["f2p"]) if t not in exclus]
-    p2p = [t for t in json.loads(instance["p2p"]) if t not in exclus]
+    f2p = [t for t in tests_officiels(instance, "f2p") if t not in exclus]
+    p2p = [t for t in tests_officiels(instance, "p2p") if t not in exclus]
     if not f2p:
         return {"resolu": False, "note": "aucun test FAIL_TO_PASS mesurable "
                                          "dans cet environnement"}
@@ -240,6 +351,9 @@ def bilan(resultats: list[dict]) -> str:
          f"  bonne fonction (top 3, si fichier trouve) : "
          f"{sum(r['fonction'] for r in ok)} "
          f"({100 * sum(r['fonction'] for r in ok) / n:.0f} %)",
+         f"  LIGNES A CORRIGER MONTREES AU MODELE : "
+         f"{sum(r.get('montre', False) for r in ok)} "
+         f"({100 * sum(r.get('montre', False) for r in ok) / n:.0f} %)",
          f"  temps moyen : index {sum(r['t_index'] for r in ok) / n:.1f} s, "
          f"localisation {sum(r['t_loc'] for r in ok) / n:.1f} s"]
     for m in ("reglage", "controle"):
@@ -247,14 +361,17 @@ def bilan(resultats: list[dict]) -> str:
         if rs:
             t1 = sum(1 for r in rs if r["rang"] == 1)
             t5 = sum(1 for r in rs if r["rang"] and r["rang"] <= 5)
+            mo = sum(r.get("montre", False) for r in rs)
             l.append(f"  moitie {m:9}: top 1 {t1}/{len(rs)}, "
-                     f"top 5 {t5}/{len(rs)}")
+                     f"top 5 {t5}/{len(rs)}, montrees {mo}/{len(rs)}")
     par = defaultdict(list)
     for r in ok:
         par[r["id"].rsplit("-", 1)[0]].append(r)
     for d, rs in sorted(par.items()):
         t5 = sum(1 for r in rs if r["rang"] and r["rang"] <= 5)
-        l.append(f"    {d:28} {t5}/{len(rs)} dans le top 5")
+        mo = sum(r.get("montre", False) for r in rs)
+        l.append(f"    {d:28} {t5}/{len(rs)} dans le top 5, "
+                 f"{mo}/{len(rs)} montrees")
     return "\n".join(l)
 
 
@@ -268,7 +385,14 @@ def main(argv=None):
     a.add_argument("--moitie", choices=("reglage", "controle"))
     a.add_argument("--choix", action="store_true",
                    help="levier 3 : le modele departage les candidats")
+    a.add_argument("--executer", action="store_true",
+                   help="phase 1 : execute l'exemple du ticket (mode hote, "
+                        "uv) — trace et couverture")
     o = a.parse_args(argv)
+    if o.executer:
+        import os
+        os.environ["MAEL_ESSAIS"] = "hote"
+        os.environ.setdefault("MAEL_ENVS", str(Path(o.dossier) / "envs"))
     instances = json.loads(Path(o.donnees).read_text(encoding="utf-8"))
     if o.moitie:
         instances = [i for i in instances if moitie(i["id"]) == o.moitie]
@@ -283,7 +407,7 @@ def main(argv=None):
     for repo, liste in par_depot.items():
         for inst in liste[:o.max or None]:
             r = evaluer(inst, base / "archives", base / "travail",
-                        moteur)
+                        moteur, executer=o.executer)
             resultats.append(r)
             print(json.dumps(r, ensure_ascii=False), flush=True)
     print(bilan(resultats))

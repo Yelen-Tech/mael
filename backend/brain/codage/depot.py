@@ -348,8 +348,19 @@ def _suite_compilee(dossier: str, noms: set[str]) -> Suite | None:
     return None
 
 
+RUNTESTS_DJANGO = "tests/runtests.py"
+
+
+def est_django(suite: Suite | None) -> bool:
+    return bool(suite and suite.commande[1:2] == [RUNTESTS_DJANGO])
+
+
 def _suite_python(dossier: str, noms: set[str], chemins_py: list[str],
                   lire) -> Suite | None:
+    # Django se teste par son propre lanceur, pas par pytest (SWE-bench :
+    # « tests/runtests.py --settings=test_sqlite ») — 114 tickets sur 300
+    if f"{dossier}/tests/runtests.py".lstrip("/") in chemins_py:
+        return Suite(dossier, ["python", RUNTESTS_DJANGO])
     motifs = motifs_pytest(lire)
     pytest_ecrit = (motifs or "pytest.ini" in noms or "conftest.py" in noms
                     or "[tool.pytest" in lire("pyproject.toml")
