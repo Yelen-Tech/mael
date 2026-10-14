@@ -164,6 +164,30 @@ def test_la_trace_designe_le_fichier_et_la_fonction(tmp_path):
     assert (lieux[0].symboles[0].debut, lieux[0].symboles[0].fin) == (2, 5)
 
 
+def test_une_recursion_designe_la_boucle_pas_le_fond(tmp_path):
+    """sympy-21627 : la pile d'une RecursionError finit n'importe ou (ici
+    core/sympify.py, 3 cadres) ; le coupable est dans la BOUCLE repetee —
+    hors mecanique generique (__new__)."""
+    from brain.codage import agent_depot
+    idx = _depot(tmp_path)
+    boucle = ('  File "/x/geo/ligne.py", line 4, in longueur\n'
+              "    return longueur(a, b)\n"
+              '  File "/x/geo/point.py", line 5, in __new__\n'
+              "    return object.__new__(cls)\n") * 300
+    sortie = ("Traceback (most recent call last):\n"
+              '  File "<stdin>", line 1, in <module>\n' + boucle
+              + "".join(f'  File "/x/core/sympify.py", line {k}, in sympify\n'
+                        "    return parse_expr(a)\n" for k in (1, 2, 2))
+              + "RecursionError: maximum recursion depth exceeded\n")
+    trace = agent_depot.trace_de(sortie)
+    assert len(trace) <= agent_depot.TRACE_MAX
+    assert "longueur  (x300)" in trace
+    assert trace.endswith("RecursionError: maximum recursion depth exceeded")
+    lieux = localisation.localiser(idx, "it crashes\n```\n" + trace + "\n```")
+    assert lieux[0].fichier == "geo/ligne.py", [
+        (l.fichier, l.score) for l in lieux]
+
+
 def test_le_message_seul_suffit(tmp_path):
     idx = _depot(tmp_path)
     lieux = localisation.localiser(

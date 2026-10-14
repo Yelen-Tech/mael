@@ -741,6 +741,75 @@ def _executer_hote(env: Environnement, racine: Path, cibles: list[str],
     return ex
 
 
+# ------------------------------------------ l'exemple du ticket, execute
+DELAI_EXEMPLE = 90
+
+
+def executer_script(env: Environnement, racine: Path | str, code: str, *,
+                    delai: int = DELAI_EXEMPLE) -> Execution:
+    """Execute un script Python (l'exemple d'un ticket) sur l'etat ACTUEL du
+    depot, sans reseau, depuis le dossier de la suite ; `sortie` rend ce
+    qu'il a ecrit (la trace d'erreur s'il plante). Seulement pour une suite
+    Python."""
+    ex = Execution()
+    if not env.pret or sorte(env.suite) != "python":
+        ex.raison = env.raison or "pas d'environnement Python"
+        return ex
+    racine = Path(racine)
+    if env.suite and env.suite.dossier:
+        racine = racine / env.suite.dossier
+    debut = time.monotonic()
+    try:
+        if env.hote:
+            dossier = Path(env.hote)
+            travail = dossier / "travail"
+            with tarfile.open(fileobj=io.BytesIO(archive(racine))) as t:
+                t.extractall(travail, filter="data")
+            variables = {**os.environ, "PYTHONDONTWRITEBYTECODE": "1"}
+            variables.pop("PYTHONPATH", None)
+            commande = [*prefixe_sans_reseau(),
+                        str(_python_de(dossier / "venv")), "-"]
+            try:
+                r = subprocess.run(commande, input=code.encode("utf-8"),
+                                   capture_output=True, timeout=delai,
+                                   cwd=travail, env=variables)
+                ex.code, ex.sortie = r.returncode, (_texte(r.stdout)
+                                                    + _texte(r.stderr))
+            except subprocess.TimeoutExpired:
+                ex.code, ex.raison = 124, f"exemple trop long (> {delai} s)"
+            ex.lance = ex.code != 124
+            return ex
+        nom = ("mael-exemple-"
+               + hashlib.sha1(str(time.time()).encode()).hexdigest()[:10])
+        try:
+            if _docker(["run", "-d", "--name", nom, "--network", "none",
+                        "--memory", MEMOIRE, "--cpus", "2", "--pids-limit",
+                        "512", env.image, "sleep", "infinity"],
+                       120).returncode:
+                ex.raison = "le conteneur n'a pas demarre"
+                return ex
+            if _docker(["cp", "-", f"{nom}:/travail"], 600,
+                       archive(racine)).returncode:
+                ex.raison = "copie impossible"
+                return ex
+            try:
+                r = _docker(["exec", "-i", "-w", "/travail", nom, "python",
+                             "-"], delai, code.encode("utf-8"))
+                ex.code, ex.sortie = r.returncode, (_texte(r.stdout)
+                                                    + _texte(r.stderr))
+            except subprocess.TimeoutExpired:
+                ex.code, ex.raison = 124, f"exemple trop long (> {delai} s)"
+            ex.lance = ex.code != 124
+        finally:
+            try:
+                _docker(["rm", "-f", nom], 60)
+            except Exception:                           # noqa: BLE001
+                pass
+    finally:
+        ex.secondes = time.monotonic() - debut
+    return ex
+
+
 # ------------------------------------------------- les tests a relancer
 def tests_lies(index, modifies: list[str], maximum: int = 8) -> list[str]:
     """Les fichiers de test qui exercent les fichiers modifies : ceux qui

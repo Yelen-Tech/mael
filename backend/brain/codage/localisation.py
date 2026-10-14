@@ -77,6 +77,10 @@ class Indices:
     mots: list[str] = field(default_factory=list)
     noms_possibles: set[str] = field(default_factory=set)   # noms de fichier
     noms_colles: set[str] = field(default_factory=set)      # « man page »
+    # cadres de trace repetes (chemin, ligne) -> fois : la BOUCLE d'une
+    # RecursionError (agent_depot.trace_de les marque « (xN) »)
+    repetes: dict[tuple[str, int], int] = field(default_factory=dict)
+    recursion: bool = False
 
 
 @dataclass
@@ -99,7 +103,7 @@ class Lieu:
 # ------------------------------------------------------------- les indices
 _TRACES = [
     # Python : File "x/y.py", line 12, in f
-    re.compile(r'File "([^"]+)", line (\d+)(?:, in (\S+))?'),
+    re.compile(r'File "([^"]+)", line (\d+)(?:, in (\S+))?(?:  \(x(\d+)\))?'),
     # IPython / Jupyter : File ~/x/y.py:12, in f(a, b) — tres courant dans
     # les tickets des bibliotheques scientifiques (seaborn, banc du 12/10)
     re.compile(r"File ((?:[A-Za-z]:)?~?[^\s\"':]+\.pyx?):(\d+)"
@@ -146,8 +150,10 @@ def indices(ticket: str) -> Indices:
     i = Indices()
     cadres = []                               # (position, chemin, ligne, f)
     for m in _TRACES[0].finditer(ticket):
-        cadres.append((m.start(), m.group(1).replace("\\", "/"),
-                       int(m.group(2)), m.group(3) or ""))
+        c = (m.group(1).replace("\\", "/"), int(m.group(2)))
+        cadres.append((m.start(), *c, m.group(3) or ""))
+        i.repetes[c] = i.repetes.get(c, 0) + int(m.group(4) or 1)
+    i.recursion = "RecursionError" in ticket
     for m in _TRACES[1].finditer(ticket):
         cadres.append((m.start(), m.group(1).replace("\\", "/"),
                        int(m.group(2)), (m.group(3) or "").rsplit(".", 1)[-1]))
@@ -232,6 +238,14 @@ def indices(ticket: str) -> Indices:
     return i
 
 
+def _generique(fonction: str) -> bool:
+    """Un cadre de mecanique (constructeur, operateur, decorateur), pas de
+    logique propre au bug."""
+    return (fonction.startswith("__") or fonction.startswith("<")
+            or fonction in {"wrapper", "wrapped", "inner", "_func",
+                            "decorator", "binary_op_wrapper"})
+
+
 def normal(nom: str) -> str:
     """import_mode, import-mode, ImportMode -> importmode (13/10/2026 :
     « --import-mode » du ticket, classe ImportMode du code, pytest-11148)."""
@@ -282,14 +296,33 @@ def localiser(index: Index, ticket: str, n: int = 10,
             l.raisons.append(raison)
         return l
 
-    # 1. traces : le cadre le plus profond (le dernier) compte le plus
+    # 1. traces : le cadre le plus profond (le dernier) compte le plus —
+    # sauf dans une RecursionError, ou le fond de la pile est n'importe ou
+    # dans la boucle : la, ce sont les cadres REPETES qui comptent, hors
+    # mecanique generique (__new__, wrapper de cache). sympy-21627 : le
+    # correctif est dans complexes.py (eval, x97), le fond est basic.py.
+    # Chaque fichier n'y compte que son MEILLEUR cadre : basic.py, 4 cadres
+    # de parcours hors boucle, passait devant.
+    boucle = ({k for k, n in ind.repetes.items() if n >= 3}
+              if ind.recursion else set())
+    meilleur: dict[str, float] = {}
     for rang, (c, ligne, fonction) in enumerate(ind.trace):
         trouves = _par_suffixe(index, c)
-        profond = rang == len(ind.trace) - 1 or rang >= len(ind.trace) - 2
+        if boucle:
+            poids = (P_TRACE + P_TRACE_PROFOND if (c, ligne) in boucle
+                     and not _generique(fonction) else P_TRACE / 2)
+        else:
+            profond = rang == len(ind.trace) - 1 or rang >= len(ind.trace) - 2
+            poids = P_TRACE + (P_TRACE_PROFOND if profond else 0)
         for f in trouves:
-            l = ajouter(f, (P_TRACE + (P_TRACE_PROFOND if profond else 0))
-                        / len(trouves), f"trace : ligne {ligne}"
-                        + (f" ({fonction})" if fonction else ""))
+            raison = f"trace : ligne {ligne}" + (f" ({fonction})" if fonction
+                                                 else "")
+            if boucle:
+                part = max(0.0, poids / len(trouves) - meilleur.get(f, 0.0))
+                meilleur[f] = max(meilleur.get(f, 0.0), poids / len(trouves))
+                l = ajouter(f, part, raison)
+            else:
+                l = ajouter(f, poids / len(trouves), raison)
             l.lignes.append(ligne)
     # 2. chemins cites
     for c in ind.chemins:

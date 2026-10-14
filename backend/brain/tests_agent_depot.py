@@ -72,8 +72,14 @@ def depot_jouet(tmp_path, monkeypatch):
         sortie = r.stdout + r.stderr
         return ed.Execution(lance=True, statuts=ed.lire_statuts(sortie),
                             code=r.returncode, sortie=sortie)
+    def executer_script(env, racine, code, delai=60):
+        r = subprocess.run([sys.executable, "-"], input=code, cwd=racine,
+                           capture_output=True, text=True, timeout=delai)
+        return ed.Execution(lance=True, code=r.returncode,
+                            sortie=r.stdout + r.stderr)
     monkeypatch.setattr(ed, "preparer", preparer)
     monkeypatch.setattr(ed, "executer_tests", executer_tests)
+    monkeypatch.setattr(ed, "executer_script", executer_script)
     return tmp_path
 
 
@@ -154,6 +160,43 @@ def test_un_test_existant_n_est_jamais_ecrase(depot_jouet):
     assert (depot_jouet / "tests/test_mael_ticket.py").read_text() == \
         "# a moi\n"
     assert any("existe deja" in n for n in b.notes)
+
+
+def test_exemples_du_ticket():
+    ticket = ("The following code causes a `RecursionError`:\n```\n"
+              "expr =sympify(\"cosh(acos(-i + acosh(-g + i)))\")\n"
+              "expr.is_zero\n```\nSession:\n```python\n>>> x = f(1)\n"
+              ">>> for i in x:\n...     print(i)\n1\n```\n"
+              "```\nTraceback (most recent call last):\n  File \"a.py\", "
+              "line 1\n```\n```bash\npip install x\n```\n```\nnot python(\n```")
+    assert agent_depot.exemples(ticket) == [
+        'expr =sympify("cosh(acos(-i + acosh(-g + i)))")\nexpr.is_zero',
+        "x = f(1)\nfor i in x:\n    print(i)"]
+    assert agent_depot.trace_de("bla\nTraceback (most recent call last):\n"
+                                "  File \"x.py\", line 2\nValueError: v\n"
+                                ).endswith("ValueError: v")
+    assert agent_depot.trace_de("tout va bien") == ""
+
+
+def test_l_exemple_du_ticket_est_execute_et_sa_trace_localise(depot_jouet):
+    """Le ticket ne cite ni fichier ni trace ; la session (sans son import)
+    plante dans boutique/calcul.py : c'est la qu'il faut regarder."""
+    (depot_jouet / "boutique/__init__.py").write_text(
+        "from .remise import appliquer\n")
+    (depot_jouet / "boutique/remise.py").write_text(
+        "from .calcul import moyenne\n\n\ndef appliquer(prix, taux):\n"
+        "    return moyenne(prix) * taux\n")
+    (depot_jouet / "boutique/calcul.py").write_text(
+        "def moyenne(xs):\n    return sum(xs) / len(xs)\n")
+    ticket = ("Discount on an empty basket crashes the shop.\n"
+              "```python\n>>> appliquer([], 10)\n```")
+    moteur = FauxMoteur(["rien"] * 8)
+    b = agent_depot.AgentDepot(moteur, depot_jouet).traiter(ticket)
+    # les deux cadres du depot passent devant tout le reste
+    assert {l.fichier for l in b.lieux[:2]} == {"boutique/calcul.py",
+                                                "boutique/remise.py"}
+    assert any("ZeroDivisionError" in n for n in b.notes), b.notes
+    assert "TRACE OBTENUE PAR MAEL" in moteur.recus[0][0]["content"]
 
 
 def test_dossier_des_tests():

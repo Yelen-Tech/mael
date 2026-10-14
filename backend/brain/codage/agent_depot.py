@@ -24,6 +24,7 @@ Memoire (8 Go) : le modele est decharge avant chaque passage des tests.
 from __future__ import annotations
 
 import re
+import textwrap
 from dataclasses import dataclass, field
 from pathlib import Path, PurePosixPath
 
@@ -36,6 +37,8 @@ from .extraction import extraire
 TOURS_REPRODUCTION = 2
 TOURS_VERIFICATION = 2
 NOM_REPRODUCTION = "test_mael_ticket.py"
+EXEMPLES_MAX = 2
+TRACE_MAX = 6_000
 
 SYSTEME_REPRO = """Tu ecris UN test qui REPRODUIT le ticket dans un depot
 existant : il doit ECHOUER sur le code actuel (le bug est la) et REUSSIR
@@ -68,6 +71,94 @@ class Bilan:
     tours: int = 0
     notes: list[str] = field(default_factory=list)      # ce qui s'est passe
     securite: list[str] = field(default_factory=list)   # defauts deja la
+
+
+_LANGUES_PY = {"", "python", "py", "python3", "pycon", "ipython", "ipython3"}
+# les invites d'une session collee : (premiere ligne, toutes les lignes)
+_INVITES = ((r">>>", r">>>|\.\.\."), (r"In \[\d+\]:", r"In \[\d+\]:|\.\.\.:"))
+
+
+def exemples(ticket: str) -> list[str]:
+    """Les blocs de code Python du ticket qu'on peut EXECUTER tels quels
+    (une session >>> ou In [1]: est rendue en script). Les traces et sorties
+    collees sont ecartees. Examen Kaggle du 15/10 (sympy-21627) : le ticket
+    donnait le code qui plante, MAEL ne l'executait pas et cherchait les
+    mots du message d'erreur (« depth » -> polys/agca/ideals.py)."""
+    out = []
+    for m in re.finditer(r"(?ms)^[ \t]*```[ \t]*([\w+-]*)[^\n]*\n(.*?)"
+                         r"^[ \t]*```", ticket):
+        if m.group(1).lower() not in _LANGUES_PY:
+            continue
+        bloc = textwrap.dedent(m.group(2))
+        if ("Traceback (most recent call last)" in bloc
+                or re.search(r'(?m)^\s*File "', bloc)):
+            continue
+        lignes = bloc.splitlines()
+        for premiere, invite in _INVITES:
+            if any(re.match(rf"\s*(?:{premiere})", l) for l in lignes):
+                lignes = [re.sub(rf"^\s*(?:{invite}) ?", "", l)
+                          for l in lignes
+                          if re.match(rf"\s*(?:{invite})( |$)", l)]
+                break
+        code = "\n".join(lignes).strip()
+        if not code or code.startswith(("$", "pip ", "conda ")):
+            continue
+        try:
+            compile(code, "<exemple>", "exec")
+        except (SyntaxError, ValueError):
+            continue
+        out.append(code)
+    return out[:EXEMPLES_MAX]
+
+
+def trace_de(sortie: str) -> str:
+    """La derniere trace d'erreur Python d'une sortie, bornee : le debut et
+    surtout la fin (le cadre le plus profond). Une trace qui repete des
+    cadres (RecursionError : 1 000 cadres, sympy-21627) est CONDENSEE :
+    chaque cadre une fois, marque « (xN) » — la boucle reste visible."""
+    i = sortie.rfind("Traceback (most recent call last)")
+    if i < 0:
+        return ""
+    t = sortie[i:].strip()
+    lignes = t.splitlines()
+    cadres = [k for k, l in enumerate(lignes) if l.lstrip().startswith(
+        'File "')]
+    if len(t) > TRACE_MAX and cadres:
+        vus: dict[str, int] = {}
+        for k in cadres:
+            vus[lignes[k].strip()] = vus.get(lignes[k].strip(), 0) + 1
+        garde, deja = lignes[:cadres[0]], set()
+        for n, k in enumerate(cadres):
+            fin = cadres[n + 1] if n + 1 < len(cadres) else len(lignes)
+            cle = lignes[k].strip()
+            if cle in deja:
+                continue
+            deja.add(cle)
+            corps = [l for l in lignes[k + 1:fin]
+                     if not l.strip().startswith("[Previous line repeated")]
+            if n + 1 == len(cadres):
+                corps = lignes[k + 1:fin]       # le message d'erreur, entier
+            garde.append(lignes[k] + (f"  (x{vus[cle]})" if vus[cle] > 1
+                                      else ""))
+            garde += corps
+        if garde[-1] != lignes[-1]:
+            garde.append(lignes[-1])            # « RecursionError: ... »
+        t = "\n".join(garde)
+    if len(t) > TRACE_MAX:
+        t = (t[:TRACE_MAX // 3] + "\n[...]\n"
+             + t[-(TRACE_MAX - TRACE_MAX // 3):])
+    return t
+
+
+def _paquets(index: depot.Index) -> list[str]:
+    """Les paquets Python du depot (sympy/__init__.py, src/x/__init__.py)."""
+    out = set()
+    for f in index.fichiers:
+        p = f.split("/")
+        if p[-1] == "__init__.py" and (len(p) == 2 or (len(p) == 3
+                                                       and p[0] == "src")):
+            out.add(p[-2])
+    return sorted(out - {"tests", "test", "docs", "doc", "examples"})
 
 
 def _dossier_des_tests(index: depot.Index, suite: depot.Suite | None,
@@ -181,6 +272,50 @@ class AgentDepot:
                           for t, s in ex.statuts.items()}
         return ex
 
+    # ------------------------------------------- l'exemple du ticket
+    def _executer_exemples(self, ticket: str, index: depot.Index,
+                           b: Bilan) -> str:
+        """Execute le code d'exemple du ticket (sans reseau, sur une copie)
+        et rend la trace d'erreur obtenue si elle passe par le depot : le
+        meilleur indice de localisation (fichier ET ligne). Rien si le
+        ticket a deja sa trace."""
+        if not self.executer or localisation.indices(ticket).trace:
+            return ""
+        codes = exemples(ticket)
+        suites = [s for s in index.suites if ed.sorte(s) == "python"]
+        if not codes or not suites:
+            return ""
+        suite = min(suites, key=lambda s: len(s.dossier))
+        env = ed.preparer(self.racine, suite, reseau=self.reseau)
+        if not env.pret:
+            b.notes.append(f"exemple du ticket NON execute : {env.raison}")
+            return ""
+        if self.decharger is not None:
+            self.decharger()
+        paquets = _paquets(index)
+        for code in codes:
+            essais = [code]
+            if paquets:
+                # une session collee oublie souvent son import
+                # (« from sympy import * ») : second essai avec
+                essais.append("".join(f"from {p} import *\n"
+                                      for p in paquets[:2]) + code)
+            for n, essai in enumerate(essais, 1):
+                t = trace_de(ed.executer_script(env, self.racine,
+                                                essai).sortie)
+                derniere = t.splitlines()[-1] if t else ""
+                if derniere.startswith("NameError") and n < len(essais):
+                    continue
+                if t and any(localisation._par_suffixe(index, c)
+                             for c, _, _ in localisation.indices(t).trace):
+                    b.notes.append("exemple du ticket execute : "
+                                   + derniere[:200])
+                    return t
+                break
+        b.notes.append("exemple du ticket execute : aucune trace dans le "
+                       "depot")
+        return ""
+
     # ---------------------------------------------------- la reproduction
     def _reproduire(self, ticket, index, lieux, env, suite, lies, b: Bilan):
         chemin = f"{_dossier_des_tests(index, suite, lies)}/{NOM_REPRODUCTION}"
@@ -264,6 +399,10 @@ class AgentDepot:
     def _traiter(self, ticket: str) -> Bilan:
         b = Bilan()
         index = depot.indexer(self.racine)
+        trace = self._executer_exemples(ticket, index, b)
+        if trace:
+            ticket += ("\n\nTRACE OBTENUE PAR MAEL EN EXECUTANT L'EXEMPLE DU "
+                       "TICKET (code actuel) :\n```\n" + trace + "\n```")
         lieux = localisation.localiser(index, ticket)
         if self.choix and lieux:
             from . import choix as choix_
