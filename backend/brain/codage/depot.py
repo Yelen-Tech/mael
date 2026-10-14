@@ -327,6 +327,11 @@ def _suite(racine: Path, dossier: str, noms: set[str],
         test = scripts.get("test", "")
         if test and "no test specified" not in test:
             return Suite(dossier, ["npm", "test"])
+    return _suite_compilee(dossier, noms) or _suite_python(
+        dossier, noms, chemins_py, lire)
+
+
+def _suite_compilee(dossier: str, noms: set[str]) -> Suite | None:
     if "go.mod" in noms:
         return Suite(dossier, ["go", "test", "./..."])
     if "Cargo.toml" in noms:
@@ -340,6 +345,11 @@ def _suite(racine: Path, dossier: str, noms: set[str],
         return Suite(dossier, ["dotnet", "test"])
     if {"phpunit.xml", "phpunit.xml.dist"} & noms:
         return Suite(dossier, ["vendor/bin/phpunit"])
+    return None
+
+
+def _suite_python(dossier: str, noms: set[str], chemins_py: list[str],
+                  lire) -> Suite | None:
     motifs = motifs_pytest(lire)
     pytest_ecrit = (motifs or "pytest.ini" in noms or "conftest.py" in noms
                     or "[tool.pytest" in lire("pyproject.toml")
@@ -371,12 +381,46 @@ def suites_de_test(racine: Path, chemins: list[str]) -> list[Suite]:
                     key=lambda d: (d.count("/") if d else -1, d)):
         py = [c for c in chemins if c.endswith(".py")
               and (not d or c.startswith(d + "/"))]
-        s = _suite(racine, d, enfants.get(d, set()), py)
+        noms = enfants.get(d, set())
+        s = _suite(racine, d, noms, py)
         if s is None and d in dotnet:
             s = Suite(d, ["dotnet", "test"])
         if s:
             out.append(s)
+        if s and s.commande[0] == "npm" and _PY_PROJET & noms:
+            # un projet Python avec ses tests JavaScript a cote (Django :
+            # package.json a la racine, « grunt test ») a AUSSI sa suite
+            # Python — examen Kaggle du 15/10 : django-15202 vu comme « node »,
+            # aucun test lance
+            def lire(n, d=d):
+                try:
+                    return (racine / d / n).read_text(encoding="utf-8",
+                                                      errors="replace")
+                except OSError:
+                    return ""
+            sp = _suite_python(d, noms, py, lire)
+            if sp:
+                out.append(sp)
     return out
+
+
+_PY_PROJET = {"pyproject.toml", "setup.py", "setup.cfg"}
+
+
+def suite_du_fichier(suites: list[Suite], fichier: str) -> Suite | None:
+    """La suite du (sous-)projet qui contient le fichier : la plus profonde ;
+    dans un meme dossier, celle de son langage (un .py -> pytest)."""
+    candidates = [s for s in suites
+                  if not s.dossier or fichier.startswith(s.dossier + "/")]
+    if not candidates:
+        return None
+    profond = max(len(s.dossier) for s in candidates)
+    candidates = [s for s in candidates if len(s.dossier) == profond]
+    if fichier.endswith(".py"):
+        for s in candidates:
+            if s.commande[0] == "python":
+                return s
+    return candidates[0]
 
 
 def _racines_dotnet(enfants: dict[str, set[str]]) -> set[str]:

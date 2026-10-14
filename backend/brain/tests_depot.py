@@ -208,6 +208,22 @@ def test_une_suite_par_sous_projet(tmp_path):
         ("web", ["npm", "test"])]          # outils : « no test specified »
 
 
+def test_projet_python_avec_tests_js_a_cote(tmp_path):
+    """Django : package.json (« grunt test ») a la racine d'un projet
+    Python ; un .py doit tomber sur la suite Python (Kaggle, 15/10)."""
+    _ecrire(tmp_path, {
+        "package.json": '{"scripts": {"test": "grunt test --verbose"}}',
+        "setup.py": "", "django/core/validators.py": "x = 1\n",
+        "tests/validators/tests.py": "def test_a():\n    pass\n",
+        "js_tests/tests.js": "QUnit.test('a', function () {});\n"})
+    i = depot.indexer(tmp_path, cache=False)
+    assert [s.commande[0] for s in i.suites] == ["npm", "python"]
+    assert depot.suite_du_fichier(
+        i.suites, "django/core/validators.py").commande[0] == "python"
+    assert depot.suite_du_fichier(
+        i.suites, "js_tests/tests.js").commande[0] == "npm"
+
+
 @pytest.mark.parametrize("fichiers,commande", [
     ({"pom.xml": "<project/>"}, ["mvn", "-q", "test"]),
     ({"build.gradle": "", "gradlew": ""}, ["./gradlew", "test"]),

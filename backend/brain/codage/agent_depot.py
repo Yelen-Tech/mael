@@ -89,10 +89,8 @@ def _dossier_des_tests(index: depot.Index, suite: depot.Suite | None,
 
 
 def _suite_de(index: depot.Index, fichier: str) -> depot.Suite | None:
-    """La suite du (sous-)projet qui contient le fichier : la plus profonde."""
-    candidates = [s for s in index.suites
-                  if not s.dossier or fichier.startswith(s.dossier + "/")]
-    return max(candidates, key=lambda s: len(s.dossier), default=None)
+    """La suite du (sous-)projet qui contient le fichier."""
+    return depot.suite_du_fichier(index.suites, fichier)
 
 
 def _relatif_a(suite: depot.Suite | None, chemin: str) -> str:
