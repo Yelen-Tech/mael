@@ -150,6 +150,20 @@ def trace_de(sortie: str) -> str:
     return t
 
 
+def _sans_entete(code: str) -> str:
+    """Un en-tete de bloc mal place, recopie dans le code (Kaggle 15/10,
+    sympy-21627 : « ```python », « fichier=... », « ```python » puis le
+    test) : ces lignes ne sont pas du Python, la collecte echouait."""
+    lignes = code.split("\n")
+    while lignes and (re.fullmatch(r"\s*(?:```[\w+-]*|fichier\s*=\s*\S+)\s*",
+                                   lignes[0]) or not lignes[0].strip()):
+        lignes.pop(0)
+    if any(re.fullmatch(r"\s*```\s*", l) for l in lignes[-2:]):
+        while lignes and re.fullmatch(r"\s*(?:```)?\s*", lignes[-1]):
+            lignes.pop()
+    return "\n".join(lignes)
+
+
 def _paquets(index: depot.Index) -> list[str]:
     """Les paquets Python du depot (sympy/__init__.py, src/x/__init__.py)."""
     out = set()
@@ -346,8 +360,8 @@ class AgentDepot:
                 systeme=SYSTEME_REPRO.replace("CHEMIN_DONNE", chemin),
                 messages=messages, role_modele="codeur")
             fichiers = extraire(rep.texte).fichiers
-            code = fichiers.get(chemin) or next(
-                (v for k, v in fichiers.items() if k.endswith(".py")), "")
+            code = _sans_entete(fichiers.get(chemin) or next(
+                (v for k, v in fichiers.items() if k.endswith(".py")), ""))
             if not code:
                 retour = "aucun bloc ```python fichier=... lisible"
             else:

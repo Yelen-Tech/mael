@@ -48,7 +48,8 @@ TOURS = 3
 
 SYSTEME = """Tu corriges un ticket dans un depot de code existant.
 On te montre le ticket et SEULEMENT les extraits utiles, lignes numerotees
-« 12| ». Reponds par un ou plusieurs blocs, rien d'autre :
+« 12| ». Commence par 2 a 5 lignes : CAUSE (quelle ligne est fausse, et
+pourquoi elle donne le comportement du ticket). Puis un ou plusieurs blocs :
 
 FICHIER: chemin/du/fichier
 <<<<<<< CHERCHER
@@ -60,6 +61,8 @@ lignes qui les remplacent
 Regles :
 - CHERCHER recopie des lignes entieres d'un extrait montre, assez pour
   etre unique dans le fichier (3 a 8 lignes en general) ;
+- REMPLACER doit CHANGER le code : un bloc identique, ou qui ne touche
+  que des commentaires, est refuse ;
 - change le MOINS possible ; garde l'indentation et le style du depot ;
 - ne modifie pas les fichiers de test ;
 - corrige la cause, pas le symptome."""
@@ -285,6 +288,41 @@ def editions_fonctions(reponse: str, extraits: list[Extrait],
     return out
 
 
+def _retrait(ligne: str) -> int:
+    return len(ligne) - len(ligne.lstrip(" "))
+
+
+def _decalage(texte: str, chercher: str) -> tuple[list[int], int]:
+    """(debuts, d) : ou les lignes cherchees apparaissent a un decalage
+    d'indentation CONSTANT pres (d = retrait du modele - retrait reel, le
+    meme sur chaque ligne non vide), et ce decalage."""
+    lignes = [l.rstrip() for l in texte.split("\n")]
+    cible = [l.rstrip() for l in chercher.strip("\n").split("\n")]
+    nets = [l.strip() for l in cible]
+    if not any(nets):
+        return [], 0
+    n = len(cible)
+    debuts, decalages = [], set()
+    for i in range(len(lignes) - n + 1):
+        bloc = lignes[i:i + n]
+        if [l.strip() for l in bloc] != nets:
+            continue
+        d = {_retrait(c) - _retrait(b) for c, b in zip(cible, bloc)
+             if c.strip()}
+        if len(d) == 1:
+            debuts.append(i + 1)
+            decalages |= d
+    return debuts, (decalages.pop() if len(decalages) == 1 else 0)
+
+
+def _reindenter(texte: str, d: int) -> str:
+    """Retire d espaces en tete de chaque ligne (ou en ajoute -d)."""
+    if d > 0:
+        return "\n".join(l[min(d, _retrait(l)):] for l in texte.split("\n"))
+    return "\n".join((" " * -d + l) if l.strip() else l
+                     for l in texte.split("\n"))
+
+
 def _positions(texte: str, chercher: str) -> list[int]:
     """Debuts (en ligne, 1-indexes) des endroits ou les lignes cherchees
     apparaissent, espaces de fin de ligne ignores."""
@@ -371,7 +409,24 @@ def appliquer(espace: Espace, editions: list[Edition],
         except (OSError, CheminRefuse) as e:
             refus.append(f"{f} : illisible ({e})")
             continue
+        if [l.rstrip() for l in ed.chercher.strip("\n").split("\n")] == \
+                [l.rstrip() for l in ed.remplacer.strip("\n").split("\n")]:
+            # Kaggle 15/10 : Qwen3-Coder renvoyait 3 fois les memes lignes
+            # des deux cotes (sympy-21627, 12236) faute de savoir quoi changer
+            refus.append(f"{f} : REMPLACER est IDENTIQUE a CHERCHER — tu "
+                         "n'as rien change. Dis quelle ligne est fausse, puis "
+                         "modifie-la")
+            continue
         pos = _positions(texte, ed.chercher)
+        if not pos:
+            # le modele a garde l'espace qui suit « 12| » (Kaggle 15/10 :
+            # django-15202, matplotlib-25433, chaque ligne decalee de 1) :
+            # meme texte a un decalage d'indentation CONSTANT pres
+            ailleurs, d = _decalage(texte, ed.chercher)
+            if len(ailleurs) == 1 and d:
+                ed = Edition(ed.fichier, _reindenter(ed.chercher, d),
+                             _reindenter(ed.remplacer, d))
+                pos = ailleurs
         n = len(ed.chercher.strip("\n").split("\n"))
         if not pos:
             refus.append(f"{f} : le texte CHERCHER n'existe pas tel quel — "

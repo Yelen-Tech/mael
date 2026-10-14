@@ -673,10 +673,18 @@ def _preparer_hote(racine: Path, suite: Suite, env: Environnement,
     debut = time.monotonic()
     journal: list[str] = []
     try:
-        r = subprocess.run([*_uv(), "venv", "--seed", "--python", version,
-                            str(dossier / "venv")],
-                           capture_output=True, timeout=900)
-        journal.append(_texte(r.stdout) + _texte(r.stderr))
+        # uv ne fournit pas les tres vieux Python (3.5, 3.6) : la plus
+        # proche au-dessus (Kaggle 15/10, sympy-12236 : « Python 3.5 »)
+        proches = [version] + [v for v in reversed(PYTHONS)
+                               if int(v.split(".")[1])
+                               > int(version.split(".")[1])][:3]
+        for version in proches:
+            r = subprocess.run([*_uv(), "venv", "--seed", "--python",
+                                version, str(dossier / "venv")],
+                               capture_output=True, timeout=900)
+            journal.append(_texte(r.stdout) + _texte(r.stderr))
+            if r.returncode == 0:
+                break
         if r.returncode:
             env.raison = f"environnement virtuel impossible (Python {version})"
             env.journal = "\n".join(journal)[-3000:]

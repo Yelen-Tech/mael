@@ -136,6 +136,39 @@ def test_python_casse_jamais_ecrit(tmp_path):
     assert (tmp_path / "boutique/panier.py").read_text() == PANIER
 
 
+def test_espace_de_trop_apres_le_numero_tolere(tmp_path):
+    """Kaggle 15/10 (django-15202, matplotlib-25433) : le modele garde
+    l'espace qui suit « 12| », chaque ligne decalee d'un cran ; CHERCHER
+    et REMPLACER sont recales ensemble."""
+    _depot(tmp_path)
+    appliquees, refus, _ = correctif.appliquer(
+        Espace(tmp_path), [correctif.Edition(
+            "boutique/panier.py",
+            "         for l in self.lignes:\n             s = l",
+            "         for l in self.lignes:\n             s += l")],
+        [Extrait("boutique/panier.py", 1, 13)])
+    assert refus == [] and len(appliquees) == 1
+    assert "        for l in self.lignes:\n            s += l\n" in (
+        tmp_path / "boutique/panier.py").read_text()
+    # un decalage qui n'est PAS constant reste refuse
+    _, refus, _ = correctif.appliquer(
+        Espace(tmp_path), [correctif.Edition(
+            "boutique/panier.py", "         s = 0\n        self.lignes = []",
+            "        s = 1\n        self.lignes = []")],
+        [Extrait("boutique/panier.py", 1, 13)])
+    assert "n'existe pas tel quel" in refus[0]
+
+
+def test_remplacer_identique_refuse_avec_sa_raison(tmp_path):
+    """Kaggle 15/10 (sympy-21627) : les memes lignes des deux cotes."""
+    _depot(tmp_path)
+    _, refus, _ = correctif.appliquer(
+        Espace(tmp_path), [correctif.Edition(
+            "boutique/panier.py", "            s = l", "            s = l  ")],
+        [Extrait("boutique/panier.py", 1, 13)])
+    assert "IDENTIQUE" in refus[0]
+
+
 def test_changer_seulement_des_commentaires_refuse(tmp_path):
     """Essai reel du 12/10 : phi4-mini « corrigeait » en reecrivant des
     commentaires."""

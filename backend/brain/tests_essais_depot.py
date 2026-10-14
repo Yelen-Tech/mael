@@ -306,6 +306,32 @@ def test_mode_hote_refuse_un_autre_langage(tmp_path, monkeypatch):
     assert not env.pret and "seul Python" in env.raison
 
 
+def test_mode_hote_python_trop_vieux_prend_le_plus_proche(tmp_path,
+                                                         monkeypatch):
+    """Kaggle 15/10 (sympy-12236) : uv ne fournit pas Python 3.5."""
+    import subprocess
+    (tmp_path / "depot").mkdir()
+    (tmp_path / "depot/setup.py").write_text(
+        "classifiers=['Programming Language :: Python :: 3.5']\n")
+    demandes = []
+
+    def run(cmd, **kw):
+        if "venv" in cmd:
+            v = cmd[cmd.index("--python") + 1]
+            demandes.append(v)
+            return subprocess.CompletedProcess(cmd, 0 if v == "3.7" else 2,
+                                               b"", b"introuvable")
+        return subprocess.CompletedProcess(cmd, 1, b"", b"stop")
+    monkeypatch.setattr(ed.subprocess, "run", run)
+    monkeypatch.setattr(ed, "_uv", lambda: ["uv"])
+    monkeypatch.setenv("MAEL_ENVS", str(tmp_path / "envs"))
+    env = ed.Environnement(suite=Suite(dossier="", commande=["python", "-m",
+                                                             "pytest"]))
+    ed._preparer_hote(tmp_path / "depot", env.suite, env, True)
+    assert demandes == ["3.5", "3.6", "3.7"]
+    assert "installation echouee" in env.raison      # le venv, lui, est fait
+
+
 def test_mode_hote_execute_avant_apres_sur_la_copie(tmp_path, monkeypatch):
     """L'execution reelle : pytest tourne dans le dossier de travail de
     l'environnement, sur l'etat ACTUEL du depot (le python du banc fait

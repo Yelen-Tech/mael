@@ -162,6 +162,15 @@ def test_un_test_existant_n_est_jamais_ecrase(depot_jouet):
     assert any("existe deja" in n for n in b.notes)
 
 
+def test_en_tete_de_bloc_recopie_dans_le_test_retire():
+    """Kaggle 15/10 (sympy-21627)."""
+    assert agent_depot._sans_entete(
+        "fichier=sympy/core/tests/test_mael_ticket.py\n```python\n"
+        "from sympy import S\n\ndef test_a():\n    assert S(1)\n```\n") == (
+        "from sympy import S\n\ndef test_a():\n    assert S(1)")
+    assert agent_depot._sans_entete("import os\n") == "import os\n"
+
+
 def test_exemples_du_ticket():
     ticket = ("The following code causes a `RecursionError`:\n```\n"
               "expr =sympify(\"cosh(acos(-i + acosh(-g + i)))\")\n"
