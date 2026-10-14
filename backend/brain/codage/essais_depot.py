@@ -435,11 +435,20 @@ def statuts_django(sortie: str) -> dict[str, str]:
         m = _LIGNE_DJANGO.match(l)
         if not m:
             continue
-        fin = _FIN_DJANGO.search(m.group(3)) or (
-            _FIN_DJANGO.search(lignes[k + 1]) if k + 1 < len(lignes)
-            else None)
+        fin = _FIN_DJANGO.search(m.group(3))
+        docstring = ""
+        if not fin and k + 1 < len(lignes):
+            fin = _FIN_DJANGO.search(lignes[k + 1])
+            if fin:
+                # un test a docstring s'affiche par SA PREMIERE LIGNE, et
+                # SWE-bench l'a prise pour identifiant (django-14411 :
+                # « ReadOnlyPasswordHashWidget doesn't contain a for
+                # attribute in the ») : on garde les deux noms
+                docstring = lignes[k + 1][:fin.start()].strip()
         if not fin:
             continue
+        if docstring:
+            out[docstring] = _STATUT_DJANGO[fin.group(1)]
         nom, chemin = m.group(1), m.group(2)
         if "_FailedTest" in chemin:
             out[f"tests/{nom.replace('.', '/')}.py"] = "ERROR"

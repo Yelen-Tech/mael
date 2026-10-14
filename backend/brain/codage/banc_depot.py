@@ -294,6 +294,27 @@ def tests_officiels(instance: dict, cle: str) -> list[str]:
     return [identifiant(t) for t in json.loads(instance[cle])]
 
 
+def fichiers_de_tests(instance: dict) -> list[str]:
+    """Les fichiers de test a lancer : ceux que touche le patch de tests
+    officiel (comme SWE-bench), plus ceux que nomment les tests. sympy ne
+    donne que des noms nus (« test_ccode_Relational ») : sans cela, toute
+    la suite tournait."""
+    touches = re.findall(r"^\+\+\+ b/(\S+\.py)$", instance["test_patch"],
+                         re.M)
+    nommes = [t.split("::")[0] for t in tests_officiels(instance, "f2p")
+              + tests_officiels(instance, "p2p") if "::" in t]
+    return sorted(set(touches) | {f for f in nommes if f.endswith(".py")})
+
+
+def reussi(ex, test: str) -> bool:
+    """Un test officiel a-t-il reussi ? Un nom nu (sympy) vaut pour le
+    test de ce nom dans les fichiers lances."""
+    if test in ex.statuts or "::" in test or " " in test:
+        return ex.reussi(test)
+    trouves = [t for t in ex.statuts if t.endswith("::" + test)]
+    return bool(trouves) and all(ex.reussi(t) for t in trouves)
+
+
 def etalonner(instance: dict, racine: Path, env) -> set[str]:
     """Les tests que NOTRE environnement ne peut pas faire reussir, meme avec
     le correctif officiel (requests-3362 : 2 tests sur 75 veulent internet,
@@ -305,9 +326,64 @@ def etalonner(instance: dict, racine: Path, env) -> set[str]:
         ok, _ = appliquer_patch(racine, patch)
         if not ok:
             return set()
-    ex = ed.executer_tests(env, racine,
-                           sorted({t.split("::")[0] for t in tests}))
-    return {t for t in tests if not ex.reussi(t)} if ex.lance else set()
+    ex = ed.executer_tests(env, racine, fichiers_de_tests(instance))
+    return {t for t in tests if not reussi(ex, t)} if ex.lance else set()
+
+
+def controler(instance: dict, archives: Path, travail: Path) -> dict:
+    """Le CONTROLE de la chaine de test de MAEL sur un ticket, comme les
+    auteurs de SWE-bench valident leurs environnements : les tests
+    officiels doivent ECHOUER sur le code d'origine et REUSSIR avec le
+    correctif officiel. Si non, MAEL ne sait pas tester ce depot (ou cette
+    version) : on le sait AVANT l'examen. Les tests qui echouent meme avec
+    le correctif sont listes (environnement), jamais caches."""
+    import shutil
+
+    from . import essais_depot as ed
+    archive = telecharger(instance["repo"], instance["commit"], archives)
+    if archive is None:
+        return {"id": instance["id"], "verdict": "TELECHARGEMENT IMPOSSIBLE"}
+    copie = travail / f"controle-{instance['id']}"
+    extraire(archive, copie)
+    try:
+        f2p = tests_officiels(instance, "f2p")
+        p2p = tests_officiels(instance, "p2p")
+        ok, err = appliquer_patch(copie, instance["test_patch"])
+        if not ok:
+            return {"id": instance["id"],
+                    "verdict": f"TESTS OFFICIELS NON APPLIQUES {err[:150]}"}
+        idx = depot.indexer(copie, cache=False)
+        suites = [s for s in idx.suites if ed.sorte(s) == "python"]
+        if not suites:
+            return {"id": instance["id"], "verdict": "AUCUNE SUITE PYTHON"}
+        env = ed.preparer(copie, min(suites, key=lambda s: len(s.dossier)))
+        if not env.pret:
+            return {"id": instance["id"], "verdict": "ENVIRONNEMENT IMPOSSIBLE",
+                    "raison": env.raison, "journal": env.journal[-600:]}
+        cibles = fichiers_de_tests(instance)
+        r = {"id": instance["id"], "version": instance.get("version", "")}
+        for etape in ("avant", "apres"):
+            if etape == "apres":
+                ok, err = appliquer_patch(copie, instance["patch"])
+                if not ok:
+                    r["verdict"] = f"CORRECTIF OFFICIEL NON APPLIQUE {err[:150]}"
+                    return r
+            ex = ed.executer_tests(env, copie, cibles)
+            r[etape] = {"f2p": sum(reussi(ex, t) for t in f2p),
+                        "p2p": sum(reussi(ex, t) for t in p2p),
+                        "lance": ex.lance, "raison": ex.raison}
+            if etape == "apres":
+                r["p2p_casses"] = [t for t in p2p if not reussi(ex, t)][:10]
+        r["f2p_total"], r["p2p_total"] = len(f2p), len(p2p)
+        av, ap = r["avant"], r["apres"]
+        if ap["f2p"] == len(f2p) and av["f2p"] < len(f2p):
+            r["verdict"] = ("VALIDE" if ap["p2p"] == len(p2p)
+                            else "VALIDE, tests d'environnement ecartes")
+        else:
+            r["verdict"] = "A VOIR"
+        return r
+    finally:
+        shutil.rmtree(copie, ignore_errors=True)
 
 
 def noter(instance: dict, racine: Path, env,
@@ -326,12 +402,11 @@ def noter(instance: dict, racine: Path, env,
     if not ok:
         return {"resolu": False, "note": f"tests caches non appliques : "
                                          f"{erreur}"}
-    cibles = sorted({t.split("::")[0] for t in f2p + p2p})
-    ex = ed.executer_tests(env, racine, cibles)
+    ex = ed.executer_tests(env, racine, fichiers_de_tests(instance))
     if not ex.lance:
         return {"resolu": False, "note": f"tests non lances : {ex.raison}"}
-    f2p_ok = sum(1 for t in f2p if ex.reussi(t))
-    p2p_ok = sum(1 for t in p2p if ex.reussi(t))
+    f2p_ok = sum(1 for t in f2p if reussi(ex, t))
+    p2p_ok = sum(1 for t in p2p if reussi(ex, t))
     return {"resolu": f2p_ok == len(f2p) and p2p_ok == len(p2p),
             "f2p": f"{f2p_ok}/{len(f2p)}", "p2p": f"{p2p_ok}/{len(p2p)}",
             "non_mesurables": sorted(exclus)}
@@ -388,12 +463,31 @@ def main(argv=None):
     a.add_argument("--executer", action="store_true",
                    help="phase 1 : execute l'exemple du ticket (mode hote, "
                         "uv) — trace et couverture")
+    a.add_argument("--controle", action="store_true",
+                   help="tests officiels : en echec avant le correctif "
+                        "officiel, reussis apres (MAEL sait-il tester ?)")
+    a.add_argument("--id", action="append", help="ces tickets seulement")
     o = a.parse_args(argv)
-    if o.executer:
+    if o.executer or o.controle:
         import os
         os.environ["MAEL_ESSAIS"] = "hote"
         os.environ.setdefault("MAEL_ENVS", str(Path(o.dossier) / "envs"))
     instances = json.loads(Path(o.donnees).read_text(encoding="utf-8"))
+    if o.id:
+        instances = [i for i in instances if i["id"] in o.id]
+    if o.controle:
+        base = Path(o.dossier)
+        res = []
+        for inst in instances:
+            r = controler(inst, base / "archives", base / "travail")
+            res.append(r)
+            print(json.dumps(r, ensure_ascii=False), flush=True)
+        for r in res:
+            print(f"  {r['id']:38} {r.get('version', ''):5} {r['verdict']}")
+        if o.sortie:
+            Path(o.sortie).write_text(json.dumps(res, ensure_ascii=False,
+                                                 indent=1), encoding="utf-8")
+        return
     if o.moitie:
         instances = [i for i in instances if moitie(i["id"]) == o.moitie]
     if o.depot:

@@ -413,3 +413,21 @@ def test_identifiants_des_tests_officiels():
         "tests/app/tests.py::T::test_a")
     assert banc_depot.identifiant("testing/test_x.py::test_y[1]") == (
         "testing/test_x.py::test_y[1]")
+
+
+def test_controle_fichiers_de_tests_et_noms_nus():
+    """sympy ne donne que des noms nus : les fichiers a lancer viennent du
+    patch de tests officiel, et le nom est retrouve dans les resultats."""
+    from brain.codage import essais_depot as ed
+    inst = {"test_patch": "--- a/sympy/printing/tests/test_ccode.py\n"
+                          "+++ b/sympy/printing/tests/test_ccode.py\n",
+            "f2p": '["test_ccode_Relational"]',
+            "p2p": '["testing/test_x.py::test_y"]'}
+    assert banc_depot.fichiers_de_tests(inst) == [
+        "sympy/printing/tests/test_ccode.py", "testing/test_x.py"]
+    ex = ed.Execution(lance=True, statuts={
+        "sympy/printing/tests/test_ccode.py::test_ccode_Relational": "PASSED",
+        "testing/test_x.py::test_y": "FAILED"})
+    assert banc_depot.reussi(ex, "test_ccode_Relational")
+    assert not banc_depot.reussi(ex, "testing/test_x.py::test_y")
+    assert not banc_depot.reussi(ex, "test_absent")

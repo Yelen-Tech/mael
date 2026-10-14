@@ -395,6 +395,7 @@ def test_django_libelles_et_statuts():
         "tests/validators/tests.py::TestValidators::test_message_dict":
             "PASSED",
         "tests/forms_tests/tests.py::UrlTests::test_url": "FAILED",
+        "Docstring du test": "FAILED",
         "tests/validators/tests.py::TestValidators::test_validators": "ERROR",
         "tests/test_mael_ticket.py": "ERROR"}
     s = Suite(dossier="", commande=["python", "tests/runtests.py"])
