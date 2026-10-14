@@ -73,6 +73,8 @@ class Bilan:
     securite: list[str] = field(default_factory=list)   # defauts deja la
 
 
+_ERREURS_D_ENVIRONNEMENT = {"ImportError", "ModuleNotFoundError",
+                             "SyntaxError"}
 _LANGUES_PY = {"", "python", "py", "python3", "pycon", "ipython", "ipython3"}
 # les invites d'une session collee : (premiere ligne, toutes les lignes)
 _INVITES = ((r">>>", r">>>|\.\.\."), (r"In \[\d+\]:", r"In \[\d+\]:|\.\.\.:"))
@@ -320,6 +322,15 @@ class AgentDepot:
                 derniere = t.splitlines()[-1] if t else ""
                 if derniere.startswith("NameError") and n < len(essais):
                     continue
+                erreur = derniere.split(":")[0].strip()
+                if erreur in _ERREURS_D_ENVIRONNEMENT and erreur not in ticket:
+                    # l'environnement, pas le bug (rejeu du 15/10,
+                    # sympy-12236 : « cannot import name 'Mapping' from
+                    # 'collections' », vieux code sur un Python recent) :
+                    # cette trace aurait mis basic.py en tete
+                    b.notes.append("exemple du ticket execute : erreur "
+                                   f"d'environnement ignoree ({derniere[:150]})")
+                    return ""
                 if t and any(localisation._par_suffixe(index, c)
                              for c, _, _ in localisation.indices(t).trace):
                     b.notes.append("exemple du ticket execute : "
@@ -413,7 +424,13 @@ class AgentDepot:
     def _traiter(self, ticket: str) -> Bilan:
         b = Bilan()
         index = depot.indexer(self.racine)
-        trace = self._executer_exemples(ticket, index, b)
+        try:
+            trace = self._executer_exemples(ticket, index, b)
+        except Exception as e:                          # noqa: BLE001
+            # un indice en plus, jamais une raison de perdre le ticket
+            trace = ""
+            b.notes.append(f"exemple du ticket : panne ignoree "
+                           f"({type(e).__name__} : {str(e)[:150]})")
         if trace:
             ticket += ("\n\nTRACE OBTENUE PAR MAEL EN EXECUTANT L'EXEMPLE DU "
                        "TICKET (code actuel) :\n```\n" + trace + "\n```")

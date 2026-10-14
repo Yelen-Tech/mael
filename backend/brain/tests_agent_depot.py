@@ -171,6 +171,18 @@ def test_en_tete_de_bloc_recopie_dans_le_test_retire():
     assert agent_depot._sans_entete("import os\n") == "import os\n"
 
 
+def test_une_erreur_d_environnement_n_est_pas_un_indice(depot_jouet):
+    """Rejeu du 15/10 (sympy-12236) : l'exemple plantait a l'IMPORT (vieux
+    code, Python recent) ; cette trace mettait basic.py en tete."""
+    ticket = ("`Panier.total` is wrong.\n```python\n"
+              "import boutique.panier, module_absent_mael\n"
+              "print(boutique.panier.Panier([1, 2]).total())\n```")
+    b = agent_depot.AgentDepot(FauxMoteur(["rien"] * 8), depot_jouet
+                               ).traiter(ticket)
+    assert any("erreur d'environnement ignoree" in n for n in b.notes), b.notes
+    assert all("trace" not in r for l in b.lieux for r in l.raisons)
+
+
 def test_exemples_du_ticket():
     ticket = ("The following code causes a `RecursionError`:\n```\n"
               "expr =sympify(\"cosh(acos(-i + acosh(-g + i)))\")\n"
@@ -219,3 +231,15 @@ def test_dossier_des_tests():
     assert agent_depot._dossier_des_tests(idx, None, []) == "testing"
     assert agent_depot._dossier_des_tests(idx, None, ["t/x/test_c.py"]) \
         == "t/x"
+
+
+def test_une_panne_de_l_exemple_ne_perd_pas_le_ticket(depot_jouet,
+                                                      monkeypatch):
+    def panne(*a, **k):
+        raise OSError("disque plein")
+    monkeypatch.setattr(ed, "executer_script", panne)
+    ticket = TICKET + "\n```python\n>>> Panier([1, 2]).total()\n```"
+    b = agent_depot.AgentDepot(FauxMoteur([REPRO, JUSTE]), depot_jouet
+                               ).traiter(ticket)
+    assert any("panne ignoree" in n for n in b.notes), b.notes
+    assert b.verdict == "resolu-verifie"
