@@ -18,6 +18,13 @@ y est COPIE (une archive sans .git, .mael, node_modules) — aucun volume de
 l'hote. La lecture de la sortie pytest (statut de chaque test) est pure,
 testee sans Docker.
 
+Mode HOTE (MAEL_ESSAIS=hote, 15/10/2026) : pour les machines SANS Docker
+(Kaggle). Python seulement : un environnement virtuel par depot (uv), meme
+recette d'installation que l'image, range dans MAEL_ENVS ; les tests y
+tournent sur une copie du depot, sans reseau si `unshare -rn` est permis
+(sinon AVEC reseau). Moins etanche que Docker : reserve aux bancs d'essai
+sur une machine jetable.
+
 Etat au 12/10/2026 : Python complet ; recettes Node, Go, Maven, .NET
 ecrites mais NON verifiees en vrai (dit par limites()).
 """
@@ -26,9 +33,12 @@ from __future__ import annotations
 import hashlib
 import io
 import json
+import os
 import re
 import shlex
+import shutil
 import subprocess
+import sys
 import tarfile
 import tempfile
 import time
@@ -400,6 +410,7 @@ class Environnement:
     raison: str = ""
     secondes: float = 0.0
     journal: str = ""
+    hote: str = ""            # mode hote : le dossier de l'environnement
 
 
 @dataclass
@@ -471,6 +482,8 @@ def preparer(racine: Path | str, suite: Suite, *, reseau: bool = True
     if suite.dossier:
         racine = racine / suite.dossier
     env = Environnement(suite=suite)
+    if mode_hote():
+        return _preparer_hote(racine, suite, env, reseau)
     if not dockerfile(racine, suite):
         env.raison = f"aucune recette pour « {' '.join(suite.commande)} »"
         return env
@@ -532,6 +545,8 @@ def executer_tests(env: Environnement, racine: Path | str,
     racine = Path(racine)
     if env.suite and env.suite.dossier:
         racine = racine / env.suite.dossier
+    if env.hote:
+        return _executer_hote(env, racine, cibles or [], delai, ex)
     nom = f"mael-essai-{hashlib.sha1(str(time.time()).encode()).hexdigest()[:10]}"
     debut = time.monotonic()
     try:
@@ -571,6 +586,157 @@ def executer_tests(env: Environnement, racine: Path | str,
             _docker(["rm", "-f", nom], 60)
         except Exception:                               # noqa: BLE001
             pass
+        ex.secondes = time.monotonic() - debut
+    return ex
+
+
+# ------------------------------------------------------------ mode hote
+def mode_hote() -> bool:
+    return os.environ.get("MAEL_ESSAIS", "").strip().lower() == "hote"
+
+
+def _racine_envs() -> Path:
+    return Path(os.environ.get("MAEL_ENVS") or
+                Path(tempfile.gettempdir()) / "mael-envs")
+
+
+def _python_de(dossier: Path) -> Path:
+    return dossier / ("Scripts/python.exe" if os.name == "nt"
+                      else "bin/python")
+
+
+def installations_python(racine: Path) -> list[tuple[list[list[str]], bool]]:
+    """La recette de l'image Python (dockerfile) en installations pip :
+    (variantes essayees dans l'ordre, obligatoire). Les `-r` qui echouent
+    sont tolerees comme dans l'image ; le paquet essaie [test], [testing],
+    puis nu."""
+    etapes: list[tuple[list[list[str]], bool]] = [([["pytest"]], True)]
+    etapes += [([["-r", n]], False) for n in _fichiers_dependances(
+        racine, "python") if n.endswith(".txt")]
+    if (racine / "setup.py").exists() or (racine / "pyproject.toml").exists():
+        etapes.append(([["-e", ".[test]"], ["-e", ".[testing]"],
+                        ["-e", "."]], True))
+    return etapes
+
+
+_SANS_RESEAU: list[str] | None = None
+
+
+def prefixe_sans_reseau() -> list[str]:
+    """`unshare -rn` s'il est permis ici (Linux, espaces de noms
+    utilisateur), sinon rien : les tests auront le reseau."""
+    global _SANS_RESEAU
+    if _SANS_RESEAU is None:
+        _SANS_RESEAU = []
+        if os.name != "nt" and shutil.which("unshare"):
+            try:
+                if subprocess.run(["unshare", "-rn", "true"],
+                                  capture_output=True, timeout=10
+                                  ).returncode == 0:
+                    _SANS_RESEAU = ["unshare", "-rn"]
+            except (OSError, subprocess.TimeoutExpired):
+                pass
+    return _SANS_RESEAU
+
+
+def _uv() -> list[str]:
+    return ["uv"] if shutil.which("uv") else [sys.executable, "-m", "uv"]
+
+
+def _preparer_hote(racine: Path, suite: Suite, env: Environnement,
+                   reseau: bool) -> Environnement:
+    if sorte(suite) != "python":
+        env.raison = ("mode hote : seul Python est pris en charge "
+                      f"(« {' '.join(suite.commande)} »)")
+        return env
+    dossier = _racine_envs() / nom_image(racine, suite)
+    env.image = dossier.name
+    env.hote = str(dossier)
+    if (dossier / "PRET").exists():
+        env.pret = True
+        return env
+    if not reseau:
+        env.raison = f"environnement {env.image} absent, et pas de reseau"
+        return env
+    shutil.rmtree(dossier, ignore_errors=True)
+    travail = dossier / "travail"
+    travail.mkdir(parents=True)
+    with tarfile.open(fileobj=io.BytesIO(archive(racine))) as t:
+        t.extractall(travail, filter="data")
+
+    def lire(n):
+        try:
+            return (racine / n).read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            return ""
+    version = version_python(lire)
+    debut = time.monotonic()
+    journal: list[str] = []
+    try:
+        r = subprocess.run([*_uv(), "venv", "--seed", "--python", version,
+                            str(dossier / "venv")],
+                           capture_output=True, timeout=900)
+        journal.append(_texte(r.stdout) + _texte(r.stderr))
+        if r.returncode:
+            env.raison = f"environnement virtuel impossible (Python {version})"
+            env.journal = "\n".join(journal)[-3000:]
+            return env
+        python = str(_python_de(dossier / "venv"))
+        for variantes, obligatoire in installations_python(travail):
+            ok = False
+            for a in variantes:
+                r = subprocess.run(
+                    [*_uv(), "pip", "install", "--python", python, *a],
+                    capture_output=True, timeout=DELAI_CONSTRUCTION,
+                    cwd=travail)
+                journal.append(_texte(r.stdout)[-1000:] +
+                               _texte(r.stderr)[-2000:])
+                if r.returncode == 0:
+                    ok = True
+                    break
+            if obligatoire and not ok:
+                env.raison = ("installation echouee : pip install "
+                              f"{' '.join(variantes[-1])}")
+                env.journal = "\n".join(journal)[-3000:]
+                return env
+    except subprocess.TimeoutExpired:
+        env.raison = f"construction trop longue (> {DELAI_CONSTRUCTION} s)"
+        return env
+    env.secondes = time.monotonic() - debut
+    env.journal = "\n".join(journal)[-3000:]
+    (dossier / "PRET").write_text(version, encoding="utf-8")
+    env.pret = True
+    return env
+
+
+def _executer_hote(env: Environnement, racine: Path, cibles: list[str],
+                   delai: int, ex: Execution) -> Execution:
+    """Comme le conteneur : l'etat actuel du depot est copie PAR-DESSUS le
+    dossier de travail de l'environnement (installe en -e), puis pytest y
+    tourne."""
+    dossier = Path(env.hote)
+    travail = dossier / "travail"
+    debut = time.monotonic()
+    try:
+        with tarfile.open(fileobj=io.BytesIO(archive(racine))) as t:
+            t.extractall(travail, filter="data")
+        commande = commande_hors_ligne(env.suite, cibles, racine)
+        commande[0] = str(_python_de(dossier / "venv"))
+        variables = {**os.environ, "PYTHONDONTWRITEBYTECODE": "1",
+                     "PYTHONUNBUFFERED": "1"}
+        variables.pop("PYTHONPATH", None)
+        try:
+            r = subprocess.run([*prefixe_sans_reseau(), *commande],
+                               capture_output=True, timeout=delai,
+                               cwd=travail, env=variables)
+            ex.code = r.returncode
+            ex.sortie = _texte(r.stdout) + _texte(r.stderr)
+        except subprocess.TimeoutExpired:
+            ex.code = 124
+            ex.raison = f"tests trop longs (> {delai} s)"
+        ex.lance = ex.code != 124
+        ex.statuts = lire_statuts(ex.sortie)
+    finally:
         ex.secondes = time.monotonic() - debut
     return ex
 

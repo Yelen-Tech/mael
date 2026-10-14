@@ -103,6 +103,7 @@ class LlamaCppBackend(LLMBackend):
         self.contexte = int(r.get("CONTEXTE", 0)) or contexte_pour_la_machine()
         self.fils = int(r.get("FILS", 0)) or (os.cpu_count() or 4)
         self.cache_ram = int(r.get("CACHE_RAM", 256))
+        self.gpu = int(r.get("GPU", 0))
         self.timeout = settings.BRAIN["TIMEOUT"]
         self.journal = _racine_mael() / "moteur" / "serveur.log"
         self.fichier_pid = _racine_mael() / "moteur" / "serveur.pid"
@@ -128,8 +129,14 @@ class LlamaCppBackend(LLMBackend):
             pid = int(self.fichier_pid.read_text().strip())
         except (OSError, ValueError):
             return
-        subprocess.run(["taskkill", "/PID", str(pid), "/T", "/F"],
-                       capture_output=True)
+        if os.name == "nt":
+            subprocess.run(["taskkill", "/PID", str(pid), "/T", "/F"],
+                           capture_output=True)
+        else:
+            try:
+                os.kill(pid, 9)
+            except OSError:
+                pass
         self.fichier_pid.unlink(missing_ok=True)
 
     def demarrer(self) -> None:
@@ -145,6 +152,8 @@ class LlamaCppBackend(LLMBackend):
                     "-np", "1", "--host", "127.0.0.1",
                     "--port", str(self.port),
                     "--cache-ram", str(self.cache_ram)]
+        if self.gpu:
+            commande += ["-ngl", str(self.gpu)]
         sortie = open(self.journal, "ab")
         self.processus = subprocess.Popen(
             commande, stdout=sortie, stderr=subprocess.STDOUT,

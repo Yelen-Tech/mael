@@ -279,3 +279,54 @@ def test_rapport_vide_n_est_pas_tout_passe(monkeypatch):
                            pret=True)
     ex = ed.executer_tests(env, Path("."))
     assert ex.statuts == {} and "aucun test" in ex.raison
+
+
+# ---------------------------------------------- mode hote (15/10, Kaggle)
+def test_mode_hote_se_choisit_par_la_variable(monkeypatch):
+    monkeypatch.delenv("MAEL_ESSAIS", raising=False)
+    assert not ed.mode_hote()
+    monkeypatch.setenv("MAEL_ESSAIS", "hote")
+    assert ed.mode_hote()
+
+
+def test_mode_hote_meme_recette_que_l_image(tmp_path):
+    (tmp_path / "setup.py").write_text("")
+    (tmp_path / "requirements-dev.txt").write_text("x\n")
+    etapes = ed.installations_python(tmp_path)
+    assert etapes[0] == ([["pytest"]], True)
+    assert ([["-r", "requirements-dev.txt"]], False) in etapes
+    assert etapes[-1] == ([["-e", ".[test]"], ["-e", ".[testing]"],
+                           ["-e", "."]], True)
+
+
+def test_mode_hote_refuse_un_autre_langage(tmp_path, monkeypatch):
+    monkeypatch.setenv("MAEL_ESSAIS", "hote")
+    monkeypatch.setenv("MAEL_ENVS", str(tmp_path / "envs"))
+    env = ed.preparer(tmp_path, Suite(dossier="", commande=["go", "test"]))
+    assert not env.pret and "seul Python" in env.raison
+
+
+def test_mode_hote_execute_avant_apres_sur_la_copie(tmp_path, monkeypatch):
+    """L'execution reelle : pytest tourne dans le dossier de travail de
+    l'environnement, sur l'etat ACTUEL du depot (le python du banc fait
+    office d'environnement : rien a telecharger)."""
+    import sys
+    depot_ = tmp_path / "depot"
+    depot_.mkdir()
+    (depot_ / "mini.py").write_text("def ajoute(a, b):\n    return a - b\n")
+    (depot_ / "test_mini.py").write_text(
+        "from mini import ajoute\n\ndef test_ajoute():\n"
+        "    assert ajoute(2, 2) == 4\n\ndef test_zero():\n"
+        "    assert ajoute(0, 0) == 0\n")
+    monkeypatch.setattr(ed, "_python_de", lambda d: Path(sys.executable))
+    monkeypatch.setattr(ed, "_SANS_RESEAU", [])
+    env = ed.Environnement(suite=Suite(dossier="", commande=["python", "-m",
+                                                             "pytest"]),
+                           pret=True, hote=str(tmp_path / "env"))
+    avant = ed.executer_tests(env, depot_)
+    assert avant.statuts == {"test_mini.py::test_ajoute": "FAILED",
+                             "test_mini.py::test_zero": "PASSED"}
+    (depot_ / "mini.py").write_text("def ajoute(a, b):\n    return a + b\n")
+    apres = ed.executer_tests(env, depot_)
+    c = ed.comparer(avant, apres)
+    assert c.repares == ["test_mini.py::test_ajoute"] and not c.regressions

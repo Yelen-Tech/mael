@@ -303,6 +303,9 @@ BRAIN = {
         "CONTEXTE": config("BRAIN_LLAMA_CONTEXTE", default=0, cast=int),
         "FILS": config("BRAIN_LLAMA_FILS", default=0, cast=int),
         "CACHE_RAM": config("BRAIN_LLAMA_CACHE_RAM", default=256, cast=int),
+        # couches sur la carte graphique (-ngl) : 0 = tout sur le processeur ;
+        # 999 = tout le modele sur la carte (Kaggle : 2 x T4)
+        "GPU": config("BRAIN_LLAMA_GPU", default=0, cast=int),
     },
     # Le GRAND modele (BRAIN_BACKEND=vllm, brain/backends/vllm.py) :
     # installe sur la machine de MAEL (cartes graphiques) et servi par
