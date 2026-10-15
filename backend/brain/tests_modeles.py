@@ -153,7 +153,7 @@ def test_aucun_candidat_utilisable_rend_rien():
 def test_la_particularite_d_un_modele_est_dite():
     # connus() rend le dictionnaire PARTAGE du processus : s'en remettre a
     # son etat, c'est dependre de ce qu'un autre test lui a fait. On le
-    # relit du fichier (signale par Kimi le 22/09 : echec flottant).
+    # relit du fichier (signale en revue interne le 22/09 : echec flottant).
     savoir = modeles.connus(recharger=True)
     choix = modeles.choisir([_m("deepseek-r1:8b", 4.9, parametres="8.0B")],
                             savoir, capacite=_grosse_machine())

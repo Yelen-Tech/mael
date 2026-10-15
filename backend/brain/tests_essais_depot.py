@@ -293,7 +293,8 @@ def test_mode_hote_meme_recette_que_l_image(tmp_path):
     (tmp_path / "setup.py").write_text("")
     (tmp_path / "requirements-dev.txt").write_text("x\n")
     etapes = ed.installations_python(tmp_path)
-    assert etapes[0] == ([["pytest"]], True)
+    assert etapes[0] == ([["pytest", "setuptools<70", "wheel"], ["pytest"]],
+                         True)
     assert ([["-r", "requirements-dev.txt"]], False) in etapes
     assert etapes[-1] == ([["-e", ".[test]"], ["-e", ".[testing]"],
                            ["-e", "."]], True)
@@ -328,7 +329,7 @@ def test_mode_hote_python_trop_vieux_prend_le_plus_proche(tmp_path,
     env = ed.Environnement(suite=Suite(dossier="", commande=["python", "-m",
                                                              "pytest"]))
     ed._preparer_hote(tmp_path / "depot", env.suite, env, True)
-    assert demandes == ["3.5", "3.6", "3.7"]
+    assert demandes == ["3.5", "3.6", "3.7"]          # 3.7 existe : arret
     assert "installation echouee" in env.raison      # le venv, lui, est fait
 
 
@@ -365,13 +366,16 @@ def test_la_copie_garde_bin_mais_pas_les_binaires_ni_les_venvs(tmp_path):
     import io
     import tarfile
     for c in ("bin/isympy", "setup.py", "App/obj/x.json", "App/bin/App.dll",
+              "tests/roots/target/empty_all.py", "rs/Cargo.toml",
+              "rs/target/debug/x",
               "env/pyvenv.cfg", "env/lib/x.py", "coverage/report.py"):
         (tmp_path / c).parent.mkdir(parents=True, exist_ok=True)
         (tmp_path / c).write_text("x")
     with tarfile.open(fileobj=io.BytesIO(ed.archive(tmp_path))) as t:
         noms = set(t.getnames())
-    assert {"bin/isympy", "setup.py", "coverage/report.py"} <= noms
-    assert not any(n.startswith(("App/bin", "env")) for n in noms)
+    assert {"bin/isympy", "setup.py", "coverage/report.py",
+            "tests/roots/target/empty_all.py"} <= noms
+    assert not any(n.startswith(("App/bin", "env", "rs/target")) for n in noms)
 
 
 def test_django_libelles_et_statuts():
@@ -401,3 +405,55 @@ def test_django_libelles_et_statuts():
     s = Suite(dossier="", commande=["python", "tests/runtests.py"])
     assert ed.commande_hors_ligne(s, ["tests/validators/tests.py"])[-1] == (
         "validators.tests")
+
+
+def test_version_python_de_l_integration_continue():
+    """Rien d'annonce : la plus haute version STABLE testee en CI (flask
+    2023 : 3.11, « 3.12-dev » et pypy-3.9 ne comptent pas)."""
+    ci = ("- {name: '3.12-dev', python: '3.12-dev'}\n"
+          "- {name: Linux, python: '3.11'}\n- {python: 'pypy-3.9'}\n"
+          "- {python: '3.8'}\n")
+    fichiers = {".github/workflows/tests.yaml": ci,
+                "pyproject.toml": 'requires-python = ">=3.7"\n'}
+    assert ed.version_python(lambda n: fichiers.get(n, "")) == "3.11"
+    fichiers["setup.py"] = "'Programming Language :: Python :: 3.9',"
+    assert ed.version_python(lambda n: fichiers.get(n, "")) == "3.9"
+
+
+def test_statuts_pytest_avec_espaces_dans_les_parametres():
+    """flask (16/10) : des parametres avec espaces etaient coupes."""
+    sortie = (
+        'tests/test_cli.py::test_locate_app[cliapp.factory-create_app2("foo", '
+        '"bar")-create_app2_foo_bar] PASSED [ 10%]\n'
+        "tests/test_cli.py::test_simple PASSED [ 20%]\n"
+        "=== short test summary info ===\n"
+        'FAILED tests/test_cli.py::test_x[a b] - AssertionError: [1] != 2\n'
+        "PASSED tests/test_cli.py::TestA::test_b\n"
+        "SKIPPED [1] tests/test_cli.py:12: pas de dotenv\n")
+    assert ed.lire_statuts(sortie) == {
+        'tests/test_cli.py::test_locate_app[cliapp.factory-create_app2("foo",'
+        ' "bar")-create_app2_foo_bar]': "PASSED",
+        "tests/test_cli.py::test_simple": "PASSED",
+        "tests/test_cli.py::test_x[a b]": "FAILED",
+        "tests/test_cli.py::TestA::test_b": "PASSED"}
+
+
+def test_date_du_depot(tmp_path):
+    """Les dependances d'un vieux depot s'installent a la date de son
+    code ; un depot vivant n'est pas borne ; les marques de MAEL ne
+    comptent pas."""
+    import os
+    import time
+    (tmp_path / "a.py").write_text("x")
+    (tmp_path / ".mael-extrait").write_text("x")
+    vieux = time.mktime((2020, 12, 28, 5, 51, 0, 0, 0, -1))
+    os.utime(tmp_path / "a.py", (vieux, vieux))
+    assert ed.date_du_depot(tmp_path) == "2020-12-30T00:00:00Z"
+    for k in range(9):                    # UN test ajoute ne la change pas
+        (tmp_path / f"v{k}.py").write_text("x")
+        os.utime(tmp_path / f"v{k}.py", (vieux, vieux))
+    (tmp_path / "test_ajoute.py").write_text("x")
+    assert ed.date_du_depot(tmp_path) == "2020-12-30T00:00:00Z"
+    for k in range(9):                    # un depot VIVANT : pas de borne
+        (tmp_path / f"v{k}.py").write_text("y")
+    assert ed.date_du_depot(tmp_path) == ""

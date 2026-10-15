@@ -349,7 +349,7 @@ def classer(commande: str) -> Verdict:
     # 1) Interdits : on teste la ligne entiere d'abord (les motifs destructeurs
     #    traversent souvent les operateurs de shell). Les MOTIFS DE RECHERCHE
     #    (grep 'shutdown', awk '/halt/') ne s'executent pas : on les retire
-    #    avant ce test (faux positif signale par Kimi, 13/10/2026).
+    #    avant ce test (faux positif signale en revue interne, 13/10/2026).
     bas = _sans_motifs_de_recherche(commande.lower())
     for motif, raison in INTERDITS:
         if re.search(motif, bas):
@@ -515,7 +515,7 @@ def _find_exec_ecrit(args: list[str]) -> str | None:
     `find /etc -type f -exec sha256sum {} +` lit la machine ; `find / -exec
     rm {} \;` la detruit. Refuser les deux, c'est interdire une empreinte
     de configuration ; accepter les deux, c'est ouvrir une porte. On classe
-    donc la commande lancee, avec le meme garde-fou (Claude, 20/09/2026)."""
+    donc la commande lancee, avec le meme garde-fou (Yelen Tech, 20/09/2026)."""
     for i, a in enumerate(args):
         if a not in {"-exec", "-execdir", "-ok", "-okdir"}:
             continue

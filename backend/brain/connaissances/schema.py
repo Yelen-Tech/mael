@@ -22,7 +22,7 @@ from pathlib import Path
 
 SCHEMA_ACTUEL = 1
 
-# Familles de connaissances (plan Kimi) : « langage » (etape 2), puis les
+# Familles de connaissances (plan de developpement) : « langage » (etape 2), puis les
 # familles scientifiques et humaines des etapes 3 a 6.
 FAMILLES = {"langage", "mathematiques", "physique", "chimie",
             "histoire-geographie", "astronomie"}

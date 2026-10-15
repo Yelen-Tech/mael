@@ -1,4 +1,4 @@
-"""Corpus de dialogues de reference (etape 10 du plan Kimi).
+"""Corpus de dialogues de reference (etape 10 du plan).
 
 Des conversations d'audit types, en YAML valide par le code, dans
 `references/dialogues/`. Elles servent d'exemples de ton et de conduite

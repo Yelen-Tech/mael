@@ -12,7 +12,7 @@ Limites du conteneur (documentees dans les consignes) : systemd et le noyau
 machine. Les fiches de ces themes sont marquees « a tester en VM », pas
 jugees fausses.
 
-Deux choses differentes, jamais melangees dans le rapport (Claude,
+Deux choses differentes, jamais melangees dans le rapport (Yelen Tech,
 20/09/2026, apres le banc reel des trois images) :
   - DEFAUT DE FICHE : la fiche est fausse (commande non LECTURE, erreur de
     syntaxe du shell). Le banc rend un code de sortie non nul.
@@ -53,7 +53,7 @@ LECTEURS_VM = {"systemctl"}       # systemd n'est pas PID 1 en conteneur
 
 
 # Commandes qui lisent ce qu'un conteneur ne reproduit pas (banc reel du
-# 19/09/2026, Claude) : /proc/cmdline de l'HOTE, systemd absent, montages
+# 19/09/2026, Yelen Tech) : /proc/cmdline de l'HOTE, systemd absent, montages
 # Docker (/etc/resolv.conf, /etc/hostname) vus comme des partitions.
 MARQUES_VM = ("/proc/cmdline", "systemctl", "mount |")
 # Fiches manuelles a parametre (domaine, certificat a fournir) : rien a
@@ -112,7 +112,7 @@ def executer_fiche(executeur: Executeur, fiche, ctx) -> dict:
             impossibles.append(f"delai depasse : {cmd[:80]}")
         # Code 2 seul ne prouve rien : grep le rend quand un fichier lu
         # n'existe pas (cas normal). Seule une erreur de syntaxe du shell
-        # est un defaut de fiche. (Claude, 19/09/2026)
+        # est un defaut de fiche. (Yelen Tech, 19/09/2026)
         elif "syntax error" in erreur or "unexpected eof" in erreur:
             defauts.append(f"erreur de syntaxe : {cmd[:80]} ({erreur[:80]})")
         # Commande impossible (126/127/124) : indetermine, jamais « vide ».

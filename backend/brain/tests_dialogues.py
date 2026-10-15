@@ -1,4 +1,4 @@
-"""Tests du corpus de dialogues de reference (etape 10 du plan Kimi).
+"""Tests du corpus de dialogues de reference (etape 10 du plan).
 
 Le corpus est valide par le code ; l'injection est bornee et etiquetee ;
 et comme toujours : un exemple montre le ton, il ne decide rien.

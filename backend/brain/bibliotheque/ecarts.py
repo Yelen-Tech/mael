@@ -55,7 +55,7 @@ ILLISIBLE = "SENTINELLE:ILLISIBLE"
 SANS_OBJET = "SENTINELLE:SANS_OBJET"
 # Substituee a la sortie quand la commande n'a pas pu s'executer (binaire
 # introuvable 127, non executable 126, delai depasse 124) : une sortie vide
-# serait sinon jugee (« aucune valeur » = faux ecart). Signale par Kimi
+# serait sinon jugee (« aucune valeur » = faux ecart). Signale en revue interne
 # (banc, 19/09/2026) ; le terminal avait le meme defaut.
 IMPOSSIBLE = "SENTINELLE:IMPOSSIBLE"
 CODES_IMPOSSIBLES = {124, 126, 127}

@@ -124,16 +124,36 @@ une machine à cartes graphiques, MAEL parle aussi à un modèle servi par
 Docker est **facultatif** : il sert à exécuter les tests et à rejouer les
 bases de données ; sans lui, MAEL le dit et juge sans exécuter.
 
+## Deux modes
+
+| | **Mode local** (par défaut) | **Mode serveur** (facultatif) |
+|---|---|---|
+| Pour qui | une personne, sur sa machine | une équipe, sur un serveur qu'elle maîtrise |
+| Lancement | `mael` dans le terminal | application web Django |
+| Base de données | aucune | PostgreSQL |
+| Cache, file d'attente | aucun | Redis |
+| Réseau | rien n'écoute sur le réseau | services joignables depuis la machine seulement (`127.0.0.1`), façade web derrière un proxy TLS |
+| Fichier concerné | — | `docker-compose.yml` (développement) |
+
+Le **mode local** est celui de l'outil décrit plus haut : il n'a besoin ni de
+PostgreSQL, ni de Redis, ni de `docker-compose.yml`. Le **mode serveur** ne
+fournit **aucun mot de passe par défaut** : `docker-compose.yml` refuse de
+démarrer tant que `POSTGRES_PASSWORD` n'est pas défini dans `.env` (voir
+`.env.example`), et les images des outils y sont figées par empreinte
+`@sha256`, comme MAEL l'exige à l'exécution.
+
 ## Mesures (octobre 2026)
 
 MAEL est mesuré, et les chiffres sont publiés tels quels :
 
 | Mesure | Résultat |
 |---|---|
-| Tests automatiques du projet (Windows) | 1 396 + 133 (Django), tous verts ; ruff propre |
+| Tests automatiques du projet (Windows) | 1 467 + 133 (Django), tous verts ; ruff propre |
+| Couverture du cœur (`backend/brain`) par ces tests | 87 % des instructions (mesure du 16/10, avant l'ajout des tests des moteurs et du bac à sable) |
+| Projets de SWE-bench Lite dont MAEL installe et lance les tests (tests officiels en échec avant le correctif officiel, réussis après) | 9 sur 12, soit 248 tickets sur 300 ; matplotlib, scikit-learn et astropy (code C à compiler) restent à contrôler sous Linux |
 | Bases de données rejouées en vrai (clé étrangère fautive refusée) | PostgreSQL, MySQL, MariaDB, SQL Server, Oracle, Cassandra |
 | pom.xml / go.mod / .csproj produits, résolus par les outils officiels | 36 / 36 |
-| Localisation sur 63 tickets réels de SWE-bench Lite (sans modèle) | bon fichier 1er : 29 (46 %) ; dans les 5 premiers : 51 (81 %) ; dans les 10 premiers : 55 (87 %) |
+| Localisation sur 63 tickets réels de SWE-bench Lite (sans modèle, mesure du 12/10) | bon fichier 1er : 29 (46 %) ; dans les 5 premiers : 51 (81 %) ; dans les 10 premiers : 55 (87 %) |
 | Choix du fichier par un petit modèle (phi4-mini) parmi ces candidats | aucun gain mesuré (2 tickets gagnés, 2 perdus) : désactivé par défaut |
 | Juges ORM (JPA, EF Core, GORM, Eloquent, Doctrine) sur Spring PetClinic, eShopOnWeb, playground GORM | 0 faux défaut |
 | Tests d'un dépôt exécutés et lus test par test (Python, Go, Maven, .NET, Node) | 5 langages éprouvés en conteneur |
@@ -151,6 +171,8 @@ MAEL est mesuré, et les chiffres sont publiés tels quels :
   13/10 : un test qui passe, un qui échoue, par langage ; pour Node : jest et
   `node --test` — vitest et mocha ne sont vérifiés que par des tests
   unitaires). Gradle, Cargo et PHPUnit ne sont pas encore pris en charge.
+  Sans Docker, seuls les dépôts **Python** sont testés (environnement isolé
+  par dépôt, dépendances installées à la date de son code).
 - L'audit couvre **Ubuntu 22.04 / 24.04 et Debian 12** (versions de
   ComplianceAsCode intégrées).
 

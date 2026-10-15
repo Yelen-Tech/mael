@@ -167,7 +167,7 @@ def test_find_exec_juge_la_charge_utile():
     assert "imbrique" in v.motif
 
 
-# ---- faux positif signale par Kimi (13/10/2026) : un MOTIF de recherche
+# ---- faux positif signale en revue interne (13/10/2026) : un MOTIF de recherche
 # n'est pas une commande ; un awk qui peut executer reste juge.
 @pytest.mark.parametrize("commande", [
     "awk '/shutdown|halt/ {print $1}' /var/log/syslog",

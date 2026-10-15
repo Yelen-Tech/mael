@@ -423,7 +423,7 @@ class Command(BaseCommand):
             savoir = injection.construire(source, self.contexte, themes,
                                           budget_jetons=self.budget_savoir)
             self.savoir = savoir.texte or None
-            # Connaissances generales (etape 2 du plan Kimi) : savoir de fond
+            # Connaissances generales (etape 2 du plan) : savoir de fond
             # (langages, sciences...) ajoute sobrement au savoir d'audit. Le
             # bloc le dit lui-meme : ce n'est PAS un constat, et rien ici ne
             # modifie un verdict — le code decide, comme partout.

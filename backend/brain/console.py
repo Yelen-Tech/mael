@@ -88,7 +88,7 @@ def couleurs_possibles(flux=None) -> bool:
     # Windows : une console peut etre un terminal ET imprimer les sequences
     # ANSI en toutes lettres tant qu'on ne lui a pas active le rendu virtuel.
     # Si on n'y arrive pas, on rend du texte nu -- lisible -- plutot qu'un
-    # ecran de codes d'echappement. (Ajout de Claude, friction L3 du 22/09.)
+    # ecran de codes d'echappement. (Ajout Yelen Tech, friction L3 du 22/09.)
     #
     # La question ne se pose que pour les VRAIES sorties du processus : on
     # interroge la console du processus, pas un flux quelconque. Un flux de

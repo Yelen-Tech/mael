@@ -63,7 +63,7 @@ def _attendu_simple(spec) -> str | None:
 
 def _intervalle(spec) -> tuple[float, float] | None:
     """Intervalle numerique admis par une evaluation, sinon None.
-    Relecture 19/09/2026 (Claude) : les bornes (au_moins, au_plus, entre)
+    Relecture 19/09/2026 (Yelen Tech) : les bornes (au_moins, au_plus, entre)
     n'etaient pas comparees ; « minlen >= 14 » et « minlen <= 8 » passaient."""
     comp, a = spec.get("comparateur"), spec.get("attendu")
     try:

@@ -140,7 +140,7 @@ def test_corpus_reel_valide_et_charge():
     assert nb_err == 0, texte
     toutes = connaissances.toutes()
     assert len(toutes) >= 41   # 9 langages + 10 maths + 8 physique + 6
-    # chimie + 8 histoire-geographie (plan Kimi, etapes 2 a 6)
+    # chimie + 8 histoire-geographie (plan, etapes 2 a 6)
     ids = [c.id for c in toutes]
     assert len(ids) == len(set(ids))             # jamais d'id en double
 

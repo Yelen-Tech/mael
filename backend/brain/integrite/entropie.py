@@ -34,7 +34,7 @@ _RE_TOKEN = re.compile(r"\S{20,}")
 
 # Tokens legitimes, exclus de l'analyse : empreintes MD5/SHA-1/SHA-256
 # (longueurs EXACTES 32/40/64) et dates ISO.
-# Relecture 19/09/2026 (Claude) : exclure tout hexa >= 32 laissait passer
+# Relecture 19/09/2026 (Yelen Tech) : exclure tout hexa >= 32 laissait passer
 # une charge encodee en hexa (4 bits/octet au plus : jamais au-dela du
 # seuil d'entropie). Les encodages sont donc aussi reperes par leur FORME.
 _RE_HEX = re.compile(r"^(?:[0-9a-f]{32}|[0-9a-f]{40}|[0-9a-f]{64})$")

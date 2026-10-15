@@ -5,7 +5,7 @@ schema: 2
 version: 1
 etat: verifie
 verifie_le: 2026-09-19
-relu_par: "assistant IA (Kimi), par delegation du responsable du projet"
+relu_par: Yelen Tech
 teste_sur: []            # a remplir par les tests en conteneur (etape 2.5)
 applicable:
   os: [linux]
@@ -30,7 +30,7 @@ observer:
   - commande: "ssh -Q kex"
     but: "Voir les echanges de cles que l'OpenSSH installe sait faire"
     lecture: "Si mlkem768x25519-sha256 ou sntrup761x25519-sha512@openssh.com est absent de la liste, l'OpenSSH est trop ancien : la recommandation ne s'applique pas encore."
-  # Relecture 19/09/2026 (Claude) : sans root, sshd -T ne repond rien, ce
+  # Relecture 19/09/2026 (Yelen Tech) : sans root, sshd -T ne repond rien, ce
   # qui passait pour « deja actif » -> marqueur ILLISIBLE ; nom
   # sntrup761x25519-sha512 sans suffixe (OpenSSH >= 9.9) accepte.
   - commande: 'if ssh -Q kex 2>/dev/null | grep -qE "^(mlkem768x25519-sha256|sntrup761x25519-sha512(@openssh\.com)?)$"; then sshd -T 2>/dev/null | awk ''$1=="kexalgorithms"{vu=1; n=split($2,c,","); for(i=1;i<=n;i++) if(c[i] ~ /^(mlkem768x25519-sha256|sntrup761x25519-sha512(@openssh\.com)?)$/) f=1} END{if(!vu) print "SENTINELLE:ILLISIBLE"; else if(!f) print "echange hybride post-quantique disponible mais non active"}''; else echo SENTINELLE:SANS_OBJET; fi'

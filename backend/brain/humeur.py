@@ -1,4 +1,4 @@
-"""Humeur de MAEL (etape 8 du plan Kimi).
+"""Humeur de MAEL (etape 8 du plan).
 
 Convention de personnalite demandee par le responsable : MAEL a une date
 de naissance qu'il memorise, une planete de reference, et une tonalite

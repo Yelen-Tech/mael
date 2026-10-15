@@ -1,43 +1,45 @@
+# Developpement en MODE SERVEUR (facultatif). Le mode local par defaut de
+# MAEL n'utilise ni PostgreSQL ni Redis : voir README, « Deux modes ».
+# Production : deploy/docker-compose.prod.yml.
 services:
   db:
     image: postgres:17-alpine
     environment:
-      POSTGRES_DB: sentinelle
-      POSTGRES_USER: sentinelle
-      POSTGRES_PASSWORD: sentinelle
+      POSTGRES_DB: ${POSTGRES_DB:-mael}
+      POSTGRES_USER: ${POSTGRES_USER:-mael}
+      # aucun mot de passe par defaut : a definir dans .env
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?definir POSTGRES_PASSWORD dans .env}
     volumes:
       - pgdata:/var/lib/postgresql/data
-    ports: ["5432:5432"]
+    # joignable depuis cette machine seulement, jamais depuis le reseau
+    ports: ["127.0.0.1:5432:5432"]
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U sentinelle"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-mael}"]
       interval: 5s
       retries: 10
 
   redis:
     image: redis:7-alpine
-    ports: ["6379:6379"]
+    ports: ["127.0.0.1:6379:6379"]
 
   # ---- outils embarques : un conteneur par outil, aucun binaire sur l'hote ----
   # Ils ne tournent pas en permanence : les adaptateurs les lancent a la demande
-  # (docker run --rm). Declares ici pour figer les versions et permettre
-  # « docker compose pull » puis « docker save » pour le paquet hors ligne.
+  # (docker run --rm). Declares ici pour « docker compose pull » puis
+  # « docker save » (paquet hors ligne). Images FIGEES par empreinte, les memes
+  # que backend/brain/tools/images.lock (MAEL refuse « latest » a l'execution).
+  # nmap n'est pas embarque : sa licence (NPSL) interdit la revente.
   tool-nuclei:
-    image: projectdiscovery/nuclei:latest
-    profiles: ["tools"]
-    entrypoint: ["true"]
-
-  tool-nmap:
-    image: instrumentisto/nmap:latest
+    image: projectdiscovery/nuclei@sha256:582d5546902e67052097cb2d07296c642d50a1afc5e44623cb038845df9a32eb
     profiles: ["tools"]
     entrypoint: ["true"]
 
   tool-trivy:
-    image: aquasec/trivy:latest
+    image: aquasec/trivy@sha256:62b1e65e8869bc4b4c6aa4fa2b21595256c7c2f6018a9d9ad61caf87187c1969
     profiles: ["tools"]
     entrypoint: ["true"]
 
   tool-testssl:
-    image: drwetter/testssl.sh:latest
+    image: drwetter/testssl.sh@sha256:a40614f5867254f6fee2d277fa367e31de29fc74a36eb5d126d93ba182f7e412
     profiles: ["tools"]
     entrypoint: ["true"]
 

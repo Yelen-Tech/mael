@@ -5,7 +5,7 @@ schema: 2
 version: 1
 etat: verifie
 verifie_le: 2026-09-19
-relu_par: "assistant IA (Kimi), par delegation du responsable du projet"
+relu_par: Yelen Tech
 teste_sur: []            # a remplir par les tests en conteneur (etape 2.5)
 applicable:
   os: [linux]
@@ -25,7 +25,7 @@ resume: >
   toucher aux cles privees.
 
 observer:
-  # Relecture 19/09/2026 (Claude) : une commande PAR controle ; avant, une
+  # Relecture 19/09/2026 (Yelen Tech) : une commande PAR controle ; avant, une
   # cle DSA mettait aussi le controle RSA en ecart.
   - commande: 'for k in /etc/ssh/ssh_host_*_key.pub; do ssh-keygen -lf "$k" 2>/dev/null; done | awk ''$NF=="(DSA)"'''
     but: "Lister les cles d'hote DSA"

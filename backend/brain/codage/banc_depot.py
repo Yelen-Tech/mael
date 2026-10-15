@@ -309,7 +309,14 @@ def fichiers_de_tests(instance: dict) -> list[str]:
 def reussi(ex, test: str) -> bool:
     """Un test officiel a-t-il reussi ? Un nom nu (sympy) vaut pour le
     test de ce nom dans les fichiers lances."""
-    if test in ex.statuts or "::" in test or " " in test:
+    if test in ex.statuts:
+        return ex.reussi(test)
+    if "[" in test and not test.endswith("]"):
+        # nom officiel COUPE au premier espace par le lecteur de SWE-bench
+        # (flask-5063 : « test_locate_app[cliapp.factory-create_app2("foo", »)
+        trouves = [t for t in ex.statuts if t.startswith(test + " ")]
+        return bool(trouves) and all(ex.reussi(t) for t in trouves)
+    if "::" in test or " " in test:
         return ex.reussi(test)
     trouves = [t for t in ex.statuts if t.endswith("::" + test)]
     return bool(trouves) and all(ex.reussi(t) for t in trouves)

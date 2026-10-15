@@ -1,4 +1,4 @@
-"""Tests de l'humeur de MAEL (etape 8 du plan Kimi).
+"""Tests de l'humeur de MAEL (etape 8 du plan).
 
 Le point central teste ici n'est pas l'humeur elle-meme — c'est
 l'INVARIANT : elle ne peut rien decider. Aucun module de securite ne la

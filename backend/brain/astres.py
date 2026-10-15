@@ -1,4 +1,4 @@
-"""Positions des astres (etape 6bis du plan Kimi).
+"""Positions des astres (etape 6bis du plan).
 
 Calcul REEL, deterministe, hors ligne : longitudes ecliptiques
 geocentriques du Soleil, de la Lune et des huit planetes a une date

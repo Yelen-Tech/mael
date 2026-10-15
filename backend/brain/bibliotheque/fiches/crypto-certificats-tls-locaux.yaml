@@ -5,7 +5,7 @@ schema: 2
 version: 1
 etat: verifie
 verifie_le: 2026-09-19
-relu_par: "assistant IA (Kimi), par delegation du responsable du projet"
+relu_par: Yelen Tech
 teste_sur: []            # a remplir par les tests en conteneur (etape 2.5)
 applicable:
   os: [linux]
@@ -34,7 +34,7 @@ observer:
   - commande: 'find -L /etc/letsencrypt/live /etc/nginx /etc/apache2 /etc/postfix -type f \( -name "*.pem" -o -name "*.crt" \) 2>/dev/null | while read c; do openssl x509 -in "$c" -noout -text 2>/dev/null | awk -v c="$c" ''/Public Key Algorithm: rsaEncryption/{rsa=1} /Public-Key:/{split($0,a,"[()]"); split(a[2],b," "); if(rsa && b[1]+0<2048) print c" : cle RSA "b[1]" bits"}''; done'
     but: "Repérer les certificats de services avec une cle RSA trop courte"
     lecture: "Chaque ligne est un certificat en defaut ; aucune ligne = conforme."
-  # Relecture 19/09/2026 (Claude) : OpenSSL >= 3.5 propose X25519MLKEM768
+  # Relecture 19/09/2026 (Yelen Tech) : OpenSSL >= 3.5 propose X25519MLKEM768
   # PAR DEFAUT ; « version >= 3.5 » ne prouve donc ni ecart ni conformite.
   # Seul un test distant des services (testssl.sh, etape Docker) le juge.
   - commande: 'openssl version'

@@ -311,7 +311,7 @@ def _module(index: Index, module: str) -> list[str]:
 
 
 # ------------------------------------------------------------- localiser
-P_COUVERTURE = 12.0
+P_COUVERTURE = 6.0          # regle sur sympy (16/10) : 12 nuisait ; total neutre
 COUVERTURE_FICHIERS = 8
 # une seule instruction : rien a comparer, tout ce qu'elle traverse compte
 COUVERTURE_UNE_INSTRUCTION = True

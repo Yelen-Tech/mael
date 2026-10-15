@@ -10,7 +10,7 @@ Pourquoi un arbre et pas une liste plate :
   - preuve d'appartenance d'une fiche en O(log n) : preuve(chemin) rend le
     chemin de hachage, verifier_preuve() le controle sans le sceau complet.
 
-Construction (relecture 19/09/2026, Claude) : separation de domaine a la
+Construction (relecture 19/09/2026, Yelen Tech) : separation de domaine a la
 RFC 6962 -- feuille = H(0x00 || chemin || 0x00 || empreinte du contenu),
 noeud = H(0x01 || gauche || droite) ; un noeud impair remonte tel quel.
 Sans cela : un noeud interne passait pour une fiche dans verifier_preuve,

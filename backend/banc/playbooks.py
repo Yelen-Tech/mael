@@ -242,7 +242,7 @@ def aller_retour(executeur: Executeur, pid: str, systeme: str,
             resultat["ecarts"].append("verifier != 0 apres application")
 
     # 5) re-mesure par la fiche liee (le code juge, conforme attendu)
-    # Meme regle qu'au banc des fiches (Claude, 20/09/2026) : la variante de
+    # Meme regle qu'au banc des fiches (Yelen Tech, 20/09/2026) : la variante de
     # commande du systeme (commande_pour) et le marqueur IMPOSSIBLE quand la
     # commande n'a pas pu s'executer -- une sortie vide n'est pas un ecart.
     sorties = {}

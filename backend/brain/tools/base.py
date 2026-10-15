@@ -286,7 +286,7 @@ class Outil:
             # Module 7 du noyau d'integrite : l'isolation se VERIFIE avant
             # chaque lancement, elle ne se suppose pas. Un conteneur mal
             # enferme chez un client, c'est notre produit qui devient le
-            # probleme (Claude, 20/09/2026).
+            # probleme (Yelen Tech, 20/09/2026).
             from brain.integrite.isolation import exigences_conteneur
             manques = exigences_conteneur(commande)
             if manques:

@@ -60,7 +60,12 @@ PYTHONS = ("3.12", "3.11", "3.10", "3.9", "3.8", "3.7", "3.6", "3.5")
 # setup.py — sans lui « pip install -e . » echouait, et aucun test sympy ne
 # tournait ; banc du 15/10). Le bin/ d'un projet .NET (a cote d'obj/) reste
 # ecarte : des binaires compiles.
-EXCLUS_COPIE = (ECARTES - {"bin", "env", "coverage"}) | {".git", ".mael"}
+EXCLUS_COPIE = (ECARTES - {"bin", "env", "coverage", "target"}) | {
+    ".git", ".mael"}
+# target/ : la sortie de Rust ou de Maven SEULEMENT a cote de leur projet —
+# ailleurs c'est du code (sphinx : tests/roots/test-ext-autodoc/target/,
+# ses tests ne trouvaient plus leurs modules, 16/10)
+_PROJETS_TARGET = ("Cargo.toml", "pom.xml", "build.gradle", "build.gradle.kts")
 # recettes eprouvees EN VRAI (banc du 13/10 : un test qui passe, un qui
 # echoue, par langage ; Node : node --test et jest — vitest et mocha lus
 # par les tests unitaires seulement)
@@ -72,6 +77,13 @@ def sorte(suite: Suite) -> str:
     c = suite.commande[0] if suite.commande else ""
     return {"python": "python", "npm": "node", "go": "go", "mvn": "maven",
             "dotnet": "dotnet"}.get(c, "")
+
+
+_FICHIERS_CI = [f".github/workflows/{n}.{e}"
+                for n in ("tests", "test", "ci", "main", "python-package",
+                          "testing", "build")
+                for e in ("yml", "yaml")] + [".travis.yml", "azure-pipelines.yml",
+                                            ".circleci/config.yml"]
 
 
 def version_python(lire) -> str:
@@ -90,6 +102,14 @@ def version_python(lire) -> str:
         # essai du 12/10 — sur 3.12 son vieux pytest plante) : la plus
         # haute annoncee, les vieilles images python:3.x-slim existent
         return max(annoncees, key=lambda v: int(v.split(".")[1]))
+    # rien d'annonce : la plus haute version STABLE de son integration
+    # continue (flask 2023 : 3.11 ; « 3.12-dev » n'etait qu'une preversion
+    # — sur 3.12 son pytest fige plantait, 16/10)
+    ci = "\n".join(lire(n) or "" for n in _FICHIERS_CI)
+    testees = {v for v in re.findall(r"(?<![\w.-])(3\.\d+)(?![\d-])", ci)
+               if v in PYTHONS}
+    if testees:
+        return max(testees, key=lambda v: int(v.split(".")[1]))
     m = re.search(r"(?:requires-python|python_requires)\s*=\s*['\"]([^'\"]+)",
                   texte)
     if m:
@@ -109,6 +129,12 @@ def _fichiers_dependances(racine: Path, s: str) -> list[str]:
                        "requirements.txt", "requirements-dev.txt",
                        "requirements_test.txt", "requirements-test.txt",
                        "test-requirements.txt", "dev-requirements.txt",
+                       # les versions de test FIGEES du depot, installees
+                       # apres pytest : elles l'emportent (flask 2023 fige
+                       # pytest==7.3.0 ; le dernier pytest n'a plus
+                       # « notset », 54 tests sur 54 en erreur, 16/10)
+                       "requirements/tests.txt", "requirements/test.txt",
+                       "requirements/testing.txt",
                        "tox.ini"],
             "node": ["package.json", "package-lock.json", "yarn.lock"],
             "go": ["go.mod", "go.sum"], "maven": ["pom.xml"],
@@ -133,7 +159,7 @@ def dockerfile(racine: Path, suite: Suite) -> str:
         exigences = [n for n in _fichiers_dependances(racine, s)
                      if n.endswith(".txt")]
         installe = ["pip install --no-cache-dir --timeout 120 --retries 10 "
-                    "pytest"]
+                    "pytest 'setuptools<70'"]
         installe += [f"pip install --no-cache-dir --timeout 120 --retries 10 "
                      f"-r {n} || true" for n in exigences]
         if (racine / "setup.py").exists() or (racine / "pyproject.toml"
@@ -360,8 +386,14 @@ def statuts_langage(s: str, sortie: str) -> dict[str, str]:
     return {}
 
 
+# A CHANGER quand la recette d'installation change : les environnements
+# deja construits avec l'ancienne seraient reutilises tels quels (sphinx,
+# 16/10 : Jinja2 d'aujourd'hui restait apres le bornage par date)
+RECETTE = "2026-10-16f"
+
+
 def empreinte(racine: Path, suite: Suite) -> str:
-    h = hashlib.sha256(dockerfile(racine, suite).encode())
+    h = hashlib.sha256((RECETTE + dockerfile(racine, suite)).encode())
     for n in _fichiers_dependances(racine, sorte(suite)):
         h.update(n.encode() + b"\0" + (racine / n).read_bytes())
     return h.hexdigest()[:12]
@@ -385,6 +417,10 @@ def archive(racine: Path) -> bytes:
             if "bin" in parties and (racine.joinpath(
                     *parties[:parties.index("bin")]) / "obj").is_dir():
                 return None                       # sortie de build .NET
+            if "target" in parties:
+                parent = racine.joinpath(*parties[:parties.index("target")])
+                if any((parent / p).is_file() for p in _PROJETS_TARGET):
+                    return None                   # sortie de Rust / Maven
             if info.isdir() and (racine / info.name / "pyvenv.cfg").exists():
                 return None                       # un environnement virtuel
             if info.issym() or info.islnk():
@@ -401,10 +437,15 @@ def archive(racine: Path) -> bytes:
 
 # ------------------------------------------------------- la sortie pytest
 _STATUTS = "PASSED|FAILED|ERROR|SKIPPED|XFAIL|XPASS|xfail"
-_RESUME = re.compile(rf"^({_STATUTS}) (\S+?)(?: - .*)?$", re.M)
+# un identifiant : chemin::nom, et ses parametres entre crochets, qui
+# peuvent contenir des ESPACES (flask : « create_app2("foo", "bar") » —
+# coupes au premier espace, 6 tests etaient introuvables, 16/10)
+_ID = r"\S+::[^\s\[]+(?:\[.*?\])?"
+# (ou un fichier seul : erreur de COLLECTE, « ERROR tests/test_x.py »)
+_RESUME = re.compile(rf"^({_STATUTS}) ({_ID}|\S+\.py)(?= - |\s*$)", re.M)
 # la ligne detaillee (-v), comprise par TOUS les pytest : un vieux pytest
 # (requests 2016, essai du 12/10) ne liste pas les reussis dans son resume
-_DETAIL = re.compile(rf"^(\S+::\S+) ({_STATUTS})\b", re.M)
+_DETAIL = re.compile(rf"^({_ID}) ({_STATUTS})\b", re.M)
 
 
 def libelle_django(cible: str) -> str:
@@ -701,7 +742,10 @@ def installations_python(racine: Path) -> list[tuple[list[list[str]], bool]]:
     (variantes essayees dans l'ordre, obligatoire). Les `-r` qui echouent
     sont tolerees comme dans l'image ; le paquet essaie [test], [testing],
     puis nu."""
-    etapes: list[tuple[list[list[str]], bool]] = [([["pytest"]], True)]
+    # setuptools < 70 : le dernier qui a surement pkg_resources (sphinx
+    # 2021 l'importe : « No module named 'pkg_resources' », 16/10)
+    etapes: list[tuple[list[list[str]], bool]] = [
+        ([["pytest", "setuptools<70", "wheel"], ["pytest"]], True)]
     etapes += [([["-r", n]], False) for n in _fichiers_dependances(
         racine, "python") if n.endswith(".txt")]
     if (racine / "setup.py").exists() or (racine / "pyproject.toml").exists():
@@ -734,6 +778,55 @@ def _uv() -> list[str]:
     return ["uv"] if shutil.which("uv") else [sys.executable, "-m", "uv"]
 
 
+def _pytest_marche(python: str, dossier: Path, travail: Path) -> bool:
+    """pytest tourne-t-il vraiment, avec les greffons installes et la
+    configuration du depot ? Un test avec une assertion (la reecriture des
+    assertions casse en premier sur un Python trop recent), lance DEPUIS
+    le depot."""
+    sonde = dossier / "sonde_mael" / "test_sonde_mael.py"
+    sonde.parent.mkdir(exist_ok=True)
+    sonde.write_text("def test_sonde():\n    x = 1\n    assert x == 1\n",
+                     encoding="utf-8")
+    try:
+        r = subprocess.run([python, "-m", "pytest", "-q", "-p",
+                            "no:cacheprovider", "--rootdir", str(travail),
+                            str(sonde)],
+                           capture_output=True, timeout=300, cwd=travail)
+        return r.returncode == 0
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+
+
+def date_du_depot(racine: Path, *, vivant_jours: int = 7) -> str:
+    """La date du code du depot, pour installer ses dependances telles
+    qu'elles etaient (uv --exclude-newer) : la date du fichier le plus
+    recent — une archive GitHub date chaque fichier du jour du commit. Un
+    depot VIVANT (modifie ces derniers jours, celui d'un utilisateur) n'est
+    pas borne : « » . Deux jours de marge apres le commit. La date de
+    90 % des fichiers, pas du plus recent : les tests ajoutes (patch
+    officiel, reproduction de MAEL) sont d'aujourd'hui (sphinx, 16/10)."""
+    dates = []
+    for d, sous, fichiers in os.walk(racine):
+        sous[:] = [s for s in sous if s not in EXCLUS_COPIE]
+        for f in fichiers:
+            if f.startswith(".mael"):          # les marques de MAEL
+                continue
+            try:
+                dates.append(os.stat(os.path.join(d, f)).st_mtime)
+            except OSError:
+                pass
+    if not dates:
+        return ""
+    dates.sort()
+    plus = dates[int(len(dates) * 0.9) - 1 if len(dates) > 1 else 0]
+    if plus > time.time() - vivant_jours * 86400:
+        return ""
+    import datetime
+    jour = datetime.datetime.fromtimestamp(plus + 2 * 86400,
+                                           datetime.timezone.utc)
+    return jour.strftime("%Y-%m-%dT00:00:00Z")
+
+
 def _preparer_hote(racine: Path, suite: Suite, env: Environnement,
                    reseau: bool) -> Environnement:
     if sorte(suite) != "python":
@@ -764,11 +857,13 @@ def _preparer_hote(racine: Path, suite: Suite, env: Environnement,
     debut = time.monotonic()
     journal: list[str] = []
     try:
-        # uv ne fournit pas les tres vieux Python (3.5, 3.6) : la plus
-        # proche au-dessus (Kaggle 15/10, sympy-12236 : « Python 3.5 »)
+        # uv ne fournit plus les vieux Python (3.5 a 3.7) : la plus proche
+        # au-dessus QUI EXISTE, sans limite de nombre d'essais (requests
+        # 2015 annonce 3.4 : 3.5, 3.6, 3.7 echouaient, on s'arretait avant
+        # 3.8, la premiere disponible)
         proches = [version] + [v for v in reversed(PYTHONS)
                                if int(v.split(".")[1])
-                               > int(version.split(".")[1])][:3]
+                               > int(version.split(".")[1])]
         for version in proches:
             r = subprocess.run([*_uv(), "venv", "--seed", "--python",
                                 version, str(dossier / "venv")],
@@ -781,11 +876,24 @@ def _preparer_hote(racine: Path, suite: Suite, env: Environnement,
             env.journal = "\n".join(journal)[-3000:]
             return env
         python = str(_python_de(dossier / "venv"))
-        for variantes, obligatoire in installations_python(travail):
+        date = date_du_depot(racine)
+        if date:
+            journal.append(f"dependances du depot bornees au {date}")
+        for k, (variantes, obligatoire) in enumerate(
+                installations_python(travail)):
             ok = False
-            for a in variantes:
+            # les dependances DU DEPOT a la date de son code (sphinx 2021
+            # + Jinja2 d'aujourd'hui : incompatibles) ; pytest et setuptools
+            # (etape 0) restent recents ; a la date d'abord, sinon sans
+            # (un depot qui fige une version plus recente que son code)
+            # (construit avec le setuptools de l'environnement : celui de la
+            # date ne sait pas faire « -e » moderne — build_editable absent)
+            essais = [(a, ["--exclude-newer", date, "--no-build-isolation"])
+                      for a in variantes] if date and k else []
+            for a, borne in essais + [(a, []) for a in variantes]:
                 r = subprocess.run(
-                    [*_uv(), "pip", "install", "--python", python, *a],
+                    [*_uv(), "pip", "install", "--python", python, *borne,
+                     *a],
                     capture_output=True, timeout=DELAI_CONSTRUCTION,
                     cwd=travail, env={**os.environ,
                                       "SETUPTOOLS_SCM_PRETEND_VERSION":
@@ -800,6 +908,27 @@ def _preparer_hote(racine: Path, suite: Suite, env: Environnement,
                               f"{' '.join(variantes[-1])}")
                 env.journal = "\n".join(journal)[-3000:]
                 return env
+        if not _pytest_marche(python, dossier, travail):
+            # un pytest FIGE par le depot, trop vieux pour ce Python
+            # (requests 2015 : pytest 2.3.4 sous 3.8, « Call constructor
+            # takes at most 3 positional arguments », puis pytest-cov 1.6,
+            # 16/10) : pytest recent, et ses greffons avec lui
+            r = subprocess.run([*_uv(), "pip", "list", "--python", python,
+                                "--format", "json"], capture_output=True,
+                               timeout=120)
+            try:
+                greffons = [p["name"] for p in json.loads(_texte(r.stdout))
+                            if p["name"].lower().startswith(
+                                ("pytest-", "pytest_"))]
+            except (ValueError, KeyError, TypeError):
+                greffons = []
+            r = subprocess.run([*_uv(), "pip", "install", "--python", python,
+                                "-U", "pytest", "py", "pluggy", *greffons],
+                               capture_output=True,
+                               timeout=DELAI_CONSTRUCTION)
+            journal.append("pytest du depot inutilisable : remplace ("
+                           + " ".join(["pytest", *greffons]) + ")\n"
+                           + _texte(r.stderr)[-500:])
     except subprocess.TimeoutExpired:
         env.raison = f"construction trop longue (> {DELAI_CONSTRUCTION} s)"
         return env

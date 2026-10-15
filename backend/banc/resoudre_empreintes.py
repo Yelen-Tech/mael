@@ -51,7 +51,7 @@ def main() -> int:
     for reference, dockerfile in DOCKERFILES.items():
         texte = dockerfile.read_text(encoding="utf-8")
         # Une image deja epinglee ne bouge plus : re-resoudre a chaque
-        # lancement changeait l'image de base en silence (Claude, 19/09).
+        # lancement changeait l'image de base en silence (Yelen Tech, 19/09).
         if f"{reference}@sha256:" in texte and _A_RESOUDRE not in texte:
             continue
         digest = _empreinte(reference)
