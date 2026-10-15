@@ -472,9 +472,21 @@ def appliquer(espace: Espace, editions: list[Edition],
                          "les numeros")
             continue
         if len(pos) > 1:
+            # Kaggle v8 (sympy-12236) : les numeros seuls ne suffisaient
+            # pas — montrer les voisinages pour qu'il copie un contexte
+            # unique au tour suivant
+            brut = texte.split("\n")
+            voisinages = []
+            for p in pos[:2]:
+                debut_v = max(1, p - 2)
+                voisinages.append(
+                    f"— occurrence ligne {p} :\n" + "\n".join(
+                        f"{i}| {l}" for i, l in enumerate(
+                            brut[debut_v - 1:p + n + 1], start=debut_v)))
             refus.append(f"{f} : le texte CHERCHER apparait {len(pos)} fois "
                          f"(lignes {', '.join(map(str, pos[:5]))}) — "
-                         "ajoute des lignes voisines pour qu'il soit unique")
+                         "ajoute des lignes voisines pour qu'il soit "
+                         "unique :\n" + "\n".join(voisinages))
             continue
         debut = pos[0]
         fin = debut + n - 1

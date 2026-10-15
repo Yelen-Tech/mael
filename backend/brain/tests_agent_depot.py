@@ -111,12 +111,16 @@ def test_resolu_et_verifie(depot_jouet):
 
 def test_une_reproduction_qui_reussit_est_refaite_puis_abandonnee(
         depot_jouet):
-    moteur = FauxMoteur([FAUSSE_REPRO, FAUSSE_REPRO, JUSTE])
+    moteur = FauxMoteur([FAUSSE_REPRO, FAUSSE_REPRO, FAUSSE_REPRO, JUSTE])
     b = agent_depot.AgentDepot(moteur, depot_jouet).traiter(TICKET)
     assert "REUSSIT sur le code actuel" in moteur.recus[1][-1]["content"]
     assert not b.reproduction and not b.reproduction_valide
     assert not (depot_jouet / "tests/test_mael_ticket.py").exists()
     assert any("aucun test ne reproduit" in n for n in b.notes)
+    # le MOTIF de chaque refus est garde (Kaggle v8 : sans lui, aveugle)
+    refuses = [n for n in b.notes if n.startswith("reproduction, essai")]
+    assert len(refuses) == 3
+    assert all("REUSSIT sur le code actuel" in n for n in refuses)
     assert b.verdict == "modifie-non-verifie"     # jamais « verifie » sans preuve
 
 

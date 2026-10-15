@@ -99,7 +99,10 @@ def test_texte_ambigu_refuse(tmp_path):
     r = correctif.Correcteur(FauxMoteur([ambigu] * 3), tmp_path).corriger(
         TICKET, idx)
     assert not r.corrige
-    assert any("apparait 2 fois" in x for x in r.refus)
+    ambigus = [x for x in r.refus if "apparait 2 fois" in x]
+    assert ambigus
+    # les voisinages sont montres pour qu'il copie un contexte unique
+    assert "occurrence ligne" in ambigus[0] and "def total" in ambigus[0]
     assert (tmp_path / "boutique/panier.py").read_text() == PANIER
 
 

@@ -26,7 +26,7 @@ import time
 from collections import defaultdict
 from pathlib import Path
 
-from . import depot, localisation
+from . import depot, localisation, sous_modules
 
 
 def moitie(instance_id: str) -> str:
@@ -194,6 +194,8 @@ def evaluer(instance: dict, archives: Path, travail: Path,
     try:
         if not marque.exists():
             extraire(archive, depot_dir)
+            sous_modules.completer(instance["repo"], instance["commit"],
+                                   depot_dir, archives)
             marque.write_text(instance["commit"], encoding="utf-8")
     except (OSError, tarfile.TarError) as e:
         # ex. chemin > 260 caracteres sous Windows (depot pytest, 12/10) :
@@ -353,6 +355,9 @@ def controler(instance: dict, archives: Path, travail: Path) -> dict:
     copie = travail / f"controle-{instance['id']}"
     extraire(archive, copie)
     try:
+        manquants = sous_modules.completer(instance["repo"],
+                                           instance["commit"], copie,
+                                           archives)
         f2p = tests_officiels(instance, "f2p")
         p2p = tests_officiels(instance, "p2p")
         ok, err = appliquer_patch(copie, instance["test_patch"])
@@ -365,8 +370,11 @@ def controler(instance: dict, archives: Path, travail: Path) -> dict:
             return {"id": instance["id"], "verdict": "AUCUNE SUITE PYTHON"}
         env = ed.preparer(copie, min(suites, key=lambda s: len(s.dossier)))
         if not env.pret:
+            raison = env.raison + (f" ; sous-modules manquants : "
+                                   f"{', '.join(manquants)}" if manquants
+                                   else "")
             return {"id": instance["id"], "verdict": "ENVIRONNEMENT IMPOSSIBLE",
-                    "raison": env.raison, "journal": env.journal[-600:]}
+                    "raison": raison, "journal": env.journal[-600:]}
         cibles = fichiers_de_tests(instance)
         r = {"id": instance["id"], "version": instance.get("version", "")}
         for etape in ("avant", "apres"):

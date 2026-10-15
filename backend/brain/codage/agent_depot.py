@@ -34,7 +34,7 @@ from .envergure import PETIT, Envergure
 from .espace import CheminRefuse, Espace
 from .extraction import extraire
 
-TOURS_REPRODUCTION = 2
+TOURS_REPRODUCTION = 3
 TOURS_VERIFICATION = 2
 NOM_REPRODUCTION = "test_mael_ticket.py"
 EXEMPLES_MAX = 2
@@ -457,6 +457,11 @@ class AgentDepot:
                 messages += [{"role": "assistant", "content": rep.texte},
                              {"role": "user", "content": retour
                               + "\n\nRenvoie le test corrige."}]
+            # le motif est GARDE (Kaggle v8 : « apres 2 essais » sans la
+            # raison — impossible de distinguer test qui passe sur le bug
+            # et erreur de collecte ; la premiere ligne suffit au bilan)
+            b.notes.append(f"reproduction, essai {tour} refuse : "
+                           + " / ".join(retour.splitlines())[:300])
         b.notes.append("aucun test ne reproduit le ticket (apres "
                        f"{TOURS_REPRODUCTION} essais) : la correction sera "
                        "jugee sur les tests existants seulement")
