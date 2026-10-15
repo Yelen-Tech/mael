@@ -190,3 +190,56 @@ def test_motif_de_recherche_n_est_pas_un_arret(commande):
 ])
 def test_un_vrai_arret_reste_interdit(commande):
     assert classer(commande).niveau == NIVEAU.INTERDIT
+
+
+# ---- revue externe du 16/10/2026 : trois bugs du garde-fou --------------
+# 1) FAUX POSITIFS : un nom dans un chemin ou en argument n'est pas un
+#    binaire lance.
+@pytest.mark.parametrize("commande", [
+    "ls /home/john", "cat /etc/passwd | grep john", "which hashcat",
+    "systemctl status reboot.target", "ls /usr/share/doc/shred",
+    "cat notes/metasploit.txt", "man shutdown"])
+def test_un_nom_cite_n_est_pas_interdit(commande):
+    assert classer(commande).niveau != NIVEAU.INTERDIT
+
+
+@pytest.mark.parametrize("commande", [
+    "sudo /sbin/reboot", "nice -n 5 shutdown now", "xargs reboot",
+    "find / -name x -exec shred {} +", 'bash -c "john --wordlist=w h"',
+    "echo $(reboot)", "systemctl reboot", "systemctl --force poweroff",
+    "init 0", "env A=1 hashcat -m 0 h", "msfconsole"])
+def test_un_binaire_interdit_lance_reste_interdit(commande):
+    assert classer(commande).niveau == NIVEAU.INTERDIT
+
+
+# 2) MODIFICATION AU LIEU D'INTERDIT : rm recursif force sous toutes ses
+#    ecritures, partitionnement d'un disque.
+@pytest.mark.parametrize("commande", [
+    "rm -r -f /home/user", "rm --recursive --force /srv", "rm -Rf x",
+    "fdisk /dev/sda", "parted /dev/sda rm 1", "sfdisk /dev/sdb"])
+def test_destruction_interdite_sous_toutes_ses_formes(commande):
+    assert classer(commande).niveau == NIVEAU.INTERDIT
+
+
+@pytest.mark.parametrize("commande,niveau", [
+    ("rm -f x", NIVEAU.MODIFICATION), ("fdisk -l", NIVEAU.LECTURE),
+    ("parted -l", NIVEAU.LECTURE), ("parted /dev/sda print", NIVEAU.LECTURE)])
+def test_consultation_des_partitions_et_rm_simple(commande, niveau):
+    assert classer(commande).niveau == niveau
+
+
+# 3) BRANCHE MORTE de _premiere_sous_commande : un drapeau devant la
+#    sous-commande faisait passer une MODIFICATION pour une LECTURE.
+@pytest.mark.parametrize("commande", [
+    "systemctl --now stop sshd", "apt -y install nginx",
+    "apt-get -y remove openssh-server", "systemctl -H hote stop sshd",
+    "git -C /srv push", "ufw --dry-run enable"])
+def test_un_drapeau_devant_ne_cache_plus_la_modification(commande):
+    assert classer(commande).niveau == NIVEAU.MODIFICATION
+
+
+@pytest.mark.parametrize("commande", [
+    "systemctl --no-pager status sshd", "git log --oneline", "dpkg -l",
+    "rpm -qa", "pacman -Q", "ufw status", "ssh -Q cipher"])
+def test_les_lectures_restent_des_lectures(commande):
+    assert classer(commande).niveau == NIVEAU.LECTURE

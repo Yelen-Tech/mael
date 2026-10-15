@@ -205,12 +205,33 @@ MODIFICATION_TOUJOURS = {
     "adduser", "deluser", "gpasswd",
     "ip6tables",
     "at", "modprobe", "insmod", "rmmod",
-    "mkfs", "fdisk", "parted", "swapon", "swapoff", "fsck",
+    "mkfs", "swapon", "swapoff", "fsck",
     "ln", "rsync", "scp", "sftp", "tee", "patch",
     "kill", "killall", "pkill", "renice", "nice",
     "certbot", "update-ca-certificates", "ssh-copy-id",
     "make", "cmake", "gcc", "cargo",
 }
+
+# Un binaire interdit ne compte que s'il est en POSITION D'ETRE EXECUTE :
+# debut de ligne, apres ; & | ( ` $( , apres sudo/doas/nohup/exec/time/
+# watch/env/nice/xargs, dans `sh -c '...'`, `system("...")`, `print |
+# "..."`, `find -exec`. Revue externe du 16/10 : « ls /home/john »,
+# « man shutdown », « which hashcat », « systemctl status reboot.target »
+# etaient INTERDITS — le nom apparaissait, rien n'etait lance.
+_POSITION = (r"(?:^|[;&|(`{]|\$\(|\bsystem\s*\(\s*[\"']|\|\s*[\"']"
+             r"|\s-c\s+[\"']?|\s-exec(?:dir)?\s+"
+             r"|\bxargs(?:\s+-\S+)*\s+"
+             r"|\b(?:sudo|doas|nohup|exec|time|watch|command|builtin)"
+             r"(?:\s+-\S+(?:\s+\S+)?)*\s+"
+             r"|\bnice(?:\s+-n\s*-?\d+)?\s+|\benv(?:\s+\S+=\S*)*\s+)"
+             r"\s*(?:\S*/)?")
+_FIN_BINAIRE = r"(?![\w.-])"
+
+
+def _execute(noms: str) -> str:
+    """Motif : un de ces binaires, lance (pas cite)."""
+    return _POSITION + rf"(?:{noms}){_FIN_BINAIRE}"
+
 
 # Motifs formellement interdits. Bloques meme sur validation humaine.
 # Chaque entree : (regex, motif lisible).
@@ -219,12 +240,16 @@ INTERDITS = [
      "rm -rf : suppression recursive forcee"),
     (r"\brm\b.*\s/(\s|$)", "rm ciblant la racine /"),
     (r":\s*\(\s*\)\s*\{.*\|.*&.*\}", "fork bomb"),
-    (r"\bmkfs\b", "formatage de systeme de fichiers"),
+    (_POSITION + r"mkfs(?:\.\w+)?" + _FIN_BINAIRE,
+     "formatage de systeme de fichiers"),
     (r"\bdd\b.*\bof=/dev/(sd|nvme|hd|mapper)", "dd ecrit sur un disque brut"),
     (r">\s*/dev/(sd|nvme|hd)", "ecriture directe sur un disque"),
-    (r"\bshred\b", "effacement securise (destructif)"),
-    (r"\bwipefs\b", "effacement de signatures de FS"),
-    (r"\b(shutdown|reboot|halt|poweroff|init\s+0|init\s+6)\b",
+    (_execute("shred"), "effacement securise (destructif)"),
+    (_execute("wipefs"), "effacement de signatures de FS"),
+    (_execute("shutdown|reboot|halt|poweroff"),
+     "arret ou redemarrage de la machine"),
+    (_execute(r"init\s+[06]|telinit\s+[06]")
+     + r"|\bsystemctl\s+(?:-\S+\s+)*(?:poweroff|reboot|halt|kexec)\b",
      "arret ou redemarrage de la machine"),
     (r"\bchmod\s+(-[a-zA-Z]*\s+)*(0*777|a\+rwx)\b.*\s/(\s|$)",
      "chmod 777 sur la racine"),
@@ -242,12 +267,16 @@ INTERDITS = [
     (r"\bcurl\b.*\|\s*(sudo\s+)?(ba)?sh\b", "curl | sh : execution de code non verifie"),
     (r"\bwget\b.*\|\s*(sudo\s+)?(ba)?sh\b", "wget | sh : execution de code non verifie"),
     # Cassage de mots de passe / attaque active = hors mandat d'audit defensif.
-    (r"\b(hydra|medusa|john|hashcat|patator|crackmapexec|responder)\b",
+    (_execute("hydra|medusa|john|hashcat|patator|crackmapexec|responder"),
      "outil d'attaque active de mots de passe"),
     (r"\bnmap\b.*\bscript=.*(exploit|brute|dos)\b",
      "scripts nmap offensifs (exploit/brute/dos)"),
-    (r"\bmsfconsole\b|\bmetasploit\b", "framework d'exploitation"),
+    (_execute("msfconsole|msfvenom|metasploit"), "framework d'exploitation"),
 ]
+
+# Partitionnement : interdit, sauf la consultation de la table.
+PARTITIONNEURS = {"fdisk", "sfdisk", "gdisk", "cfdisk", "sgdisk", "parted"}
+_LECTURE_PARTITIONS = {"-l", "--list", "-p", "--print"}
 
 # Binaires en lecture SEULEMENT si un drapeau de test/vidage est present
 # (ex. `sshd -T` lit la config effective ; `sshd` seul demarre le service).
@@ -286,13 +315,22 @@ def _binaire_reel(jetons: list[str]) -> tuple[str, list[str]]:
     return "", []
 
 
-def _premiere_sous_commande(args: list[str]) -> str | None:
-    """Premier argument non-drapeau : la sous-commande (install, restart...)."""
+# Outils dont la sous-commande EST un drapeau (pacman -S, dpkg -i, ssh -Q).
+_SOUS_COMMANDE_DRAPEAU = {"pacman", "dpkg", "dpkg-divert", "rpm", "ssh",
+                          "fail2ban-client"}
+
+
+def _premiere_sous_commande(base: str, args: list[str]) -> str | None:
+    """La sous-commande (install, restart...) : le premier argument qui n'est
+    pas un drapeau — sauf pour les outils dont la sous-commande EST un
+    drapeau. Revue externe du 16/10 : les deux branches rendaient le
+    premier argument, si bien que « systemctl --now stop sshd » donnait
+    « --now » et passait pour une LECTURE."""
+    if base in _SOUS_COMMANDE_DRAPEAU:
+        return args[0] if args else None
     for a in args:
-        if a.startswith("-"):
-            # Pour pacman/dpkg/rpm, le drapeau EST la sous-commande.
+        if not a.startswith("-"):
             return a
-        return a
     return None
 
 
@@ -443,8 +481,25 @@ def _classer_segment(binaire: str, args: list[str]) -> Verdict:
         return Verdict(NIVEAU.MODIFICATION, base, ecriture,
                        signaux=["option-ecriture"])
 
+    if base == "rm" and _rm_recursif_force(args):
+        # quelle que soit l'ecriture : -rf, -r -f, --recursive --force
+        return Verdict(NIVEAU.INTERDIT, base,
+                       "rm -rf : suppression recursive forcee",
+                       signaux=["rm-recursif-force"])
+
+    if base in PARTITIONNEURS:
+        if base == "parted" and set(args) & {"print"} and not set(args) & {
+                "rm", "mkpart", "mklabel", "resizepart", "mkfs", "name",
+                "set", "toggle", "rescue"}:
+            return Verdict(NIVEAU.LECTURE, base, "table de partitions lue")
+        if _a_une_option(args, _LECTURE_PARTITIONS):
+            return Verdict(NIVEAU.LECTURE, base, "table de partitions lue")
+        return Verdict(NIVEAU.INTERDIT, base,
+                       f"{base} : partitionnement d'un disque",
+                       signaux=["partitionnement"])
+
     if base in LECTURE_SI_SOUS_COMMANDE:
-        sc = _premiere_sous_commande(args)
+        sc = _premiere_sous_commande(base, args)
         if sc in LECTURE_SI_SOUS_COMMANDE[base] and not ecrit_fichier:
             return Verdict(NIVEAU.LECTURE, base, f"{base} {sc} : consultation")
         return Verdict(NIVEAU.MODIFICATION, base,
@@ -475,8 +530,16 @@ def _classer_segment(binaire: str, args: list[str]) -> Verdict:
                        f"{base} modifie l'etat de la machine")
 
     if base in SOUS_COMMANDES_MODIFIANTES:
-        sc = _premiere_sous_commande(args)
-        if sc and sc in SOUS_COMMANDES_MODIFIANTES[base]:
+        modifiantes = SOUS_COMMANDES_MODIFIANTES[base]
+        # PRUDENCE : modifiant des qu'UN mot de la commande est une
+        # sous-commande modifiante, quels que soient les drapeaux devant
+        # (« apt -y install », « systemctl -H hote stop x » — une option a
+        # valeur inconnue ne doit pas faire passer une modification pour
+        # une lecture)
+        sc = next((a for a in args if a in modifiantes
+                   and (not a.startswith("-")
+                        or base in _SOUS_COMMANDE_DRAPEAU)), None)
+        if sc:
             return Verdict(NIVEAU.MODIFICATION, base,
                            f"{base} {sc} modifie l'etat", signaux=[sc])
         # sous-commande de lecture (status, list, show...) -> lecture
@@ -495,6 +558,22 @@ def _classer_segment(binaire: str, args: list[str]) -> Verdict:
     return Verdict(NIVEAU.MODIFICATION, base,
                    f"binaire inconnu ({base}) : validation requise",
                    signaux=["inconnu"])
+
+
+def _rm_recursif_force(args: list[str]) -> bool:
+    """rm recursif ET force, sous toutes ses ecritures."""
+    recursif = force = False
+    for a in args:
+        if a == "--":
+            break
+        if a in {"--recursive"}:
+            recursif = True
+        elif a == "--force":
+            force = True
+        elif a.startswith("-") and not a.startswith("--"):
+            recursif = recursif or "r" in a or "R" in a
+            force = force or "f" in a
+    return recursif and force
 
 
 def _a_une_option(args: list[str], options: set[str]) -> bool:
