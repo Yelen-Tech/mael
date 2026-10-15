@@ -389,7 +389,7 @@ def statuts_langage(s: str, sortie: str) -> dict[str, str]:
 # A CHANGER quand la recette d'installation change : les environnements
 # deja construits avec l'ancienne seraient reutilises tels quels (sphinx,
 # 16/10 : Jinja2 d'aujourd'hui restait apres le bornage par date)
-RECETTE = "2026-10-16f"
+RECETTE = "2026-10-16g"
 
 
 def empreinte(racine: Path, suite: Suite) -> str:
@@ -737,6 +737,22 @@ def _python_de(dossier: Path) -> Path:
                       else "bin/python")
 
 
+def outils_de_construction(racine: Path) -> list[str]:
+    """Les outils que le projet declare pour se construire ([build-system]
+    requires de pyproject.toml), sans setuptools ni wheel (deja poses)."""
+    import tomllib
+    try:
+        conf = tomllib.loads((racine / "pyproject.toml").read_text(
+            encoding="utf-8", errors="replace"))
+    except (OSError, tomllib.TOMLDecodeError):
+        return []
+    requis = conf.get("build-system", {}).get("requires", [])
+    if not isinstance(requis, list):
+        return []
+    return [r for r in requis if isinstance(r, str) and not re.match(
+        r"\s*(setuptools|wheel)\b(?![-_])", r, re.I)]
+
+
 def installations_python(racine: Path) -> list[tuple[list[list[str]], bool]]:
     """La recette de l'image Python (dockerfile) en installations pip :
     (variantes essayees dans l'ordre, obligatoire). Les `-r` qui echouent
@@ -746,6 +762,14 @@ def installations_python(racine: Path) -> list[tuple[list[list[str]], bool]]:
     # 2021 l'importe : « No module named 'pkg_resources' », 16/10)
     etapes: list[tuple[list[list[str]], bool]] = [
         ([["pytest", "setuptools<70", "wheel"], ["pytest"]], True)]
+    # les OUTILS DE CONSTRUCTION du projet, a la date de son code, AVANT sa
+    # construction (sans isolation) : le code compile et son execution
+    # utilisent le MEME numpy. Kaggle 15/10 (matplotlib 3.7, scikit-learn
+    # 1.3) : compile contre un numpy, execute avec un autre — « numpy.core.
+    # multiarray failed to import », 0 test sur 55
+    construction = outils_de_construction(racine)
+    if construction:
+        etapes.append(([construction], False))
     etapes += [([["-r", n]], False) for n in _fichiers_dependances(
         racine, "python") if n.endswith(".txt")]
     if (racine / "setup.py").exists() or (racine / "pyproject.toml").exists():

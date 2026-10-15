@@ -490,3 +490,19 @@ def test_limites_de_ressources():
     import os
     f = ed.limites_ressources(60)
     assert (f is None) if os.name == "nt" else callable(f)
+
+
+def test_outils_de_construction_installes_avant_le_projet(tmp_path):
+    """Kaggle 15/10 : matplotlib compile contre un numpy, execute avec un
+    autre. Les outils declares passent AVANT la construction."""
+    (tmp_path / "pyproject.toml").write_text(
+        '[build-system]\nrequires = ["setuptools>=64", "wheel", '
+        '"setuptools_scm>=7", "numpy>=1.25", "pybind11>=2.6"]\n')
+    assert ed.outils_de_construction(tmp_path) == [
+        "setuptools_scm>=7", "numpy>=1.25", "pybind11>=2.6"]
+    etapes = ed.installations_python(tmp_path)
+    assert etapes[1] == ([["setuptools_scm>=7", "numpy>=1.25",
+                           "pybind11>=2.6"]], False)
+    assert etapes[-1][0][-1] == ["-e", "."]          # le projet, ensuite
+    (tmp_path / "pyproject.toml").write_text("[tool.black]\n")
+    assert ed.outils_de_construction(tmp_path) == []
