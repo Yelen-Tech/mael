@@ -757,6 +757,77 @@ def installations_python(racine: Path) -> list[tuple[list[list[str]], bool]]:
 _SANS_RESEAU: list[str] | None = None
 
 
+# ------------------------------------- isolation en mode hote (principe 6)
+# Le code d'un TIERS (ses tests, l'exemple du ticket, son setup.py) ne voit
+# AUCUN secret de la machine : avant le 16/10, il recevait une copie de tout
+# l'environnement (HF_TOKEN, GITHUB_TOKEN, KAGGLE_KEY...).
+_SECRET = re.compile(r"TOKEN|SECRET|PASSWORD|PASSWD|CREDENTIAL|API_?KEY"
+                     r"|ACCESS_?KEY|PRIVATE|COOKIE|SESSION|AUTH|KAGGLE",
+                     re.I)
+_UTILES = {"PATH", "SYSTEMROOT", "WINDIR", "COMSPEC", "PATHEXT", "TEMP",
+           "TMP", "LANG", "LC_ALL", "LC_CTYPE", "TZ", "NUMBER_OF_PROCESSORS",
+           "PROCESSOR_ARCHITECTURE"}
+
+
+def environnement_sans_secrets(base: dict | None = None) -> dict:
+    """L'environnement, moins tout ce qui ressemble a un secret. Pour
+    l'INSTALLATION (pip a besoin du reseau, du cache, des mandataires)."""
+    return {k: v for k, v in (base if base is not None else os.environ
+                              ).items() if not _SECRET.search(k)}
+
+
+def environnement_minimal(dossier: Path, base: dict | None = None) -> dict:
+    """Pour EXECUTER le code d'un tiers : le strict necessaire, et un
+    repertoire personnel a lui (HOME, caches) dans l'environnement."""
+    base = base if base is not None else os.environ
+    maison = Path(dossier) / "maison"
+    tmp = Path(dossier) / "tmp"
+    for d in (maison, tmp):
+        d.mkdir(parents=True, exist_ok=True)
+    variables = {k: v for k, v in base.items()
+                 if k.upper() in _UTILES and not _SECRET.search(k)}
+    variables.update({
+        "HOME": str(maison), "USERPROFILE": str(maison),
+        "APPDATA": str(maison), "LOCALAPPDATA": str(maison),
+        "XDG_CACHE_HOME": str(maison / ".cache"), "TMPDIR": str(tmp),
+        "MPLCONFIGDIR": str(tmp), "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONUNBUFFERED": "1", "SETUPTOOLS_SCM_PRETEND_VERSION":
+        VERSION_SANS_GIT})
+    return variables
+
+
+# Limites des processus du code d'un tiers (Linux, macOS) : memoire,
+# processeur, taille des fichiers, pas de fichier « core ».
+LIMITE_MEMOIRE = 8 * 1024 ** 3
+LIMITE_FICHIER = 2 * 1024 ** 3
+
+
+def limites_ressources(delai: int):
+    """La fonction a passer a subprocess (preexec_fn) ; None sous Windows,
+    ou il n'existe pas d'equivalent simple : la limite est alors le delai,
+    et c'est DIT dans les limites connues."""
+    if os.name == "nt":
+        return None
+
+    def appliquer():
+        import resource
+        for nom, valeur in (("RLIMIT_AS", LIMITE_MEMOIRE),
+                            ("RLIMIT_CPU", delai + 60),
+                            ("RLIMIT_FSIZE", LIMITE_FICHIER),
+                            ("RLIMIT_CORE", 0)):
+            r = getattr(resource, nom, None)
+            if r is None:
+                continue
+            try:
+                _, dur = resource.getrlimit(r)
+                plafond = valeur if dur == resource.RLIM_INFINITY \
+                    else min(valeur, dur)
+                resource.setrlimit(r, (plafond, plafond))
+            except (ValueError, OSError):
+                pass
+    return appliquer
+
+
 def prefixe_sans_reseau() -> list[str]:
     """`unshare -rn` s'il est permis ici (Linux, espaces de noms
     utilisateur), sinon rien : les tests auront le reseau."""
@@ -791,7 +862,9 @@ def _pytest_marche(python: str, dossier: Path, travail: Path) -> bool:
         r = subprocess.run([python, "-m", "pytest", "-q", "-p",
                             "no:cacheprovider", "--rootdir", str(travail),
                             str(sonde)],
-                           capture_output=True, timeout=300, cwd=travail)
+                           capture_output=True, timeout=300, cwd=travail,
+                           env=environnement_minimal(dossier),
+                           preexec_fn=limites_ressources(300))
         return r.returncode == 0
     except (OSError, subprocess.TimeoutExpired):
         return False
@@ -895,7 +968,7 @@ def _preparer_hote(racine: Path, suite: Suite, env: Environnement,
                     [*_uv(), "pip", "install", "--python", python, *borne,
                      *a],
                     capture_output=True, timeout=DELAI_CONSTRUCTION,
-                    cwd=travail, env={**os.environ,
+                    cwd=travail, env={**environnement_sans_secrets(),
                                       "SETUPTOOLS_SCM_PRETEND_VERSION":
                                       VERSION_SANS_GIT})
                 journal.append(_texte(r.stdout)[-1000:] +
@@ -952,13 +1025,12 @@ def _executer_hote(env: Environnement, racine: Path, cibles: list[str],
             t.extractall(travail, filter="data")
         commande = commande_hors_ligne(env.suite, cibles, racine)
         commande[0] = str(_python_de(dossier / "venv"))
-        variables = {**os.environ, "PYTHONDONTWRITEBYTECODE": "1",
-                     "PYTHONUNBUFFERED": "1"}
-        variables.pop("PYTHONPATH", None)
         try:
             r = subprocess.run([*prefixe_sans_reseau(), *commande],
                                capture_output=True, timeout=delai,
-                               cwd=travail, env=variables)
+                               cwd=travail,
+                               env=environnement_minimal(dossier),
+                               preexec_fn=limites_ressources(delai))
             ex.code = r.returncode
             ex.sortie = _texte(r.stdout) + _texte(r.stderr)
         except subprocess.TimeoutExpired:
@@ -995,14 +1067,14 @@ def executer_script(env: Environnement, racine: Path | str, code: str, *,
             travail = dossier / "travail"
             with tarfile.open(fileobj=io.BytesIO(archive(racine))) as t:
                 t.extractall(travail, filter="data")
-            variables = {**os.environ, "PYTHONDONTWRITEBYTECODE": "1"}
-            variables.pop("PYTHONPATH", None)
             commande = [*prefixe_sans_reseau(),
                         str(_python_de(dossier / "venv")), "-"]
             try:
                 r = subprocess.run(commande, input=code.encode("utf-8"),
                                    capture_output=True, timeout=delai,
-                                   cwd=travail, env=variables)
+                                   cwd=travail,
+                                   env=environnement_minimal(dossier),
+                                   preexec_fn=limites_ressources(delai))
                 ex.code, ex.sortie = r.returncode, (_texte(r.stdout)
                                                     + _texte(r.stderr))
             except subprocess.TimeoutExpired:

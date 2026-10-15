@@ -19,6 +19,8 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
+from . import donnees_tierces
+
 CANDIDATS = 8
 SIGNATURES = 3                  # fonctions montrees par candidat
 
@@ -37,6 +39,7 @@ retenu et la signature de ses fonctions concernees. Dis quels fichiers (1 a
 corriger le ticket — pas celui qui l'utilise seulement.
 Reponds en JSON : {"fichiers": ["chemin", ...], "raison": "une phrase"}.
 Recopie les chemins EXACTEMENT comme dans la liste."""
+SYSTEME += donnees_tierces.AVERTISSEMENT        # principe 5, 16/10
 
 
 @dataclass
@@ -99,7 +102,8 @@ def choisir(backend, ticket: str, lieux, textes: dict[str, str],
     t = ticket.strip()
     if len(t) > limite_ticket:
         t = t[:limite_ticket] + "\n[... ticket coupe ...]"
-    message = (f"TICKET :\n{t}\n\nCANDIDATS (ordre calcule par MAEL) :\n"
+    message = ("TICKET :\n" + donnees_tierces.encadrer("TICKET", t)
+               + "\n\nCANDIDATS (ordre calcule par MAEL) :\n"
                + resume(lieux, textes))
     try:
         rep = backend.completer(systeme=SYSTEME, messages=[

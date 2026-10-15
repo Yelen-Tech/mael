@@ -457,3 +457,36 @@ def test_date_du_depot(tmp_path):
     for k in range(9):                    # un depot VIVANT : pas de borne
         (tmp_path / f"v{k}.py").write_text("y")
     assert ed.date_du_depot(tmp_path) == ""
+
+
+def test_le_code_d_un_tiers_ne_voit_aucun_secret(tmp_path, monkeypatch):
+    """Principe 6 (16/10) : avant, le code d'un depot tiers recevait tout
+    l'environnement, jetons compris. Execution reelle, en mode hote."""
+    import sys
+    monkeypatch.setenv("HF_TOKEN", "hf_secret")
+    monkeypatch.setenv("GITHUB_TOKEN", "ghp_secret")
+    monkeypatch.setenv("KAGGLE_KEY", "k_secret")
+    monkeypatch.setenv("MON_API_KEY", "x")
+    monkeypatch.setattr(ed, "_python_de", lambda d: Path(sys.executable))
+    monkeypatch.setattr(ed, "_SANS_RESEAU", [])
+    depot_ = tmp_path / "depot"
+    depot_.mkdir()
+    (depot_ / "a.py").write_text("x = 1\n")
+    env = ed.Environnement(suite=Suite(dossier="", commande=["python", "-m",
+                                                             "pytest"]),
+                           pret=True, hote=str(tmp_path / "env"))
+    ex = ed.executer_script(env, depot_, "import os, json\n"
+                            "print(json.dumps(dict(os.environ)))\n")
+    import json
+    vu = json.loads(ex.sortie.strip().splitlines()[-1])
+    assert not {"HF_TOKEN", "GITHUB_TOKEN", "KAGGLE_KEY", "MON_API_KEY"} & set(vu)
+    assert vu["HOME"] == str(tmp_path / "env" / "maison")   # chez lui
+    sans = ed.environnement_sans_secrets({"PATH": "p", "HF_TOKEN": "s",
+                                          "PIP_INDEX_URL": "u"})
+    assert sans == {"PATH": "p", "PIP_INDEX_URL": "u"}
+
+
+def test_limites_de_ressources():
+    import os
+    f = ed.limites_ressources(60)
+    assert (f is None) if os.name == "nt" else callable(f)

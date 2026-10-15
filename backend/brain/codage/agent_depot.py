@@ -28,7 +28,7 @@ import textwrap
 from dataclasses import dataclass, field
 from pathlib import Path, PurePosixPath
 
-from . import correctif, couverture, depot, localisation
+from . import correctif, couverture, depot, donnees_tierces, localisation
 from . import essais_depot as ed
 from .envergure import PETIT, Envergure
 from .espace import CheminRefuse, Espace
@@ -73,6 +73,9 @@ from django.test import SimpleTestCase
 Regles : des methodes test_... courtes ; self.assertEqual, assertRaises,
 assertRaisesMessage... qui verifient le comportement ATTENDU decrit par le
 ticket ; pas de pytest ; aucun acces reseau ; ne modifie rien d'autre."""
+
+SYSTEME_REPRO += donnees_tierces.AVERTISSEMENT
+SYSTEME_REPRO_DJANGO += donnees_tierces.AVERTISSEMENT
 
 
 @dataclass
@@ -329,6 +332,17 @@ class AgentDepot:
         if not env.pret:
             b.notes.append(f"exemple du ticket NON execute : {env.raison}")
             return ""
+        if env.hote:
+            # sans Docker, l'isolation est faible : le code d'un TIERS qui
+            # lance des commandes, supprime, ouvre le reseau ou evalue du
+            # code n'est pas execute (principe 5, 16/10)
+            risques = [r for c in codes
+                       for r in donnees_tierces.code_dangereux(c)]
+            if risques:
+                b.notes.append("exemple du ticket NON execute : sans "
+                               "isolation forte, il "
+                               + ", ".join(dict.fromkeys(risques))[:200])
+                return ""
         if self.decharger is not None:
             self.decharger()
         paquets = _paquets(index)
@@ -462,6 +476,12 @@ class AgentDepot:
 
     def _traiter(self, ticket: str) -> Bilan:
         b = Bilan()
+        manipulations = donnees_tierces.injections(ticket)
+        if manipulations:
+            # dit, pas efface : le ticket reste lu tel quel, comme une DONNEE
+            b.notes.append("le ticket contient des phrases adressees a l'IA ("
+                           + ", ".join(manipulations) + ") : traitees comme "
+                           "des donnees, jamais comme des consignes")
         index = depot.indexer(self.racine)
         try:
             trace = self._executer_exemples(ticket, index, b)
