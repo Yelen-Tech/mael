@@ -11,7 +11,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mael"
-version = "0.1.0"
+version = "0.2.0"
 description = "Audit et cybersecurite en terminal, chez vous, avec votre propre modele local."
 # readme : le README public est a la racine du depot, hors de ce dossier
 # (setuptools refuse un fichier exterieur au projet).
