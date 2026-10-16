@@ -150,7 +150,7 @@ MAEL est mesuré, et les chiffres sont publiés tels quels :
 |---|---|
 | Tests automatiques du projet (Windows) | 1 467 + 133 (Django), tous verts ; ruff propre |
 | Couverture du cœur (`backend/brain`) par ces tests | 87 % des instructions (mesure du 16/10, avant l'ajout des tests des moteurs et du bac à sable) |
-| Projets de SWE-bench Lite dont MAEL installe et lance les tests (tests officiels en échec avant le correctif officiel, réussis après) | 9 sur 12, soit 248 tickets sur 300 ; matplotlib, scikit-learn et astropy (code C à compiler) restent à contrôler sous Linux |
+| Projets de SWE-bench Lite dont MAEL installe et lance les tests (tests officiels en échec avant le correctif officiel, réussis après) | 10 sur 12, soit 271 tickets sur 300 (matplotlib validé sous Linux le 16/10) ; scikit-learn (« à voir ») et astropy (code de 2017, construction à confirmer) restent |
 | Bases de données rejouées en vrai (clé étrangère fautive refusée) | PostgreSQL, MySQL, MariaDB, SQL Server, Oracle, Cassandra |
 | pom.xml / go.mod / .csproj produits, résolus par les outils officiels | 36 / 36 |
 | Localisation sur 63 tickets réels de SWE-bench Lite (sans modèle, mesure du 12/10) | bon fichier 1er : 29 (46 %) ; dans les 5 premiers : 51 (81 %) ; dans les 10 premiers : 55 (87 %) |
@@ -158,7 +158,7 @@ MAEL est mesuré, et les chiffres sont publiés tels quels :
 | Juges ORM (JPA, EF Core, GORM, Eloquent, Doctrine) sur Spring PetClinic, eShopOnWeb, playground GORM | 0 faux défaut |
 | Tests d'un dépôt exécutés et lus test par test (Python, Go, Maven, .NET, Node) | 5 langages éprouvés en conteneur |
 | `mael audit` sur Vulnerable-Flask-App (application volontairement vulnérable) | 7 critiques, 43 élevées, 23 moyennes ; gitleaks : 3 clés piégées sur 3 |
-| Tickets SWE-bench résolus de bout en bout | **pas encore mesuré sur un lot** |
+| Tickets SWE-bench Lite résolus de bout en bout (répétitions des 15-16/10 sur 20 tickets, détail dans [docs/examen-swebench-2026-10.md](docs/examen-swebench-2026-10.md)) | **1 sur 20 en auto-notation stricte** (reproduction écrite, en échec avant, réussie après, sans régression) ; note officielle sb-cli pas encore calculée |
 
 ## Limites connues
 
