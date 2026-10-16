@@ -14,6 +14,9 @@ s'il l'a prouvé par les tests.
   date du code avant lui ; les motifs de refus des reproductions sont
   consignés ; les voisinages sont montrés quand un texte à remplacer est
   ambigu.
+- **v10** (16/10) : MAEL `fd5fe41` — l'environnement de test est construit
+  au niveau qui porte la recette (racine du dépôt), ce qui répare sympy
+  (mpmath) et scikit-learn (`_check_build`).
 
 ## Verdicts ticket par ticket
 
@@ -63,24 +66,56 @@ s'il l'a prouvé par les tests.
 3. **L'honnêteté tient** : aucun faux « résolu » ; les correctifs faux sont
    testés, vus échouer, et dits.
 
+## v10 — la chaîne est réparée, le modèle mis à nu
+
+| Ticket | v10 | Note v10 |
+|---|---|---|
+| sympy-21627 | échec | **reproduction validée** (morte à la collecte en v9) |
+| sympy-12236 | modifié-non-vérifié | **reproduction validée** |
+| sympy-14774 | échec | **reproduction validée** |
+| sympy-12454 | échec | **reproduction validée** |
+| sympy-22005 | échec | **reproduction validée** |
+| sympy-13031 | échec | le modèle a écrit 3 tests qui passent sur le code buggé |
+| sympy-14308 | modifié-non-vérifié | blocs illisibles du modèle (2 essais) |
+| django-13230 | modifié-non-vérifié | **perdu** : 3 tests du modèle passent sur le code buggé (il l'avait réussi en v8 et v9 — variance du modèle, la chaîne a refusé ses mauvais tests honnêtement) |
+| django-15202, 14787, 15695, pylint-7114, scikit-learn-25747 | modifié-non-vérifié | correctifs appliqués, non prouvés |
+| pytest-9359, matplotlib-25433, django-11422, 11742, 15819, xarray-4248, seaborn-3010 | échec | reproductions validées ; correctifs testés et faux, dits honnêtement |
+
+| Compteurs | v8 | v9 | v10 |
+|---|---|---|---|
+| Résolu-vérifié | 1 | 1 | **0** |
+| Reproductions exécutées et confirmées | 9 | 8 | **12 (record, dont 5/7 sympy)** |
+| Modifié-non-vérifié | 10 | 11 | 8 |
+| Échec dit honnêtement | 9 | 8 | 12 |
+
+**Lecture honnête.** Le correctif d'environnement a pleinement marché :
+les tests tournent partout (sauf astropy, construction 2017 toujours à
+confirmer, et scikit-learn dont le contrôle reste « à voir »). Le score
+baisse à 0/20 **parce que le thermomètre est devenu juste** : en v8/v9,
+« modifié-non-vérifié » couvrait des correctifs jamais testés ; en v10 ils
+sont testés, et la plupart échouent. Le goulot d'étranglement n'est plus
+l'environnement ni la chaîne : c'est le **modèle** (tests écrits « à
+l'envers », qui attendent le bug ; correctifs qui ne passent pas ses
+propres tests).
+
 ## La note, sans détour
 
-- **Auto-notation stricte de MAEL : 1 / 20 résolu-vérifié (5 %).** C'est la
-  seule note mesurée à ce jour. « Modifié-non-vérifié » ne compte pas :
-  certains de ces correctifs sont peut-être bons, mais non prouvés.
+- **Auto-notation stricte de MAEL : 1 / 20 en v8 et v9, 0 / 20 en v10.**
+  « Modifié-non-vérifié » ne compte pas : certains de ces correctifs sont
+  peut-être bons, mais non prouvés.
 - **La note officielle SWE-bench (sb-cli, conteneurs) n'a pas encore été
   calculée** sur ce lot ; elle exige de rejouer `predictions.jsonl` dans
   les conteneurs de l'équipe SWE-bench.
-- Le tirage de 20 tickets n'est pas le benchmark entier : il contient 7
-  tickets sympy bloqués par l'environnement de l'agent (cause identifiée,
-  correction en cours) — le taux sur les 300 ne peut pas en être déduit.
+- Le tirage de 20 tickets n'est pas le benchmark entier — le taux sur les
+  300 ne peut pas en être déduit.
 
 ## Prochaines étapes (dans l'ordre)
 
-1. Réparer l'environnement de test de l'agent pour sympy (mpmath) et
-   scikit-learn (`_check_build`) — 8 tickets du tirage concernés.
+1. Guider l'écriture des tests de reproduction par le modèle (motif de
+   refus n°1 : « ton test réussit sur le code actuel ») et la localisation
+   fine — chantier modèle, maintenant que tout s'exécute.
 2. Confirmer sous Linux la construction d'astropy 2017 (sous-module git
-   désormais récupéré).
+   désormais récupéré) et le contrôle de scikit-learn.
 3. Calculer la note officielle sb-cli sur `predictions.jsonl`.
-4. Nouvelle répétition (v10), même tirage, pour mesurer l'effet de ces
-   corrections avant l'examen des 300.
+4. Nouvelle répétition (v11), même tirage, pour mesurer l'effet du
+   chantier modèle avant l'examen des 300.

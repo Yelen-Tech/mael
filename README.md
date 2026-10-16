@@ -158,7 +158,7 @@ MAEL est mesuré, et les chiffres sont publiés tels quels :
 | Juges ORM (JPA, EF Core, GORM, Eloquent, Doctrine) sur Spring PetClinic, eShopOnWeb, playground GORM | 0 faux défaut |
 | Tests d'un dépôt exécutés et lus test par test (Python, Go, Maven, .NET, Node) | 5 langages éprouvés en conteneur |
 | `mael audit` sur Vulnerable-Flask-App (application volontairement vulnérable) | 7 critiques, 43 élevées, 23 moyennes ; gitleaks : 3 clés piégées sur 3 |
-| Tickets SWE-bench Lite résolus de bout en bout (répétitions des 15-16/10 sur 20 tickets, détail dans [docs/examen-swebench-2026-10.md](docs/examen-swebench-2026-10.md)) | **1 sur 20 en auto-notation stricte** (reproduction écrite, en échec avant, réussie après, sans régression) ; note officielle sb-cli pas encore calculée |
+| Tickets SWE-bench Lite résolus de bout en bout (répétitions des 15-16/10 sur 20 tickets, détail dans [docs/examen-swebench-2026-10.md](docs/examen-swebench-2026-10.md)) | **1 sur 20 (v8, v9) puis 0 sur 20 (v10) en auto-notation stricte** — la v10 teste enfin tout pour de vrai, et les correctifs du modèle échouent majoritairement ; la chaîne, elle, est prouvée (12 reproductions validées, record) ; note officielle sb-cli pas encore calculée |
 
 ## Limites connues
 
