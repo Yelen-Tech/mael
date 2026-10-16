@@ -53,7 +53,20 @@ Reponds par UN seul bloc :
 Regles : importe le code du depot comme le font ses tests existants ;
 des fonctions test_... courtes ; une assertion qui verifie le comportement
 ATTENDU decrit par le ticket ; aucun acces reseau ; ne modifie rien
-d'autre."""
+d'autre.
+
+Le piege a eviter (Kaggle 16/10 : motif de refus n°1) : un test qui
+ATTEND l'erreur du bug REUSSIT sur le code buggé — il ne reproduit rien.
+
+    # MAUVAIS : reussit tant que le bug est la, echoue une fois corrige
+    with raises(RecursionError):
+        expr.is_zero
+    # BON : sur le code actuel l'erreur du bug leve et le test ECHOUE ;
+    # une fois corrige, l'appel rend une valeur et le test REUSSIT
+    assert expr.is_zero in (True, False, None)
+
+Si le ticket montre une erreur, le bon test appelle le code SANS l'attendre
+et verifie le resultat correct (valeur, type, absence d'effet de bord)."""
 
 # Django se teste par son lanceur (tests/runtests.py, unittest) : une
 # fonction pytest n'y est jamais executee (Kaggle 15/10, django-15202 :
@@ -72,7 +85,12 @@ from django.test import SimpleTestCase
 
 Regles : des methodes test_... courtes ; self.assertEqual, assertRaises,
 assertRaisesMessage... qui verifient le comportement ATTENDU decrit par le
-ticket ; pas de pytest ; aucun acces reseau ; ne modifie rien d'autre."""
+ticket ; pas de pytest ; aucun acces reseau ; ne modifie rien d'autre.
+
+Le piege a eviter : assertRaises sur l'erreur du bug REUSSIT sur le code
+buggé — il ne reproduit rien. Le bon test appelle le code et verifie le
+resultat ATTENDU : sur le code actuel il ECHOUE, une fois corrige il
+REUSSIT."""
 
 SYSTEME_REPRO += donnees_tierces.AVERTISSEMENT
 SYSTEME_REPRO_DJANGO += donnees_tierces.AVERTISSEMENT
@@ -449,8 +467,10 @@ class AgentDepot:
                     return
                 if propres and all(s == "PASSED" for s in propres.values()):
                     retour = ("ton test REUSSIT sur le code actuel : il ne "
-                              "reproduit pas le bug. L'assertion doit verifier "
-                              "le comportement ATTENDU par le ticket.")
+                              "reproduit pas le bug. N'ATTENDS pas l'erreur "
+                              "du bug (raises, try/except) : appelle le code "
+                              "et verifie le resultat ATTENDU par le ticket "
+                              "— sur le code actuel le test doit ECHOUER.")
                 else:
                     retour = ("ton test ne s'execute pas (erreur de collecte "
                               "ou d'import) :\n" + _echecs(ex, [chemin])
