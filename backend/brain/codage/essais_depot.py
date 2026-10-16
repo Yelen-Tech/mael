@@ -606,13 +606,33 @@ def _texte(octets: bytes) -> str:
     return (octets or b"").decode("utf-8", "replace")
 
 
+def _niveau_installation(racine: Path, suite: Suite) -> tuple[Path, Suite]:
+    """Le niveau ou l'environnement se CONSTRUIT : le dossier de la suite
+    s'il porte sa propre recette (setup.py / pyproject.toml — sous-projet
+    d'un monodepot), sinon la racine du depot quand ELLE la porte.
+    Kaggle v9 (16/10) : pour sympy et scikit-learn, la suite du fichier
+    designe est le paquet (« sympy ») ; construire depuis ce sous-dossier
+    (sans setup.py) donnait un environnement SANS les dependances du projet
+    (mpmath : toutes les reproductions mortes a la collecte), et l'etat
+    courant copie ensuite au mauvais niveau n'aurait jamais teste les
+    corrections. La suite rendue suit le niveau retenu (dossier "" a la
+    racine) pour que l'execution, elle, reste coherente."""
+    if not suite.dossier:
+        return racine, suite
+    sous = racine / suite.dossier
+    if (sous / "setup.py").exists() or (sous / "pyproject.toml").exists():
+        return sous, suite
+    if (racine / "setup.py").exists() or (racine / "pyproject.toml").exists():
+        return racine, Suite(dossier="", commande=list(suite.commande),
+                             motifs_py=list(suite.motifs_py))
+    return sous, suite
+
+
 def preparer(racine: Path | str, suite: Suite, *, reseau: bool = True
              ) -> Environnement:
     """Construit (une fois) l'image de l'environnement du depot. Sans
     reseau, seule une image deja construite peut servir."""
-    racine = Path(racine)
-    if suite.dossier:
-        racine = racine / suite.dossier
+    racine, suite = _niveau_installation(Path(racine), suite)
     env = Environnement(suite=suite)
     if mode_hote():
         return _preparer_hote(racine, suite, env, reseau)

@@ -506,3 +506,33 @@ def test_outils_de_construction_installes_avant_le_projet(tmp_path):
     assert etapes[-1][0][-1] == ["-e", "."]          # le projet, ensuite
     (tmp_path / "pyproject.toml").write_text("[tool.black]\n")
     assert ed.outils_de_construction(tmp_path) == []
+
+
+def test_niveau_installation_sans_recette_dans_le_sous_dossier(tmp_path):
+    """Kaggle v9 (sympy, scikit-learn) : la suite du fichier designe est le
+    paquet, sans setup.py ; construire la donnait un env sans mpmath, et
+    les corrections copiees au mauvais niveau n'etaient jamais testees."""
+    (tmp_path / "setup.py").write_text("x = 1\n")
+    (tmp_path / "sympy").mkdir()
+    suite = Suite(dossier="sympy", commande=["pytest"])
+    racine, eff = ed._niveau_installation(tmp_path, suite)
+    assert racine == tmp_path and eff.dossier == ""
+    assert eff.commande == suite.commande
+
+
+def test_niveau_installation_sous_projet_autonome_garde(tmp_path):
+    """Un sous-projet avec sa propre recette reste le niveau de
+    construction (monodepot)."""
+    (tmp_path / "setup.py").write_text("x = 1\n")
+    (tmp_path / "back").mkdir()
+    (tmp_path / "back" / "pyproject.toml").write_text("[project]\n")
+    suite = Suite(dossier="back", commande=["pytest"])
+    racine, eff = ed._niveau_installation(tmp_path, suite)
+    assert racine == tmp_path / "back" and eff.dossier == "back"
+
+
+def test_niveau_installation_sans_recette_nulle_part_inchange(tmp_path):
+    (tmp_path / "tests").mkdir()
+    suite = Suite(dossier="tests", commande=["pytest"])
+    racine, eff = ed._niveau_installation(tmp_path, suite)
+    assert racine == tmp_path / "tests" and eff.dossier == "tests"

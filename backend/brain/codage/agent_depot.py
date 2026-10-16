@@ -297,15 +297,18 @@ class AgentDepot:
         self.couverture: dict = {}       # ce que l'exemple du ticket traverse
 
     # ---------------------------------------------------------- les tests
-    def _lancer(self, env, tests: list[str], suite) -> ed.Execution:
+    def _lancer(self, env, tests: list[str]) -> ed.Execution:
         if self.decharger is not None:
             self.decharger()                    # 8 Go : le modele OU Docker
+        # les cibles suivent le NIVEAU de l'environnement (env.suite), pas
+        # forcement la suite du fichier designe (sympy : env a la racine)
         return ed.executer_tests(env, self.racine,
-                                 [_relatif_a(suite, t) for t in tests])
+                                 [_relatif_a(env.suite, t) for t in tests])
 
-    def _requalifier(self, ex: ed.Execution, suite) -> ed.Execution:
+    def _requalifier(self, ex: ed.Execution, env) -> ed.Execution:
         """Les identifiants de pytest sont relatifs au dossier de la suite :
         on les remet relatifs au depot."""
+        suite = env.suite
         if suite and suite.dossier and ex.statuts:
             ex.statuts = {f"{suite.dossier}/{t}": s
                           for t, s in ex.statuts.items()}
@@ -436,8 +439,7 @@ class AgentDepot:
                     b.notes.append("test de reproduction ecrit, NON execute "
                                    "(pas d'environnement)")
                     return
-                ex = self._requalifier(self._lancer(env, [chemin], suite),
-                                       suite)
+                ex = self._requalifier(self._lancer(env, [chemin]), env)
                 propres = {t: s for t, s in ex.statuts.items()
                            if t.startswith(chemin)}
                 if any(s == "FAILED" for s in propres.values()):
@@ -539,8 +541,7 @@ class AgentDepot:
         self._reproduire(ticket, index, lieux, env, suite, lies, b)
         b.tests = ([b.reproduction] if b.reproduction else []) + lies
         if env and env.pret and b.tests:
-            b.avant = self._requalifier(self._lancer(env, b.tests, suite),
-                                        suite)
+            b.avant = self._requalifier(self._lancer(env, b.tests), env)
         # les originaux des fichiers de code, pour le diff final
         originaux: dict[str, str] = {}
         correcteur = correctif.Correcteur(self.backend, self.racine,
@@ -560,8 +561,7 @@ class AgentDepot:
                 break
             if not (env and env.pret and b.tests):
                 break
-            b.apres = self._requalifier(self._lancer(env, b.tests, suite),
-                                        suite)
+            b.apres = self._requalifier(self._lancer(env, b.tests), env)
             b.comparaison = ed.comparer(b.avant, b.apres) if b.avant else None
             repro_ok = (not b.reproduction_valide) or all(
                 s == "PASSED" for t, s in b.apres.statuts.items()
