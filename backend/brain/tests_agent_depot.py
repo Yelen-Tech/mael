@@ -101,6 +101,11 @@ def test_resolu_et_verifie(depot_jouet):
     # le modele a vu un test existant (style, imports) et le chemin impose
     vu = moteur.recus[0][0]["content"]
     assert "tests/test_panier.py" in vu and "tests/test_mael_ticket.py" in vu
+    # la correction recoit le test de reproduction valide (la spec a faire
+    # passer) — Kaggle v10 : des correctifs testes et faux sans l'avoir vu
+    vu_corr = moteur.recus[1][0]["content"]
+    assert "TEST DE REPRODUCTION ECRIT PAR MAEL" in vu_corr
+    assert "Panier([1, 2, 3]).total() == 6" in vu_corr
     texte = agent_depot.rendre(b)
     assert texte.startswith("# RESOLU ET VERIFIE") and "```diff" in texte
     journal = (depot_jouet / ".mael" / "journal-ticket.md").read_text(

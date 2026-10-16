@@ -562,6 +562,15 @@ class AgentDepot:
         b.tests = ([b.reproduction] if b.reproduction else []) + lies
         if env and env.pret and b.tests:
             b.avant = self._requalifier(self._lancer(env, b.tests), env)
+        # la correction voit le test de reproduction VALIDE : c'est la
+        # specification exacte de ce qui doit passer (Kaggle v10 : des
+        # correctifs testes et faux, la spec n'etait pas sous ses yeux)
+        ticket_corr = ticket
+        if b.reproduction_valide and b.test_ajoute:
+            ticket_corr += ("\n\nTEST DE REPRODUCTION ECRIT PAR MAEL : il "
+                            "ECHOUE sur le code actuel et DOIT REUSSIR apres "
+                            "ta correction, sans casser les autres tests :"
+                            "\n```python\n" + b.test_ajoute + "\n```")
         # les originaux des fichiers de code, pour le diff final
         originaux: dict[str, str] = {}
         correcteur = correctif.Correcteur(self.backend, self.racine,
@@ -574,7 +583,7 @@ class AgentDepot:
                 if l.fichier not in originaux and l.fichier in index.fichiers \
                         and not index.fichiers[l.fichier].test:
                     originaux[l.fichier] = self.espace.lire(l.fichier)
-            r = correcteur.corriger(ticket, index, lieux, retour=retour)
+            r = correcteur.corriger(ticket_corr, index, lieux, retour=retour)
             if not r.appliquees and tour == 1:
                 b.notes.append("aucune correction appliquee : "
                                + "; ".join(r.refus[:3]))
